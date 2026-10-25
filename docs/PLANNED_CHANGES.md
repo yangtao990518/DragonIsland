@@ -36,6 +36,16 @@
 - 苹果公开文档说明 Widget / Live Activity 动画单次最多两秒，可基于状态更新触发短动画；持续自主循环走路、滚动没有在本项目中验证，不能承诺后台每秒换帧或持续播放 GIF。
 - V1.2 使用现有单张 Q 版图实现状态更新时的 1.4 秒位移 / 旋转过渡，首页提供延后 5 秒执行的测试入口，方便回到桌面观察；“招呼 / 心情”也触发相应状态更新。未制作逐帧走路或打滚素材，未进行用户手机实测。
 
+### 后续明确要求（2026-10-25，先调研与准备素材，不继续改 App 代码）
+
+- 自动随机是确定的产品目标：离开 App 后小人物自己活动，不依赖点“测试走动 / 翻滚”。
+- 在任务页面提供可勾选的动作列表，只从已勾选的动作随机抽取；未来新增动作可继续加入。
+- 希望每 5 秒安排一个动作，避免有多个可用动作时连续重复；没有勾选则待机，只有一个动作时允许间隔待机后重复。
+- 当前单张图平移 / 旋转不够连贯，需要真正的迈腿、重心、蜷身、翻滚、起身素材，以及共同中立姿势衔接。
+- 用户负责把原图和制作提示词交给网页版 Codex 生成。本地已提供 `D:\gpt_workspace\ios_ldd\mAIverse-Xiaobai-MotionKit-V1.zip`，其中是原图与制作要求，尚无新动作帧。
+- 候选研究方向为系统计时文字驱动的字形 / 遮罩序列，开始时按勾选动作预排随机顺序；原作者桌面 Widget 演示不能代替本项目灵动岛验证。调研与验证门槛见 `docs/RANDOM_MOTION_RESEARCH.txt`，不能宣布后台五秒随机已解决。
+- 用户随后提交 `mAIverse_DragonGirl_Animation_Assets`，指定更换旧 Q 版，并授权本地补画缺失帧、自测。已另存 `mAIverse_DragonGirl_Animation_Assets_V2`：新母图、待机 / 左右走 / 打滚 / 转身共 36 个帧文件，原件保留，重复端点如实声明。使用内置 imagegen，保存提示词、六项素材检查与浏览器验收记录。当前仅素材准备，尚未替换进 App 或验证真机持续随机。
+
 参考：[Apple — Animating data updates in widgets and Live Activities](https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities)。
 
 ## 改动点 4：替换 App 图标

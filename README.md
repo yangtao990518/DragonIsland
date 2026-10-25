@@ -10,6 +10,7 @@
 - 日常灵动岛紧凑态和最小态使用 Q 版小人物；长按展开和锁屏使用用户提供立绘的透明版本，主界面展示大尺寸立绘。
 - 主 App 包含“我的世界 / 角色 / 关于”，提供两种岛上形态的示意预览。更多角色可通过统一目录配置，当前只有小白。
 - V1.2 增加人物卡片与详情，Q 版和立绘分别支持全屏缩放、双击与拖动；详情可查看日常、展开与锁屏预览。
+- V1.3 看图支持单击返回、未缩放时单指下滑关闭；放大后的拖动保留为查看图片，双击仍用于缩放。
 - 主 App 可切换深色 / 白色背景并保存选择。关于页提供用户指定的五款桌面图标，默认 GPT 款。
 - 岛上动作先提供短位移 / 旋转小样，可在首页安排 5 秒后的单次测试；尚无逐帧走路素材或自主连续循环。
 - 锁屏也有对应卡片；没有灵动岛的设备仍可测试锁屏实时活动。
@@ -18,7 +19,7 @@
 
 ## 先读清楚这三点
 
-1. **当前对外版本为 mAIverse V1.2。** 主 App 和扩展均为 1.2（build 5）。本机安装包与配套文件放在独立目录 `D:\gpt_workspace\ios_ldd\mAIverse-V1.2\`，保留旧版目录。[本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40179759854)及实际检查结果见[验证记录](docs/VALIDATION.md)，交付规则见[版本命名规则](docs/VERSIONS.md)。编译和模拟器验证不代替用户手机的签名与显示测试。
+1. **当前对外版本为 mAIverse V1.3。** 主 App 和扩展均为 1.3（build 6）。本机安装包与配套文件放在独立目录 `D:\gpt_workspace\ios_ldd\mAIverse-V1.3\`，保留旧版目录。[本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40180604685)及实际检查结果见[验证记录](docs/VALIDATION.md)，交付规则见[版本命名规则](docs/VERSIONS.md)。编译和模拟器验证不代替用户手机的签名与显示测试。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
@@ -28,8 +29,8 @@
 2. 登录 GitHub，新建一个空仓库，如 `DragonIsland`。公开仓库的标准 Actions runner 通常免费；私有仓库使用你的 Actions 配额。无需添加 Apple ID、密码或证书到仓库。
 3. 在仓库选择 **Add file → Upload files**，上传这个目录里的所有内容，**包括 `.github/workflows/build-ios.yml`**。不要只上传整个 ZIP，也不要多套一层 `DragonIsland` 目录。
 4. 提交到 `main` 后自动触发编译。或进入 **Actions → Build iOS IPA → Run workflow** 手动运行。
-5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.2-unsigned**（后续版本会相应更新）。
-6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.2-unsigned.ipa`、安装说明和 SHA-256 校验文件。
+5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.3-unsigned**（后续版本会相应更新）。
+6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.3-unsigned.ipa`、安装说明和 SHA-256 校验文件。
 7. 按 [Windows 签名安装说明](docs/WINDOWS_INSTALL.md)给 IPA 及扩展签名并安装。
 
 如果网页上传时漏了 `.github` 文件夹，可在仓库点击 **Add file → Create new file**，文件名填 `.github/workflows/build-ios.yml`，把本工程同名文件内容复制进去，提交后再进 Actions。

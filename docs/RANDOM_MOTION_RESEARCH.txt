@@ -1,0 +1,47 @@
+mAIverse 自动随机动作调研 · 2026-10-25
+
+目标不变：用户勾选动作；进入陪伴后无需再点动作按钮；离开 App 后希望每 5 秒一个随机动作。当前不继续改 App 代码。
+
+一、已确认的边界
+苹果公开文档将 Widget / Live Activity 的普通状态更新动画限制为最多两秒；它不是“每两秒可以再运行一次代码”的授权。
+App 进入后台后会被挂起；beginBackgroundTask 只能争取有限时间，不是持续调度器。BGTaskRequest 的 earliestBeginDate 也不保证准点执行。
+ActivityKit 推送可更新后台的实时活动，但有预算、系统调度和用户设置，不能直接保证稳定每五秒一次。当前工程无服务器、推送或账号系统。
+
+二、优先研究的候选方案：系统计时文字 + 自定义字体 / 遮罩
+找到原作者公开的概念验证 brycebostwick/WidgetAnimation。核对 README、Widget/Widget.swift、WidgetSetup.swift：
+- 它是桌面 Widget 演示，不是本工程的 ActivityConfiguration / 灵动岛验证。
+- README 描述 30 秒循环、8 fps 的演示。
+- 核心代码通过系统 Text(date, style: .timer)、多组帧字体和时间错开的闪烁遮罩合成动画；TimelineProvider 只提交一个 entry，policy 为 never。
+- 这说明有一条不依靠 App 后台逐帧 Timer 的候选路径；不能据此说我们的彩色 Q 版、透明边缘或 iOS 27 灵动岛已成功。
+- 已读源码对应仓库提交 a3b1a424d22387bfcbe54f7ff3acb7335d4e418c（2025-05-11）。本包未复制第三方代码、字体或猫咪素材。
+
+三、如何考虑随机
+候选设计：开始本轮时，根据勾选动作和随机种子预先生成动作顺序，按每 5 秒一个时段排列。前约 2 秒做短动作，后约 3 秒待机；动作首尾接共同中立姿势。
+这是一轮开始时预排的随机 / 伪随机播放表，不是后台每五秒重新调用 random()。如果能够让系统时间驱动帧选择，就可能避开“必须每五秒唤醒 App”的瓶颈。
+这只是本工程的设计推断，开源示例没有实现动作勾选或此随机方案。
+要验证如何把序列编码到字体、遮罩或预编译片段；静态字体 / 片段组合也可能受勾选子集和组合数量限制；若需运行时生成字体，还需验证扩展可读位置、签名方式及资源加载约束。不能默认任意新增动作都能零成本拼接。
+长轮次（如 120 分钟）不能为每次重复无上限复制整套 PNG；需评估重复帧复用、字体大小、视图层数、透明渲染、内存和耗电。
+
+四、最小验证与判定标准（尚未实施）
+1. 使用现有少量帧，单独验证系统计时字形 / 遮罩在 ActivityConfiguration 的 compact / minimal / expanded 能否连续换帧。
+2. 在真实 iPhone 上无调试器运行；从 App 回桌面，至少观察十分钟并录屏，再切到其他 App、锁屏 / 解锁；验证超过短暂后台运行窗口后仍然播放。
+3. 验证两个动作按五秒时段轮换、共同中立衔接、可选子集与预排随机顺序；不以 App 内视频或模拟器单次动画代替此结论。
+4. 验证系统时间变化、分钟 / 小时进位、语言与数字字形、字体加载、角色图透明边缘及小尺寸裁切。
+5. 减弱动态效果 / 息屏低亮度采用静态姿势，不强求持续动画。测试更新 App 与活动结束后的清理。
+6. 若需要复制此示例代码，先保留 MIT 许可与原作者声明；此包只提供链接和独立分析。
+
+五、其他路径
+普通 Activity.update + 本地定时器：可做前台和短期实验，不能承诺持续后台五秒节奏。
+APNs 实时活动推送：适合低频内容 / 状态变化，作为后续备选；不是稳定帧动画时钟，也不保证每五秒送达，需要额外服务与推送签名能力。
+App 内正常动画：可以验证素材连贯和随机选择，但不能替代灵动岛目标。
+
+六、原始来源
+苹果动画规则：https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities
+苹果后台执行：https://developer.apple.com/documentation/uikit/extending-your-app-s-background-execution-time
+苹果调度时间：https://developer.apple.com/documentation/backgroundtasks/bgtaskrequest/earliestbegindate
+苹果实时活动推送：https://developer.apple.com/documentation/activitykit/starting-and-updating-live-activities-with-activitykit-push-notifications
+原作者演示仓库：https://github.com/brycebostwick/WidgetAnimation
+已读核心源码：https://github.com/brycebostwick/WidgetAnimation/blob/a3b1a424d22387bfcbe54f7ff3acb7335d4e418c/Widget/Widget.swift
+Widget 时间线源码：https://github.com/brycebostwick/WidgetAnimation/blob/a3b1a424d22387bfcbe54f7ff3acb7335d4e418c/Widget/Supporting%20Files/WidgetSetup.swift
+
+结论：优先验证系统时间驱动的预排帧序列，不再把“有限后台时间内反复 update”当作最终随机方案。尚不能宣布稳定随机已解决。

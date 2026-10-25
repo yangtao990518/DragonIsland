@@ -76,3 +76,19 @@
 - 本机交付路径为 `D:\gpt_workspace\ios_ldd\mAIverse-V1.2\mAIverse-V1.2-unsigned.ipa`。IPA 为 34,771,178 字节，SHA-256 为 `c5f189a26bab59e32ac924344f30751b46d35fd3351ff0122d89626c0a216c8d`，与产物校验文件一致。旧版目录保留。
 - 本机再次运行真实 IPA 结构检查，并解析 App 与 Widget 的 Info.plist：二者均为 1.2（build 5），Bundle ID 沿用旧版本，`DragonIslandWidget.appex` 完整保留。
 - 本轮未实际操作 Sideloadly、签名或用户 iPhone。按 `docs/TEST_GUIDE.md` 验证 1 分钟陪伴、主题、图片操作、图标、短动作、互动、结束及重开恢复；原有到期不保证精确收起的边界保留。
+
+## 看图关闭手势 V1.3（内部 1.3 / build 6）
+
+- 用户反馈看图必须点 X 退出。加入单击图片返回、未缩放时单指下滑关闭；双击等待识别后缩放，放大后拖动不直接关闭。
+- [云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40180604685)成功，源码提交 `353ea7b2e24f7148d501d30dda880df2eaad99cb`。App、Widget、10 项 Swift 模型测试、4 项 Python 打包测试及 5 项界面测试步骤通过。
+- 新的界面测试实际覆盖双击放大、放大后的下拉仍停留、单击退出、另开立绘并下滑退出。原有页面与灵动岛截图步骤通过；下载产物保留测试附件。
+- artifact ID `12594296988`，下载 ZIP 为 138,407,214 字节，SHA-256 为 `2e6fd6d773d19c64724b29004f7fb90d1831d9e45739790431b1c410f3e6da52`，下载后已比对一致。一次下载遇到传输中断，重试后成功且校验值正确。
+- 本机 IPA 为 `D:\gpt_workspace\ios_ldd\mAIverse-V1.3\mAIverse-V1.3-unsigned.ipa`，34,773,288 字节，SHA-256 为 `5f2d06ba81f60e5ba91bf56cdbfd815efcc358187d503c4fcdee3fe471f9a503`，与产物校验文件一致，真实 IPA 结构检查再次通过。
+- 用户随后要求先暂停代码、讨论自动随机并制作新 Q 版动作素材；V1.3 没有替换新 Q 版，也没有新增持续随机功能，真机手势仍待安装检查。
+
+## 新 Q 版动作素材 V2（未接入 IPA）
+
+- 用户提交的初版素材位于 `D:\gpt_workspace\ios_ldd\mAIverse_DragonGirl_Animation_Assets`，左右走各 4 帧，镜像逐像素一致；旧站姿备份与 App 原图 SHA-256 相同。已查看全部走路姿势和图集，发现缺少明显交替步态、待机、翻滚及新中立母图。
+- 用户授权补画、自测后使用内置 imagegen 另存 `mAIverse_DragonGirl_Animation_Assets_V2`，未覆盖输入。包括中立母图、待机 / 左走 / 右走 / 打滚 / 转身 36 个透明 PNG 帧文件、动画预览、动作片段索引和完整提示词。重复端点未计为额外绘制。
+- 6 项素材检查实际通过；浏览器实际验收图片加载、暂停逐帧、深浅背景、小尺寸及随机池筛选 / 无动作时待机，保存截图与检查记录。原始候选、处理脚本和逐帧图均保留。
+- 素材与浏览器演示验证不能代替真实灵动岛播放；新素材尚未集成，基于系统计时字形 / 遮罩的后台持续随机仍是待验证候选方案，研究见 `docs/RANDOM_MOTION_RESEARCH.txt`。
