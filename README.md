@@ -15,7 +15,7 @@
 
 ## 先读清楚这三点
 
-1. **当前对外版本统一为 mAIverse V1.1。** 原型阶段归为 V1.0 阶段，此后交付的 IPA 均带版本号，例如 `output/mAIverse-V1.1-unsigned.ipa`。主 App 和扩展的内部版本均为 1.1（build 4），后续文件名直接读取实际 App 版本自动生成。功能沿用已经过[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40175751176)验证的双形态与三页界面；本次版本更新的实际构建结果见 [验证记录](docs/VALIDATION.md)。系统灵动岛展开布局的真机显示仍待用户验证。
+1. **当前对外版本统一为 mAIverse V1.1。** 原型阶段归为 V1.0 阶段，此后交付的 IPA 均带版本号，例如 `output/mAIverse-V1.1-unsigned.ipa`。主 App 和扩展的内部版本均为 1.1（build 4），后续文件名直接读取实际 App 版本自动生成。[本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40176430230)已通过编译、12 项测试和模拟器截图步骤；已下载真实 IPA，并核对文件名、主 App 与扩展版本完全对应。详见 [版本命名规则](docs/VERSIONS.md)及[验证记录](docs/VALIDATION.md)。系统灵动岛展开布局的真机显示仍待用户验证。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 

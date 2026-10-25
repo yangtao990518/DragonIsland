@@ -54,3 +54,12 @@
 - 真实 IPA 显示名为 mAIverse，主 App 和扩展版本均为 0.2.0（build 3），Bundle ID 保持原值。
 - 产物 `mAIverse-unsigned`（artifact ID `12592086975`）下载 ZIP SHA-256 与 GitHub digest 一致。IPA 为 6,338,720 字节，SHA-256 为 `bf599b7181c6f73d24261afadf3c918768f7e7d0f82dfb2591ed9728151fb119`，与产物校验文件一致。
 - 立绘处理来源、原图、最终素材和完整提示词见 `docs/ARTWORK.md`；多角色配置方式见 `docs/CHARACTERS.md`。
+
+## 对外版本统一为 V1.1（内部 1.1 / build 4）
+
+- 按用户要求，对外版本从 V1.0 阶段起计，当前为 V1.1；后续 IPA 和 Actions 下载包都包含版本号，规则见 `docs/VERSIONS.md`。
+- [本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40176430230)成功，源码提交 `90d6a9fc764f0e37b8ecc2e447da18050e31f660`；8 项 Swift 测试、4 项 Python 测试、真机 Release 构建、真实 IPA 结构验证和模拟器三页截图步骤均通过。
+- 产物名称为 `mAIverse-V1.1-unsigned`（artifact ID `12592541853`），已下载并校验 ZIP digest。
+- 真实 IPA 为 `output/mAIverse-V1.1-unsigned.ipa`，6,338,696 字节；SHA-256 为 `f0b17b133465880805f1c4cb7fdc0913719718a6de4bec837d4b35c7439e7838`，与产物校验文件一致。
+- 已逐项解析主 App 与 Widget 的 Info.plist，二者版本均为 1.1（build 4），文件名与包内版本一致；Widget 扩展和原 Bundle ID 保留。关于页显示版本带 V 前缀。
+- 本次为版本与交付命名更新，功能及待真机验证事项沿用上一版。
