@@ -27,7 +27,7 @@ struct ContentView: View {
                         .foregroundStyle(.white.opacity(0.45))
                         .multilineTextAlignment(.center)
                         .lineSpacing(5)
-                    Text("ChatGPT 龙娘同人试验 · 非官方应用")
+                    Text("mAIverse · 非官方同人角色陪伴")
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.3))
                 }
@@ -52,7 +52,7 @@ struct ContentView: View {
             HStack(spacing: 8) {
                 Image(systemName: "moon.stars.fill")
                     .foregroundStyle(DragonPalette.lavender)
-                Text("岛上龙娘").font(.headline)
+                Text("mAIverse").font(.headline)
             }
             Spacer()
             Text("PROTOTYPE 01")

@@ -1,6 +1,6 @@
-# 岛上龙娘 · Dragon Island
+# mAIverse · 我的 AI 小世界
 
-白紫色 ChatGPT 同人龙娘的 iPhone 原生试验项目。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
+属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前原型只有白紫色 ChatGPT 同人龙娘“小白”，后续计划加入其他 AI 角色；目前没有角色切换或 AI 对话。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
 
 ## 第一版做什么
 
@@ -14,7 +14,7 @@
 
 ## 先读清楚这三点
 
-1. **源码和未签名 IPA 均已准备好。** 2026-10-25 的[首次 GitHub Actions 构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40171957891)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查。产物见该次运行的 `DragonIsland-unsigned`，当前工作区已下载至 `output/DragonIsland-unsigned.ipa`。尚未完成签名安装和 iPhone 实测，详细证据见 [验证记录](docs/VALIDATION.md)。
+1. **App 正式命名为 mAIverse。** 0.1.1（build 2）统一桌面名称、App 内标题与实时活动扩展名称，新产物名称为 `mAIverse-unsigned`，IPA 为 `output/mAIverse-unsigned.ipa`。初版[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40171957891)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查；用户已提供展开态截图，底部按钮存在裁切，待下一步修复。各版本实际验证情况见 [验证记录](docs/VALIDATION.md)。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
@@ -24,8 +24,8 @@
 2. 登录 GitHub，新建一个空仓库，如 `DragonIsland`。公开仓库的标准 Actions runner 通常免费；私有仓库使用你的 Actions 配额。无需添加 Apple ID、密码或证书到仓库。
 3. 在仓库选择 **Add file → Upload files**，上传这个目录里的所有内容，**包括 `.github/workflows/build-ios.yml`**。不要只上传整个 ZIP，也不要多套一层 `DragonIsland` 目录。
 4. 提交到 `main` 后自动触发编译。或进入 **Actions → Build iOS IPA → Run workflow** 手动运行。
-5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载 **DragonIsland-unsigned**。
-6. 解压下载到的 ZIP，里面才是 `DragonIsland-unsigned.ipa`、安装说明和 SHA-256 校验文件。
+5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载 **mAIverse-unsigned**。
+6. 解压下载到的 ZIP，里面才是 `mAIverse-unsigned.ipa`、安装说明和 SHA-256 校验文件。
 7. 按 [Windows 签名安装说明](docs/WINDOWS_INSTALL.md)给 IPA 及扩展签名并安装。
 
 如果网页上传时漏了 `.github` 文件夹，可在仓库点击 **Add file → Create new file**，文件名填 `.github/workflows/build-ios.yml`，把本工程同名文件内容复制进去，提交后再进 Actions。
@@ -63,7 +63,7 @@ Git 的登录和账号验证在你自己的电脑完成。如果新仓库预先�
 
 `macos-15` runner：安装 XcodeGen 与 Pillow → `swift test` 跑计时与状态测试 → 生成图片资源 → 生成 Xcode 工程 → `xcodebuild` 编译真机 arm64 App 和扩展（关闭签名）→ 打包 IPA → 验证扩展、可执行文件、资源、版本号 → 上传构建产物。
 
-编译失败时，下载同次运行的 `DragonIsland-build-log` 或查看失败步骤的红色错误行。上传工程包本身不表示已编译成功。依赖版本和 Apple SDK 变化也可能需要修正。
+编译失败时，下载同次运行的 `mAIverse-build-log` 或查看失败步骤的红色错误行。上传工程包本身不表示已编译成功。依赖版本和 Apple SDK 变化也可能需要修正。
 
 ## 文件布局
 
@@ -95,6 +95,8 @@ bash Scripts/build_unsigned.sh
 产物位于 `output/`。若要用 Xcode 自动签名，先生成工程，再打开 `DragonIsland.xcodeproj`，为 App 与 Widget 两个 target 选择同一开发团队，按需修改两者的 Bundle ID。上述脚本每次会重新生成工程，手工配置请保存在 `project.yml` 中。
 
 ## 素材与定位
+
+mAIverse 是产品名称；源码 target、Bundle ID、URL scheme 与仓库暂沿用原有 DragonIsland 标识，方便沿用签名与覆盖升级。角色“小白”是第一个角色，不是整个 App 的名称。
 
 角色是根据本次用户提供参考生成的同人形象，不代表 OpenAI 官方角色。本工程不包含该上传参考图，只带本次生成的 Q 版原型。此版本只是本地陪伴 UI，未接入 ChatGPT，也不会生成 AI 对话。
 

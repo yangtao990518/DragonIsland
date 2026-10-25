@@ -24,9 +24,9 @@ PACKAGE_DIR="$(mktemp -d "$ROOT/build/package.XXXXXX")"
 trap 'rm -rf "$PACKAGE_DIR"' EXIT
 mkdir -p "$PACKAGE_DIR/Payload"
 ditto "$APP" "$PACKAGE_DIR/Payload/DragonIsland.app"
-rm -f "$ROOT/output/DragonIsland-unsigned.ipa"
-(cd "$PACKAGE_DIR" && /usr/bin/zip -q -r "$ROOT/output/DragonIsland-unsigned.ipa" Payload)
-python3 Scripts/verify_ipa.py output/DragonIsland-unsigned.ipa
+rm -f "$ROOT/output/mAIverse-unsigned.ipa"
+(cd "$PACKAGE_DIR" && /usr/bin/zip -q -r "$ROOT/output/mAIverse-unsigned.ipa" Payload)
+python3 Scripts/verify_ipa.py output/mAIverse-unsigned.ipa
 cp docs/WINDOWS_INSTALL.md output/INSTALL_README.md
-shasum -a 256 output/DragonIsland-unsigned.ipa > output/SHA256SUMS.txt
-echo "Ready: output/DragonIsland-unsigned.ipa (unsigned; must be signed with its widget extension)."
+shasum -a 256 output/mAIverse-unsigned.ipa > output/SHA256SUMS.txt
+echo "Ready: output/mAIverse-unsigned.ipa (unsigned; must be signed with its widget extension)."

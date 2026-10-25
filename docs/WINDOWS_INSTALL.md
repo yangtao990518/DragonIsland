@@ -1,8 +1,8 @@
-# Windows 安装与排错
+# mAIverse：Windows 安装与排错
 
 ## 你下载到的是什么
 
-GitHub Actions 的 `DragonIsland-unsigned` 构建产物是一个 ZIP。解压后使用里面的 `DragonIsland-unsigned.ipa`，不要把外层 ZIP 直接交给签名工具。
+GitHub Actions 的 `mAIverse-unsigned` 构建产物是一个 ZIP。解压后使用里面的 `mAIverse-unsigned.ipa`，不要把外层 ZIP 直接交给签名工具。0.1.1（build 2）起桌面名称为 mAIverse；内部 App 与扩展文件名仍沿用下面的路径。
 
 IPA 内应有：
 
@@ -46,6 +46,6 @@ IPA 内应有：
 - iPhone 型号、iOS 版本。
 - 使用的签名工具、是否保留扩展、免费或付费账号（不要提供账号密码）。
 - App 内提示原文、能否看到锁屏卡片、能否看到灵动岛。
-- 若云端构建失败，提供错误行或 `DragonIsland-build-log`。
+- 若云端构建失败，提供错误行或 `mAIverse-build-log`。
 
 修改后沿用同一签名身份与包名覆盖安装；升级前若担心丢失当前状态，先结束本轮。此原型未保存历史会话。

@@ -1,15 +1,15 @@
-岛上龙娘 第一版工程包
+mAIverse · 我的 AI 小世界
 
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。
-可供签名的 IPA 已保存为 output/DragonIsland-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
+0.1.1（build 2）正式更名为 mAIverse，新的构建产物为 output/mAIverse-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
 
 1. 仓库根目录应直接看到 project.yml、README.md、App、Shared、Widget、Scripts、.github。
 2. 不要只上传这个 ZIP，也不要额外多套一层工程文件夹。
 3. 提交后进入 Actions → Build iOS IPA。
-4. 编译成功后，从 Artifacts 下载 DragonIsland-unsigned，解压取出 IPA。
+4. 编译成功后，从 Artifacts 下载 mAIverse-unsigned，解压取出 IPA。
 5. 使用自己的签名工具安装；一定保留并签名 Widget 扩展。
 6. iPhone 打开 App → 选择 1 分钟 → 开始陪伴 → 返回桌面查看灵动岛。
 
 详细步骤见 README.md 和 docs/WINDOWS_INSTALL.md。
-已通过实际 Xcode 16.4 编译、5 项 Swift 模型测试、4 项 Python 打包测试和真实 IPA 结构检查；尚未签名安装或真机测试。
+初版已通过实际 Xcode 16.4 编译、5 项 Swift 模型测试、4 项 Python 打包测试和真实 IPA 结构检查；用户已提供展开态截图，底部按钮裁切待后续修复。各版本验证情况见 docs/VALIDATION.md。
 灵动岛显示角色、倒计时与点击互动；不承诺后台永远循环跑步动画。
