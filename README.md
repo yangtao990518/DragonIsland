@@ -8,11 +8,11 @@
 - App 内有轻微上下浮动的待机效果，尊重系统“减弱动态效果”设置。
 - 选择 1 / 25 / 50 / 120 分钟的一轮陪伴。
 - 日常灵动岛紧凑态和最小态使用 Q 版小人物；长按展开和锁屏使用用户提供立绘的透明版本，主界面展示大尺寸立绘。
-- 主 App 包含“我的世界 / 角色 / 关于”，提供两种岛上形态的示意预览。更多角色可通过统一目录配置，当前只有小白。
+- 主 App 包含“我的世界 / 角色 / 任务 / 关于”，提供日常、展开和锁屏预览。更多角色可通过统一目录配置，当前只有小白。
 - V1.2 增加人物卡片与详情，Q 版和立绘分别支持全屏缩放、双击与拖动；详情可查看日常、展开与锁屏预览。
 - V1.3 看图支持单击返回、未缩放时单指下滑关闭；放大后的拖动保留为查看图片，双击仍用于缩放。
 - 主 App 可切换深色 / 白色背景并保存选择。关于页提供用户指定的五款桌面图标，默认 GPT 款。
-- 岛上动作先提供短位移 / 旋转小样，可在首页安排 5 秒后的单次测试；尚无逐帧走路素材或自主连续循环。
+- V1.4 接入新版 Q 版与待机、左右走、打滚素材；任务页可预览、勾选动作并保存。开始陪伴后回桌面自动播放，五秒一个时段，60 秒预排循环，开局选择两套种子之一；不需要点击动作按钮。
 - 锁屏也有对应卡片；没有灵动岛的设备仍可测试锁屏实时活动。
 - “招呼”轮换本地短句，“心情”切换三种状态，“结束”收起实时活动。
 - 无联网、无账号、无 AI API 调用、无推送服务器。
@@ -29,8 +29,8 @@
 2. 登录 GitHub，新建一个空仓库，如 `DragonIsland`。公开仓库的标准 Actions runner 通常免费；私有仓库使用你的 Actions 配额。无需添加 Apple ID、密码或证书到仓库。
 3. 在仓库选择 **Add file → Upload files**，上传这个目录里的所有内容，**包括 `.github/workflows/build-ios.yml`**。不要只上传整个 ZIP，也不要多套一层 `DragonIsland` 目录。
 4. 提交到 `main` 后自动触发编译。或进入 **Actions → Build iOS IPA → Run workflow** 手动运行。
-5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.3-unsigned**（后续版本会相应更新）。
-6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.3-unsigned.ipa`、安装说明和 SHA-256 校验文件。
+5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.4-unsigned**（后续版本会相应更新）。
+6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.4-unsigned.ipa`、安装说明和 SHA-256 校验文件。
 7. 按 [Windows 签名安装说明](docs/WINDOWS_INSTALL.md)给 IPA 及扩展签名并安装。
 
 如果网页上传时漏了 `.github` 文件夹，可在仓库点击 **Add file → Create new file**，文件名填 `.github/workflows/build-ios.yml`，把本工程同名文件内容复制进去，提交后再进 Actions。
@@ -66,7 +66,7 @@ Git 的登录和账号验证在你自己的电脑完成。如果新仓库预先�
 
 ## 编译任务里做了什么
 
-`macos-15` runner：安装 XcodeGen 与 Pillow → `swift test` 跑计时与状态测试 → 生成图片资源 → 生成 Xcode 工程 → `xcodebuild` 编译真机 arm64 App 和扩展（关闭签名）→ 打包 IPA → 验证扩展、可执行文件、资源、版本号 → 上传构建产物。
+`macos-15` runner：安装 XcodeGen、Pillow 与 fonttools → Swift / Python 测试 → 生成图片与动作字体 → 生成 Xcode 工程 → `xcodebuild` 编译真机 arm64 App 和扩展（关闭签名）→ 打包并检查 IPA → 模拟器界面测试与系统灵动岛截图 → 上传构建产物。
 
 编译失败时，下载同次运行的 `mAIverse-build-log` 或查看失败步骤的红色错误行。上传工程包本身不表示已编译成功。依赖版本和 Apple SDK 变化也可能需要修正。
 
@@ -80,7 +80,8 @@ Git 的登录和账号验证在你自己的电脑完成。如果新仓库预先�
 | `Shared/Resources/Characters.json` | 角色目录、名称和两种形象的资源映射 |
 | `Shared/Activity/` | ActivityKit 属性、互动 Intent |
 | `Shared/Resources/` | 小尺寸角色资源 |
-| `Art/dragon-original.png` | 本次确认的生成角色原图 |
+| `Art/xiaobai-chibi-v2.png` | V1.4 新 Q 版高分辨率母图，旧图另行保留 |
+| `Art/MotionV2/` | 透明动作帧、时长索引及完整提示词 |
 | `Art/xiaobai-standing.png` | 从用户立绘处理得到的透明版本 |
 | `Scripts/capture_previews.sh` | 云端模拟器深浅色页面截图、交互测试与实际系统灵动岛截图 |
 | `Scripts/` | 资源处理、云端编译、IPA 结构检查 |
@@ -106,7 +107,7 @@ bash Scripts/build_unsigned.sh
 
 mAIverse 是产品名称；源码 target、Bundle ID、URL scheme 与仓库暂沿用原有 DragonIsland 标识，方便沿用签名与覆盖升级。角色“小白”是第一个角色，不是整个 App 的名称。
 
-角色是根据用户提供参考生成的同人形象，不代表 OpenAI 官方角色。Q 版源图保存在 `Art/dragon-original.png`。此版本只是本地陪伴 UI，未接入 ChatGPT，也不会生成 AI 对话。
+角色是根据用户提供参考生成的同人形象，不代表 OpenAI 官方角色。当前 Q 版源图为 `Art/xiaobai-chibi-v2.png`，`Art/dragon-original.png` 保留为旧版。此版本只是本地陪伴 UI，未接入 ChatGPT，也不会生成 AI 对话。
 
 0.2.0 新增的立绘原图与透明处理版本均保存在 `Art/`，Q 版与立绘分别用于不同场景。详见 [角色接入说明](docs/CHARACTERS.md)与[立绘处理记录及提示词](docs/ARTWORK.md)。
 

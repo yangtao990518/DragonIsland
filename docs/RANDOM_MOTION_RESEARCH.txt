@@ -44,4 +44,9 @@ App 内正常动画：可以验证素材连贯和随机选择，但不能替代�
 已读核心源码：https://github.com/brycebostwick/WidgetAnimation/blob/a3b1a424d22387bfcbe54f7ff3acb7335d4e418c/Widget/Widget.swift
 Widget 时间线源码：https://github.com/brycebostwick/WidgetAnimation/blob/a3b1a424d22387bfcbe54f7ff3acb7335d4e418c/Widget/Supporting%20Files/WidgetSetup.swift
 
-结论：优先验证系统时间驱动的预排帧序列，不再把“有限后台时间内反复 update”当作最终随机方案。尚不能宣布稳定随机已解决。
+阶段结论：优先验证系统时间驱动的预排帧序列，不再把“有限后台时间内反复 update”当作最终随机方案。此处为实施前研究，当前进展见下文。
+
+七、V1.4 已实施与实际证据（2026-10-25）
+系统计时字形 / 遮罩方案已接入，Scripts/prepare_motion.py 编译 4 种勾选集合 × 2 套种子，每套 60 秒、目标 8fps，五秒一个时段；字体重复 PNG 使用 sbix dupe 引用，App 与 Widget 均注册并打包字体。TimerMotionPortrait 只含系统 Text 时间视图，epoch 持久化；没有后台循环或逐帧 Activity.update。MIT 来源与授权见 THIRD_PARTY_NOTICES.txt，声明也已打包。
+最终 Actions 40196702922 成功，24 项测试步骤通过。实际 SpringBoard 60 张截图跨度 159.976 秒，不点击动作按钮；晚段仍显示姿势变化和翻滚，展开大立绘与三个按钮完整。安装包已在本机再次校验；详情见 VALIDATION.md。
+当前只证明云端构建和模拟器换帧，不证明 iOS 27.01 手机稳定达到 8fps 或长期耗电合格。每 60 秒重复预排表，开局仅从两套种子选择，不是后台每五秒新随机。息屏 / 减弱动态静态；真机长轮次、锁屏解锁、时间变化、结束清理仍按 TEST_GUIDE.md 验证。新增动作需重新编译资源，不能零成本任意拼接。
