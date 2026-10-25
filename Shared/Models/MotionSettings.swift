@@ -25,6 +25,7 @@ struct MotionTimeline: Decodable {
     let fps: Int
     let period: Int
     let plans: [Plan]
+    let durations: [String: [Int]]?
     static let shared: MotionTimeline? = {
         guard let url = Bundle.main.url(forResource: "MotionTimeline", withExtension: "json"),
               let data = try? Data(contentsOf: url) else { return nil }

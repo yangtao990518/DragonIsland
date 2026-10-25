@@ -139,17 +139,25 @@ def main():
                 order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'f{s:02}' for s in range(60)]
                 font=base_font(name,order)
                 strike=Strike(ppem=128,resolution=72)
+                encoded={}
                 for n in order:strike.glyphs[n]=Glyph(glyphName=n)
                 for second in range(60):
                     # For the active layer, timer text lags the reference by 1s.
                     frame=frames[(((second+1)%60)*FPS+phase)%len(frames)]
                     glyph=f'f{second:02}'
-                    strike.glyphs[glyph]=Glyph(glyphName=glyph,originOffsetX=0,originOffsetY=0,
-                                               graphicType='png ',imageData=png(frame))
+                    data=png(frame)
+                    digest=hashlib.sha256(data).digest()
+                    if digest in encoded:
+                        strike.glyphs[glyph]=Glyph(glyphName=glyph,graphicType='dupe',referenceGlyphName=encoded[digest])
+                    else:
+                        encoded[digest]=glyph
+                        strike.glyphs[glyph]=Glyph(glyphName=glyph,originOffsetX=0,originOffsetY=0,
+                                                   graphicType='png ',imageData=data)
                 sbix=newTable('sbix');sbix.strikes={128:strike};font['sbix']=sbix
                 addOpenTypeFeaturesFromString(font,features([f'f{s:02}' for s in range(60)]))
                 font.save(OUTPUT/f'{name}.ttf')
-    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans},separators=(',',':'))+'\n',encoding='utf-8')
+    durations={a:info['frameDurationsMs'] for a,info in MANIFEST['actions'].items()}
+    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'durations':durations},separators=(',',':'))+'\n',encoding='utf-8')
     # XcodeGen includes this generated settings fragment in both Info.plists.
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
     (ROOT/'motion-fonts.yml').write_text('targets:\n  DragonIsland:\n    info:\n      properties:\n        UIAppFonts: &motionFonts\n'+''.join(f'          - {n}\n' for n in paths)+'  DragonIslandWidget:\n    info:\n      properties:\n        UIAppFonts: *motionFonts\n',encoding='utf-8')

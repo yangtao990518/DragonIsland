@@ -36,7 +36,7 @@ struct MotionSettingsView: View {
                 Text("每 5 秒安排一段动作，做完后自然待机。未勾选的动作不会参与随机；都不勾选时只待机。")
                     .font(.system(size: 12)).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
-            Text("设置会自动保存，并应用到当前陪伴。减弱动态效果或息屏低亮度时显示静态人物。")
+            Text("设置会保存并应用当前陪伴。本版日常片段为 60 秒循环；减弱动态效果或息屏低亮度时显示静态人物。")
                 .font(.system(size: 11)).foregroundStyle(.secondary)
         }
     }
@@ -76,14 +76,11 @@ struct MotionArtworkPreview: View {
             guard let plan = settings.plan(seed: 0) else { return nil }
             return MotionTimeline.shared?.frame(plan: plan, elapsed: elapsed)
         }
-        let index: Int
-        if action == "roll" {
-            let durations = [160,180,210,240,230,210,200,170]
-            var time = Int(elapsed * 1000) % 2000
-            var found = 7
-            for i in durations.indices { if time < durations[i] { found = i; break }; time -= durations[i] }
-            index = found
-        } else { index = Int(elapsed * (action == "idle" ? 4 : 10)) % 8 }
+        guard let durations = MotionTimeline.shared?.durations?[action], !durations.isEmpty else { return nil }
+        let period = action == "roll" ? 2000 : durations.reduce(0, +)
+        var time = Int(elapsed * 1000) % period
+        var index = durations.count - 1
+        for i in durations.indices { if time < durations[i] { index = i; break }; time -= durations[i] }
         return MotionFrame(asset: "Motion_\(action)_\(String(format: "%03d", index))", x: 0, action: action)
     }
 }
