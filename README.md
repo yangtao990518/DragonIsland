@@ -15,7 +15,7 @@
 
 ## 先读清楚这三点
 
-1. **当前版本为 mAIverse 0.2.0（build 3）。** [本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40175751176)已通过 Xcode 16.4 真机 Release 编译、8 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查，还完成了 iPhone 16 Pro 模拟器的 Debug 编译和三页实际截图。产物为 `mAIverse-unsigned`，本地 IPA 为 `output/mAIverse-unsigned.ipa`，截图在 `output/previews/`。初版展开按钮裁切已通过减少纵向堆叠、将按钮放到立绘右侧来调整，但本版系统灵动岛的真机效果仍待用户验证。详细证据见 [验证记录](docs/VALIDATION.md)。
+1. **当前对外版本统一为 mAIverse V1.1。** 原型阶段归为 V1.0 阶段，此后交付的 IPA 均带版本号，例如 `output/mAIverse-V1.1-unsigned.ipa`。主 App 和扩展的内部版本均为 1.1（build 4），后续文件名直接读取实际 App 版本自动生成。功能沿用已经过[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40175751176)验证的双形态与三页界面；本次版本更新的实际构建结果见 [验证记录](docs/VALIDATION.md)。系统灵动岛展开布局的真机显示仍待用户验证。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
@@ -25,8 +25,8 @@
 2. 登录 GitHub，新建一个空仓库，如 `DragonIsland`。公开仓库的标准 Actions runner 通常免费；私有仓库使用你的 Actions 配额。无需添加 Apple ID、密码或证书到仓库。
 3. 在仓库选择 **Add file → Upload files**，上传这个目录里的所有内容，**包括 `.github/workflows/build-ios.yml`**。不要只上传整个 ZIP，也不要多套一层 `DragonIsland` 目录。
 4. 提交到 `main` 后自动触发编译。或进入 **Actions → Build iOS IPA → Run workflow** 手动运行。
-5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载 **mAIverse-unsigned**。
-6. 解压下载到的 ZIP，里面才是 `mAIverse-unsigned.ipa`、安装说明和 SHA-256 校验文件。
+5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.1-unsigned**（后续版本会相应更新）。
+6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.1-unsigned.ipa`、安装说明和 SHA-256 校验文件。
 7. 按 [Windows 签名安装说明](docs/WINDOWS_INSTALL.md)给 IPA 及扩展签名并安装。
 
 如果网页上传时漏了 `.github` 文件夹，可在仓库点击 **Add file → Create new file**，文件名填 `.github/workflows/build-ios.yml`，把本工程同名文件内容复制进去，提交后再进 Actions。

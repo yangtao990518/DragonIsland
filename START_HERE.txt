@@ -1,12 +1,12 @@
 mAIverse · 我的 AI 小世界
 
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。
-当前为 mAIverse 0.2.0（build 3），已实际编译通过并下载至 output/mAIverse-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
+当前对外版本为 mAIverse V1.1，主 App 与扩展内部版本为 1.1（build 4）。IPA 使用带版本号的名称：output/mAIverse-V1.1-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
 
 1. 仓库根目录应直接看到 project.yml、README.md、App、Shared、Widget、Scripts、.github。
 2. 不要只上传这个 ZIP，也不要额外多套一层工程文件夹。
 3. 提交后进入 Actions → Build iOS IPA。
-4. 编译成功后，从 Artifacts 下载 mAIverse-unsigned，解压取出 IPA。
+4. 编译成功后，从 Artifacts 下载 mAIverse-V1.1-unsigned，解压取出带版本号的 IPA。后续版本名称自动对应 App 版本。
 5. 使用自己的签名工具安装；一定保留并签名 Widget 扩展。
 6. iPhone 打开 App → 选择 1 分钟 → 开始陪伴 → 返回桌面查看灵动岛。
 

@@ -2,7 +2,7 @@
 
 ## 你下载到的是什么
 
-GitHub Actions 的 `mAIverse-unsigned` 构建产物是一个 ZIP。解压后使用里面的 `mAIverse-unsigned.ipa`，不要把外层 ZIP 直接交给签名工具。0.1.1（build 2）起桌面名称为 mAIverse；内部 App 与扩展文件名仍沿用下面的路径。
+GitHub Actions 的构建产物带版本号，例如 `mAIverse-V1.1-unsigned`。解压下载的 ZIP 后使用里面的 `mAIverse-V1.1-unsigned.ipa`，不要把外层 ZIP 直接交给签名工具。后续版本使用对应版本号的文件；桌面名称始终为 mAIverse，内部 App 与扩展文件名仍沿用下面的路径。
 
 IPA 内应有：
 

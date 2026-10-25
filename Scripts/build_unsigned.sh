@@ -20,13 +20,20 @@ xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
 
 APP="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/DragonIsland.app"
 test -d "$APP/PlugIns/DragonIslandWidget.appex"
+VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Info.plist")"
+[[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || { echo "Invalid app version: $VERSION" >&2; exit 1; }
+IPA_NAME="mAIverse-V${VERSION}-unsigned.ipa"
+IPA_PATH="$ROOT/output/$IPA_NAME"
 PACKAGE_DIR="$(mktemp -d "$ROOT/build/package.XXXXXX")"
 trap 'rm -rf "$PACKAGE_DIR"' EXIT
 mkdir -p "$PACKAGE_DIR/Payload"
 ditto "$APP" "$PACKAGE_DIR/Payload/DragonIsland.app"
-rm -f "$ROOT/output/mAIverse-unsigned.ipa"
-(cd "$PACKAGE_DIR" && /usr/bin/zip -q -r "$ROOT/output/mAIverse-unsigned.ipa" Payload)
-python3 Scripts/verify_ipa.py output/mAIverse-unsigned.ipa
+rm -f "$IPA_PATH"
+(cd "$PACKAGE_DIR" && /usr/bin/zip -q -r "$IPA_PATH" Payload)
+python3 Scripts/verify_ipa.py "$IPA_PATH"
 cp docs/WINDOWS_INSTALL.md output/INSTALL_README.md
-shasum -a 256 output/mAIverse-unsigned.ipa > output/SHA256SUMS.txt
-echo "Ready: output/mAIverse-unsigned.ipa (unsigned; must be signed with its widget extension)."
+shasum -a 256 "output/$IPA_NAME" > output/SHA256SUMS.txt
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+fi
+echo "Ready: output/$IPA_NAME (unsigned; must be signed with its widget extension)."
