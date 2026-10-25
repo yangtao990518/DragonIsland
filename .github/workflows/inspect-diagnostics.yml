@@ -1,0 +1,42 @@
+name: Inspect failed iOS diagnostics
+"on":
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Failed iOS build run
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: mAIverse-build-log
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          path: diagnostics
+      - name: Extract useful logs and review sheets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+          root=Path('diagnostics');dest=Path('report');dest.mkdir()
+          for p in root.rglob('interface-tests.log'):
+              shutil.copy2(p,dest/p.name)
+              lines=p.read_text(errors='replace').splitlines()
+              for i,line in enumerate(lines):
+                  if 'error:' in line or "failed (" in line:
+                      print('\n'.join(lines[max(0,i-14):i+4]))
+          for pattern in ('*contact.png','live-session-before-home.png','system-island-expanded.png','video-timing.json','motion-capture.json','video-analysis.json','video-start-unix.txt','font-summary.json'):
+              for p in root.rglob(pattern):shutil.copy2(p,dest/p.name)
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: concise-ios-diagnostics
+          path: report/
+          retention-days: 7
