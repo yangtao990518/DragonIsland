@@ -1,5 +1,10 @@
 import Foundation
 
+enum CompanionMotion: String, Codable, Hashable {
+    case walk, roll
+    var title: String { self == .walk ? "走动" : "翻滚" }
+}
+
 enum DragonMood: String, Codable, Hashable, CaseIterable {
     case calm, cheerful, sleepy
 
@@ -43,6 +48,24 @@ struct CompanionSession: Codable, Hashable {
     var message: String
     var greetings: Int
     var revision: Int
+    // Optional fields preserve decoding of sessions from earlier releases.
+    var motion: CompanionMotion?
+    var motionSequence: Int?
+    var walkSteps: Int?
+    var rollTurns: Int?
+
+    private mutating func recordMotion(_ action: CompanionMotion) {
+        motion = action
+        motionSequence = (motionSequence ?? 0) + 1
+        if action == .walk { walkSteps = (walkSteps ?? 0) + 1 }
+        else { rollTurns = (rollTurns ?? 0) + 1 }
+    }
+
+    mutating func performMotion(_ action: CompanionMotion) {
+        recordMotion(action)
+        message = action == .walk ? "走两步，也陪你换换心情。" : "打个滚，今天也轻松一点。"
+        revision += 1
+    }
 
     init(minutes: Int, now: Date = Date()) {
         // A finite session, well below the system's 8-hour Live Activity limit.
@@ -67,12 +90,14 @@ struct CompanionSession: Codable, Hashable {
         let phrases = ["收到你的招呼啦。", "嗯？我在听。", "今天也陪你多待一会儿。", "不用着急，我们慢慢来。"]
         message = phrases[greetings % phrases.count]
         greetings += 1
+        recordMotion(.walk)
         revision += 1
     }
 
     mutating func cycleMood() {
         mood = mood.next
         message = mood.message
+        recordMotion(.roll)
         revision += 1
     }
 }

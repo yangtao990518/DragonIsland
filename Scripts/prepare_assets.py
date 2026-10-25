@@ -52,18 +52,19 @@ def main():
         imageset(SHARED, character["chibiAsset"], chibi, 26)
         imageset(SHARED, character["portraitAsset"], standing, (100, 134))
         imageset(APP, character["heroAsset"], standing, (300, 400))
+        imageset(APP, character["chibiAsset"] + "Detail", chibi, 400)
 
-    # iOS 17+ supports a single universal 1024px app icon. Flatten alpha for it.
-    icon = Image.new("RGBA", (1024, 1024), (31, 25, 49, 255))
-    face = portrait.resize((930, 930), Image.Resampling.LANCZOS)
-    icon.alpha_composite(face, (47, 55))
-    icon_dir = APP / "AppIcon.appiconset"
-    icon_dir.mkdir(parents=True, exist_ok=True)
-    icon.convert("RGB").save(icon_dir / "AppIcon.png")
-    write_json(icon_dir / "Contents.json", {
-        "images": [{"filename": "AppIcon.png", "idiom": "universal", "platform": "ios", "size": "1024x1024"}],
-        "info": {"author": "xcode", "version": 1}
-    })
+    for name in ("GPT", "Claude", "DeepSeek", "Gemini", "Grok"):
+        icon = Image.open(ROOT / f"Art/AppIcons/{name}.png").convert("RGB")
+        asset = "AppIcon" if name == "GPT" else f"AppIcon{name}"
+        icon_dir = APP / f"{asset}.appiconset"
+        icon_dir.mkdir(parents=True, exist_ok=True)
+        icon.resize((1024, 1024), Image.Resampling.LANCZOS).save(icon_dir / "AppIcon.png")
+        write_json(icon_dir / "Contents.json", {
+            "images": [{"filename": "AppIcon.png", "idiom": "universal", "platform": "ios", "size": "1024x1024"}],
+            "info": {"author": "xcode", "version": 1}
+        })
+        imageset(APP, f"IconPreview{name}", icon.convert("RGBA"), 64)
     print(f"Assets ready: {len(characters)} characters, separate chibi / standing / hero art, opaque app icon.")
 
 

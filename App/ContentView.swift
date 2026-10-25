@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var tab = WorldTab.initial
     @State private var minutes = 25
     @State private var expandedPreview = false
+    @State private var detailCharacter: CompanionCharacter?
     @Environment(\.openURL) private var openURL
 
     var body: some View {
@@ -29,9 +30,28 @@ struct ContentView: View {
             aboutPage
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
-        .tint(DragonPalette.lavender)
-        .toolbarBackground(DragonPalette.ink, for: .tabBar)
+        .tint(AppPalette.accent)
+        .toolbarBackground(AppPalette.background, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
+        .sheet(item: $detailCharacter) { character in
+            NavigationStack {
+                CharacterDetailView(store: store, character: character) {
+                    store.select(character)
+                    detailCharacter = nil
+                    tab = .world
+                }
+            }
+            .presentationDragIndicator(.visible)
+        }
+        .task {
+            #if DEBUG
+            let args = ProcessInfo.processInfo.arguments
+            if args.contains("--preview-detail") || args.contains("--preview-gallery-chibi") || args.contains("--preview-gallery-standing") {
+                detailCharacter = store.selectedCharacter
+            }
+            if args.contains("--preview-live-motion") { await store.start(minutes: 1) }
+            #endif
+        }
         .alert("mAIverse", isPresented: Binding(
             get: { store.notice != nil }, set: { if !$0 { store.notice = nil } }
         )) {
@@ -45,18 +65,21 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("mAIverse").font(.system(size: 27, weight: .bold, design: .rounded))
                     Text("你的世界，他们也在。")
-                        .font(.system(size: 11)).foregroundStyle(.white.opacity(0.48))
+                        .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.48))
                 }
                 Spacer()
+                AppearanceToggle()
                 Button { tab = .characters } label: {
                     DragonPortrait(character: store.displayCharacter, size: 32)
                         .padding(7)
-                        .background(.white.opacity(0.06), in: Circle())
-                        .overlay(Circle().stroke(DragonPalette.lavender.opacity(0.35), lineWidth: 1))
+                        .background(Color.primary.opacity(0.06), in: Circle())
+                        .overlay(Circle().stroke(AppPalette.accent.opacity(0.35), lineWidth: 1))
                 }
                 .accessibilityLabel("查看角色")
             }
-            CharacterHero(character: store.displayCharacter, active: store.session != nil)
+            Button { detailCharacter = store.displayCharacter } label: {
+                CharacterHero(character: store.displayCharacter, active: store.session != nil)
+            }.buttonStyle(.plain).accessibilityLabel("查看\(store.displayCharacter.name)角色详情")
             if let session = store.session {
                 activeSession(session)
             } else {
@@ -67,7 +90,7 @@ struct ContentView: View {
                 Image(systemName: "heart")
                 Text("把一小段日常，留给喜欢的角色。")
             }
-            .font(.system(size: 11)).foregroundStyle(.white.opacity(0.35))
+            .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.35))
             .frame(maxWidth: .infinity).padding(.vertical, 6)
         }
     }
@@ -77,7 +100,7 @@ struct ContentView: View {
             HStack {
                 Text("这次，陪你多久？").font(.system(size: 17, weight: .semibold))
                 Spacer()
-                Text("1 分钟体验").font(.system(size: 10)).foregroundStyle(DragonPalette.mint)
+                Text("1 分钟体验").font(.system(size: 10)).foregroundStyle(AppPalette.status)
             }
             HStack(spacing: 8) {
                 ForEach([1, 25, 50, 120], id: \.self) { value in
@@ -87,8 +110,8 @@ struct ContentView: View {
                             Text("分钟").font(.system(size: 10))
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 11)
-                        .foregroundStyle(minutes == value ? DragonPalette.ink : DragonPalette.softWhite)
-                        .background(minutes == value ? DragonPalette.lavender : .white.opacity(0.045),
+                        .foregroundStyle(minutes == value ? AppPalette.background : Color.primary)
+                        .background(minutes == value ? AppPalette.accent : Color.primary.opacity(0.045),
                                     in: RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
@@ -98,7 +121,7 @@ struct ContentView: View {
             }
             Button { Task { await store.start(minutes: minutes) } } label: {
                 HStack(spacing: 8) {
-                    if store.busy { ProgressView().tint(DragonPalette.ink) }
+                    if store.busy { ProgressView().tint(AppPalette.background) }
                     Image(systemName: "sparkles")
                     Text("让\(store.selectedCharacter.name)陪着我").fontWeight(.semibold)
                     Spacer()
@@ -106,8 +129,8 @@ struct ContentView: View {
                 }
                 .font(.system(size: 14))
                 .padding(.horizontal, 17).frame(height: 48)
-                .foregroundStyle(DragonPalette.ink)
-                .background(DragonPalette.lavender, in: RoundedRectangle(cornerRadius: 15))
+                .foregroundStyle(AppPalette.background)
+                .background(AppPalette.accent, in: RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain).disabled(store.busy)
         }
@@ -122,9 +145,9 @@ struct ContentView: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Label(expired ? "这轮陪伴已完成" : "\(store.displayCharacter.name)正在陪你",
                               systemImage: expired ? "checkmark.circle" : session.mood.symbol)
-                            .font(.system(size: 13, weight: .medium)).foregroundStyle(DragonPalette.mint)
+                            .font(.system(size: 13, weight: .medium)).foregroundStyle(AppPalette.status)
                         Text(expired ? "辛苦啦，休息一下吧。" : session.mood.title)
-                            .font(.system(size: 11)).foregroundStyle(.white.opacity(0.45))
+                            .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.45))
                     }
                     Spacer(minLength: 8)
                     DragonCountdown(state: session, expired: expired)
@@ -132,7 +155,7 @@ struct ContentView: View {
                         .frame(width: 108, alignment: .trailing)
                 }
                 Text(expired ? "下一段时间，也可以一起度过。" : session.message)
-                    .font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
+                    .font(.system(size: 14)).foregroundStyle(Color.primary.opacity(0.8))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if !expired {
                     HStack(spacing: 9) {
@@ -143,10 +166,11 @@ struct ContentView: View {
                             await store.changeMood()
                         }
                     }
+                    motionSampleControls
                 }
                 Button { Task { await store.finish() } } label: {
                     Text(expired ? "收起这一轮，准备再出发" : "结束本轮陪伴")
-                        .font(.system(size: 11)).foregroundStyle(.white.opacity(0.5))
+                        .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.5))
                         .frame(maxWidth: .infinity).padding(.vertical, 7)
                 }
                 .disabled(store.busy)
@@ -160,7 +184,7 @@ struct ContentView: View {
             HStack {
                 Text("在岛上，遇见你").font(.system(size: 16, weight: .semibold))
                 Spacer()
-                Text("界面示意").font(.system(size: 10)).foregroundStyle(.white.opacity(0.4))
+                Text("界面示意").font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.4))
             }
             Picker("预览形态", selection: $expandedPreview) {
                 Text("日常 · 小人物").tag(false)
@@ -169,48 +193,58 @@ struct ContentView: View {
             IslandArtPreview(character: store.displayCharacter, expanded: expandedPreview)
                 .frame(maxWidth: .infinity)
             Text("开始陪伴后回到桌面，长按灵动岛展开。")
-                .font(.system(size: 11)).foregroundStyle(.white.opacity(0.45))
+                .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.45))
         }
         .worldCard()
     }
 
     private var charactersPage: some View {
         WorldPage {
-            PageHeading(eyebrow: "RESIDENTS", title: "住进你的世界", subtitle: "小小的身影，也有完整的模样。")
+            HStack {
+                PageHeading(eyebrow: "RESIDENTS", title: "住进你的世界", subtitle: "小小的身影，也有完整的模样。")
+                Spacer(minLength: 4)
+                AppearanceToggle()
+            }
             ForEach(store.characters) { character in
                 CharacterResidentCard(character: character,
                                       selected: store.selectedCharacter.id == character.id,
-                                      active: store.session != nil) { store.select(character) }
+                                      active: store.session != nil,
+                                      open: { detailCharacter = character }) { store.select(character) }
             }
             VStack(spacing: 10) {
-                Image(systemName: "sparkles").font(.system(size: 24)).foregroundStyle(DragonPalette.lavender)
+                Image(systemName: "sparkles").font(.system(size: 24)).foregroundStyle(AppPalette.accent)
                 Text("这里会慢慢热闹起来。")
                     .font(.system(size: 16, weight: .medium))
                 Text("更多角色，等待与你相遇。")
-                    .font(.system(size: 12)).foregroundStyle(.white.opacity(0.45))
+                    .font(.system(size: 12)).foregroundStyle(Color.primary.opacity(0.45))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 28)
             if store.session != nil {
                 Text("结束本轮陪伴后，可以切换住民。")
-                    .font(.system(size: 12)).foregroundStyle(.white.opacity(0.5))
+                    .font(.system(size: 12)).foregroundStyle(Color.primary.opacity(0.5))
             }
         }
     }
 
     private var aboutPage: some View {
         WorldPage {
-            PageHeading(eyebrow: "ABOUT YOUR WORLD", title: "mAIverse", subtitle: "My + AI + Universe · 我的 AI 小世界")
+            HStack {
+                PageHeading(eyebrow: "ABOUT YOUR WORLD", title: "mAIverse", subtitle: "My + AI + Universe · 我的 AI 小世界")
+                Spacer(minLength: 4)
+                AppearanceToggle()
+            }
+            AppIconPicker()
             VStack(alignment: .leading, spacing: 17) {
                 Text("你的世界，他们也在。")
                     .font(.system(size: 21, weight: .semibold))
                 Text("让喜欢的角色住进手机，陪你专注，也陪你放松。小白是这里的第一位住民。")
-                    .font(.system(size: 14)).foregroundStyle(.white.opacity(0.65)).lineSpacing(5)
-                Divider().overlay(.white.opacity(0.08))
+                    .font(.system(size: 14)).foregroundStyle(Color.primary.opacity(0.65)).lineSpacing(5)
+                Divider().overlay(Color.primary.opacity(0.08))
                 Label("当前为本地陪伴，互动短句为预设内容。", systemImage: "iphone")
                 Label("尚未接入 AI 对话，无需账号或 API Key。", systemImage: "lock")
                 Label("到时不会自动响铃，可手动结束陪伴。", systemImage: "hourglass")
             }
-            .font(.system(size: 12)).foregroundStyle(DragonPalette.softWhite)
+            .font(.system(size: 12)).foregroundStyle(Color.primary)
             .worldCard()
             Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
@@ -220,14 +254,33 @@ struct ContentView: View {
                     Spacer()
                     Image(systemName: "arrow.up.right")
                 }
-                .font(.system(size: 14)).foregroundStyle(DragonPalette.lavender)
+                .font(.system(size: 14)).foregroundStyle(AppPalette.accent)
             }.worldCard()
             VStack(spacing: 7) {
-                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1")")
+                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2")")
                 Text("角色为非官方同人形象，与相关 AI 服务提供方无隶属关系。")
             }
-            .font(.system(size: 10)).foregroundStyle(.white.opacity(0.35))
+            .font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.35))
             .multilineTextAlignment(.center).frame(maxWidth: .infinity).padding(.vertical, 12)
+        }
+    }
+
+    private var motionSampleControls: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text("岛上动作小样").font(.system(size: 12, weight: .medium))
+            HStack(spacing: 9) {
+                Button { store.scheduleMotionTest(.walk) } label: {
+                    Label("测试走动", systemImage: "figure.walk")
+                }.accessibilityIdentifier("test-walk")
+                Button { store.scheduleMotionTest(.roll) } label: {
+                    Label("测试翻滚", systemImage: "arrow.clockwise")
+                }.accessibilityIdentifier("test-roll")
+            }
+            .font(.system(size: 11, weight: .medium)).buttonStyle(.bordered)
+            .disabled(store.busy)
+            Text(store.motionTestStatus ?? "点测试后 5 秒内回桌面，观察一次短动作。")
+                .font(.system(size: 10)).foregroundStyle(.secondary)
+                .accessibilityIdentifier("motionTestStatus")
         }
     }
 }

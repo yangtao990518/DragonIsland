@@ -35,6 +35,22 @@ struct CharacterStanding: View {
     }
 }
 
+struct IslandMotionPortrait: View {
+    let character: CompanionCharacter
+    let state: CompanionSession
+    var size: CGFloat = 24
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isLuminanceReduced) private var luminanceReduced
+
+    var body: some View {
+        DragonPortrait(character: character, size: size)
+            .rotationEffect(.degrees(Double(state.rollTurns ?? 0) * 360))
+            .offset(x: (state.walkSteps ?? 0).isMultiple(of: 2) ? -3 : 3)
+            .animation(reduceMotion || luminanceReduced ? nil : .easeInOut(duration: 1.4), value: state.motionSequence)
+            .frame(width: size + 8, height: size + 2)
+    }
+}
+
 struct DragonCountdown: View {
     let state: CompanionSession
     var expired: Bool = false

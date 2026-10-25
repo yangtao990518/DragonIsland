@@ -32,6 +32,7 @@ rm -f "$IPA_PATH"
 (cd "$PACKAGE_DIR" && /usr/bin/zip -q -r "$IPA_PATH" Payload)
 python3 Scripts/verify_ipa.py "$IPA_PATH"
 cp docs/WINDOWS_INSTALL.md output/INSTALL_README.md
+cp docs/TEST_GUIDE.md output/TEST_GUIDE.md
 shasum -a 256 "output/$IPA_NAME" > output/SHA256SUMS.txt
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"

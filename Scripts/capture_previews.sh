@@ -14,15 +14,25 @@ xcrun simctl boot "$DEVICE" || true
 xcrun simctl bootstatus "$DEVICE" -b
 xcrun simctl ui "$DEVICE" appearance dark
 xcrun simctl status_bar "$DEVICE" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+TEST_STATUS=0
 xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
   -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$DEVICE" \
   -derivedDataPath build/Simulator CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build \
   > build/simulator.log 2>&1 || { tail -80 build/simulator.log; exit 1; }
 xcrun simctl install "$DEVICE" build/Simulator/Build/Products/Debug-iphonesimulator/DragonIsland.app
-for PAGE in world characters about; do
-  xcrun simctl terminate "$DEVICE" com.dragonisle.prototype.app >/dev/null 2>&1 || true
-  xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE"
-  sleep 3
-  xcrun simctl io "$DEVICE" screenshot "output/previews/$PAGE.png"
+for THEME in dark light; do
+  for PAGE in world characters detail gallery-chibi gallery-standing about; do
+    xcrun simctl terminate "$DEVICE" com.dragonisle.prototype.app >/dev/null 2>&1 || true
+    xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE" "--appearance-$THEME"
+    sleep 3
+    xcrun simctl io "$DEVICE" screenshot "output/previews/$PAGE-$THEME.png"
+  done
 done
+xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
+  -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE" \
+  -derivedDataPath build/Simulator -resultBundlePath build/InterfaceTests.xcresult \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test \
+  > build/interface-tests.log 2>&1 || TEST_STATUS=$?
+xcrun xcresulttool export attachments --path build/InterfaceTests.xcresult --output-path output/ui-test-attachments
 xcrun simctl shutdown "$DEVICE"
+if [[ "$TEST_STATUS" != "0" ]]; then tail -100 build/interface-tests.log; exit "$TEST_STATUS"; fi

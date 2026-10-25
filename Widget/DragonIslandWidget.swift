@@ -19,7 +19,10 @@ struct DragonLiveActivity: Widget {
             let character = CharacterCatalog.resolve(context.attributes.characterID, in: CharacterCatalog.load())
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Label(context.attributes.companionName, systemImage: context.state.mood.symbol)
+                    HStack(spacing: 3) {
+                        IslandMotionPortrait(character: character, state: context.state, size: 18)
+                        Text(context.attributes.companionName)
+                    }
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(DragonPalette.lavender)
                         .lineLimit(1)
@@ -53,14 +56,14 @@ struct DragonLiveActivity: Widget {
                     .foregroundStyle(DragonPalette.softWhite)
                 }
             } compactLeading: {
-                DragonPortrait(character: character, size: 24)
+                IslandMotionPortrait(character: character, state: context.state)
             } compactTrailing: {
                 DragonCountdown(state: context.state, expired: context.isStale)
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
                     .foregroundStyle(DragonPalette.lavender)
                     .frame(width: 46)
             } minimal: {
-                DragonPortrait(character: character, size: 24)
+                IslandMotionPortrait(character: character, state: context.state)
             }
             .keylineTint(DragonPalette.lavender)
             .widgetURL(URL(string: "dragonisle://companion"))

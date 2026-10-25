@@ -43,7 +43,7 @@ jobs:
         run: bash Scripts/build_unsigned.sh
 
       - name: Render actual app previews in iPhone simulator
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: bash Scripts/capture_previews.sh
 
       - name: Downloadable IPA
@@ -62,5 +62,9 @@ jobs:
           path: |
             build/build.log
             build/simulator.log
+            build/interface-tests.log
+            build/InterfaceTests.xcresult
+            output/previews/
+            output/ui-test-attachments/
           if-no-files-found: ignore
           retention-days: 7

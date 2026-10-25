@@ -1,12 +1,16 @@
 import ActivityKit
 import Combine
 import Foundation
+import UIKit
 
 @MainActor
 final class CompanionStore: ObservableObject {
     @Published private(set) var session: CompanionSession?
     @Published private(set) var busy = false
     @Published var notice: String?
+    @Published private(set) var motionTestStatus: String?
+    private var motionTask: Task<Void, Never>?
+    private var motionBackgroundTask: UIBackgroundTaskIdentifier = .invalid
     let characters = CharacterCatalog.load()
     @Published private(set) var selectedCharacterID = UserDefaults.standard.string(forKey: "selectedCharacterID") ?? "xiaobai"
     @Published private(set) var activeCharacterID: String?
@@ -41,6 +45,7 @@ final class CompanionStore: ObservableObject {
     }
 
     private func clear() {
+        cancelMotionTest()
         contentTask?.cancel()
         stateTask?.cancel()
         activity = nil
@@ -100,10 +105,11 @@ final class CompanionStore: ObservableObject {
         }
     }
 
-    func greet() async { await mutate(greeting: true) }
-    func changeMood() async { await mutate(greeting: false) }
+    func greet() async { await mutate { $0.greet() } }
+    func changeMood() async { await mutate { $0.cycleMood() } }
+    func performMotion(_ motion: CompanionMotion) async { await mutate { $0.performMotion(motion) } }
 
-    private func mutate(greeting: Bool) async {
+    private func mutate(_ update: (inout CompanionSession) -> Void) async {
         guard !busy, let current = activity else { return }
         busy = true
         defer { busy = false }
@@ -114,9 +120,42 @@ final class CompanionStore: ObservableObject {
             notice = "这一轮结束啦，可以再开始一轮。"
             return
         }
-        if greeting { state.greet() } else { state.cycleMood() }
+        update(&state)
         await current.update(ActivityContent(state: state, staleDate: state.endsAt))
         if activity?.id == current.id { session = state }
+    }
+
+    func scheduleMotionTest(_ motion: CompanionMotion) {
+        guard !busy, let current = activity, !current.content.state.hasExpired() else { return }
+        cancelMotionTest()
+        motionBackgroundTask = UIApplication.shared.beginBackgroundTask(withName: "mAIverseMotionSample") { [weak self] in
+            Task { @MainActor in
+                self?.motionTestStatus = "系统已结束这次测试，请重新触发。"
+                self?.cancelMotionTest()
+            }
+        }
+        guard motionBackgroundTask != .invalid else {
+            motionTestStatus = "无法安排延后测试，可在展开态点招呼或心情观察短动作。"
+            return
+        }
+        let activityID = current.id
+        motionTestStatus = "5 秒后发送\(motion.title)小样，请现在回到桌面。"
+        motionTask = Task { [weak self] in
+            do { try await Task.sleep(nanoseconds: 5_000_000_000) } catch { return }
+            guard let self, self.activity?.id == activityID else { return }
+            await self.performMotion(motion)
+            self.motionTestStatus = "已发送一次\(motion.title)更新；动画是否播放由系统决定。"
+            self.cancelMotionTest()
+        }
+    }
+
+    private func cancelMotionTest() {
+        motionTask?.cancel()
+        motionTask = nil
+        if motionBackgroundTask != .invalid {
+            UIApplication.shared.endBackgroundTask(motionBackgroundTask)
+            motionBackgroundTask = .invalid
+        }
     }
 
     func finish() async {
