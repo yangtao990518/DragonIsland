@@ -29,10 +29,10 @@ struct TimerMotionPortrait: View {
         .accessibilityHidden(true)
     }
     private func layer(_ index: Int) -> some View {
-        // Named instances keep the standard WidgetKit custom-font archive path;
-        // do not bridge a runtime CTFont into the remote activity view.
-        let font = Font.custom("mAIverseB\(plan)P\(index)", fixedSize: size)
-        return timerGlyph(font: font, offset: 1 + Double(index) / Double(framesPerSecond))
+        let font = Font.custom("mAIverseF\(index)", fixedSize: size)
+        // All banks share the phase font. Hidden hours select one of eight
+        // banks in font shaping; the maximum two-hour session stays in its bank.
+        return timerGlyph(font: font, offset: 1 + Double(index) / Double(framesPerSecond) - Double(plan * 3 * 3600))
     }
     private func gate(offset: Double) -> some View {
         timerGlyph(font: .custom("mAIverseGate", fixedSize: size), offset: -offset).foregroundStyle(.white)

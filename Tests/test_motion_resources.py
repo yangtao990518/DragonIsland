@@ -81,5 +81,12 @@ class MotionResourcesTests(unittest.TestCase):
         roll=motion.MANIFEST['actions']['roll']['frames']
         self.assertEqual((motion.ART/roll[0]).read_bytes(),(motion.ART/roll[-1]).read_bytes())
 
+    def test_hidden_bank_clock_does_not_cross_bank_during_two_hour_session(self):
+        for bank in range(8):
+            for elapsed in (0,1,59,60,3599,3600,7199,7200):
+                for phase in (0,29,30,59):
+                    counter=bank*3*3600+60+elapsed-1-phase/30
+                    self.assertEqual(int(counter//3600)//3,bank)
+
 
 if __name__=='__main__':unittest.main()

@@ -46,7 +46,7 @@ def verify(path):
                 fps=data.get('fps',0)
                 period=data.get('period',0)
                 required_fps=30 if tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,5) else 8
-                expected_fonts=2 if required_fps==30 else 129
+                expected_fonts=61 if required_fps==30 else 129
                 if len(fonts)!=expected_fonts or any(f'{root}/{font}' not in names for font in fonts):
                     raise ValueError(f'Missing registered system-timer motion fonts in {root}')
                 if fps!=required_fps or period!=60 or len(data['plans'])!=8 or any(len(p['frames'])!=fps*period for p in data['plans']):

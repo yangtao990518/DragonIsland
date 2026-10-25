@@ -20,7 +20,7 @@ struct DragonLiveActivity: Widget {
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     HStack(spacing: 3) {
-                        IslandMotionPortrait(character: character, state: context.state, size: 18)
+                        DragonPortrait(character: character, size: 22)
                         Text(context.attributes.companionName)
                     }
                         .font(.system(size: 12, weight: .medium))
@@ -63,7 +63,9 @@ struct DragonLiveActivity: Widget {
                     .foregroundStyle(DragonPalette.lavender)
                     .frame(width: 46)
             } minimal: {
-                IslandMotionPortrait(character: character, state: context.state)
+                // Keep the tiny secondary-activity badge static. Only the
+                // normal compact island needs the full 30fps frame stack.
+                DragonPortrait(character: character, size: 26)
             }
             .keylineTint(DragonPalette.lavender)
             .widgetURL(URL(string: "dragonisle://companion"))
