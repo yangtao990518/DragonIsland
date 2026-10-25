@@ -16,4 +16,5 @@ Shared/Resources/MotionFonts/
 Shared/Resources/MotionTimeline.json
 Shared/Resources/Companion.xcassets/Motion_*.imageset/
 Shared/Resources/Companion.xcassets/IslandScene_*.imageset/
+Shared/Resources/Companion.xcassets/IslandSceneWide_*.imageset/
 motion-fonts.yml

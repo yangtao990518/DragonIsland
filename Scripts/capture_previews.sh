@@ -53,9 +53,22 @@ wait "$VIDEO_PID" || true
 trap - EXIT
 cp build/interface-tests.log output/verification/interface-tests.log
 xcrun simctl spawn "$DEVICE" log show --last 10m --style compact --predicate '(process == "liveactivitiesd" OR process == "chronod" OR process == "DragonIslandWidget" OR process == "SpringBoard") AND (eventMessage CONTAINS[c] "dragonisle" OR eventMessage CONTAINS[c] "budget" OR eventMessage CONTAINS[c] "archive" OR eventMessage CONTAINS[c] "memory")' > output/verification/live-activity-system.log 2>&1 || true
-if [[ "$TEST_STATUS" != "0" ]]; then tail -100 build/interface-tests.log; exit "$TEST_STATUS"; fi
 APP_DATA="$(xcrun simctl get_app_container "$DEVICE" com.dragonisle.prototype.app data)"
-cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json
-xcrun swift Scripts/analyze_motion_video.swift output/verification/system-island-motion.mp4 output/verification
+if [[ -f "$APP_DATA/Documents/motion-capture.json" ]]; then
+  cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json
+fi
+if [[ "$TEST_STATUS" != "0" ]]; then
+  python3 - <<'PY'
+from pathlib import Path
+lines=Path('build/interface-tests.log').read_text(errors='replace').splitlines()
+for i,line in enumerate(lines):
+    if 'error:' in line:
+        print('\n'.join(lines[max(0,i-4):i+3]))
+print('\n'.join(lines[-60:]))
+PY
+  exit "$TEST_STATUS"
+fi
+xcrun swiftc -O Scripts/analyze_motion_video.swift -o build/analyze-motion-video
+build/analyze-motion-video output/verification/system-island-motion.mp4 output/verification
 xcrun simctl shutdown "$DEVICE"
 if [[ "$TEST_STATUS" != "0" ]]; then tail -100 build/interface-tests.log; exit "$TEST_STATUS"; fi

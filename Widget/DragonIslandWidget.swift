@@ -55,7 +55,7 @@ struct DragonLiveActivity: Widget {
                     .padding(.bottom, 8)
                     .foregroundStyle(DragonPalette.softWhite)
                     .padding(5)
-                    .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+                    .background { IslandSceneBackdrop(scene: context.state.islandScene, wide: true) }
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             } compactLeading: {
@@ -109,7 +109,7 @@ private struct LockScreenCompanion: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .foregroundStyle(DragonPalette.softWhite)
-        .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+        .background { IslandSceneBackdrop(scene: context.state.islandScene, wide: true) }
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }

@@ -137,7 +137,7 @@ struct IslandArtPreview: View {
                         }.accessibilityHidden(true)
                     }
                 }
-                .padding(14).background { IslandSceneBackdrop(scene: scene) }
+                .padding(14).background { IslandSceneBackdrop(scene: scene, wide: true) }
                 .clipShape(RoundedRectangle(cornerRadius: 27))
             } else {
                 HStack(spacing: 10) {

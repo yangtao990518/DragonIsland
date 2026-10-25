@@ -40,31 +40,35 @@ for a in ('walk_left','walk_right'):DURATIONS[a]=[70,70,71]*5+[70]
 DURATIONS['roll']=[62,63]*8
 
 
-def scene_image(name):
+def scene_image(name,size=(STAGE_WIDTH,GLYPH_PIXELS)):
     """Small code-drawn scenery, kept dark enough to distinguish white artwork."""
-    image=Image.new('RGBA',(STAGE_WIDTH,GLYPH_PIXELS),(0,0,0,255))
+    width,height=size
+    sx,sy=width/180,height/96
+    def box(values):return tuple(v*(sx if i%2==0 else sy) for i,v in enumerate(values))
+    image=Image.new('RGBA',size,(0,0,0,255))
     if name=='black':return image
     draw=ImageDraw.Draw(image)
     top,bottom=((6,20,20),(24,51,30)) if name=='meadow' else ((9,12,31),(22,22,47))
-    for y in range(GLYPH_PIXELS):
-        t=y/(GLYPH_PIXELS-1)
-        draw.line((0,y,STAGE_WIDTH,y),fill=tuple(round(a+(b-a)*t) for a,b in zip(top,bottom))+(255,))
+    for y in range(height):
+        t=y/(height-1)
+        draw.line((0,y,width,y),fill=tuple(round(a+(b-a)*t) for a,b in zip(top,bottom))+(255,))
     if name=='meadow':
-        draw.ellipse((-40,55,130,145),fill=(20,52,29,255))
-        draw.ellipse((75,60,235,140),fill=(26,64,33,255))
-        draw.rectangle((0,88,180,96),fill=(24,60,30,255))
+        draw.ellipse(box((-40,55,130,145)),fill=(20,52,29,255))
+        draw.ellipse(box((75,60,235,140)),fill=(26,64,33,255))
+        draw.rectangle(box((0,88,180,96)),fill=(24,60,30,255))
         for x in range(3,180,9):
             y=91+(x%3)
-            draw.line([(x-2,y-5),(x,y),(x+3,y-4)],fill=(39,83,43,255),width=1)
-        for x in (17,61,108,156):draw.rectangle((x,87,x+1,88),fill=(97,80,39,255))
+            draw.line([((x-2)*sx,(y-5)*sy),(x*sx,y*sy),((x+3)*sx,(y-4)*sy)],fill=(39,83,43,255),width=max(1,round(sy)))
+        for x in (17,61,108,156):draw.ellipse(box((x,87,x+1,88)),fill=(97,80,39,255))
     else:
-        draw.ellipse((140,10,158,28),fill=(86,81,99,255))
-        draw.ellipse((146,7,162,24),fill=(11,15,35,255))
+        cx,cy=149*sx,19*sy
+        draw.ellipse((cx-9*sy,cy-9*sy,cx+9*sy,cy+9*sy),fill=(86,81,99,255))
+        draw.ellipse((cx-3*sy,cy-12*sy,cx+13*sy,cy+5*sy),fill=(11,15,35,255))
         for x,y in ((12,15),(39,31),(65,10),(98,25),(123,8),(172,42),(86,47)):
-            draw.line((x-1,y,x+1,y),fill=(88,86,98,255))
-            draw.line((x,y-1,x,y+1),fill=(88,86,98,255))
-        draw.ellipse((-30,77,120,135),fill=(20,24,45,255))
-        draw.ellipse((75,81,220,128),fill=(28,28,51,255))
+            draw.line((x*sx-sy,y*sy,x*sx+sy,y*sy),fill=(88,86,98,255),width=max(1,round(sy)))
+            draw.line((x*sx,y*sy-sy,x*sx,y*sy+sy),fill=(88,86,98,255),width=max(1,round(sy)))
+        draw.ellipse(box((-30,77,120,135)),fill=(20,24,45,255))
+        draw.ellipse(box((75,81,220,128)),fill=(28,28,51,255))
     return image
 
 
@@ -207,6 +211,7 @@ def main():
     palettes={}
     for scene in SCENES:
         imageset(SHARED,f'IslandScene_{scene}',scene_image(scene),(60,32))
+        imageset(SHARED,f'IslandSceneWide_{scene}',scene_image(scene,(900,300)),(300,100))
         master=Image.new('RGB',(STAGE_WIDTH*8,GLYPH_PIXELS*((len(artwork)+7)//8)))
         for j,asset in enumerate(artwork):
             master.paste(render_frame(artwork,{'asset':asset,'x':0},scene=scene).convert('RGB'),((j%8)*STAGE_WIDTH,(j//8)*GLYPH_PIXELS))

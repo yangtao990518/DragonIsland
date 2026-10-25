@@ -11,6 +11,7 @@ enum IslandScene: String, Codable, CaseIterable, Identifiable {
         }
     }
     var asset: String { "IslandScene_\(rawValue)" }
+    var wideAsset: String { "IslandSceneWide_\(rawValue)" }
     var fontPrefix: String {
         switch self {
         case .black: return "mAIverse"

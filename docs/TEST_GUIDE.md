@@ -1,6 +1,6 @@
 # mAIverse V1.6 安装后验证
 
-内部版本 1.6（build 11）。Sideloadly 保留并签名 PlugIns/DragonIslandWidget.appex；升级后先结束旧活动，再开始新一轮。
+内部版本 1.6（build 12）。Sideloadly 保留并签名 PlugIns/DragonIslandWidget.appex；升级后先结束旧活动，再开始新一轮。
 
 1. 在“关于 → 岛上小世界”选择经典黑色、小小草地、月下星夜。退出重开应保留选择。已有陪伴时直接切换，回桌面检查场景已变、人物仍在，倒计时没有重新开始。
 2. 场景出现在 App 内容区域：紧凑态人物活动区与倒计时区、展开内容和锁屏卡片。系统黑色外壳和摄像头区域仍黑，不能跨摄像头绘制人物。

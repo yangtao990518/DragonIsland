@@ -68,8 +68,9 @@ struct IslandMotionPortrait: View {
 
 struct IslandSceneBackdrop: View {
     let scene: IslandScene
+    var wide = false
     var body: some View {
-        Image(scene.asset).resizable().scaledToFill().clipped().accessibilityHidden(true)
+        Image(wide ? scene.wideAsset : scene.asset).resizable().scaledToFill().clipped().accessibilityHidden(true)
     }
 }
 
