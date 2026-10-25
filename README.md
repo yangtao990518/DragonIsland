@@ -1,20 +1,21 @@
 # mAIverse · 我的 AI 小世界
 
-属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前原型只有白紫色 ChatGPT 同人龙娘“小白”，后续计划加入其他 AI 角色；目前没有角色切换或 AI 对话。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
+属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前只有白紫色 ChatGPT 同人龙娘“小白”，角色目录和选择界面已准备好，后续可配置其他 AI 角色；目前没有 AI 对话。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
 
 ## 第一版做什么
 
 - 使用本次确认的白角、紫瞳、白发、龙翼与鳞片尾巴角色；头像和全身形象均已打包。
 - App 内有轻微上下浮动的待机效果，尊重系统“减弱动态效果”设置。
 - 选择 1 / 25 / 50 / 120 分钟的一轮陪伴。
-- 开始后，在灵动岛紧凑态显示头像和倒计时；长按展开可看到全身角色及互动按钮。
+- 日常灵动岛紧凑态和最小态使用 Q 版小人物；长按展开和锁屏使用用户提供立绘的透明版本，主界面展示大尺寸立绘。
+- 主 App 包含“我的世界 / 角色 / 关于”，提供两种岛上形态的示意预览。更多角色可通过统一目录配置，当前只有小白。
 - 锁屏也有对应卡片；没有灵动岛的设备仍可测试锁屏实时活动。
 - “招呼”轮换本地短句，“心情”切换三种状态，“结束”收起实时活动。
 - 无联网、无账号、无 AI API 调用、无推送服务器。
 
 ## 先读清楚这三点
 
-1. **App 正式命名为 mAIverse。** 0.1.1（build 2）统一桌面名称、App 内标题与实时活动扩展名称，新产物名称为 `mAIverse-unsigned`，IPA 为 `output/mAIverse-unsigned.ipa`。本版[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40173652726)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查，并已确认 IPA 中的显示名与版本号。用户已提供初版展开态截图，底部按钮存在裁切，待下一步修复。各版本实际验证情况见 [验证记录](docs/VALIDATION.md)。
+1. **当前版本为 mAIverse 0.2.0（build 3）。** [本版云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40175751176)已通过 Xcode 16.4 真机 Release 编译、8 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查，还完成了 iPhone 16 Pro 模拟器的 Debug 编译和三页实际截图。产物为 `mAIverse-unsigned`，本地 IPA 为 `output/mAIverse-unsigned.ipa`，截图在 `output/previews/`。初版展开按钮裁切已通过减少纵向堆叠、将按钮放到立绘右侧来调整，但本版系统灵动岛的真机效果仍待用户验证。详细证据见 [验证记录](docs/VALIDATION.md)。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
@@ -72,9 +73,12 @@ Git 的登录和账号验证在你自己的电脑完成。如果新仓库预先�
 | `App/` | SwiftUI 页面、活动状态管理 |
 | `Widget/` | 锁屏和灵动岛布局 |
 | `Shared/Models/` | 可独立测试的计时与心情模型 |
+| `Shared/Resources/Characters.json` | 角色目录、名称和两种形象的资源映射 |
 | `Shared/Activity/` | ActivityKit 属性、互动 Intent |
 | `Shared/Resources/` | 小尺寸角色资源 |
 | `Art/dragon-original.png` | 本次确认的生成角色原图 |
+| `Art/xiaobai-standing.png` | 从用户立绘处理得到的透明版本 |
+| `Scripts/capture_previews.sh` | 云端 iPhone 模拟器三页实际截图 |
 | `Scripts/` | 资源处理、云端编译、IPA 结构检查 |
 | `.github/workflows/` | GitHub Actions 工作流 |
 | `Tests/` | Swift 状态测试、Python 打包检查测试 |
@@ -98,7 +102,9 @@ bash Scripts/build_unsigned.sh
 
 mAIverse 是产品名称；源码 target、Bundle ID、URL scheme 与仓库暂沿用原有 DragonIsland 标识，方便沿用签名与覆盖升级。角色“小白”是第一个角色，不是整个 App 的名称。
 
-角色是根据本次用户提供参考生成的同人形象，不代表 OpenAI 官方角色。本工程不包含该上传参考图，只带本次生成的 Q 版原型。此版本只是本地陪伴 UI，未接入 ChatGPT，也不会生成 AI 对话。
+角色是根据用户提供参考生成的同人形象，不代表 OpenAI 官方角色。Q 版源图保存在 `Art/dragon-original.png`。此版本只是本地陪伴 UI，未接入 ChatGPT，也不会生成 AI 对话。
+
+0.2.0 新增的立绘原图与透明处理版本均保存在 `Art/`，Q 版与立绘分别用于不同场景。详见 [角色接入说明](docs/CHARACTERS.md)与[立绘处理记录及提示词](docs/ARTWORK.md)。
 
 ## 官方参考
 

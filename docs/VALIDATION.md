@@ -42,3 +42,15 @@
 - IPA SHA-256：`3b02159a317476d2e69179a67fb1252b957220eca30e23c4633de53c3fd1fdec`，与产物中的 `SHA256SUMS.txt` 一致。
 - 实际解析 IPA 内主 App 和扩展的 Info.plist，确认显示名分别为 `mAIverse`、`mAIverse 实时活动`，版本均为 0.1.1（build 2），Bundle ID 与旧版本一致，Widget 扩展保留。
 - 原有竖屏相关编译警告仍在；本次没有新增编译错误。更名版的实际覆盖安装与桌面显示待用户验证，按钮裁切仍待下一步修复。
+
+## 双形态与界面更新 0.2.0（build 3）
+
+- [云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40175751176)成功，源码提交 `17ce20ee57a0de29da5eeefa9acbb582e89203cd`，使用 Xcode 16.4（16F6）。
+- 8 项 Swift 测试（含角色目录、不同形象映射、无效目录拒绝和旧角色 ID 回退）与 4 项 Python 打包测试通过。
+- 主 App 与 Widget 的真机 Release 编译和真实 IPA 结构检查通过；扩展仍为 `DragonIslandWidget.appex`。原有竖屏警告保留。
+- iPhone 16 Pro 模拟器 Debug 编译、安装与运行成功，实际捕获 `world.png`、`characters.png`、`about.png`；已目视检查主界面文字、立绘、开始按钮、角色页和关于页。截图为 1206×2622，保存在 `output/previews/`。
+- 紧凑态、最小态使用 Q 版全身小人物；展开态与锁屏使用透明立绘。展开布局把按钮移到立绘右侧并减少纵向堆叠，底部留出 8pt；本次未捕获系统灵动岛展开截图，真机是否完全解决裁切仍待用户确认。
+- App 和 Widget 均包含同一份 `Characters.json`，已从真实 IPA 逐字解析对比源码目录。每轮 Activity 绑定稳定角色 ID，未来可通过角色目录扩展；当前只有小白，没有新增 AI 对话能力。
+- 真实 IPA 显示名为 mAIverse，主 App 和扩展版本均为 0.2.0（build 3），Bundle ID 保持原值。
+- 产物 `mAIverse-unsigned`（artifact ID `12592086975`）下载 ZIP SHA-256 与 GitHub digest 一致。IPA 为 6,338,720 字节，SHA-256 为 `bf599b7181c6f73d24261afadf3c918768f7e7d0f82dfb2591ed9728151fb119`，与产物校验文件一致。
+- 立绘处理来源、原图、最终素材和完整提示词见 `docs/ARTWORK.md`；多角色配置方式见 `docs/CHARACTERS.md`。
