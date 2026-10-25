@@ -12,6 +12,7 @@ command -v xcodebuild >/dev/null || { echo "Missing Xcode" >&2; exit 1; }
 
 python3 Scripts/prepare_assets.py
 python3 Scripts/prepare_motion.py
+xcrun swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
 xcodegen generate --spec project.yml
 mkdir -p build output
 xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \

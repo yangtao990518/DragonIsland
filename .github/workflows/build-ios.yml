@@ -50,7 +50,28 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: mAIverse-V${{ steps.build.outputs.version }}-unsigned
-          path: output/
+          path: |
+            output/*.ipa
+            output/*.md
+            output/*.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: System motion video and review sheets
+        uses: actions/upload-artifact@v7
+        with:
+          name: mAIverse-V${{ steps.build.outputs.version }}-verification
+          path: output/verification/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Original simulator screenshots
+        uses: actions/upload-artifact@v7
+        with:
+          name: mAIverse-V${{ steps.build.outputs.version }}-screenshots
+          path: |
+            output/previews/
+            output/ui-test-attachments/
           if-no-files-found: error
           retention-days: 7
 

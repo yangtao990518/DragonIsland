@@ -39,10 +39,12 @@ xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test \
   > build/interface-tests.log 2>&1 || TEST_STATUS=$?
 xcrun xcresulttool export attachments --path build/InterfaceTests.xcresult --output-path output/ui-test-attachments
+python3 Scripts/build_qa_contacts.py
 kill -INT "$VIDEO_PID" 2>/dev/null || true
 wait "$VIDEO_PID" || true
 trap - EXIT
 cp build/interface-tests.log output/verification/interface-tests.log
+if [[ "$TEST_STATUS" != "0" ]]; then tail -100 build/interface-tests.log; exit "$TEST_STATUS"; fi
 APP_DATA="$(xcrun simctl get_app_container "$DEVICE" com.dragonisle.prototype.app data)"
 cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json
 xcrun swift Scripts/analyze_motion_video.swift output/verification/system-island-motion.mp4 output/verification

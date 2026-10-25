@@ -88,6 +88,14 @@ final class CharacterInterfaceTests: XCTestCase {
         let app = start(["--preview-live-motion", "--appearance-dark"])
         sleep(3)
         XCTAssertFalse(app.alerts.firstMatch.exists, "Live Activity must start for automatic motion validation")
+        let beforeHome = XCTAttachment(screenshot: app.screenshot())
+        beforeHome.name = "live-session-before-home"
+        beforeHome.lifetime = .keepAlways
+        add(beforeHome)
+        guard app.buttons["结束本轮陪伴"].waitForExistence(timeout: 10) else {
+            XCTFail("Live Activity did not remain active before leaving the app")
+            return
+        }
         XCUIDevice.shared.press(.home)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         for sample in 0..<3 {
@@ -107,7 +115,7 @@ final class CharacterInterfaceTests: XCTestCase {
         expanded.lifetime = .keepAlways
         add(expanded)
         app.activate()
-        XCTAssertTrue(app.buttons["结束本轮陪伴"].exists || app.staticTexts["小白正在陪你"].exists)
+        XCTAssertTrue(app.buttons["结束本轮陪伴"].waitForExistence(timeout: 8) || app.staticTexts["小白正在陪你"].waitForExistence(timeout: 2))
     }
 
     func testMotionChoicesPersistAndOldTestButtonsAreGone() {

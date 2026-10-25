@@ -17,6 +17,7 @@ from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.ttLib import newTable
 from fontTools.ttLib.tables.sbixGlyph import Glyph
 from fontTools.ttLib.tables.sbixStrike import Strike
+from fontTools.varLib.featureVars import addFeatureVariations
 
 ROOT=Path(__file__).resolve().parents[1]
 ART=ROOT/'Art/MotionV3'
@@ -142,39 +143,61 @@ def main():
             canvas=render_frame(artwork,frame)
             buf=BytesIO();canvas.save(buf,format='PNG');rendered[k]=buf.getvalue()
         return rendered[k]
+    # Share one variable font across all banks and phases. Independent fonts
+    # registered hundreds of times impose too much overhead on Live Activities.
+    for old in OUTPUT.glob('mAIverseP*F*.ttf'):
+        assert old.resolve().parent==OUTPUT.resolve()
+        old.unlink()
     mask_font()
     plans=[]
+    order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'f{s:02}' for s in range(60)]
+    def glyph_name(bank,phase,second):
+        return f'f{second:02}' if bank==0 and phase==0 else f'b{bank}p{phase}s{second:02}'
     for mask in range(4):
         for seed in range(SEEDS):
             bank=mask*SEEDS+seed
             chosen,frames=schedule(mask,seed)
             plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames})
             for phase in range(PHASES):
-                name=f'mAIverseP{bank}F{phase}'
-                order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'f{s:02}' for s in range(60)]
-                font=base_font(name,order)
-                strike=Strike(ppem=GLYPH_PIXELS,resolution=72)
-                encoded={}
-                for n in order:strike.glyphs[n]=Glyph(glyphName=n)
-                for second in range(60):
-                    # For the active layer, timer text lags the reference by 1s.
-                    frame=frames[(((second+1)%60)*FPS+phase)%len(frames)]
-                    glyph=f'f{second:02}'
-                    data=png(frame)
-                    digest=hashlib.sha256(data).digest()
-                    if digest in encoded:
-                        strike.glyphs[glyph]=Glyph(glyphName=glyph,graphicType='dupe',referenceGlyphName=encoded[digest])
-                    else:
-                        encoded[digest]=glyph
-                        strike.glyphs[glyph]=Glyph(glyphName=glyph,originOffsetX=0,originOffsetY=0,
-                                                   graphicType='png ',imageData=data)
-                sbix=newTable('sbix');sbix.strikes={128:strike};font['sbix']=sbix
-                addOpenTypeFeaturesFromString(font,features([f'f{s:02}' for s in range(60)]))
-                font.save(OUTPUT/f'{name}.ttf')
+                if bank or phase:order += [glyph_name(bank,phase,s) for s in range(60)]
+    font=base_font('mAIverseMotion',order)
+    builder=FontBuilder(font=font)
+    builder.setupFvar([('BANK',0,0,7,'Motion bank'),('PHAS',0,0,PHASES-1,'Frame phase')],[])
+    builder.setupGvar({})
+    strike=Strike(ppem=GLYPH_PIXELS,resolution=72)
+    for n in order:strike.glyphs[n]=Glyph(glyphName=n)
+    encoded={};variations=[]
+    for plan in plans:
+        bank=plan['id'];frames=plan['frames']
+        for phase in range(PHASES):
+            substitutions={}
+            for second in range(60):
+                frame=frames[(((second+1)%60)*FPS+phase)%len(frames)]
+                glyph=glyph_name(bank,phase,second)
+                data=png(frame);digest=hashlib.sha256(data).digest()
+                if digest in encoded:
+                    strike.glyphs[glyph]=Glyph(glyphName=glyph,graphicType='dupe',referenceGlyphName=encoded[digest])
+                else:
+                    encoded[digest]=glyph
+                    strike.glyphs[glyph]=Glyph(glyphName=glyph,originOffsetX=0,originOffsetY=0,graphicType='png ',imageData=data)
+                if bank or phase:substitutions[f'f{second:02}']=glyph
+            if substitutions:
+                box={'BANK':(max(0,(bank-.45)/7),min(1,(bank+.45)/7)),
+                     'PHAS':(max(0,(phase-.45)/(PHASES-1)),min(1,(phase+.45)/(PHASES-1)))}
+                variations.append(([box],substitutions))
+    sbix=newTable('sbix');sbix.strikes={GLYPH_PIXELS:strike};font['sbix']=sbix
+    addOpenTypeFeaturesFromString(font,features([f'f{s:02}' for s in range(60)]))
+    # The variation lookup follows the default seconds ligature in liga.
+    addFeatureVariations(font,variations,featureTag='liga')
+    font.save(OUTPUT/'mAIverseMotion.ttf')
+    checks=[{'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,p,s))}
+            for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
+    (OUTPUT/'checks.json').write_text(json.dumps(checks),encoding='utf-8')
     durations={a:info['frameDurationsMs'] for a,info in MANIFEST['actions'].items()}
     (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'durations':durations},separators=(',',':'))+'\n',encoding='utf-8')
     # XcodeGen includes this generated settings fragment in both Info.plists.
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
+    (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':len(encoded),'targetFPS':FPS,'phases':PHASES,'plans':len(plans)}),encoding='utf-8')
     (ROOT/'motion-fonts.yml').write_text('targets:\n  DragonIsland:\n    info:\n      properties:\n        UIAppFonts: &motionFonts\n'+''.join(f'          - {n}\n' for n in paths)+'  DragonIslandWidget:\n    info:\n      properties:\n        UIAppFonts: *motionFonts\n',encoding='utf-8')
     print(f'Motion resources: {len(artwork)} PNG poses, {len(plans)} plans, {len(paths)} fonts; native timer rendering.')
 
