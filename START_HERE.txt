@@ -1,7 +1,7 @@
 mAIverse · 我的 AI 小世界
 
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。
-当前对外版本为 mAIverse V1.5，主 App 与扩展内部版本为 1.5（build 8）。本机安装包放在独立目录 D:\gpt_workspace\ios_ldd\mAIverse-V1.5\，保留旧版目录。IPA 名称为 mAIverse-V1.5-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
+当前对外版本为 mAIverse V1.5，主 App 与扩展内部版本为 1.5（build 9）。本机安装包放在独立目录 D:\gpt_workspace\ios_ldd\mAIverse-V1.5\，保留旧版目录。IPA 名称为 mAIverse-V1.5-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
 
 1. 仓库根目录应直接看到 project.yml、README.md、App、Shared、Widget、Scripts、.github。
 2. 不要只上传这个 ZIP，也不要额外多套一层工程文件夹。
