@@ -57,11 +57,21 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: System motion video and review sheets
+      - name: System motion review sheets and video analysis
         uses: actions/upload-artifact@v7
         with:
           name: mAIverse-V${{ steps.build.outputs.version }}-verification
-          path: output/verification/
+          path: |
+            output/verification/
+            !output/verification/system-island-motion.mp4
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Original system motion video
+        uses: actions/upload-artifact@v7
+        with:
+          name: mAIverse-V${{ steps.build.outputs.version }}-system-video
+          path: output/verification/system-island-motion.mp4
           if-no-files-found: error
           retention-days: 7
 

@@ -32,7 +32,12 @@ struct TimerMotionPortrait: View {
         let font = Font.custom("mAIverseF\(index)", fixedSize: size)
         // All banks share the phase font. Hidden hours select one of eight
         // banks in font shaping; the maximum two-hour session stays in its bank.
-        return timerGlyph(font: font, offset: 1 + Double(index) / Double(framesPerSecond) - Double(plan * 3 * 3600))
+        // Prepare the next glyph one phase BEFORE its gate opens. Native timer
+        // texts and masks can commit separately; changing both at the same
+        // boundary briefly exposed the previous second's pose in system video.
+        // Earlier layers cover this preload until the scheduled gate opens.
+        let preload = 1 / Double(framesPerSecond)
+        return timerGlyph(font: font, offset: 1 + Double(index) / Double(framesPerSecond) - Double(plan * 3 * 3600) - preload)
     }
     private func gate(offset: Double) -> some View {
         timerGlyph(font: .custom("mAIverseGate", fixedSize: size), offset: -offset).foregroundStyle(.white)

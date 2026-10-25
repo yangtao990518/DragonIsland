@@ -69,6 +69,24 @@ class MotionResourcesTests(unittest.TestCase):
                     if previous['x']!=current['x']:
                         self.assertIn('Motion_walk_',current['asset'])
 
+    def test_preloaded_glyph_survives_a_late_native_text_commit(self):
+        # System video exposed an old pose for one frame when a text commit
+        # lagged its mask. Replay a 20ms glyph delay at every phase boundary.
+        # Preparing text one phase ahead fixes that delay while still hidden.
+        old_pose_count=0
+        for tick in range(1800):
+            t=(tick+0.25)/30
+            visible=[0]+[i for i in range(1,30) if math.floor(t-i/30)%2==0]
+            if math.floor(t+1)%2==0:
+                visible += [i for i in range(30,60) if math.floor(t-i/30)%2==0]
+            phase=visible[-1]
+            delayed=t-1-phase/30-0.020
+            old=(((math.floor(delayed)+1)%60)*30+phase)%1800
+            actual=(((math.floor(delayed+1/30)+1)%60)*30+phase)%1800
+            old_pose_count += old!=tick
+            self.assertEqual(actual,tick)
+        self.assertGreater(old_pose_count,0)
+
     def test_dense_new_sequences_and_roll_share_clean_neutral_endpoints(self):
         for action in ('walk_left','walk_right','roll'):
             info=motion.MANIFEST['actions'][action]
