@@ -25,9 +25,13 @@ struct ArtworkViewer: View {
                         Image(systemName: darkBackground ? "sun.max" : "moon").frame(width: 44, height: 44)
                     }.accessibilityLabel("切换看图背景").accessibilityIdentifier("galleryBackgroundToggle")
                 }.padding(.horizontal, 10)
-                ZoomableArtwork(asset: item.asset, resetToken: resetToken) { zoomRatio = $0 }
+                ZoomableArtwork(asset: item.asset, resetToken: resetToken,
+                                onZoom: { zoomRatio = $0 }, onClose: { dismiss() })
                 HStack {
-                    Text("双指缩放 · 双击放大 · 拖动查看").font(.system(size: 11))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("单击返回 · 原图下滑关闭")
+                        Text("双指缩放 · 双击放大 · 拖动查看")
+                    }.font(.system(size: 10))
                     Spacer()
                     Text("\(Int((zoomRatio * 100).rounded()))%")
                         .font(.system(size: 12, weight: .medium, design: .rounded)).monospacedDigit()
@@ -47,8 +51,9 @@ private struct ZoomableArtwork: UIViewRepresentable {
     let asset: String
     let resetToken: Int
     let onZoom: (CGFloat) -> Void
+    let onClose: () -> Void
 
-    func makeCoordinator() -> Coordinator { Coordinator(onZoom: onZoom) }
+    func makeCoordinator() -> Coordinator { Coordinator(onZoom: onZoom, onClose: onClose) }
 
     func makeUIView(context: Context) -> ArtworkScrollView {
         let view = ArtworkScrollView()
@@ -60,6 +65,11 @@ private struct ZoomableArtwork: UIViewRepresentable {
         let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.doubleTap(_:)))
         tap.numberOfTapsRequired = 2
         view.addGestureRecognizer(tap)
+        let closeTap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.singleTap(_:)))
+        closeTap.require(toFail: tap)
+        view.addGestureRecognizer(closeTap)
+        // Observe the scroll view's existing pan so zoomed-image dragging keeps its normal behavior.
+        view.panGestureRecognizer.addTarget(context.coordinator, action: #selector(Coordinator.panToClose(_:)))
         return view
     }
 
@@ -72,8 +82,38 @@ private struct ZoomableArtwork: UIViewRepresentable {
 
     final class Coordinator: NSObject, UIScrollViewDelegate {
         let onZoom: (CGFloat) -> Void
+        let onClose: () -> Void
         var resetToken = 0
-        init(onZoom: @escaping (CGFloat) -> Void) { self.onZoom = onZoom }
+        private var mayCloseFromPan = false
+        init(onZoom: @escaping (CGFloat) -> Void, onClose: @escaping () -> Void) {
+            self.onZoom = onZoom
+            self.onClose = onClose
+        }
+        @objc func singleTap(_ gesture: UITapGestureRecognizer) {
+            if gesture.state == .ended { onClose() }
+        }
+        @objc func panToClose(_ gesture: UIPanGestureRecognizer) {
+            guard let scroll = gesture.view as? ArtworkScrollView else { return }
+            switch gesture.state {
+            case .began:
+                mayCloseFromPan = gesture.numberOfTouches == 1
+                    && scroll.zoomScale <= scroll.minimumZoomScale * 1.01 && !scroll.isZooming
+            case .changed:
+                if gesture.numberOfTouches > 1 { mayCloseFromPan = false }
+            case .ended:
+                let translation = gesture.translation(in: scroll)
+                let velocity = gesture.velocity(in: scroll)
+                if mayCloseFromPan && scroll.zoomScale <= scroll.minimumZoomScale * 1.01
+                    && translation.y > 90 && translation.y > abs(translation.x) * 1.3
+                    && (translation.y > 140 || velocity.y > 500) {
+                    onClose()
+                }
+                mayCloseFromPan = false
+            case .cancelled, .failed:
+                mayCloseFromPan = false
+            default: break
+            }
+        }
         func viewForZooming(in scrollView: UIScrollView) -> UIView? { (scrollView as? ArtworkScrollView)?.imageView }
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
             (scrollView as? ArtworkScrollView)?.centerImage()
@@ -105,6 +145,7 @@ private final class ArtworkScrollView: UIScrollView {
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         bouncesZoom = true
+        alwaysBounceVertical = true
         contentInsetAdjustmentBehavior = .never
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)

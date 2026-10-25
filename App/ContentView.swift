@@ -257,7 +257,7 @@ struct ContentView: View {
                 .font(.system(size: 14)).foregroundStyle(AppPalette.accent)
             }.worldCard()
             VStack(spacing: 7) {
-                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2")")
+                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3")")
                 Text("角色为非官方同人形象，与相关 AI 服务提供方无隶属关系。")
             }
             .font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.35))

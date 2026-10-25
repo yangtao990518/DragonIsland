@@ -61,6 +61,29 @@ final class CharacterInterfaceTests: XCTestCase {
         XCTAssertEqual(app.buttons["appearanceToggle"].firstMatch.value as? String, "深色")
     }
 
+    func testGalleryDismissGesturesPreserveDoubleTapAndZoomedPan() {
+        let app = start(["--preview-characters", "--appearance-light"])
+        XCTAssertTrue(app.buttons["characterCard-xiaobai"].waitForExistence(timeout: 8))
+        app.buttons["characterCard-xiaobai"].tap()
+        XCTAssertTrue(app.buttons["artwork-chibi"].waitForExistence(timeout: 5))
+        app.buttons["artwork-chibi"].tap()
+        let image = app.scrollViews["artworkZoomScroll"]
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        image.doubleTap()
+        let percentage = app.staticTexts["zoomPercentage"]
+        expectation(for: NSPredicate(format: "label != %@", "100%"), evaluatedWith: percentage)
+        waitForExpectations(timeout: 4)
+        image.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+            .press(forDuration: 0.1, thenDragTo: image.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.75)))
+        XCTAssertTrue(image.exists, "Dragging an enlarged image must not close the viewer")
+        image.tap()
+        XCTAssertTrue(app.buttons["artwork-standing"].waitForExistence(timeout: 5))
+        app.buttons["artwork-standing"].tap()
+        XCTAssertTrue(image.waitForExistence(timeout: 5))
+        image.swipeDown()
+        XCTAssertTrue(app.buttons["artwork-chibi"].waitForExistence(timeout: 5))
+    }
+
     func testCaptureSystemIslandMotionSample() throws {
         let app = start(["--preview-live-motion", "--appearance-dark"])
         sleep(3)
