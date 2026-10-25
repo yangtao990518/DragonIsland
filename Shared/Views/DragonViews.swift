@@ -4,17 +4,34 @@ enum DragonPalette {
     static let ink = Color(red: 0.055, green: 0.043, blue: 0.090)
     static let lavender = Color(red: 0.77, green: 0.68, blue: 0.96)
     static let softWhite = Color(red: 0.96, green: 0.94, blue: 1.0)
+    static let mint = Color(red: 0.72, green: 0.91, blue: 0.83)
+    static let surface = Color(red: 0.10, green: 0.085, blue: 0.15)
 }
 
 struct DragonPortrait: View {
+    var character: CompanionCharacter = .xiaobai
     var size: CGFloat = 22
 
     var body: some View {
-        Image("DragonCompact")
+        Image(character.chibiAsset)
             .resizable()
             .scaledToFit()
             .frame(width: size, height: size)
-            .accessibilityLabel("白紫色小龙娘")
+            .accessibilityLabel("\(character.name)的 Q 版形象")
+    }
+}
+
+struct CharacterStanding: View {
+    let character: CompanionCharacter
+    var width: CGFloat = 72
+    var height: CGFloat = 96
+
+    var body: some View {
+        Image(character.portraitAsset)
+            .resizable()
+            .scaledToFit()
+            .frame(width: width, height: height)
+            .accessibilityLabel("\(character.name)的立绘")
     }
 }
 

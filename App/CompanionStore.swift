@@ -7,6 +7,20 @@ final class CompanionStore: ObservableObject {
     @Published private(set) var session: CompanionSession?
     @Published private(set) var busy = false
     @Published var notice: String?
+    let characters = CharacterCatalog.load()
+    @Published private(set) var selectedCharacterID = UserDefaults.standard.string(forKey: "selectedCharacterID") ?? "xiaobai"
+    @Published private(set) var activeCharacterID: String?
+
+    var selectedCharacter: CompanionCharacter { CharacterCatalog.resolve(selectedCharacterID, in: characters) }
+    var displayCharacter: CompanionCharacter {
+        CharacterCatalog.resolve(activeCharacterID ?? selectedCharacterID, in: characters)
+    }
+
+    func select(_ character: CompanionCharacter) {
+        guard session == nil, characters.contains(where: { $0.id == character.id }) else { return }
+        selectedCharacterID = character.id
+        UserDefaults.standard.set(character.id, forKey: "selectedCharacterID")
+    }
     private var activity: Activity<DragonAttributes>?
     private var contentTask: Task<Void, Never>?
     private var stateTask: Task<Void, Never>?
@@ -31,10 +45,12 @@ final class CompanionStore: ObservableObject {
         stateTask?.cancel()
         activity = nil
         session = nil
+        activeCharacterID = nil
     }
 
     private func attach(_ current: Activity<DragonAttributes>) {
         session = current.content.state
+        activeCharacterID = current.attributes.characterID ?? CompanionCharacter.xiaobai.id
         if activity?.id == current.id { return }
         contentTask?.cancel()
         stateTask?.cancel()
@@ -73,7 +89,8 @@ final class CompanionStore: ObservableObject {
         let state = CompanionSession(minutes: minutes)
         do {
             let created = try Activity.request(
-                attributes: DragonAttributes(companionName: "小白", sessionID: UUID()),
+                attributes: DragonAttributes(companionName: selectedCharacter.name, sessionID: UUID(),
+                                             characterID: selectedCharacter.id),
                 content: ActivityContent(state: state, staleDate: state.endsAt),
                 pushType: nil
             )

@@ -41,6 +41,10 @@ jobs:
       - name: Build unsigned IPA and verify embedded extension
         run: bash Scripts/build_unsigned.sh
 
+      - name: Render actual app previews in iPhone simulator
+        timeout-minutes: 10
+        run: bash Scripts/capture_previews.sh
+
       - name: Downloadable IPA
         uses: actions/upload-artifact@v7
         with:
@@ -54,6 +58,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: mAIverse-build-log
-          path: build/build.log
+          path: |
+            build/build.log
+            build/simulator.log
           if-no-files-found: ignore
           retention-days: 7
