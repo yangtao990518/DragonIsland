@@ -14,7 +14,7 @@
 
 ## 先读清楚这三点
 
-1. **这是源代码工程包，不是已经编译好的 IPA。** 本次制作环境为 Linux，无法调用 Xcode；尚未完成实际 Xcode 编译、签名和 iPhone 实测。工程内已配好云端编译任务，需在你的 GitHub 仓库首次运行验证。
+1. **源码和未签名 IPA 均已准备好。** 2026-10-25 的[首次 GitHub Actions 构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40171957891)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查。产物见该次运行的 `DragonIsland-unsigned`，当前工作区已下载至 `output/DragonIsland-unsigned.ipa`。尚未完成签名安装和 iPhone 实测，详细证据见 [验证记录](docs/VALIDATION.md)。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
