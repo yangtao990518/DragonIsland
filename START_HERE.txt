@@ -1,0 +1,14 @@
+岛上龙娘 第一版工程包
+
+这是源码，不是 IPA。请先解压，再把工程内容上传到自己的 GitHub 空仓库。
+
+1. 仓库根目录应直接看到 project.yml、README.md、App、Shared、Widget、Scripts、.github。
+2. 不要只上传这个 ZIP，也不要额外多套一层工程文件夹。
+3. 提交后进入 Actions → Build iOS IPA。
+4. 编译成功后，从 Artifacts 下载 DragonIsland-unsigned，解压取出 IPA。
+5. 使用自己的签名工具安装；一定保留并签名 Widget 扩展。
+6. iPhone 打开 App → 选择 1 分钟 → 开始陪伴 → 返回桌面查看灵动岛。
+
+详细步骤见 README.md 和 docs/WINDOWS_INSTALL.md。
+目前仅完成源代码与本地静态/打包脚本检查，尚未经过实际 Xcode 编译和真机测试。
+灵动岛显示角色、倒计时与点击互动；不承诺后台永远循环跑步动画。

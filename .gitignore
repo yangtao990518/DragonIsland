@@ -1,0 +1,14 @@
+.DS_Store
+.build/
+.swiftpm/
+.asset-venv/
+build/
+output/
+*.xcodeproj/
+Config/
+*.p12
+*.mobileprovision
+*.cer
+*.key
+__pycache__/
+*.pyc

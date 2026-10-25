@@ -1,0 +1,59 @@
+name: Build iOS IPA
+
+"on":
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and build app + Live Activity
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install build tools
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
+
+      - name: Test countdown and session state
+        run: |
+          swift test
+          python3 -m unittest discover -s Tests -p 'test_*.py' -v
+
+      - name: Build unsigned IPA and verify embedded extension
+        run: bash Scripts/build_unsigned.sh
+
+      - name: Downloadable IPA
+        uses: actions/upload-artifact@v7
+        with:
+          name: DragonIsland-unsigned
+          path: output/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Build log
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: DragonIsland-build-log
+          path: build/build.log
+          if-no-files-found: ignore
+          retention-days: 7
