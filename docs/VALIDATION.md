@@ -63,3 +63,16 @@
 - 真实 IPA 为 `output/mAIverse-V1.1-unsigned.ipa`，6,338,696 字节；SHA-256 为 `f0b17b133465880805f1c4cb7fdc0913719718a6de4bec837d4b35c7439e7838`，与产物校验文件一致。
 - 已逐项解析主 App 与 Widget 的 Info.plist，二者版本均为 1.1（build 4），文件名与包内版本一致；Widget 扩展和原 Bundle ID 保留。关于页显示版本带 V 前缀。
 - 本次为版本与交付命名更新，功能及待真机验证事项沿用上一版。
+
+## 四项改造 V1.2（内部 1.2 / build 5）
+
+- [最终云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40179759854)成功，源码提交 `f00f1ee5952dae77e4de4e962d464e7efba929f6`，Xcode 16.4（16F6）。主 App 与 Widget 真机 Release 编译、打包和结构检查通过。
+- 10 项 Swift 模型测试、4 项 Python 打包测试通过；另外 4 项 XCUITest 通过，涵盖卡片进入详情、Q 版缩放与还原、独立立绘查看、外观重开保留及实际系统灵动岛动作截图。无启动失败跳过，实际导出 26 张测试附件。
+- 在 iPhone 16 Pro 模拟器实际捕获 12 张页面截图：世界、角色、详情、Q 版大图、立绘大图、关于，各有深浅两色。已目视检查浅色文字对比、双形态图片、图标选择和展开态按钮；实际系统展开态三个按钮完整显示。用户手机上的裁切是否解决仍需安装验证。
+- 实际 SpringBoard 灵动岛连续截图记录一次短位移和一次旋转。位移序列中角色左边界依次为 328、329、335、342、346 个原生像素；旋转序列出现倾斜及横向中间画面后回正，证实过渡实际播放。此证据仅覆盖模拟器中的单次图片位移 / 旋转，不能视为逐帧走路、持续自主循环或真机成功。
+- 人物卡片和详情使用统一角色目录，分别提供高分辨率 Q 版与立绘大图；看图支持双指缩放、双击、拖动、还原和背景切换。主 App 深色 / 白色设置持久化。
+- 使用用户指定五款图标，默认 GPT，其余四款为备用图标；真实 IPA 的 `CFBundleAlternateIcons` 包含 Claude、DeepSeek、Gemini、Grok。实际系统桌面截图已看到 GPT 默认图标；备用图标的手机切换行为待用户验证。
+- 最终 artifact ID `12594411449`，下载 ZIP 为 138,374,901 字节，SHA-256 为 `bae53d166b8dffccbbe2d0acd06e25511c5f27010e5a79667c7437ac186f0a11`，与 GitHub artifact digest 一致。
+- 本机交付路径为 `D:\gpt_workspace\ios_ldd\mAIverse-V1.2\mAIverse-V1.2-unsigned.ipa`。IPA 为 34,771,178 字节，SHA-256 为 `c5f189a26bab59e32ac924344f30751b46d35fd3351ff0122d89626c0a216c8d`，与产物校验文件一致。旧版目录保留。
+- 本机再次运行真实 IPA 结构检查，并解析 App 与 Widget 的 Info.plist：二者均为 1.2（build 5），Bundle ID 沿用旧版本，`DragonIslandWidget.appex` 完整保留。
+- 本轮未实际操作 Sideloadly、签名或用户 iPhone。按 `docs/TEST_GUIDE.md` 验证 1 分钟陪伴、主题、图片操作、图标、短动作、互动、结束及重开恢复；原有到期不保证精确收起的边界保留。

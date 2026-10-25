@@ -12,3 +12,9 @@
 ```text
 Use case: background-extraction. Edit target: the provided full-body white-haired lavender-eyed dragon woman illustration. Prepare a clean transparent PNG cutout for an iPhone character companion app. Remove ONLY the outside white background and white negative space between the silhouette's limbs, hair, wings and tail. Preserve the same character identity, pose, expression, outfit, full body from horn tips to shoes, white dragon horns, white long hair, lavender eyes, pointed ears, white and lavender dress, white-edged lavender dragon wings and white scaled tail. Preserve all white details within the character; they are NOT background. Do not redesign, repaint, change the style, recolor, add details, or crop away the horns/wings/tail/feet. No text, no shadows, no white rectangle, no checkerboard pattern: actual alpha transparency around the figure. Keep the entire single character centered with a little transparent padding.
 ```
+
+## V1.2 桌面图标与看图资源
+
+- 用户指定原图目录为 `D:\gpt_workspace\ios_ldd\mAIverse_5_icons_4K`，包含 GPT、Claude、DeepSeek、Gemini、Grok 五款 4096×4096 PNG。
+- 仅按比例缩小、转换为不透明 RGB 并保存到 `Art/AppIcons/`；没有重新生成图案。资源脚本据此生成默认 GPT 图标、四款备用图标及选择界面的缩略图。
+- Q 版看图使用独立的高分辨率 `XiaobaiChibiDetail` 资源，避免把灵动岛的小尺寸资源直接放大。详情大图与岛上小图仍来自同一张原图。
