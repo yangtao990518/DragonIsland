@@ -46,11 +46,14 @@ def verify(path):
                 fps=data.get('fps',0)
                 period=data.get('period',0)
                 required_fps=30 if tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,5) else 8
-                expected_fonts=61 if required_fps==30 else 129
+                scenes_version=tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,6)
+                expected_fonts=181 if scenes_version else 61 if required_fps==30 else 129
                 if len(fonts)!=expected_fonts or any(f'{root}/{font}' not in names for font in fonts):
                     raise ValueError(f'Missing registered system-timer motion fonts in {root}')
                 if fps!=required_fps or period!=60 or len(data['plans'])!=8 or any(len(p['frames'])!=fps*period for p in data['plans']):
                     raise ValueError(f'Incomplete automatic-motion plans in {root}')
+                if scenes_version and (data.get('scenes')!=['black','meadow','night'] or data.get('stagePixels')!=[180,96] or data.get('travelPixels')!=100):
+                    raise ValueError(f'Missing scenery or full-width walking resources in {root}')
         for key in ("CFBundleShortVersionString", "CFBundleVersion"):
             if app[key] != widget[key]:
                 raise ValueError(f"App and widget version differ: {key}")

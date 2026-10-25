@@ -7,6 +7,8 @@ struct TimerMotionPortrait: View {
     let epoch: Date
     let endsAt: Date
     let size: CGFloat
+    var scene: IslandScene = .black
+    private var width: CGFloat { size * 1.875 }
 
     private var reference: Date { epoch.addingTimeInterval(-60) }
     private var framesPerSecond: Int { MotionTimeline.shared?.fps ?? 30 }
@@ -24,12 +26,12 @@ struct TimerMotionPortrait: View {
                 }
             }.mask(gate(offset: 1))
         }
-        .frame(width: size, height: size).clipped()
+        .frame(width: width, height: size).clipped()
         .environment(\.locale, Locale(identifier: "en_US_POSIX"))
         .accessibilityHidden(true)
     }
     private func layer(_ index: Int) -> some View {
-        let font = Font.custom("mAIverseF\(index)", fixedSize: size)
+        let font = Font.custom("\(scene.fontPrefix)F\(index)", fixedSize: size)
         // All banks share the phase font. Hidden hours select one of eight
         // banks in font shaping; the maximum two-hour session stays in its bank.
         // Prepare the next glyph one phase BEFORE its gate opens. Native timer
@@ -46,8 +48,8 @@ struct TimerMotionPortrait: View {
         Text(timerInterval: reference.addingTimeInterval(offset)...endsAt, countsDown: false)
             .font(font)
             .contentTransition(.identity)
-            .frame(width: size * 9, height: size)
+            .frame(width: width * 9, height: size)
             .multilineTextAlignment(.trailing)
-            .offset(x: -size * 4)
+            .offset(x: -width * 4)
     }
 }

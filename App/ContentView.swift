@@ -49,6 +49,9 @@ struct ContentView: View {
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
+            for scene in IslandScene.allCases where args.contains("--scene-\(scene.rawValue)") {
+                await store.setIslandScene(scene)
+            }
             if args.contains("--preview-detail") || args.contains("--preview-gallery-chibi") || args.contains("--preview-gallery-standing") {
                 detailCharacter = store.selectedCharacter
             }
@@ -193,7 +196,7 @@ struct ContentView: View {
                 Text("日常 · 小人物").tag(false)
                 Text("展开 · 立绘").tag(true)
             }.pickerStyle(.segmented)
-            IslandArtPreview(character: store.displayCharacter, expanded: expandedPreview)
+            IslandArtPreview(character: store.displayCharacter, expanded: expandedPreview, scene: store.islandScene)
                 .frame(maxWidth: .infinity)
             Text("开始陪伴后回到桌面，长按灵动岛展开。")
                 .font(.system(size: 11)).foregroundStyle(Color.primary.opacity(0.45))
@@ -236,6 +239,7 @@ struct ContentView: View {
                 Spacer(minLength: 4)
                 AppearanceToggle()
             }
+            IslandScenePicker(store: store)
             AppIconPicker()
             VStack(alignment: .leading, spacing: 17) {
                 Text("你的世界，他们也在。")
@@ -260,7 +264,7 @@ struct ContentView: View {
                 .font(.system(size: 14)).foregroundStyle(AppPalette.accent)
             }.worldCard()
             VStack(spacing: 7) {
-                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.4")")
+                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.6")")
                 Text("角色为非官方同人形象，与相关 AI 服务提供方无隶属关系。")
             }
             .font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.35))

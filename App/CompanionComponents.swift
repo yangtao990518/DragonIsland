@@ -113,6 +113,7 @@ struct CompanionAction: View {
 struct IslandArtPreview: View {
     let character: CompanionCharacter
     let expanded: Bool
+    var scene: IslandScene = .black
 
     var body: some View {
         Group {
@@ -136,10 +137,14 @@ struct IslandArtPreview: View {
                         }.accessibilityHidden(true)
                     }
                 }
-                .padding(14).background(.black, in: RoundedRectangle(cornerRadius: 27))
+                .padding(14).background { IslandSceneBackdrop(scene: scene) }
+                .clipShape(RoundedRectangle(cornerRadius: 27))
             } else {
                 HStack(spacing: 10) {
                     DragonPortrait(character: character, size: 26)
+                        .frame(width: 60, height: 32)
+                        .background { IslandSceneBackdrop(scene: scene) }
+                        .clipShape(RoundedRectangle(cornerRadius: 7))
                     Capsule().fill(Color.white.opacity(0.025)).frame(width: 66, height: 22)
                     Text("24:59").font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(DragonPalette.lavender)

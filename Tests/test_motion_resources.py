@@ -23,7 +23,7 @@ class MotionResourcesTests(unittest.TestCase):
                 self.assertEqual(slots.count('walk')%2,0)
                 self.assertEqual(frames[0]['x'],frames[-1]['x'])
                 for frame in frames:
-                    self.assertLessEqual(abs(frame['x']),16)
+                    self.assertLessEqual(abs(frame['x']),motion.WALK_EXTENT)
                     self.assertTrue(frame['asset'].startswith('Motion_'))
 
     def test_new_neutral_and_required_poses_exist(self):
@@ -98,6 +98,48 @@ class MotionResourcesTests(unittest.TestCase):
                     self.assertEqual(frame.getchannel('A').getextrema(),(0,255))
         roll=motion.MANIFEST['actions']['roll']['frames']
         self.assertEqual((motion.ART/roll[0]).read_bytes(),(motion.ART/roll[-1]).read_bytes())
+
+    def test_full_width_walk_reaches_both_edges_and_immediately_returns(self):
+        self.assertEqual(motion.WALK_MOVE_MS,4500)
+        self.assertEqual(sum(motion.DURATIONS['walk_left']),1125)
+        self.assertEqual(sum(motion.DURATIONS['roll']),1000)
+        self.assertEqual(motion.ROLL_END,1000)
+        for mask in (1,3):
+            for seed in range(2):
+                slots,frames=motion.schedule(mask,seed)
+                i=0
+                while i<12:
+                    if slots[i]!='walk':i+=1;continue
+                    self.assertLess(i,11)
+                    self.assertEqual(slots[i+1],'walk')
+                    outward=frames[i*150:(i+1)*150]
+                    back=frames[(i+1)*150:(i+2)*150]
+                    self.assertEqual((outward[0]['x'],outward[-1]['x']),(-50,50))
+                    self.assertEqual((back[0]['x'],back[-1]['x']),(50,-50))
+                    i+=2
+        # Every source pose fits at either endpoint, including wings and tail.
+        for info in motion.MANIFEST['actions'].values():
+            for name in info['frames']:
+                image=Image.open(motion.ART/name).convert('RGBA').resize((72,90))
+                x0,y0,x1,y1=image.getbbox()
+                for x in (-50,50):
+                    self.assertGreaterEqual(54+x+x0,0)
+                    self.assertLessEqual(54+x+x1,180)
+                self.assertLessEqual(3+y1,96)
+
+    def test_each_scene_replaces_old_pose_with_the_same_opaque_landscape(self):
+        a=Image.new('RGBA',(512,640),(250,240,255,255))
+        art={'person':a}
+        backgrounds=[]
+        for scene in motion.SCENES:
+            bg=motion.scene_image(scene);backgrounds.append(bg.tobytes())
+            self.assertEqual(bg.size,(180,96))
+            self.assertEqual(bg.getchannel('A').getextrema(),(255,255))
+            first=motion.render_frame(art,{'asset':'person','x':-50},scene=scene)
+            last=motion.render_frame(art,{'asset':'person','x':50},scene=scene)
+            self.assertIsNone(ImageChops.difference(Image.alpha_composite(first,last),last).getbbox())
+            self.assertEqual(last.getpixel((12,45)),bg.getpixel((12,45)))
+        self.assertEqual(len(set(backgrounds)),3)
 
     def test_hidden_bank_clock_does_not_cross_bank_during_two_hour_session(self):
         for bank in range(8):

@@ -6,6 +6,7 @@ import UIKit
 @MainActor
 final class CompanionStore: ObservableObject {
     @Published private(set) var motionSettings = MotionSettings.load()
+    @Published private(set) var islandScene = IslandScene.load()
     @Published private(set) var session: CompanionSession?
     @Published private(set) var busy = false
     @Published var notice: String?
@@ -89,14 +90,19 @@ final class CompanionStore: ObservableObject {
         }
         clear()
         var state = CompanionSession(minutes: minutes)
+        state.islandSceneID = islandScene.rawValue
         state.automaticMotionPlan = motionSettings.plan(seed: Int.random(in: 0..<2))
         state.motionEpoch = state.startedAt
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-live-motion") {
             // Reproducible system-video QA: includes both directions and rolls.
             state.automaticMotionPlan = 6
-            if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                let data: [String: Any] = ["epoch": state.startedAt.timeIntervalSince1970, "plan": 6, "fps": 30]
+            if ProcessInfo.processInfo.arguments.contains("--record-motion-metadata"),
+               let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let slots = MotionTimeline.shared?.plans.first(where: { $0.id == 6 })?.slots ?? []
+                let walkingSlots = slots.indices.filter { slots[$0] == "walk" }.map { $0 * 5 }
+                let data: [String: Any] = ["epoch": state.startedAt.timeIntervalSince1970, "plan": 6, "fps": 30,
+                                          "walkingSlots": walkingSlots, "scene": islandScene.rawValue]
                 if let json = try? JSONSerialization.data(withJSONObject: data) {
                     try? json.write(to: documents.appendingPathComponent("motion-capture.json"), options: .atomic)
                 }
@@ -127,6 +133,16 @@ final class CompanionStore: ObservableObject {
         await mutate {
             $0.automaticMotionPlan = value.plan(seed: 0)
             $0.motionEpoch = Date()
+            $0.revision += 1
+        }
+    }
+
+    func setIslandScene(_ value: IslandScene) async {
+        guard !busy else { return }
+        islandScene = value
+        value.save()
+        await mutate {
+            $0.islandSceneID = value.rawValue
             $0.revision += 1
         }
     }

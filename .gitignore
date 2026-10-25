@@ -15,4 +15,5 @@ __pycache__/
 Shared/Resources/MotionFonts/
 Shared/Resources/MotionTimeline.json
 Shared/Resources/Companion.xcassets/Motion_*.imageset/
+Shared/Resources/Companion.xcassets/IslandScene_*.imageset/
 motion-fonts.yml

@@ -5,10 +5,10 @@ import Darwin
 import UIKit
 
 final class CharacterInterfaceTests: XCTestCase {
-    private func portraitPixels(_ screenshot: XCUIScreenshot) -> Int {
+    private func islandPixels(_ screenshot: XCUIScreenshot, scene: String? = nil) -> Int {
         guard let source = screenshot.image.cgImage else { return 0 }
         let scale = CGFloat(source.width) / 1206
-        guard let crop = source.cropping(to: CGRect(x: 300*scale, y: 40*scale, width: 135*scale, height: 110*scale)) else { return 0 }
+        guard let crop = source.cropping(to: CGRect(x: 180*scale, y: 40*scale, width: 320*scale, height: 120*scale)) else { return 0 }
         var rgba = [UInt8](repeating: 0, count: crop.width * crop.height * 4)
         let drawn = rgba.withUnsafeMutableBytes { bytes -> Bool in
             guard let context = CGContext(data: bytes.baseAddress, width: crop.width, height: crop.height, bitsPerComponent: 8,
@@ -20,6 +20,8 @@ final class CharacterInterfaceTests: XCTestCase {
         guard drawn else { return 0 }
         return stride(from: 0, to: rgba.count, by: 4).filter {
             let r = Int(rgba[$0]), g = Int(rgba[$0+1]), b = Int(rgba[$0+2])
+            if scene == "meadow" { return g > r + 8 && g > b + 3 && g < 100 && g > 25 }
+            if scene == "night" { return b > r + 9 && b > g + 9 && b < 100 && b > 25 }
             return min(r,g,b)>100 && r>=g-3 && b>=r-5
         }.count
     }
@@ -104,7 +106,7 @@ final class CharacterInterfaceTests: XCTestCase {
     }
 
     func testAutomaticIslandMotionContinuesWithoutButtons() throws {
-        let app = start(["--preview-live-motion", "--appearance-dark"])
+        let app = start(["--preview-live-motion", "--record-motion-metadata", "--scene-meadow", "--appearance-dark"])
         sleep(3)
         XCTAssertFalse(app.alerts.firstMatch.exists, "Live Activity must start for automatic motion validation")
         let beforeHome = XCTAttachment(screenshot: app.screenshot())
@@ -126,7 +128,7 @@ final class CharacterInterfaceTests: XCTestCase {
                 frame.lifetime = .keepAlways
                 add(frame)
                 if index == 15 {
-                    let pixels = portraitPixels(screenshot)
+                    let pixels = islandPixels(screenshot)
                     XCTAssertGreaterThan(pixels, 200, "Actual system island must contain the portrait, not an empty island")
                     if pixels <= 200 { return }
                 }
@@ -157,5 +159,40 @@ final class CharacterInterfaceTests: XCTestCase {
         XCTAssertTrue(app.switches["walkMotionToggle"].waitForExistence(timeout: 8))
         XCTAssertEqual(app.switches["walkMotionToggle"].value as? String, selected)
         XCTAssertFalse(app.buttons["test-walk"].exists)
+    }
+
+    func testIslandScenesUpdateActualActivityAndPersist() {
+        let app = start(["--preview-about", "--preview-live-motion", "--scene-black", "--appearance-light"])
+        let black = app.buttons["islandScene-black"]
+        XCTAssertTrue(black.waitForExistence(timeout: 10))
+        expectation(for: NSPredicate(format: "value == %@ AND enabled == true", "已选择"), evaluatedWith: black)
+        waitForExpectations(timeout: 10)
+        XCTAssertEqual(black.value as? String, "已选择")
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for scene in ["meadow", "night"] {
+            let button = app.buttons["islandScene-\(scene)"]
+            XCTAssertTrue(button.waitForExistence(timeout: 8))
+            button.tap()
+            expectation(for: NSPredicate(format: "value == %@", "已选择"), evaluatedWith: button)
+            waitForExpectations(timeout: 5)
+            XCUIDevice.shared.press(.home)
+            sleep(3)
+            let screenshot = springboard.screenshot()
+            XCTAssertGreaterThan(islandPixels(screenshot, scene: scene), 150, "Scene must actually reach the system island")
+            XCTAssertGreaterThan(islandPixels(screenshot), 200, "The character must remain visible when changing scenery")
+            let compact = XCTAttachment(screenshot: screenshot)
+            compact.name = "scene-\(scene)-compact"; compact.lifetime = .keepAlways; add(compact)
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.035)).press(forDuration: 1.2)
+            sleep(2)
+            let expanded = XCTAttachment(screenshot: springboard.screenshot())
+            expanded.name = "scene-\(scene)-expanded"; expanded.lifetime = .keepAlways; add(expanded)
+            app.activate()
+        }
+        app.terminate()
+        app.launchArguments = ["--maiverse-capture", "--preview-about"]
+        app.launch()
+        let night = app.buttons["islandScene-night"]
+        XCTAssertTrue(night.waitForExistence(timeout: 8))
+        XCTAssertEqual(night.value as? String, "已选择")
     }
 }

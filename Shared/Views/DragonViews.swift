@@ -43,15 +43,24 @@ struct IslandMotionPortrait: View {
     @Environment(\.isLuminanceReduced) private var luminanceReduced
 
     var body: some View {
-        Group {
+        ZStack {
+            Image(state.islandScene.asset).resizable()
             if character.id == "xiaobai", let plan = state.automaticMotionPlan,
                (0..<8).contains(plan), !reduceMotion, !luminanceReduced {
                 TimerMotionPortrait(plan: plan, epoch: state.motionEpoch ?? state.startedAt,
-                                    endsAt: state.endsAt, size: size + 8)
+                                    endsAt: state.endsAt, size: size + 8, scene: state.islandScene)
             } else {
                 DragonPortrait(character: character, size: size)
             }
-        }.frame(width: size + 8, height: size + 8)
+        }.frame(width: (size + 8) * 1.875, height: size + 8)
+            .clipShape(RoundedRectangle(cornerRadius: 7))
+    }
+}
+
+struct IslandSceneBackdrop: View {
+    let scene: IslandScene
+    var body: some View {
+        Image(scene.asset).resizable().scaledToFill().clipped().accessibilityHidden(true)
     }
 }
 

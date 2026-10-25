@@ -10,7 +10,7 @@ from io import BytesIO
 import json
 from pathlib import Path
 import random
-from PIL import Image
+from PIL import Image, ImageDraw
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
@@ -26,12 +26,52 @@ FPS=30
 PHASES=FPS*2
 SEEDS=2
 PERIOD=60
-WALK_END=1566
+WALK_END=5000
 WALK_MOVE_START=250
-WALK_MOVE_MS=1066
-WALK_EXTENT=16
+WALK_MOVE_MS=4500
+WALK_EXTENT=50  # Native 3x pixels, inside the 180px-wide visible stage.
 GLYPH_PIXELS=96  # Exactly 32pt at 3x; avoid oversized bitmaps in 60 timer layers.
-ROLL_END=1066
+STAGE_WIDTH=180
+ADVANCE=1875  # 60pt wide at a 32pt font size.
+ROLL_END=1000
+SCENES={'black':'mAIverse','meadow':'mAIverseMeadow','night':'mAIverseNight'}
+DURATIONS={a:info['frameDurationsMs'] for a,info in MANIFEST['actions'].items()}
+for a in ('walk_left','walk_right'):DURATIONS[a]=[70,70,71]*5+[70]
+DURATIONS['roll']=[62,63]*8
+
+
+def scene_image(name):
+    """Small code-drawn scenery, kept dark enough to distinguish white artwork."""
+    image=Image.new('RGBA',(STAGE_WIDTH,GLYPH_PIXELS),(0,0,0,255))
+    if name=='black':return image
+    draw=ImageDraw.Draw(image)
+    top,bottom=((6,20,20),(24,51,30)) if name=='meadow' else ((9,12,31),(22,22,47))
+    for y in range(GLYPH_PIXELS):
+        t=y/(GLYPH_PIXELS-1)
+        draw.line((0,y,STAGE_WIDTH,y),fill=tuple(round(a+(b-a)*t) for a,b in zip(top,bottom))+(255,))
+    if name=='meadow':
+        draw.ellipse((-40,55,130,145),fill=(20,52,29,255))
+        draw.ellipse((75,60,235,140),fill=(26,64,33,255))
+        draw.rectangle((0,88,180,96),fill=(24,60,30,255))
+        for x in range(3,180,9):
+            y=91+(x%3)
+            draw.line([(x-2,y-5),(x,y),(x+3,y-4)],fill=(39,83,43,255),width=1)
+        for x in (17,61,108,156):draw.rectangle((x,87,x+1,88),fill=(97,80,39,255))
+    else:
+        draw.ellipse((140,10,158,28),fill=(86,81,99,255))
+        draw.ellipse((146,7,162,24),fill=(11,15,35,255))
+        for x,y in ((12,15),(39,31),(65,10),(98,25),(123,8),(172,42),(86,47)):
+            draw.line((x-1,y,x+1,y),fill=(88,86,98,255))
+            draw.line((x,y-1,x,y+1),fill=(88,86,98,255))
+        draw.ellipse((-30,77,120,135),fill=(20,24,45,255))
+        draw.ellipse((75,81,220,128),fill=(28,28,51,255))
+    return image
+
+
+def walk_clip(direction):
+    turns=[(62.5,'turn_left',i) for i in range(4)] if direction=='walk_left' else [(250,'idle',0)]
+    gait=[(d,direction,i) for i,d in enumerate(DURATIONS[direction])]*4
+    return turns+gait+list(reversed(turns))
 
 
 def key(action,index):
@@ -59,13 +99,19 @@ def schedule(mask,seed):
     for slot in range(12):
         options=[a for a in pool if not chosen or a != chosen[-1]]
         chosen.append(rng.choice(options or pool))
-    # The 60-second loop must return to the same physical position.
-    if chosen.count('walk')%2:
-        chosen[max(i for i,a in enumerate(chosen) if a=='walk')]='idle'
+    # A chosen walk reserves two adjacent five-second legs: reach the far edge,
+    # then return. Do not abandon the character at the other side until a later
+    # random walk. Every complete minute ends at its original physical position.
+    slot=0
+    while slot<len(chosen):
+        if chosen[slot]=='walk':
+            if slot==len(chosen)-1:chosen[slot]='idle'
+            else:chosen[slot+1]='walk';slot+=1
+        slot+=1
     idle=timeline([{'action':'idle','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['idle']['frameDurationsMs'])])
-    roll=timeline([{'action':'roll','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['roll']['frameDurationsMs'])]*2)
-    right=timeline(MANIFEST['clips']['walk_burst']['entries'])
-    left=timeline(MANIFEST['clips']['walk_left_burst']['entries'])
+    roll=[(d,'roll',i) for i,d in enumerate(DURATIONS['roll'])]
+    right=walk_clip('walk_right')
+    left=walk_clip('walk_left')
     frames=[];position=-WALK_EXTENT if 'walk' in chosen else 0
     for slot,action in enumerate(chosen):
         start=position
@@ -75,7 +121,10 @@ def schedule(mask,seed):
         for j in range(FPS*5):
             ms=j*1000/FPS
             if action=='walk' and ms<WALK_END:
-                a,i=sample(clip,ms)
+                # At the exact endpoint keep the final stepping pose for this
+                # sample; settle on the next sample, after root movement stops.
+                pose_time=ms-0.001 if abs(ms-(WALK_MOVE_START+WALK_MOVE_MS))<0.000001 else ms
+                a,i=sample(clip,pose_time)
                 # Actual root movement is baked into color glyphs, not a background task.
                 p=start+(end-start)*min(1,max(0,(ms-WALK_MOVE_START)/WALK_MOVE_MS))
             elif action=='roll' and ms<ROLL_END:a,i=sample(roll,ms);p=start
@@ -87,14 +136,14 @@ def schedule(mask,seed):
     return chosen,frames
 
 
-def render_frame(artwork,frame,*,opaque=True):
+def render_frame(artwork,frame,*,opaque=True,scene='black'):
     # Timer masks reveal cumulative stacks. Transparent PNGs let old silhouettes
     # show THROUGH the new pose. A fully opaque island-black tile replaces all
     # older pixels, including where a previous leg/tail used to be. This matte
     # is only for island fonts; app imagesets retain their original alpha.
-    canvas=Image.new('RGBA',(GLYPH_PIXELS,GLYPH_PIXELS),(0,0,0,255 if opaque else 0))
+    canvas=scene_image(scene) if opaque else Image.new('RGBA',(STAGE_WIDTH,GLYPH_PIXELS))
     image=artwork[frame['asset']].resize((72,90),Image.Resampling.LANCZOS)
-    canvas.alpha_composite(image,(12+round(frame['x']*GLYPH_PIXELS/128),3))
+    canvas.alpha_composite(image,((STAGE_WIDTH-72)//2+frame['x'],3))
     return canvas
 
 
@@ -103,7 +152,7 @@ def base_font(name,glyph_order):
     builder.setupGlyphOrder(glyph_order)
     builder.setupCharacterMap({ord(str(i)):f'd{i}' for i in range(10)}|{32:'space',58:'colon',160:'space'})
     builder.setupGlyf({n:TTGlyphPen(None).glyph() for n in glyph_order})
-    builder.setupHorizontalMetrics({n:(1000,0) for n in glyph_order})
+    builder.setupHorizontalMetrics({n:(ADVANCE,0) for n in glyph_order})
     builder.setupHorizontalHeader(ascent=1000,descent=0)
     builder.setupOS2(sTypoAscender=1000,sTypoDescender=0,usWinAscent=1000,usWinDescent=0)
     builder.setupNameTable({'familyName':name,'styleName':'Regular','uniqueFontIdentifier':name,
@@ -138,7 +187,7 @@ def bank_features():
 def mask_font():
     names=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+['full','empty']
     font=base_font('mAIverseGate',names)
-    pen=TTGlyphPen(None);pen.moveTo((0,0));pen.lineTo((1000,0));pen.lineTo((1000,1000));pen.lineTo((0,1000));pen.closePath()
+    pen=TTGlyphPen(None);pen.moveTo((0,0));pen.lineTo((ADVANCE,0));pen.lineTo((ADVANCE,1000));pen.lineTo((0,1000));pen.closePath()
     font['glyf']['full']=pen.glyph()
     addOpenTypeFeaturesFromString(font,features(['full' if s%2==0 else 'empty' for s in range(60)]))
     font.save(OUTPUT/'mAIverseGate.ttf')
@@ -153,16 +202,25 @@ def main():
             image=Image.open((ART/path).resolve()).convert('RGBA')
             artwork[key(action,i)]=image
             imageset(SHARED,key(action,i),image,(64,80))
+    # A fixed palette per scene keeps its grass/sky identical across frames;
+    # per-frame adaptive palettes would make the background shimmer.
+    palettes={}
+    for scene in SCENES:
+        imageset(SHARED,f'IslandScene_{scene}',scene_image(scene),(60,32))
+        master=Image.new('RGB',(STAGE_WIDTH*8,GLYPH_PIXELS*((len(artwork)+7)//8)))
+        for j,asset in enumerate(artwork):
+            master.paste(render_frame(artwork,{'asset':asset,'x':0},scene=scene).convert('RGB'),((j%8)*STAGE_WIDTH,(j//8)*GLYPH_PIXELS))
+        palettes[scene]=master.quantize(colors=256,method=Image.Quantize.MEDIANCUT)
     rendered={}
-    def png(frame):
-        k=(frame['asset'],frame['x'])
+    def png(frame,scene):
+        k=(scene,frame['asset'],frame['x'])
         if k not in rendered:
-            canvas=render_frame(artwork,frame)
+            canvas=render_frame(artwork,frame,scene=scene).convert('RGB').quantize(palette=palettes[scene],dither=Image.Dither.NONE)
             buf=BytesIO();canvas.save(buf,format='PNG');rendered[k]=buf.getvalue()
         return rendered[k]
     # One ordinary, WidgetKit-compatible font per phase, all banks in each file.
     # Avoid runtime CTFont bridging and unsupported named variable instances.
-    for old in list(OUTPUT.glob('mAIverseP*F*.ttf'))+list(OUTPUT.glob('mAIverseMotion.ttf')):
+    for old in OUTPUT.glob('*.ttf'):
         assert old.resolve().parent==OUTPUT.resolve()
         old.unlink()
     mask_font()
@@ -176,8 +234,9 @@ def main():
             chosen,frames=schedule(mask,seed)
             plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames})
     unique=set()
-    for phase in range(PHASES):
-        name=f'mAIverseF{phase}'
+    for scene,prefix in SCENES.items():
+      for phase in range(PHASES):
+        name=f'{prefix}F{phase}'
         font=base_font(name,order)
         strike=Strike(ppem=GLYPH_PIXELS,resolution=72)
         for n in order:strike.glyphs[n]=Glyph(glyphName=n)
@@ -187,7 +246,7 @@ def main():
             for second in range(60):
                 frame=frames[(((second+1)%60)*FPS+phase)%len(frames)]
                 glyph=glyph_name(bank,second)
-                data=png(frame);digest=hashlib.sha256(data).digest()
+                data=png(frame,scene);digest=hashlib.sha256(data).digest()
                 unique.add(digest)
                 if digest in encoded:
                     strike.glyphs[glyph]=Glyph(glyphName=glyph,graphicType='dupe',referenceGlyphName=encoded[digest])
@@ -197,11 +256,10 @@ def main():
         sbix=newTable('sbix');sbix.strikes={GLYPH_PIXELS:strike};font['sbix']=sbix
         addOpenTypeFeaturesFromString(font,bank_features())
         font.save(OUTPUT/f'{name}.ttf')
-    checks=[{'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
-            for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
+    checks=[{'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
+            for scene in SCENES for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
     (OUTPUT/'checks.json').write_text(json.dumps(checks),encoding='utf-8')
-    durations={a:info['frameDurationsMs'] for a,info in MANIFEST['actions'].items()}
-    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'durations':durations},separators=(',',':'))+'\n',encoding='utf-8')
+    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'durations':DURATIONS,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2},separators=(',',':'))+'\n',encoding='utf-8')
     # XcodeGen includes this generated settings fragment in both Info.plists.
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
     (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':len(unique),'targetFPS':FPS,'phases':PHASES,'plans':len(plans)}),encoding='utf-8')

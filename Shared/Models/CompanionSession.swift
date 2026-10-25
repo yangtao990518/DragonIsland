@@ -55,6 +55,8 @@ struct CompanionSession: Codable, Hashable {
     var rollTurns: Int?
     var automaticMotionPlan: Int?
     var motionEpoch: Date?
+    var islandSceneID: String?
+    var islandScene: IslandScene { IslandScene.resolve(islandSceneID) }
 
     private mutating func recordMotion(_ action: CompanionMotion) {
         motion = action

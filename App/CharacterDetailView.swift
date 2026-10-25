@@ -40,7 +40,7 @@ struct CharacterDetailView: View {
                 }.pickerStyle(.segmented)
                 if preview == 2 { lockScreenPreview }
                 else {
-                    IslandArtPreview(character: character, expanded: preview == 1)
+                    IslandArtPreview(character: character, expanded: preview == 1, scene: store.islandScene)
                         .frame(maxWidth: .infinity)
                 }
                 Text("这是尺寸效果示意，实际显示由系统安排。")

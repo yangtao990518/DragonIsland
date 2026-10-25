@@ -11,7 +11,7 @@ struct MotionSettingsView: View {
                 AppearanceToggle()
             }
             VStack(spacing: 12) {
-                MotionArtworkPreview(settings: store.motionSettings, action: previewAction)
+                MotionArtworkPreview(settings: store.motionSettings, action: previewAction, scene: store.islandScene)
                     .frame(height: 220)
                     .frame(maxWidth: .infinity)
                 Picker("动作预览", selection: $previewAction) {
@@ -29,11 +29,11 @@ struct MotionSettingsView: View {
                 Text("开始陪伴后回到桌面，无需再点动作按钮。")
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                 Divider()
-                Toggle("走路 · 轻快来回", isOn: binding(\.walk))
+                Toggle("走路 · 走到边边再回来", isOn: binding(\.walk))
                     .accessibilityIdentifier("walkMotionToggle")
                 Toggle("打滚 · 蜷身再起身", isOn: binding(\.roll))
                     .accessibilityIdentifier("rollMotionToggle")
-                Text("每 5 秒安排一段动作，做完后自然待机。未勾选的动作不会参与随机；都不勾选时只待机。")
+                Text("每段约 5 秒。走路会先走到另一端，再折返回来；打滚只轻轻滚一次。未勾选的动作不会参与，都不勾选时只待机。")
                     .font(.system(size: 12)).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
             Text("设置会保存并应用当前陪伴。本版日常片段为 60 秒循环；减弱动态效果或息屏低亮度时显示静态人物。")
@@ -52,20 +52,28 @@ struct MotionSettingsView: View {
 struct MotionArtworkPreview: View {
     let settings: MotionSettings
     var action = "random"
+    var scene: IslandScene = .black
     @State private var began = Date()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / Double(MotionTimeline.shared?.fps ?? 30), paused: reduceMotion)) { context in
+        GeometryReader { geometry in
+          let width = min(geometry.size.width - 12, 330)
+          TimelineView(.animation(minimumInterval: 1.0 / Double(MotionTimeline.shared?.fps ?? 30), paused: reduceMotion)) { context in
             let elapsed = context.date.timeIntervalSince(began)
+            ZStack {
+              Image(scene.asset).resizable()
             if let frame = frame(elapsed: elapsed) {
                 Image(frame.asset).resizable().scaledToFit()
-                    .frame(width: 150, height: 187.5)
-                    .offset(x: CGFloat(frame.x) * 200 / 128)
+                    .frame(width: width * 72 / 180, height: width * 90 / 180)
+                    .offset(x: CGFloat(frame.x) * width / 180)
                     .accessibilityLabel("小白动作预览")
             } else {
                 Image("XiaobaiChibiDetail").resizable().scaledToFit()
-                    .frame(width: 150, height: 187.5)
+                    .frame(width: width * 72 / 180, height: width * 90 / 180)
             }
+            }.frame(width: width, height: width * 96 / 180)
+             .clipShape(RoundedRectangle(cornerRadius: 18))
+          }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onChange(of: action) { _, _ in began = Date() }
         .onChange(of: settings) { _, _ in began = Date() }
@@ -79,7 +87,7 @@ struct MotionArtworkPreview: View {
         guard let durations = MotionTimeline.shared?.durations?[action], !durations.isEmpty else { return nil }
         let period = action == "roll" ? 2000 : durations.reduce(0, +)
         var time = Int(elapsed * 1000) % period
-        if action == "roll", time < durations.reduce(0, +) * 2 {
+        if action == "roll", time < durations.reduce(0, +) {
             time %= durations.reduce(0, +)
         }
         var index = durations.count - 1

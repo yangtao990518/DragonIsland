@@ -23,9 +23,17 @@ xcrun simctl install "$DEVICE" build/Simulator/Build/Products/Debug-iphonesimula
 for THEME in dark light; do
   for PAGE in world characters tasks detail gallery-chibi gallery-standing about; do
     xcrun simctl terminate "$DEVICE" com.dragonisle.prototype.app >/dev/null 2>&1 || true
-    xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE" "--appearance-$THEME"
+    xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE" "--appearance-$THEME" --scene-black
     sleep 3
     xcrun simctl io "$DEVICE" screenshot "output/previews/$PAGE-$THEME.png"
+  done
+done
+for SCENE in meadow night; do
+  for PAGE in about tasks; do
+    xcrun simctl terminate "$DEVICE" com.dragonisle.prototype.app >/dev/null 2>&1 || true
+    xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE" --appearance-light "--scene-$SCENE"
+    sleep 3
+    xcrun simctl io "$DEVICE" screenshot "output/previews/$PAGE-scene-$SCENE.png"
   done
 done
 mkdir -p output/verification

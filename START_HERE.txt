@@ -1,15 +1,15 @@
 mAIverse · 我的 AI 小世界
 
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。
-当前对外版本为 mAIverse V1.5，主 App 与扩展内部版本为 1.5（build 9）。本机安装包放在独立目录 D:\gpt_workspace\ios_ldd\mAIverse-V1.5\，保留旧版目录。IPA 名称为 mAIverse-V1.5-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
+当前对外版本为 mAIverse V1.6，主 App 与扩展内部版本为 1.6（build 10）。本机安装包放在独立目录 D:\gpt_workspace\ios_ldd\mAIverse-V1.6\，保留旧版目录。IPA 名称为 mAIverse-V1.6-unsigned.ipa；下载的原始源码 ZIP 本身仍不包含编译产物。
 
 1. 仓库根目录应直接看到 project.yml、README.md、App、Shared、Widget、Scripts、.github。
 2. 不要只上传这个 ZIP，也不要额外多套一层工程文件夹。
 3. 提交后进入 Actions → Build iOS IPA。
-4. 编译成功后，从 Artifacts 下载 mAIverse-V1.5-unsigned，解压取出带版本号的 IPA。后续版本名称自动对应 App 版本。
+4. 编译成功后，从 Artifacts 下载 mAIverse-V1.6-unsigned，解压取出带版本号的 IPA。后续版本名称自动对应 App 版本。
 5. 使用自己的签名工具安装；一定保留并签名 Widget 扩展。
 6. iPhone 打开 App → 选择 1 分钟 → 开始陪伴 → 返回桌面查看灵动岛。
 
 详细步骤见 README.md 和 docs/WINDOWS_INSTALL.md。
-V1.5 修复透明帧叠放导致的旧姿势透出；目标从 8fps 提高到 30fps，左右步行各 16 帧，步频与横移同步加快。转身与收脚时不再继续滑行。当前每五秒一个时段、60 秒预排循环，仍保留任务页筛选、深浅背景、人物卡片、看图手势和五款图标。
-实际构建与测试记录见 docs/VALIDATION.md，本次改动见 docs/RELEASE_V1.5.md；手机安装后按 docs/TEST_GUIDE.md 检查。30fps 是目标，不代表已在用户手机测得固定 30fps。
+V1.6 在关于页新增黑色、草地、星夜场景，可保存并应用当前陪伴。人物活动区拓宽，迈腿放慢，单程约 4.5 秒、到边后紧接折返；打滚改为轻滚一次。保留 30fps 目标、防重影覆盖和提前准备字形时序。系统黑色外壳仍保留。继续保留任务页筛选、深浅背景、人物卡片、看图手势和五款图标。
+实际构建与测试记录见 docs/VALIDATION.md，本次改动见 docs/RELEASE_V1.6.md；手机安装后按 docs/TEST_GUIDE.md 检查。30fps 是目标，不代表已在用户手机测得固定 30fps。

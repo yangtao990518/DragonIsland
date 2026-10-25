@@ -19,8 +19,8 @@
 
 ## 先读清楚这三点
 
-1. **当前对外版本为 mAIverse V1.5。** 主 App 和扩展均为 1.5（build 9），本机放在独立目录 `D:\gpt_workspace\ios_ldd\mAIverse-V1.5\`，保留旧版本。V1.5 修复透明旧帧透出与偶发旧姿势闪回，目标提高到 30fps，替换左右走路各 16 帧并加快步频与横移；实际构建结果见[验证记录](docs/VALIDATION.md)，完整改动见[本版清单](docs/RELEASE_V1.5.md)。编译和模拟器验证不代替用户手机测试。
-2. **V1.5 自动动作采用系统计时字形 / 遮罩播放预排片段。** 每段五秒，当前 60 秒片段循环，开局选择两套种子之一；不靠后台常驻或每帧更新 Activity。不是普通状态更新动画的两秒限制被取消；系统仍可能限帧，息屏低亮度与减弱动态时静态显示，实际设备表现需验证。
+1. **当前对外版本为 mAIverse V1.6。** 主 App 和扩展均为 1.6（build 10），本机使用独立目录 `D:\gpt_workspace\ios_ldd\mAIverse-V1.6\`。本版新增关于页的黑色 / 草地 / 星夜场景，放慢步态并扩大到边折返行程；完整改动见[本版清单](docs/RELEASE_V1.6.md)，实际构建结果见[验证记录](docs/VALIDATION.md)。编译和模拟器验证不代替用户手机测试。
+2. **V1.6 自动动作采用系统计时字形 / 遮罩播放预排片段。** 每段五秒，当前 60 秒片段循环，开局选择两套种子之一；不靠后台常驻或每帧更新 Activity。不是普通状态更新动画的两秒限制被取消；系统仍可能限帧，息屏低亮度与减弱动态时静态显示，实际设备表现需验证。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
 ## Windows：最快开始
@@ -29,8 +29,8 @@
 2. 登录 GitHub，新建一个空仓库，如 `DragonIsland`。公开仓库的标准 Actions runner 通常免费；私有仓库使用你的 Actions 配额。无需添加 Apple ID、密码或证书到仓库。
 3. 在仓库选择 **Add file → Upload files**，上传这个目录里的所有内容，**包括 `.github/workflows/build-ios.yml`**。不要只上传整个 ZIP，也不要多套一层 `DragonIsland` 目录。
 4. 提交到 `main` 后自动触发编译。或进入 **Actions → Build iOS IPA → Run workflow** 手动运行。
-5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.5-unsigned**（后续版本会相应更新）。
-6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.5-unsigned.ipa`、安装说明和 SHA-256 校验文件。
+5. 等待绿色成功标志，进入该次运行，滚到 **Artifacts**，下载带版本号的 **mAIverse-V1.6-unsigned**（后续版本会相应更新）。
+6. 解压下载到的 ZIP，里面才是 `mAIverse-V1.6-unsigned.ipa`、安装说明和 SHA-256 校验文件。
 7. 按 [Windows 签名安装说明](docs/WINDOWS_INSTALL.md)给 IPA 及扩展签名并安装。
 
 如果网页上传时漏了 `.github` 文件夹，可在仓库点击 **Add file → Create new file**，文件名填 `.github/workflows/build-ios.yml`，把本工程同名文件内容复制进去，提交后再进 Actions。

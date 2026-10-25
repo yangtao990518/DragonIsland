@@ -54,18 +54,25 @@ struct DragonLiveActivity: Widget {
                     .padding(.top, 2)
                     .padding(.bottom, 8)
                     .foregroundStyle(DragonPalette.softWhite)
+                    .padding(5)
+                    .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
             } compactLeading: {
                 IslandMotionPortrait(character: character, state: context.state)
             } compactTrailing: {
                 DragonCountdown(state: context.state, expired: context.isStale)
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundStyle(DragonPalette.lavender)
-                    .frame(width: 46)
+                    .foregroundStyle(DragonPalette.softWhite)
+                    .frame(width: 46, height: 32)
+                    .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+                    .clipShape(RoundedRectangle(cornerRadius: 7))
             } minimal: {
                 // Keep the tiny secondary-activity badge static. Only the
                 // normal compact island needs the full 30fps frame stack.
                 DragonPortrait(character: character, size: 26)
+                    .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+                    .clipShape(Circle())
             }
             .keylineTint(DragonPalette.lavender)
             .widgetURL(URL(string: "dragonisle://companion"))
@@ -99,6 +106,8 @@ private struct LockScreenCompanion: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .foregroundStyle(DragonPalette.softWhite)
+        .background { IslandSceneBackdrop(scene: context.state.islandScene) }
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
 
