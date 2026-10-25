@@ -14,7 +14,7 @@
 
 ## 先读清楚这三点
 
-1. **App 正式命名为 mAIverse。** 0.1.1（build 2）统一桌面名称、App 内标题与实时活动扩展名称，新产物名称为 `mAIverse-unsigned`，IPA 为 `output/mAIverse-unsigned.ipa`。初版[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40171957891)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查；用户已提供展开态截图，底部按钮存在裁切，待下一步修复。各版本实际验证情况见 [验证记录](docs/VALIDATION.md)。
+1. **App 正式命名为 mAIverse。** 0.1.1（build 2）统一桌面名称、App 内标题与实时活动扩展名称，新产物名称为 `mAIverse-unsigned`，IPA 为 `output/mAIverse-unsigned.ipa`。本版[云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40173652726)已通过 Xcode 16.4 编译、5 项 Swift 测试、4 项 Python 测试及真实 IPA 结构检查，并已确认 IPA 中的显示名与版本号。用户已提供初版展开态截图，底部按钮存在裁切，待下一步修复。各版本实际验证情况见 [验证记录](docs/VALIDATION.md)。
 2. **灵动岛不会永久循环播放小人跑步、眨眼动画。** 第一版在 App 内做待机浮动，在实时活动中使用角色图片、系统倒计时和状态更新时的短过渡。实时活动的显示与调度由 iOS 控制。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 

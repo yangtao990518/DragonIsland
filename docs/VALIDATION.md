@@ -37,4 +37,8 @@
 - 产品名称定为 mAIverse，含义为 My + AI + Universe；当前角色仍为小白，其他 AI 角色是后续计划。
 - 统一桌面显示名、App 内标题、扩展显示名及下载产物名称；Bundle ID、target、URL scheme 保持原值，以便覆盖升级。
 - 本次不调整展开态布局；底部按钮裁切问题仍保留为下一步工作。
-- 本版本云端编译与实际 IPA 名称检查结果待补充。
+- [本版本云端构建](https://github.com/yangtao990518/DragonIsland/actions/runs/40173652726)成功，源码提交 `700008b8d38482fdebccc97bf929192c31e3b981`；Xcode 16.4（16F6），5 项 Swift 模型测试、4 项 Python 打包测试及真实 IPA 结构检查均通过。
+- 产物 `mAIverse-unsigned`（artifact ID `12591376046`）已下载至 `output/mAIverse-unsigned.ipa`，4,031,281 字节；下载 ZIP 校验值与 GitHub artifact digest 一致。
+- IPA SHA-256：`3b02159a317476d2e69179a67fb1252b957220eca30e23c4633de53c3fd1fdec`，与产物中的 `SHA256SUMS.txt` 一致。
+- 实际解析 IPA 内主 App 和扩展的 Info.plist，确认显示名分别为 `mAIverse`、`mAIverse 实时活动`，版本均为 0.1.1（build 2），Bundle ID 与旧版本一致，Widget 扩展保留。
+- 原有竖屏相关编译警告仍在；本次没有新增编译错误。更名版的实际覆盖安装与桌面显示待用户验证，按钮裁切仍待下一步修复。
