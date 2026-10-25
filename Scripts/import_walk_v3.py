@@ -42,12 +42,18 @@ def main():
     for action,info in manifest['actions'].items():
         info['frames']=['../MotionV2/'+p for p in info['frames']]
     previews=ROOT/'build/motion-v3-preview';previews.mkdir(parents=True,exist_ok=True)
-    for action,source in [('walk_left','walk-left-16.png'),('walk_right','walk-right-16.png')]:
+    for action,source in [('walk_left','walk-left-16.png'),('walk_right','walk-right-16.png'),('roll','roll-16.png')]:
         atlas=Image.open(ART/'sources'/source).convert('RGBA')
+        boundaries=[0]
+        counts=(np.asarray(atlas)[:,:,3]>16).sum(axis=1)
+        for row in range(1,4):
+            center=row*atlas.height/4;radius=atlas.height/4*.22
+            boundaries.append(min(range(round(center-radius),round(center+radius)),key=lambda y:(counts[y],abs(y-center))))
+        boundaries.append(atlas.height)
         cells=[]
         for i in range(16):
             x,y=i%4,i//4
-            cells.append(clean_cell(atlas.crop((round(x*atlas.width/4),round(y*atlas.height/4),round((x+1)*atlas.width/4),round((y+1)*atlas.height/4)))))
+            cells.append(clean_cell(atlas.crop((round(x*atlas.width/4),boundaries[y],round((x+1)*atlas.width/4),boundaries[y+1]))))
         # One scale for the entire sequence; independent per-frame scaling causes
         # breathing/jitter even if the source animation is otherwise correct.
         scale=min(468/max(c.width for c in cells),566/max(c.height for c in cells))
@@ -58,9 +64,13 @@ def main():
             canvas.alpha_composite(cell,((512-cell.width)//2,600-cell.height))
             path=ART/f'frames/{action}/{i:03}.png';path.parent.mkdir(parents=True,exist_ok=True);canvas.save(path)
             frames.append(canvas)
+        if action=='roll':
+            neutral=Image.open(ROOT/'Art/MotionV2/frames/idle/000.png').convert('RGBA')
+            for i in (0,15):
+                frames[i]=neutral.copy();frames[i].save(ART/f'frames/{action}/{i:03}.png')
         # Every 30fps tick advances a genuine newly drawn pose. 16/30s cycle.
         durations=[33,34,33]*5+[33]
-        manifest['actions'][action]={'frames':[f'frames/{action}/{i:03}.png' for i in range(16)],'frameDurationsMs':durations,'durationMs':sum(durations),'loop':True,'uniqueDrawings':16,'mirrorAllowed':False}
+        manifest['actions'][action]={'frames':[f'frames/{action}/{i:03}.png' for i in range(16)],'frameDurationsMs':durations,'durationMs':sum(durations),'loop':action!='roll','uniqueDrawings':15 if action=='roll' else 16,'mirrorAllowed':False}
         contact=Image.new('RGB',(4*256,4*340),'#14111c');d=ImageDraw.Draw(contact)
         for i,frame in enumerate(frames):
             rgb=Image.new('RGBA',frame.size,'#14111c');rgb.alpha_composite(frame)
@@ -85,7 +95,7 @@ def main():
         else:entries += [{'action':'idle','frame':0,'durationMs':250}]
         manifest['clips'][name]={'entries':entries,'durationMs':1566,'note':'gait active exactly during 250..1316ms root movement; no sliding during turns'}
     (ART/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    print('Imported 16 left + 16 right poses; original input and V2 assets preserved.')
+    print('Imported 16 left + 16 right + 16 roll frames (shared neutral endpoints); V2 preserved.')
 
 
 if __name__=='__main__':main()

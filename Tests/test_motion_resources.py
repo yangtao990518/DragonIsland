@@ -69,5 +69,17 @@ class MotionResourcesTests(unittest.TestCase):
                     if previous['x']!=current['x']:
                         self.assertIn('Motion_walk_',current['asset'])
 
+    def test_dense_new_sequences_and_roll_share_clean_neutral_endpoints(self):
+        for action in ('walk_left','walk_right','roll'):
+            info=motion.MANIFEST['actions'][action]
+            self.assertEqual(len(info['frames']),16)
+            for relative in info['frames']:
+                with Image.open(motion.ART/relative) as frame:
+                    self.assertEqual(frame.size,(512,640))
+                    self.assertEqual(frame.mode,'RGBA')
+                    self.assertEqual(frame.getchannel('A').getextrema(),(0,255))
+        roll=motion.MANIFEST['actions']['roll']['frames']
+        self.assertEqual((motion.ART/roll[0]).read_bytes(),(motion.ART/roll[-1]).read_bytes())
+
 
 if __name__=='__main__':unittest.main()

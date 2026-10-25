@@ -66,5 +66,6 @@ jobs:
             build/InterfaceTests.xcresult
             output/previews/
             output/ui-test-attachments/
+            output/verification/
           if-no-files-found: ignore
           retention-days: 7

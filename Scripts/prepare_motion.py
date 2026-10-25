@@ -31,6 +31,7 @@ WALK_MOVE_START=250
 WALK_MOVE_MS=1066
 WALK_EXTENT=16
 GLYPH_PIXELS=96  # Exactly 32pt at 3x; avoid oversized bitmaps in 60 timer layers.
+ROLL_END=1066
 
 
 def key(action,index):
@@ -62,7 +63,7 @@ def schedule(mask,seed):
     if chosen.count('walk')%2:
         chosen[max(i for i,a in enumerate(chosen) if a=='walk')]='idle'
     idle=timeline([{'action':'idle','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['idle']['frameDurationsMs'])])
-    roll=timeline([{'action':'roll','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['roll']['frameDurationsMs'])])
+    roll=timeline([{'action':'roll','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['roll']['frameDurationsMs'])]*2)
     right=timeline(MANIFEST['clips']['walk_burst']['entries'])
     left=timeline(MANIFEST['clips']['walk_left_burst']['entries'])
     frames=[];position=-WALK_EXTENT if 'walk' in chosen else 0
@@ -77,9 +78,9 @@ def schedule(mask,seed):
                 a,i=sample(clip,ms)
                 # Actual root movement is baked into color glyphs, not a background task.
                 p=start+(end-start)*min(1,max(0,(ms-WALK_MOVE_START)/WALK_MOVE_MS))
-            elif action=='roll' and ms<1600:a,i=sample(roll,ms);p=start
+            elif action=='roll' and ms<ROLL_END:a,i=sample(roll,ms);p=start
             else:
-                a,i=sample(idle,(ms-(WALK_END if action=='walk' else 1600 if action=='roll' else 0))%2000)
+                a,i=sample(idle,(ms-(WALK_END if action=='walk' else ROLL_END if action=='roll' else 0))%2000)
                 p=end
             frames.append({'asset':key(a,i),'x':round(p),'action':action})
         position=end

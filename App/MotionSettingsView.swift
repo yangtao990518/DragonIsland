@@ -79,6 +79,9 @@ struct MotionArtworkPreview: View {
         guard let durations = MotionTimeline.shared?.durations?[action], !durations.isEmpty else { return nil }
         let period = action == "roll" ? 2000 : durations.reduce(0, +)
         var time = Int(elapsed * 1000) % period
+        if action == "roll", time < durations.reduce(0, +) * 2 {
+            time %= durations.reduce(0, +)
+        }
         var index = durations.count - 1
         for i in durations.indices { if time < durations[i] { index = i; break }; time -= durations[i] }
         return MotionFrame(asset: "Motion_\(action)_\(String(format: "%03d", index))", x: 0, action: action)
