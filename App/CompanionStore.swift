@@ -46,6 +46,7 @@ final class CompanionStore: ObservableObject {
 
     private func clear() {
         cancelMotionTest()
+        motionTestStatus = nil
         contentTask?.cancel()
         stateTask?.cancel()
         activity = nil

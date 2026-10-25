@@ -91,5 +91,19 @@ final class CharacterInterfaceTests: XCTestCase {
         expanded.name = "system-island-expanded"
         expanded.lifetime = .keepAlways
         add(expanded)
+        app.activate()
+        let roll = app.buttons["test-roll"]
+        for _ in 0..<4 { if roll.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(roll.waitForExistence(timeout: 5))
+        roll.tap()
+        XCUIDevice.shared.press(.home)
+        sleep(4)
+        for index in 0..<12 {
+            let frame = XCTAttachment(screenshot: springboard.screenshot())
+            frame.name = "system-island-roll-\(index)"
+            frame.lifetime = .keepAlways
+            add(frame)
+            usleep(150_000)
+        }
     }
 }
