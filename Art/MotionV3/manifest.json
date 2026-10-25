@@ -1,0 +1,554 @@
+{
+  "schemaVersion": 2,
+  "characterID": "xiaobai",
+  "artworkGeneration": "imagegen",
+  "canvas": [
+    512,
+    640
+  ],
+  "anchor": {
+    "x": 256,
+    "groundY": 600
+  },
+  "status": "V1.5_walk_replacement_30fps_target",
+  "actions": {
+    "walk_left": {
+      "frames": [
+        "frames/walk_left/000.png",
+        "frames/walk_left/001.png",
+        "frames/walk_left/002.png",
+        "frames/walk_left/003.png",
+        "frames/walk_left/004.png",
+        "frames/walk_left/005.png",
+        "frames/walk_left/006.png",
+        "frames/walk_left/007.png",
+        "frames/walk_left/008.png",
+        "frames/walk_left/009.png",
+        "frames/walk_left/010.png",
+        "frames/walk_left/011.png",
+        "frames/walk_left/012.png",
+        "frames/walk_left/013.png",
+        "frames/walk_left/014.png",
+        "frames/walk_left/015.png"
+      ],
+      "frameDurationsMs": [
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33
+      ],
+      "durationMs": 533,
+      "loop": true,
+      "uniqueDrawings": 16,
+      "mirrorAllowed": false
+    },
+    "walk_right": {
+      "frames": [
+        "frames/walk_right/000.png",
+        "frames/walk_right/001.png",
+        "frames/walk_right/002.png",
+        "frames/walk_right/003.png",
+        "frames/walk_right/004.png",
+        "frames/walk_right/005.png",
+        "frames/walk_right/006.png",
+        "frames/walk_right/007.png",
+        "frames/walk_right/008.png",
+        "frames/walk_right/009.png",
+        "frames/walk_right/010.png",
+        "frames/walk_right/011.png",
+        "frames/walk_right/012.png",
+        "frames/walk_right/013.png",
+        "frames/walk_right/014.png",
+        "frames/walk_right/015.png"
+      ],
+      "frameDurationsMs": [
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33,
+        34,
+        33,
+        33
+      ],
+      "durationMs": 533,
+      "loop": true,
+      "uniqueDrawings": 16,
+      "mirrorAllowed": false
+    },
+    "idle": {
+      "frames": [
+        "../MotionV2/frames/idle/000.png",
+        "../MotionV2/frames/idle/001.png",
+        "../MotionV2/frames/idle/002.png",
+        "../MotionV2/frames/idle/003.png",
+        "../MotionV2/frames/idle/004.png",
+        "../MotionV2/frames/idle/005.png",
+        "../MotionV2/frames/idle/006.png",
+        "../MotionV2/frames/idle/007.png"
+      ],
+      "frameDurationsMs": [
+        500,
+        180,
+        180,
+        350,
+        90,
+        120,
+        90,
+        490
+      ],
+      "durationMs": 2000,
+      "loop": true,
+      "uniqueDrawings": 8,
+      "mirrorAllowed": false
+    },
+    "roll": {
+      "frames": [
+        "../MotionV2/frames/roll/000.png",
+        "../MotionV2/frames/roll/001.png",
+        "../MotionV2/frames/roll/002.png",
+        "../MotionV2/frames/roll/003.png",
+        "../MotionV2/frames/roll/004.png",
+        "../MotionV2/frames/roll/005.png",
+        "../MotionV2/frames/roll/006.png",
+        "../MotionV2/frames/roll/007.png"
+      ],
+      "frameDurationsMs": [
+        160,
+        180,
+        210,
+        240,
+        230,
+        210,
+        200,
+        170
+      ],
+      "durationMs": 1600,
+      "loop": false,
+      "uniqueDrawings": 7,
+      "mirrorAllowed": false
+    },
+    "turn_left": {
+      "frames": [
+        "../MotionV2/frames/turn_left/000.png",
+        "../MotionV2/frames/turn_left/001.png",
+        "../MotionV2/frames/turn_left/002.png",
+        "../MotionV2/frames/turn_left/003.png"
+      ],
+      "frameDurationsMs": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "durationMs": 400,
+      "loop": false,
+      "uniqueDrawings": 4,
+      "mirrorAllowed": false
+    }
+  },
+  "clips": {
+    "walk_burst": {
+      "entries": [
+        {
+          "action": "idle",
+          "frame": 0,
+          "durationMs": 250
+        },
+        {
+          "action": "walk_right",
+          "frame": 0,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 2,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 3,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 4,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 5,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 6,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 7,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 8,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 9,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 10,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 11,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 12,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 13,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 14,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 15,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 0,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 2,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 3,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 4,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 5,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 6,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 7,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 8,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 9,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 10,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 11,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 12,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 13,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_right",
+          "frame": 14,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_right",
+          "frame": 15,
+          "durationMs": 33
+        },
+        {
+          "action": "idle",
+          "frame": 0,
+          "durationMs": 250
+        }
+      ],
+      "durationMs": 1566,
+      "note": "gait active exactly during 250..1316ms root movement; no sliding during turns"
+    },
+    "walk_left_burst": {
+      "entries": [
+        {
+          "action": "turn_left",
+          "frame": 0,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 1,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 2,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 3,
+          "durationMs": 62.5
+        },
+        {
+          "action": "walk_left",
+          "frame": 0,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 1,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 2,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 3,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 4,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 5,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 6,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 7,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 8,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 9,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 10,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 11,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 12,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 13,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 14,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 15,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 0,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 1,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 2,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 3,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 4,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 5,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 6,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 7,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 8,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 9,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 10,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 11,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 12,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 13,
+          "durationMs": 34
+        },
+        {
+          "action": "walk_left",
+          "frame": 14,
+          "durationMs": 33
+        },
+        {
+          "action": "walk_left",
+          "frame": 15,
+          "durationMs": 33
+        },
+        {
+          "action": "turn_left",
+          "frame": 3,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 2,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 1,
+          "durationMs": 62.5
+        },
+        {
+          "action": "turn_left",
+          "frame": 0,
+          "durationMs": 62.5
+        }
+      ],
+      "durationMs": 1566,
+      "note": "gait active exactly during 250..1316ms root movement; no sliding during turns"
+    }
+  }
+}

@@ -91,6 +91,18 @@ final class CompanionStore: ObservableObject {
         var state = CompanionSession(minutes: minutes)
         state.automaticMotionPlan = motionSettings.plan(seed: Int.random(in: 0..<2))
         state.motionEpoch = state.startedAt
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--preview-live-motion") {
+            // Reproducible system-video QA: includes both directions and rolls.
+            state.automaticMotionPlan = 6
+            if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let data: [String: Any] = ["epoch": state.startedAt.timeIntervalSince1970, "plan": 6, "fps": 30]
+                if let json = try? JSONSerialization.data(withJSONObject: data) {
+                    try? json.write(to: documents.appendingPathComponent("motion-capture.json"), options: .atomic)
+                }
+            }
+        }
+        #endif
         do {
             let created = try Activity.request(
                 attributes: DragonAttributes(companionName: selectedCharacter.name, sessionID: UUID(),

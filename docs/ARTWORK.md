@@ -26,3 +26,7 @@ Use case: background-extraction. Edit target: the provided full-body white-haire
 - 步行包含抬腿与重心变化，打滚包含蹲下、蜷身、倒转和起身；源文件及预览另存本机 `mAIverse_DragonGirl_Animation_Assets_V2`，没有覆盖用户输入素材。
 - `Scripts/prepare_motion.py` 生成共享 imageset、60 秒播放计划与彩色字体，字体重复帧采用引用去重；App 预览和 Widget 使用同一套帧与计划。素材由 ImageGen 绘制后确定性切分、统一画布与透明边缘，没有把简单图片旋转称为补画。
 - 母图已更新为白紫造型、两只白角、小握拳。发梢与衣纹仍有轻微生成差异，不声称所有帧逐像素一致。大立绘继续使用原已确认版本。
+
+## V1.5 左右走路替换
+
+`Art/MotionV3/` 保存两套独立生成的 4×4 步行图集、各 16 个透明帧和全部提示词。`Scripts/import_walk_v3.py` 确定性切分、移除邻格孤立碎片并按统一比例 / 地面线打包，需要本地 Pillow 和 NumPy；构建直接消费已提交帧，不需要运行切图脚本。待机、打滚、转身引用 V2，主静态母图与大立绘保留。播放代码以 30fps 采样，岛上字体使用 96 像素黑色不透明底面防旧姿势透出，App 中的帧仍保留透明。

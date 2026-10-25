@@ -42,10 +42,14 @@ def verify(path):
                 raise ValueError(f"Missing compiled character assets in {root}")
             if tuple(map(int, app['CFBundleShortVersionString'].split('.'))) >= (1,4):
                 fonts=info.get('UIAppFonts',[])
-                if len(fonts)!=129 or any(f'{root}/{font}' not in names for font in fonts):
-                    raise ValueError(f'Missing registered system-timer motion fonts in {root}')
                 data=json.loads(archive.read(f'{root}/MotionTimeline.json'))
-                if len(data['plans'])!=8 or any(len(p['frames'])!=480 for p in data['plans']):
+                fps=data.get('fps',0)
+                period=data.get('period',0)
+                required_fps=30 if tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,5) else 8
+                expected_fonts=8*2*required_fps+1
+                if len(fonts)!=expected_fonts or any(f'{root}/{font}' not in names for font in fonts):
+                    raise ValueError(f'Missing registered system-timer motion fonts in {root}')
+                if fps!=required_fps or period!=60 or len(data['plans'])!=8 or any(len(p['frames'])!=fps*period for p in data['plans']):
                     raise ValueError(f'Incomplete automatic-motion plans in {root}')
         for key in ("CFBundleShortVersionString", "CFBundleVersion"):
             if app[key] != widget[key]:

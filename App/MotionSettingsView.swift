@@ -29,7 +29,7 @@ struct MotionSettingsView: View {
                 Text("开始陪伴后回到桌面，无需再点动作按钮。")
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                 Divider()
-                Toggle("走路 · 来回散步", isOn: binding(\.walk))
+                Toggle("走路 · 轻快来回", isOn: binding(\.walk))
                     .accessibilityIdentifier("walkMotionToggle")
                 Toggle("打滚 · 蜷身再起身", isOn: binding(\.roll))
                     .accessibilityIdentifier("rollMotionToggle")
@@ -55,7 +55,7 @@ struct MotionArtworkPreview: View {
     @State private var began = Date()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.125, paused: reduceMotion)) { context in
+        TimelineView(.animation(minimumInterval: 1.0 / Double(MotionTimeline.shared?.fps ?? 30), paused: reduceMotion)) { context in
             let elapsed = context.date.timeIntervalSince(began)
             if let frame = frame(elapsed: elapsed) {
                 Image(frame.asset).resizable().scaledToFit()

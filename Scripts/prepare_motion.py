@@ -19,13 +19,18 @@ from fontTools.ttLib.tables.sbixGlyph import Glyph
 from fontTools.ttLib.tables.sbixStrike import Strike
 
 ROOT=Path(__file__).resolve().parents[1]
-ART=ROOT/'Art/MotionV2'
+ART=ROOT/'Art/MotionV3'
 OUTPUT=ROOT/'Shared/Resources/MotionFonts'
 MANIFEST=json.loads((ART/'manifest.json').read_text())
-PHASES=16
-FPS=8
+FPS=30
+PHASES=FPS*2
 SEEDS=2
 PERIOD=60
+WALK_END=1566
+WALK_MOVE_START=250
+WALK_MOVE_MS=1066
+WALK_EXTENT=16
+GLYPH_PIXELS=96  # Exactly 32pt at 3x; avoid oversized bitmaps in 60 timer layers.
 
 
 def key(action,index):
@@ -60,25 +65,36 @@ def schedule(mask,seed):
     roll=timeline([{'action':'roll','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['roll']['frameDurationsMs'])])
     right=timeline(MANIFEST['clips']['walk_burst']['entries'])
     left=timeline(MANIFEST['clips']['walk_left_burst']['entries'])
-    frames=[];position=-10 if 'walk' in chosen else 0
+    frames=[];position=-WALK_EXTENT if 'walk' in chosen else 0
     for slot,action in enumerate(chosen):
         start=position
         direction='walk_right' if start<0 else 'walk_left'
         end=-start if action=='walk' else start
         clip=right if direction=='walk_right' else left
-        for j in range(40):
-            ms=j*125
-            if action=='walk' and ms<2000:
+        for j in range(FPS*5):
+            ms=j*1000/FPS
+            if action=='walk' and ms<WALK_END:
                 a,i=sample(clip,ms)
                 # Actual root movement is baked into color glyphs, not a background task.
-                p=start+(end-start)*min(1,max(0,(ms-180)/1500))
+                p=start+(end-start)*min(1,max(0,(ms-WALK_MOVE_START)/WALK_MOVE_MS))
             elif action=='roll' and ms<1600:a,i=sample(roll,ms);p=start
             else:
-                a,i=sample(idle,(ms-(2000 if action=='walk' else 1600 if action=='roll' else 0))%2000)
+                a,i=sample(idle,(ms-(WALK_END if action=='walk' else 1600 if action=='roll' else 0))%2000)
                 p=end
             frames.append({'asset':key(a,i),'x':round(p),'action':action})
         position=end
     return chosen,frames
+
+
+def render_frame(artwork,frame,*,opaque=True):
+    # Timer masks reveal cumulative stacks. Transparent PNGs let old silhouettes
+    # show THROUGH the new pose. A fully opaque island-black tile replaces all
+    # older pixels, including where a previous leg/tail used to be. This matte
+    # is only for island fonts; app imagesets retain their original alpha.
+    canvas=Image.new('RGBA',(GLYPH_PIXELS,GLYPH_PIXELS),(0,0,0,255 if opaque else 0))
+    image=artwork[frame['asset']].resize((72,90),Image.Resampling.LANCZOS)
+    canvas.alpha_composite(image,(12+round(frame['x']*GLYPH_PIXELS/128),3))
+    return canvas
 
 
 def base_font(name,glyph_order):
@@ -115,16 +131,14 @@ def main():
     artwork={}
     for action,info in MANIFEST['actions'].items():
         for i,path in enumerate(info['frames']):
-            image=Image.open(ART/path).convert('RGBA')
+            image=Image.open((ART/path).resolve()).convert('RGBA')
             artwork[key(action,i)]=image
             imageset(SHARED,key(action,i),image,(64,80))
     rendered={}
     def png(frame):
         k=(frame['asset'],frame['x'])
         if k not in rendered:
-            canvas=Image.new('RGBA',(128,128))
-            image=artwork[k[0]].resize((96,120),Image.Resampling.LANCZOS)
-            canvas.alpha_composite(image,(16+k[1],4))
+            canvas=render_frame(artwork,frame)
             buf=BytesIO();canvas.save(buf,format='PNG');rendered[k]=buf.getvalue()
         return rendered[k]
     mask_font()
@@ -138,7 +152,7 @@ def main():
                 name=f'mAIverseP{bank}F{phase}'
                 order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'f{s:02}' for s in range(60)]
                 font=base_font(name,order)
-                strike=Strike(ppem=128,resolution=72)
+                strike=Strike(ppem=GLYPH_PIXELS,resolution=72)
                 encoded={}
                 for n in order:strike.glyphs[n]=Glyph(glyphName=n)
                 for second in range(60):

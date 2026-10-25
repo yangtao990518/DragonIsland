@@ -9,17 +9,18 @@ struct TimerMotionPortrait: View {
     let size: CGFloat
 
     private var reference: Date { epoch.addingTimeInterval(-60) }
+    private var framesPerSecond: Int { MotionTimeline.shared?.fps ?? 30 }
     var body: some View {
         ZStack {
             ZStack {
                 layer(0)
-                ForEach(1..<8, id: \.self) { index in
-                    layer(index).mask(gate(offset: -Double(index) / 8))
+                ForEach(1..<framesPerSecond, id: \.self) { index in
+                    layer(index).mask(gate(offset: -Double(index) / Double(framesPerSecond)))
                 }
             }
             ZStack {
-                ForEach(8..<16, id: \.self) { index in
-                    layer(index).mask(gate(offset: -Double(index) / 8))
+                ForEach(framesPerSecond..<(framesPerSecond * 2), id: \.self) { index in
+                    layer(index).mask(gate(offset: -Double(index) / Double(framesPerSecond)))
                 }
             }.mask(gate(offset: 1))
         }
@@ -28,7 +29,7 @@ struct TimerMotionPortrait: View {
         .accessibilityHidden(true)
     }
     private func layer(_ index: Int) -> some View {
-        timerGlyph(font: "mAIverseP\(plan)F\(index)", offset: 1 + Double(index) / 8)
+        timerGlyph(font: "mAIverseP\(plan)F\(index)", offset: 1 + Double(index) / Double(framesPerSecond))
     }
     private func gate(offset: Double) -> some View {
         timerGlyph(font: "mAIverseGate", offset: -offset).foregroundStyle(.white)

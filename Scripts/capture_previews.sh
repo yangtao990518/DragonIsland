@@ -28,11 +28,23 @@ for THEME in dark light; do
     xcrun simctl io "$DEVICE" screenshot "output/previews/$PAGE-$THEME.png"
   done
 done
+mkdir -p output/verification
+python3 -c 'import time;print(time.time())' > output/verification/video-start-unix.txt
+xcrun simctl io "$DEVICE" recordVideo --codec=h264 output/verification/system-island-motion.mp4 > build/video-capture.log 2>&1 &
+VIDEO_PID=$!
+trap 'kill -INT "$VIDEO_PID" 2>/dev/null || true' EXIT
 xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
   -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE" \
   -derivedDataPath build/Simulator -resultBundlePath build/InterfaceTests.xcresult \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test \
   > build/interface-tests.log 2>&1 || TEST_STATUS=$?
 xcrun xcresulttool export attachments --path build/InterfaceTests.xcresult --output-path output/ui-test-attachments
+kill -INT "$VIDEO_PID" 2>/dev/null || true
+wait "$VIDEO_PID" || true
+trap - EXIT
+cp build/interface-tests.log output/verification/interface-tests.log
+APP_DATA="$(xcrun simctl get_app_container "$DEVICE" com.dragonisle.prototype.app data)"
+cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json
+xcrun swift Scripts/analyze_motion_video.swift output/verification/system-island-motion.mp4 output/verification
 xcrun simctl shutdown "$DEVICE"
 if [[ "$TEST_STATUS" != "0" ]]; then tail -100 build/interface-tests.log; exit "$TEST_STATUS"; fi
