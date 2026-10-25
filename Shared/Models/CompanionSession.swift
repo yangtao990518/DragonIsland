@@ -53,6 +53,8 @@ struct CompanionSession: Codable, Hashable {
     var motionSequence: Int?
     var walkSteps: Int?
     var rollTurns: Int?
+    var automaticMotionPlan: Int?
+    var motionEpoch: Date?
 
     private mutating func recordMotion(_ action: CompanionMotion) {
         motion = action

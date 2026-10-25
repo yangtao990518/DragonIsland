@@ -2,11 +2,12 @@ import SwiftUI
 import UIKit
 
 private enum WorldTab: Hashable {
-    case world, characters, about
+    case world, characters, tasks, about
 
     static var initial: WorldTab {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-characters") { return .characters }
+        if ProcessInfo.processInfo.arguments.contains("--preview-tasks") { return .tasks }
         if ProcessInfo.processInfo.arguments.contains("--preview-about") { return .about }
         #endif
         return .world
@@ -27,6 +28,8 @@ struct ContentView: View {
                 .tabItem { Label("我的世界", systemImage: "sparkles") }.tag(WorldTab.world)
             charactersPage
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
+            MotionSettingsView(store: store)
+                .tabItem { Label("任务", systemImage: "figure.play") }.tag(WorldTab.tasks)
             aboutPage
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
@@ -49,7 +52,7 @@ struct ContentView: View {
             if args.contains("--preview-detail") || args.contains("--preview-gallery-chibi") || args.contains("--preview-gallery-standing") {
                 detailCharacter = store.selectedCharacter
             }
-            if args.contains("--preview-live-motion") { await store.start(minutes: 1) }
+            if args.contains("--preview-live-motion") { await store.setMotionSettings(MotionSettings()); await store.start(minutes: 25) }
             #endif
         }
         .alert("mAIverse", isPresented: Binding(
@@ -166,7 +169,7 @@ struct ContentView: View {
                             await store.changeMood()
                         }
                     }
-                    motionSampleControls
+                    Button("挑选自动动作") { tab = .tasks }.font(.system(size: 12)).accessibilityIdentifier("openMotionSettings")
                 }
                 Button { Task { await store.finish() } } label: {
                     Text(expired ? "收起这一轮，准备再出发" : "结束本轮陪伴")
@@ -257,7 +260,7 @@ struct ContentView: View {
                 .font(.system(size: 14)).foregroundStyle(AppPalette.accent)
             }.worldCard()
             VStack(spacing: 7) {
-                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.3")")
+                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.4")")
                 Text("角色为非官方同人形象，与相关 AI 服务提供方无隶属关系。")
             }
             .font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.35))
@@ -265,22 +268,4 @@ struct ContentView: View {
         }
     }
 
-    private var motionSampleControls: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            Text("岛上动作小样").font(.system(size: 12, weight: .medium))
-            HStack(spacing: 9) {
-                Button { store.scheduleMotionTest(.walk) } label: {
-                    Label("测试走动", systemImage: "figure.walk")
-                }.accessibilityIdentifier("test-walk")
-                Button { store.scheduleMotionTest(.roll) } label: {
-                    Label("测试翻滚", systemImage: "arrow.clockwise")
-                }.accessibilityIdentifier("test-roll")
-            }
-            .font(.system(size: 11, weight: .medium)).buttonStyle(.bordered)
-            .disabled(store.busy)
-            Text(store.motionTestStatus ?? "点测试后 5 秒内回桌面，观察一次短动作。")
-                .font(.system(size: 10)).foregroundStyle(.secondary)
-                .accessibilityIdentifier("motionTestStatus")
-        }
-    }
 }

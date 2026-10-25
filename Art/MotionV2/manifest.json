@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "characterID": "xiaobai",
+  "artworkGeneration": "imagegen",
+  "canvas": [
+    512,
+    640
+  ],
+  "anchor": {
+    "x": 256,
+    "groundY": 600
+  },
+  "status": "artwork_candidate_not_integrated_or_live_activity_validated",
+  "actions": {
+    "walk_left": {
+      "frames": [
+        "frames/walk_left/000.png",
+        "frames/walk_left/001.png",
+        "frames/walk_left/002.png",
+        "frames/walk_left/003.png",
+        "frames/walk_left/004.png",
+        "frames/walk_left/005.png",
+        "frames/walk_left/006.png",
+        "frames/walk_left/007.png"
+      ],
+      "frameDurationsMs": [
+        90,
+        90,
+        110,
+        110,
+        90,
+        90,
+        110,
+        110
+      ],
+      "durationMs": 800,
+      "loop": true,
+      "uniqueDrawings": 8,
+      "mirrorAllowed": false
+    },
+    "walk_right": {
+      "frames": [
+        "frames/walk_right/000.png",
+        "frames/walk_right/001.png",
+        "frames/walk_right/002.png",
+        "frames/walk_right/003.png",
+        "frames/walk_right/004.png",
+        "frames/walk_right/005.png",
+        "frames/walk_right/006.png",
+        "frames/walk_right/007.png"
+      ],
+      "frameDurationsMs": [
+        90,
+        90,
+        110,
+        110,
+        90,
+        90,
+        110,
+        110
+      ],
+      "durationMs": 800,
+      "loop": true,
+      "uniqueDrawings": 8,
+      "mirrorAllowed": false
+    },
+    "idle": {
+      "frames": [
+        "frames/idle/000.png",
+        "frames/idle/001.png",
+        "frames/idle/002.png",
+        "frames/idle/003.png",
+        "frames/idle/004.png",
+        "frames/idle/005.png",
+        "frames/idle/006.png",
+        "frames/idle/007.png"
+      ],
+      "frameDurationsMs": [
+        500,
+        180,
+        180,
+        350,
+        90,
+        120,
+        90,
+        490
+      ],
+      "durationMs": 2000,
+      "loop": true,
+      "uniqueDrawings": 8,
+      "mirrorAllowed": false
+    },
+    "roll": {
+      "frames": [
+        "frames/roll/000.png",
+        "frames/roll/001.png",
+        "frames/roll/002.png",
+        "frames/roll/003.png",
+        "frames/roll/004.png",
+        "frames/roll/005.png",
+        "frames/roll/006.png",
+        "frames/roll/007.png"
+      ],
+      "frameDurationsMs": [
+        160,
+        180,
+        210,
+        240,
+        230,
+        210,
+        200,
+        170
+      ],
+      "durationMs": 1600,
+      "loop": false,
+      "uniqueDrawings": 7,
+      "mirrorAllowed": false
+    },
+    "turn_left": {
+      "frames": [
+        "frames/turn_left/000.png",
+        "frames/turn_left/001.png",
+        "frames/turn_left/002.png",
+        "frames/turn_left/003.png"
+      ],
+      "frameDurationsMs": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "durationMs": 400,
+      "loop": false,
+      "uniqueDrawings": 4,
+      "mirrorAllowed": false
+    }
+  },
+  "clips": {
+    "walk_burst": {
+      "entries": [
+        {
+          "action": "idle",
+          "frame": 0,
+          "durationMs": 100
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 80
+        },
+        {
+          "action": "walk_right",
+          "frame": 0,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 2,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 3,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 4,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 5,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 6,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 7,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 0,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 2,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 3,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 4,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 5,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_right",
+          "frame": 6,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 7,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_right",
+          "frame": 1,
+          "durationMs": 80
+        },
+        {
+          "action": "idle",
+          "frame": 0,
+          "durationMs": 140
+        }
+      ],
+      "durationMs": 2000,
+      "note": "two complete cycles with shared neutral endpoints"
+    },
+    "walk_left_burst": {
+      "entries": [
+        {
+          "action": "turn_left",
+          "frame": 0,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 1,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 2,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 3,
+          "durationMs": 100
+        },
+        {
+          "action": "walk_left",
+          "frame": 0,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_left",
+          "frame": 1,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_left",
+          "frame": 2,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_left",
+          "frame": 3,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_left",
+          "frame": 4,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_left",
+          "frame": 5,
+          "durationMs": 90
+        },
+        {
+          "action": "walk_left",
+          "frame": 6,
+          "durationMs": 110
+        },
+        {
+          "action": "walk_left",
+          "frame": 7,
+          "durationMs": 110
+        },
+        {
+          "action": "turn_left",
+          "frame": 3,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 2,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 1,
+          "durationMs": 100
+        },
+        {
+          "action": "turn_left",
+          "frame": 0,
+          "durationMs": 100
+        },
+        {
+          "action": "idle",
+          "frame": 0,
+          "durationMs": 400
+        }
+      ],
+      "durationMs": 2000,
+      "note": "turn to left, one full gait cycle, turn back, common neutral"
+    }
+  }
+}

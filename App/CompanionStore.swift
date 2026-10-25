@@ -5,12 +5,10 @@ import UIKit
 
 @MainActor
 final class CompanionStore: ObservableObject {
+    @Published private(set) var motionSettings = MotionSettings.load()
     @Published private(set) var session: CompanionSession?
     @Published private(set) var busy = false
     @Published var notice: String?
-    @Published private(set) var motionTestStatus: String?
-    private var motionTask: Task<Void, Never>?
-    private var motionBackgroundTask: UIBackgroundTaskIdentifier = .invalid
     let characters = CharacterCatalog.load()
     @Published private(set) var selectedCharacterID = UserDefaults.standard.string(forKey: "selectedCharacterID") ?? "xiaobai"
     @Published private(set) var activeCharacterID: String?
@@ -45,8 +43,6 @@ final class CompanionStore: ObservableObject {
     }
 
     private func clear() {
-        cancelMotionTest()
-        motionTestStatus = nil
         contentTask?.cancel()
         stateTask?.cancel()
         activity = nil
@@ -92,7 +88,9 @@ final class CompanionStore: ObservableObject {
             await previous.end(previous.content, dismissalPolicy: .immediate)
         }
         clear()
-        let state = CompanionSession(minutes: minutes)
+        var state = CompanionSession(minutes: minutes)
+        state.automaticMotionPlan = motionSettings.plan(seed: Int.random(in: 0..<2))
+        state.motionEpoch = state.startedAt
         do {
             let created = try Activity.request(
                 attributes: DragonAttributes(companionName: selectedCharacter.name, sessionID: UUID(),
@@ -110,6 +108,17 @@ final class CompanionStore: ObservableObject {
     func changeMood() async { await mutate { $0.cycleMood() } }
     func performMotion(_ motion: CompanionMotion) async { await mutate { $0.performMotion(motion) } }
 
+    func setMotionSettings(_ value: MotionSettings) async {
+        guard !busy else { return }
+        motionSettings = value
+        value.save()
+        await mutate {
+            $0.automaticMotionPlan = value.plan(seed: 0)
+            $0.motionEpoch = Date()
+            $0.revision += 1
+        }
+    }
+
     private func mutate(_ update: (inout CompanionSession) -> Void) async {
         guard !busy, let current = activity else { return }
         busy = true
@@ -124,39 +133,6 @@ final class CompanionStore: ObservableObject {
         update(&state)
         await current.update(ActivityContent(state: state, staleDate: state.endsAt))
         if activity?.id == current.id { session = state }
-    }
-
-    func scheduleMotionTest(_ motion: CompanionMotion) {
-        guard !busy, let current = activity, !current.content.state.hasExpired() else { return }
-        cancelMotionTest()
-        motionBackgroundTask = UIApplication.shared.beginBackgroundTask(withName: "mAIverseMotionSample") { [weak self] in
-            Task { @MainActor in
-                self?.motionTestStatus = "系统已结束这次测试，请重新触发。"
-                self?.cancelMotionTest()
-            }
-        }
-        guard motionBackgroundTask != .invalid else {
-            motionTestStatus = "无法安排延后测试，可在展开态点招呼或心情观察短动作。"
-            return
-        }
-        let activityID = current.id
-        motionTestStatus = "5 秒后发送\(motion.title)小样，请现在回到桌面。"
-        motionTask = Task { [weak self] in
-            do { try await Task.sleep(nanoseconds: 5_000_000_000) } catch { return }
-            guard let self, self.activity?.id == activityID else { return }
-            await self.performMotion(motion)
-            self.motionTestStatus = "已发送一次\(motion.title)更新；动画是否播放由系统决定。"
-            self.cancelMotionTest()
-        }
-    }
-
-    private func cancelMotionTest() {
-        motionTask?.cancel()
-        motionTask = nil
-        if motionBackgroundTask != .invalid {
-            UIApplication.shared.endBackgroundTask(motionBackgroundTask)
-            motionBackgroundTask = .invalid
-        }
     }
 
     func finish() async {

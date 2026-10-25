@@ -21,7 +21,7 @@ xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
   > build/simulator.log 2>&1 || { tail -80 build/simulator.log; exit 1; }
 xcrun simctl install "$DEVICE" build/Simulator/Build/Products/Debug-iphonesimulator/DragonIsland.app
 for THEME in dark light; do
-  for PAGE in world characters detail gallery-chibi gallery-standing about; do
+  for PAGE in world characters tasks detail gallery-chibi gallery-standing about; do
     xcrun simctl terminate "$DEVICE" com.dragonisle.prototype.app >/dev/null 2>&1 || true
     xcrun simctl launch "$DEVICE" com.dragonisle.prototype.app --maiverse-capture "--preview-$PAGE" "--appearance-$THEME"
     sleep 3

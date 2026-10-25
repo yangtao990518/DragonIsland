@@ -12,3 +12,7 @@ Config/
 *.key
 __pycache__/
 *.pyc
+Shared/Resources/MotionFonts/
+Shared/Resources/MotionTimeline.json
+Shared/Resources/Companion.xcassets/Motion_*.imageset/
+motion-fonts.yml

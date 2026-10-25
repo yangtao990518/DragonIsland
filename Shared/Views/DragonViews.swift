@@ -43,11 +43,15 @@ struct IslandMotionPortrait: View {
     @Environment(\.isLuminanceReduced) private var luminanceReduced
 
     var body: some View {
-        DragonPortrait(character: character, size: size)
-            .rotationEffect(.degrees(Double(state.rollTurns ?? 0) * 360))
-            .offset(x: (state.walkSteps ?? 0).isMultiple(of: 2) ? -3 : 3)
-            .animation(reduceMotion || luminanceReduced ? nil : .easeInOut(duration: 1.4), value: state.motionSequence)
-            .frame(width: size + 8, height: size + 2)
+        Group {
+            if character.id == "xiaobai", let plan = state.automaticMotionPlan,
+               (0..<8).contains(plan), !reduceMotion, !luminanceReduced {
+                TimerMotionPortrait(plan: plan, epoch: state.motionEpoch ?? state.startedAt,
+                                    endsAt: state.endsAt, size: size + 8)
+            } else {
+                DragonPortrait(character: character, size: size)
+            }
+        }.frame(width: size + 8, height: size + 8)
     }
 }
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fail if an IPA is missing the Live Activity extension or its resources."""
 import argparse
+import json
 import plistlib
 import zipfile
 from pathlib import PurePosixPath
@@ -39,6 +40,13 @@ def verify(path):
                 raise ValueError(f"Missing executable: {binary}")
             if f"{root}/Assets.car" not in names:
                 raise ValueError(f"Missing compiled character assets in {root}")
+            if tuple(map(int, app['CFBundleShortVersionString'].split('.'))) >= (1,4):
+                fonts=info.get('UIAppFonts',[])
+                if len(fonts)!=129 or any(f'{root}/{font}' not in names for font in fonts):
+                    raise ValueError(f'Missing registered system-timer motion fonts in {root}')
+                data=json.loads(archive.read(f'{root}/MotionTimeline.json'))
+                if len(data['plans'])!=8 or any(len(p['frames'])!=480 for p in data['plans']):
+                    raise ValueError(f'Incomplete automatic-motion plans in {root}')
         for key in ("CFBundleShortVersionString", "CFBundleVersion"):
             if app[key] != widget[key]:
                 raise ValueError(f"App and widget version differ: {key}")

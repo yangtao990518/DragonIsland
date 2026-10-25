@@ -84,29 +84,21 @@ final class CharacterInterfaceTests: XCTestCase {
         XCTAssertTrue(app.buttons["artwork-chibi"].waitForExistence(timeout: 5))
     }
 
-    func testCaptureSystemIslandMotionSample() throws {
+    func testAutomaticIslandMotionContinuesWithoutButtons() throws {
         let app = start(["--preview-live-motion", "--appearance-dark"])
         sleep(3)
-        if app.alerts.firstMatch.exists {
-            let failure = XCTAttachment(screenshot: app.screenshot())
-            failure.name = "live-activity-unavailable"
-            failure.lifetime = .keepAlways
-            add(failure)
-            throw XCTSkip("Live Activity could not start in this simulator; physical-device validation remains required")
-        }
-        let sample = app.buttons["test-walk"]
-        for _ in 0..<4 { if sample.isHittable { break }; app.swipeUp() }
-        XCTAssertTrue(sample.waitForExistence(timeout: 5))
-        sample.tap()
+        XCTAssertFalse(app.alerts.firstMatch.exists, "Live Activity must start for automatic motion validation")
         XCUIDevice.shared.press(.home)
-        sleep(4)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        for index in 0..<12 {
-            let frame = XCTAttachment(screenshot: springboard.screenshot())
-            frame.name = "system-island-motion-\(index)"
-            frame.lifetime = .keepAlways
-            add(frame)
-            usleep(150_000)
+        for sample in 0..<3 {
+            if sample > 0 { sleep(70) }
+            for index in 0..<20 {
+                let frame = XCTAttachment(screenshot: springboard.screenshot())
+                frame.name = "automatic-island-\(sample)-\(index)"
+                frame.lifetime = .keepAlways
+                add(frame)
+                usleep(130_000)
+            }
         }
         springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.035)).press(forDuration: 1.2)
         sleep(2)
@@ -115,18 +107,22 @@ final class CharacterInterfaceTests: XCTestCase {
         expanded.lifetime = .keepAlways
         add(expanded)
         app.activate()
-        let roll = app.buttons["test-roll"]
-        for _ in 0..<4 { if roll.isHittable { break }; app.swipeUp() }
-        XCTAssertTrue(roll.waitForExistence(timeout: 5))
-        roll.tap()
-        XCUIDevice.shared.press(.home)
-        sleep(4)
-        for index in 0..<12 {
-            let frame = XCTAttachment(screenshot: springboard.screenshot())
-            frame.name = "system-island-roll-\(index)"
-            frame.lifetime = .keepAlways
-            add(frame)
-            usleep(150_000)
-        }
+        XCTAssertTrue(app.buttons["结束本轮陪伴"].exists || app.staticTexts["小白正在陪你"].exists)
+    }
+
+    func testMotionChoicesPersistAndOldTestButtonsAreGone() {
+        let app = start(["--preview-tasks", "--appearance-light"])
+        let walk = app.switches["walkMotionToggle"]
+        XCTAssertTrue(walk.waitForExistence(timeout: 8))
+        let before = walk.value as? String
+        walk.tap()
+        XCTAssertNotEqual(walk.value as? String, before)
+        let selected = walk.value as? String
+        app.terminate()
+        app.launchArguments = ["--maiverse-capture", "--preview-tasks"]
+        app.launch()
+        XCTAssertTrue(app.switches["walkMotionToggle"].waitForExistence(timeout: 8))
+        XCTAssertEqual(app.switches["walkMotionToggle"].value as? String, selected)
+        XCTAssertFalse(app.buttons["test-walk"].exists)
     }
 }

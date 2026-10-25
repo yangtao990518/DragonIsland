@@ -11,6 +11,7 @@ command -v xcodegen >/dev/null || { echo "Missing XcodeGen; run brew install xco
 command -v xcodebuild >/dev/null || { echo "Missing Xcode" >&2; exit 1; }
 
 python3 Scripts/prepare_assets.py
+python3 Scripts/prepare_motion.py
 xcodegen generate --spec project.yml
 mkdir -p build output
 xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
