@@ -2,8 +2,27 @@ import XCTest
 import Foundation
 import CoreGraphics
 import Darwin
+import UIKit
 
 final class CharacterInterfaceTests: XCTestCase {
+    private func portraitPixels(_ screenshot: XCUIScreenshot) -> Int {
+        guard let source = screenshot.image.cgImage else { return 0 }
+        let scale = CGFloat(source.width) / 1206
+        guard let crop = source.cropping(to: CGRect(x: 300*scale, y: 40*scale, width: 135*scale, height: 110*scale)) else { return 0 }
+        var rgba = [UInt8](repeating: 0, count: crop.width * crop.height * 4)
+        let drawn = rgba.withUnsafeMutableBytes { bytes -> Bool in
+            guard let context = CGContext(data: bytes.baseAddress, width: crop.width, height: crop.height, bitsPerComponent: 8,
+                                          bytesPerRow: crop.width * 4, space: CGColorSpaceCreateDeviceRGB(),
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue) else { return false }
+            context.draw(crop, in: CGRect(x: 0, y: 0, width: CGFloat(crop.width), height: CGFloat(crop.height)))
+            return true
+        }
+        guard drawn else { return 0 }
+        return stride(from: 0, to: rgba.count, by: 4).filter {
+            let r = Int(rgba[$0]), g = Int(rgba[$0+1]), b = Int(rgba[$0+2])
+            return min(r,g,b)>100 && r>=g-3 && b>=r-5
+        }.count
+    }
     private func start(_ arguments: [String]) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture"] + arguments
@@ -101,10 +120,16 @@ final class CharacterInterfaceTests: XCTestCase {
         for sample in 0..<3 {
             if sample > 0 { sleep(70) }
             for index in 0..<20 {
-                let frame = XCTAttachment(screenshot: springboard.screenshot())
+                let screenshot = springboard.screenshot()
+                let frame = XCTAttachment(screenshot: screenshot)
                 frame.name = "automatic-island-\(sample)-\(index)"
                 frame.lifetime = .keepAlways
                 add(frame)
+                if index == 15 {
+                    let pixels = portraitPixels(screenshot)
+                    XCTAssertGreaterThan(pixels, 200, "Actual system island must contain the portrait, not an empty island")
+                    if pixels <= 200 { return }
+                }
                 usleep(130_000)
             }
         }

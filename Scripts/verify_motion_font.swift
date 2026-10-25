@@ -9,11 +9,8 @@ guard CTFontManagerRegisterFontsForURL(url as CFURL, .process, &error) else {
 }
 let tests = try JSONSerialization.jsonObject(with: Data(contentsOf: directory.appendingPathComponent("checks.json"))) as! [[String: Int]]
 for test in tests {
-    let descriptor = CTFontDescriptorCreateWithAttributes([
-        kCTFontNameAttribute as String: "mAIverseMotion",
-        kCTFontVariationAttribute as String: [NSNumber(value: UInt32(0x42414E4B)): NSNumber(value: test["bank"]!), NSNumber(value: UInt32(0x50484153)): NSNumber(value: test["phase"]!)]
-    ] as CFDictionary)
-    let font = CTFontCreateWithFontDescriptor(descriptor, 32, nil)
+    let name = "mAIverseB\(test["bank"]!)P\(test["phase"]!)"
+    let font = CTFontCreateWithName(name as CFString, 32, nil)
     let text = NSAttributedString(string: String(format: "%02d", test["second"]!), attributes: [NSAttributedString.Key(kCTFontAttributeName as String): font])
     let runs = CTLineGetGlyphRuns(CTLineCreateWithAttributedString(text as CFAttributedString)) as! [CTRun]
     var actual: [CGGlyph] = []

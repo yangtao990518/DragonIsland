@@ -1,5 +1,4 @@
 import SwiftUI
-import CoreText
 
 /// Uses system-rendered timer glyphs; contains no Timer, Task loop or Activity.update.
 /// Layering technique adapted from MIT WidgetAnimation by Bryce Bostwick.
@@ -30,14 +29,9 @@ struct TimerMotionPortrait: View {
         .accessibilityHidden(true)
     }
     private func layer(_ index: Int) -> some View {
-        let descriptor = CTFontDescriptorCreateWithAttributes([
-            kCTFontNameAttribute as String: "mAIverseMotion",
-            kCTFontVariationAttribute as String: [
-                NSNumber(value: UInt32(0x42414E4B)): NSNumber(value: plan),
-                NSNumber(value: UInt32(0x50484153)): NSNumber(value: index)
-            ]
-        ] as CFDictionary)
-        let font = Font(CTFontCreateWithFontDescriptor(descriptor, size, nil))
+        // Named instances keep the standard WidgetKit custom-font archive path;
+        // do not bridge a runtime CTFont into the remote activity view.
+        let font = Font.custom("mAIverseB\(plan)P\(index)", fixedSize: size)
         return timerGlyph(font: font, offset: 1 + Double(index) / Double(framesPerSecond))
     }
     private func gate(offset: Double) -> some View {

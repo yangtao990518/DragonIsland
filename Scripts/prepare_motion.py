@@ -162,7 +162,10 @@ def main():
                 if bank or phase:order += [glyph_name(bank,phase,s) for s in range(60)]
     font=base_font('mAIverseMotion',order)
     builder=FontBuilder(font=font)
-    builder.setupFvar([('BANK',0,0,7,'Motion bank'),('PHAS',0,0,PHASES-1,'Frame phase')],[])
+    instances=[{'location':{'BANK':b,'PHAS':p},'stylename':f'Bank {b} Phase {p}',
+                'postscriptfontname':f'mAIverseB{b}P{p}'} for b in range(8) for p in range(PHASES)]
+    builder.setupFvar([('BANK',0,0,7,'Motion bank'),('PHAS',0,0,PHASES-1,'Frame phase')],instances)
+    font['name'].setName('mAIverse',25,3,1,0x409)
     builder.setupGvar({})
     strike=Strike(ppem=GLYPH_PIXELS,resolution=72)
     for n in order:strike.glyphs[n]=Glyph(glyphName=n)
