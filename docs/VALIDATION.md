@@ -145,3 +145,11 @@
 - 最终 IPA 为 `D:\gpt_workspace\ios_ldd\mAIverse-V1.5\mAIverse-V1.5-unsigned.ipa`，64,349,874 字节；SHA-256 `3ea3eb78a53f52c805dfd5919503768bf4da62a68d80758e36a83d1bf8c8b98f`，与 `SHA256SUMS.txt` 一致。App / Widget 版本均为 1.5（build 9），原 Bundle ID 和 `PlugIns/DragonIslandWidget.appex` 完整保留；本机真实 IPA 结构检查再次通过。旧 V1.4 文件夹保留，build 8 候选单独归档在 ignored build 目录，不作交付。
 - `verification/` 保存最终页面 / 展开 / 连续裁剪图、界面日志、视频像素分析、连续性结果和本地包检查报告。大体积原始录像单列为[系统录像 artifact](https://github.com/yangtao990518/DragonIsland/actions/runs/40213328156/artifacts/12606971926)，完整截图单列为[截图 artifact](https://github.com/yangtao990518/DragonIsland/actions/runs/40213328156/artifacts/12607061591)，GitHub 保留期七天；未将前一候选录像冒充最终录像。
 - 实现范围和边界见 `RELEASE_V1.5.md`：普通紧凑态播放，最小态与展开名称旁静态；每五秒一个时段、60 秒预排循环；减弱动态 / 息屏低亮度静态。没有新增服务器、逐帧后台更新、AI 聊天或响铃。Sideloadly 实际签名与用户 iOS 27.01 长时间体验未操作或验证，不能承诺真机锁定 30fps。安装前结束旧活动，并保留、签名 Widget 扩展。
+
+
+## V1.6 build 10 候选：场景切换检查失败，未交付
+
+- 源码 e31058ce4aebacc76a03318840335b2179447a1b，Actions 40217735834。App / Widget Release、14 项 Swift 模型、14 项 Python 资源 / 打包及 336 项原生字形检查通过。
+- 7 项界面测试中，持续活动与原有图片 / 外观等 6 项通过；场景测试有两次失败：固定等待三秒后，紧凑态人物区仍显示上一种场景。持久化及展开态正确，但不能据此称当前场景即时应用成功。流程在界面失败时停止，未执行后续系统视频行程测量，也未交付该 IPA。
+- 实际截图：切到草地后紧凑态暂留黑色；随后切到星夜时人物区仍为草地，倒计时区已为星夜，并出现人物淡化叠像。不是通过降低颜色像素门槛绕过检查。候选证据提取于 Actions 40218811759，本机 build/qa-v16-first；原诊断 artifact 12608500478。
+- build 11 为场景更换计时视图身份、禁用切换时的交叉淡化；测试改为有时限地等待真实人物区出现所选场景，同时继续要求人物可见。结果待下一轮实际验证。

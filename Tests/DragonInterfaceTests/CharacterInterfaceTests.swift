@@ -176,8 +176,20 @@ final class CharacterInterfaceTests: XCTestCase {
             expectation(for: NSPredicate(format: "value == %@", "已选择"), evaluatedWith: button)
             waitForExpectations(timeout: 5)
             XCUIDevice.shared.press(.home)
-            sleep(3)
-            let screenshot = springboard.screenshot()
+            // ActivityKit.update does not acknowledge that SpringBoard has
+            // committed a new presentation. Wait for the requested on-screen
+            // landscape, not merely the app's selection or a fixed delay.
+            var screenshot = springboard.screenshot()
+            let deadline = Date().addingTimeInterval(12)
+            while Date() < deadline {
+                if islandPixels(screenshot, scene: scene) > 150 && islandPixels(screenshot) > 200 {
+                    usleep(700_000)
+                    screenshot = springboard.screenshot()
+                    if islandPixels(screenshot, scene: scene) > 150 { break }
+                }
+                usleep(250_000)
+                screenshot = springboard.screenshot()
+            }
             XCTAssertGreaterThan(islandPixels(screenshot, scene: scene), 150, "Scene must actually reach the system island")
             XCTAssertGreaterThan(islandPixels(screenshot), 200, "The character must remain visible when changing scenery")
             let compact = XCTAttachment(screenshot: screenshot)

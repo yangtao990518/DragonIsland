@@ -67,6 +67,9 @@ struct DragonLiveActivity: Widget {
                     .frame(width: 46, height: 32)
                     .background { IslandSceneBackdrop(scene: context.state.islandScene) }
                     .clipShape(RoundedRectangle(cornerRadius: 7))
+                    .id(context.state.islandScene.rawValue)
+                    .transition(.identity)
+                    .transaction { $0.animation = nil; $0.disablesAnimations = true }
             } minimal: {
                 // Keep the tiny secondary-activity badge static. Only the
                 // normal compact island needs the full 30fps frame stack.

@@ -54,6 +54,15 @@ struct IslandMotionPortrait: View {
             }
         }.frame(width: (size + 8) * 1.875, height: size + 8)
             .clipShape(RoundedRectangle(cornerRadius: 7))
+            // A scene uses a different timer-font family. Reusing native text
+            // identities can retain its old font until another presentation
+            // refreshes. Replace the scene atomically, without a pose crossfade.
+            .id(state.islandScene.rawValue)
+            .transition(.identity)
+            .transaction { transaction in
+                transaction.animation = nil
+                transaction.disablesAnimations = true
+            }
     }
 }
 

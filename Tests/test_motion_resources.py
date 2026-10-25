@@ -42,7 +42,7 @@ class MotionResourcesTests(unittest.TestCase):
         first=motion.render_frame(art,{'asset':'a','x':-16})
         second=motion.render_frame(art,{'asset':'b','x':16})
         self.assertEqual(second.getchannel('A').getextrema(),(255,255))
-        self.assertIsNone(ImageChops.difference(Image.alpha_composite(first,second),second).getbbox())
+        self.assertIsNone(ImageChops.difference(Image.alpha_composite(first,second).convert('RGB'),second.convert('RGB')).getbbox())
         leaky=motion.render_frame(art,{'asset':'b','x':16},opaque=False)
         self.assertIsNotNone(ImageChops.difference(Image.alpha_composite(first,leaky).convert('RGB'),second.convert('RGB')).getbbox())
 
@@ -137,7 +137,7 @@ class MotionResourcesTests(unittest.TestCase):
             self.assertEqual(bg.getchannel('A').getextrema(),(255,255))
             first=motion.render_frame(art,{'asset':'person','x':-50},scene=scene)
             last=motion.render_frame(art,{'asset':'person','x':50},scene=scene)
-            self.assertIsNone(ImageChops.difference(Image.alpha_composite(first,last),last).getbbox())
+            self.assertIsNone(ImageChops.difference(Image.alpha_composite(first,last).convert('RGB'),last.convert('RGB')).getbbox())
             self.assertEqual(last.getpixel((12,45)),bg.getpixel((12,45)))
         self.assertEqual(len(set(backgrounds)),3)
 
