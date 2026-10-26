@@ -38,4 +38,22 @@ final class MotionSettingsTests: XCTestCase {
         XCTAssertEqual(IslandScene.resolve("future-scene"), .black)
         XCTAssertEqual(IslandScene.resolve("night"), .night)
     }
+
+    func testLegacyTimelineStillDecodesWithoutPreviewOrLegMetadata() throws {
+        let data = Data(#"{"fps":30,"period":60,"plans":[{"id":0,"mask":0,"slots":["idle"],"frames":[{"asset":"idle","x":0,"action":"idle"}]}]}"#.utf8)
+        let timeline = try JSONDecoder().decode(MotionTimeline.self, from: data)
+        XCTAssertNil(timeline.previews)
+        XCTAssertNil(timeline.plans.first?.legs)
+        XCTAssertEqual(timeline.frame(plan: 0, elapsed: 100)?.asset, "idle")
+    }
+
+    func testPreviewRetainsTravelAndLoopsWithoutJumpingToAnotherAction() throws {
+        let data = Data(#"{"fps":1,"period":60,"plans":[],"previews":{"roll":[{"asset":"roll_right","x":-50,"action":"roll"},{"asset":"roll_left","x":50,"action":"roll"}]}}"#.utf8)
+        let timeline = try JSONDecoder().decode(MotionTimeline.self, from: data)
+        XCTAssertEqual(timeline.preview(action: "roll", elapsed: 0)?.x, -50)
+        XCTAssertEqual(timeline.preview(action: "roll", elapsed: 1)?.asset, "roll_left")
+        XCTAssertEqual(timeline.preview(action: "roll", elapsed: 2)?.x, -50)
+        XCTAssertNil(timeline.preview(action: "walk_right", elapsed: 0))
+    }
 }
+

@@ -10,7 +10,13 @@ let folder = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)
 let metadata = try JSONSerialization.jsonObject(with: Data(contentsOf: folder.appendingPathComponent("motion-capture.json"))) as! [String: Any]
 let epoch = metadata["epoch"] as! Double
 let walkStarts = Array((metadata["walkingSlots"] as? [Int] ?? [15, 30]).filter { $0 >= 10 && $0 <= 50 }.prefix(2))
+let rollStarts = Array((metadata["rollingSlots"] as? [Int] ?? []).prefix(2))
+let walkDuration = metadata["walkingDuration"] as? Int ?? 5
+let rollDuration = metadata["rollingDuration"] as? Int ?? 5
+let windows = walkStarts.map { (action: "walk", start: $0, duration: walkDuration) }
+    + rollStarts.map { (action: "roll", start: $0, duration: rollDuration) }
 guard walkStarts.count == 2 else { fatalError("QA plan must include an outward and return walking leg") }
+guard rollStarts.count == 2 else { fatalError("QA plan must include an outward and return rolling leg") }
 let videoStart = Double(try String(contentsOf: folder.appendingPathComponent("video-start-unix.txt"), encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines))!
 let asset = AVURLAsset(url: video)
 let track = asset.tracks(withMediaType: .video).first!
@@ -38,12 +44,12 @@ while let sample = output.copyNextSampleBuffer() {
     let timestamp = pts - firstPTS!
     let elapsed = timestamp + videoStart - epoch
     minElapsed = min(minElapsed, elapsed); maxElapsed = max(maxElapsed, elapsed)
-    guard elapsed >= 7, elapsed < 158, let buffer = CMSampleBufferGetImageBuffer(sample) else { continue }
-    // Match the actual plan's two complete walking legs, with recorder margin.
+    guard elapsed >= 7, elapsed < 178, let buffer = CMSampleBufferGetImageBuffer(sample) else { continue }
+    // Inspect both complete actions; rolling must move on the actual island.
     let phase = elapsed.truncatingRemainder(dividingBy: 60)
-    guard walkStarts.contains(where: { start in
-        let lower = Double(start) - 1
-        let upper = Double(start) + 5.2
+    guard windows.contains(where: { window in
+        let lower = Double(window.start) - 0.5
+        let upper = Double(window.start + window.duration) + 0.5
         return (lower...upper).contains(phase)
     }) else { continue }
     CVPixelBufferLockBaseAddress(buffer, .readOnly)
@@ -76,13 +82,14 @@ while let sample = output.copyNextSampleBuffer() {
         difference = zip(old, pixels).reduce(0.0) { $0 + Double(abs(Int($1.0) - Int($1.1))) } / Double(135 * 110 * 3)
     }
     previous = pixels
-    var row: [String: Any] = ["videoSeconds": timestamp, "sessionSecondsApprox": elapsed, "meanRGBChange": difference,
+    let currentAction = windows.first { Double($0.start) <= phase && phase < Double($0.start + $0.duration) }?.action ?? "transition"
+    var row: [String: Any] = ["videoSeconds": timestamp, "sessionSecondsApprox": elapsed, "meanRGBChange": difference, "motionAction": currentAction,
                  "characterPixels": visiblePixels, "characterCenterX": Double(minCharacterX + maxCharacterX) / 2,
                  "characterWidth": max(0, maxCharacterX - minCharacterX + 1),
                  "characterHeight": max(0, maxCharacterY - minCharacterY + 1)]
     let minute = Int(elapsed / 60)
     visibleByMinute[minute] = max(visibleByMinute[minute] ?? 0, visiblePixels)
-    if saved < 900, difference > 1, visiblePixels > 200 {
+    if saved < 1500, difference > 1, visiblePixels > 200 {
         let image = CIImage(cvPixelBuffer: buffer)
         let rect = CGRect(x: CGFloat(x0), y: CGFloat(height - y1), width: CGFloat(x1 - x0), height: CGFloat(y1 - y0))
         if let cg = context.createCGImage(image, from: rect) {
@@ -110,7 +117,7 @@ try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .so
 // Build 8's video had a narrow front-facing pose briefly jump sideways between
 // two adjacent side-walk poses. Reject that same observed defect independently
 // of approximate session/video alignment, using only neighboring screen frames.
-let changed = rows.filter { ($0["meanRGBChange"] as! Double) > 1 && ($0["characterPixels"] as! Int) > 200 }
+let changed = rows.filter { ($0["motionAction"] as? String) == "walk" && ($0["meanRGBChange"] as! Double) > 1 && ($0["characterPixels"] as! Int) > 200 }
 var poseJumps: [[String: Any]] = []
 if changed.count >= 3 {
     for i in 1..<(changed.count - 1) {
@@ -130,16 +137,20 @@ guard poseJumps.isEmpty else {
 }
 var travel: [[String: Any]] = []
 for minute in 0..<3 {
-    for start in walkStarts {
-        let low = Double(minute * 60 + start) - 1
-        let high = Double(minute * 60 + start) + 5.2
+    for window in windows {
+        let low = Double(minute * 60 + window.start) - 0.5
+        let high = Double(minute * 60 + window.start + window.duration) + 0.5
         let centers = rows.filter { ($0["sessionSecondsApprox"] as! Double) >= low && ($0["sessionSecondsApprox"] as! Double) <= high && ($0["characterPixels"] as! Int) > 200 }.map { $0["characterCenterX"] as! Double }
         let extent = (centers.max() ?? 0) - (centers.min() ?? 0)
-        travel.append(["minute": minute, "slotStart": start, "screenTravelPixels": extent, "samples": centers.count])
+        let isRight = window.start == (window.action == "walk" ? walkStarts.first : rollStarts.first)
+        let signedTravel = ((centers.last ?? 0) - (centers.first ?? 0)) * (isRight ? 1 : -1)
+        travel.append(["minute": minute, "action": window.action, "direction": isRight ? "right" : "left", "slotStart": window.start,
+                       "duration": window.duration, "screenTravelPixels": extent, "signedTravelPixels": signedTravel, "samples": centers.count])
     }
 }
-try JSONSerialization.data(withJSONObject: travel, options: [.prettyPrinted, .sortedKeys]).write(to: folder.appendingPathComponent("walking-travel.json"))
-guard travel.allSatisfy({ ($0["screenTravelPixels"] as! Double) >= 70 }) else {
-    throw NSError(domain: "SystemMotionQA", code: 4, userInfo: [NSLocalizedDescriptionKey: "Character did not traverse the wider stage in every walking leg; inspect walking-travel.json."])
+try JSONSerialization.data(withJSONObject: travel, options: [.prettyPrinted, .sortedKeys]).write(to: folder.appendingPathComponent("motion-travel.json"))
+guard travel.allSatisfy({ ($0["screenTravelPixels"] as! Double) >= 70 && ($0["signedTravelPixels"] as! Double) >= 60 }) else {
+    throw NSError(domain: "SystemMotionQA", code: 4, userInfo: [NSLocalizedDescriptionKey: "Character must walk AND roll across the stage in both directions; inspect motion-travel.json."])
 }
 print("System-video verification: \(count) decoded frames; \(rows.count) walking-window samples; nominal \(track.nominalFrameRate)fps; target 30fps. Physical-device FPS is not verified.")
+

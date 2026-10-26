@@ -31,9 +31,9 @@ struct MotionSettingsView: View {
                 Divider()
                 Toggle("走路 · 走到边边再回来", isOn: binding(\.walk))
                     .accessibilityIdentifier("walkMotionToggle")
-                Toggle("打滚 · 蜷身再起身", isOn: binding(\.roll))
+                Toggle("打滚 · 向两边滚，再回来", isOn: binding(\.roll))
                     .accessibilityIdentifier("rollMotionToggle")
-                Text("每段约 5 秒。走路会先走到另一端，再折返回来；打滚只轻轻滚一次。未勾选的动作不会参与，都不勾选时只待机。")
+                Text("走路会慢慢迈步，约 10 秒走到另一端，再折返回来。打滚也会向左、向右移动，约 5 秒一个方向。未勾选的动作不会参与，都不勾选时只待机。")
                     .font(.system(size: 12)).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
             Text("设置会保存并应用当前陪伴。本版日常片段为 60 秒循环；减弱动态效果或息屏低亮度时显示静态人物。")
@@ -84,14 +84,7 @@ struct MotionArtworkPreview: View {
             guard let plan = settings.plan(seed: 0) else { return nil }
             return MotionTimeline.shared?.frame(plan: plan, elapsed: elapsed)
         }
-        guard let durations = MotionTimeline.shared?.durations?[action], !durations.isEmpty else { return nil }
-        let period = action == "roll" ? 2000 : durations.reduce(0, +)
-        var time = Int(elapsed * 1000) % period
-        if action == "roll", time < durations.reduce(0, +) {
-            time %= durations.reduce(0, +)
-        }
-        var index = durations.count - 1
-        for i in durations.indices { if time < durations[i] { index = i; break }; time -= durations[i] }
-        return MotionFrame(asset: "Motion_\(action)_\(String(format: "%03d", index))", x: 0, action: action)
+        return MotionTimeline.shared?.preview(action: action, elapsed: elapsed)
     }
 }
+
