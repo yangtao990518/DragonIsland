@@ -102,10 +102,11 @@ jobs:
             build/build.log
             build/simulator.log
             build/interface-tests.log
-            build/InterfaceTests.xcresult
             output/previews/
-            output/ui-test-attachments/
+            output/ui-test-attachments/manifest.json
+            output/ui-test-attachments/*.txt
             output/verification/
+            !output/verification/system-island-motion.mp4
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
