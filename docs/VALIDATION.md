@@ -1,5 +1,12 @@
 # 验证记录 · 2026-10-25
 
+## V1.8 候选保存（2026-10-26，尚未交付）
+
+- 功能源码 `9e04f0ff4daf3a58d36831a1d673342c1b4c44d3`，分支 `codex/character-voice-alarms`；恢复说明见 `V1.8_RESUME.md`。
+- [运行 40345351544](https://github.com/yangtao990518/DragonIsland/actions/runs/40345351544)：App / Widget 编译、真实 IPA 结构、24 项 Swift、20 项 Python、336 个 CoreText 检查通过；10 项界面测试中 9 项通过。
+- 未通过项为真实一分钟闹钟的系统停止控件检查。系统标题存在断言通过，保存截图为紧凑态；停止控件未找到，展开与系统停止操作仍待验证。失败后从 App 取消并确认记录清空通过。后续视频分析和最终 IPA 发布未执行，不能把候选编译通过说成最终验收完成。
+- [诊断运行 40348647821](https://github.com/yangtao990518/DragonIsland/actions/runs/40348647821) 因账户付款 / Actions 支出限制未启动任何步骤。用户要求先保存代码，待通知后继续；当前暂停触发云端构建。手机签名、实际音频听感及静音 / 专注模式仍未实机验证。
+
 ## 源码包交接时已完成的检查
 
 - 10 个 Swift 文件经 tree-sitter Swift 语法树解析，无 ERROR 或缺失节点；这是语法检查，不是 Swift 类型检查。
