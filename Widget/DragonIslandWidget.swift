@@ -4,7 +4,12 @@ import WidgetKit
 
 @main
 struct DragonIslandWidgetBundle: WidgetBundle {
-    var body: some Widget { DragonLiveActivity() }
+    var body: some Widget {
+        DragonLiveActivity()
+        #if canImport(AlarmKit)
+        if #available(iOS 26.0, *) { CharacterAlarmWidget() }
+        #endif
+    }
 }
 
 struct DragonLiveActivity: Widget {

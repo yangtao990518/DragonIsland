@@ -54,6 +54,7 @@ wait "$VIDEO_PID" || true
 trap - EXIT
 cp build/interface-tests.log output/verification/interface-tests.log
 xcrun simctl spawn "$DEVICE" log show --last 10m --style compact --predicate '(process == "liveactivitiesd" OR process == "chronod" OR process == "DragonIslandWidget" OR process == "SpringBoard") AND (eventMessage CONTAINS[c] "dragonisle" OR eventMessage CONTAINS[c] "budget" OR eventMessage CONTAINS[c] "archive" OR eventMessage CONTAINS[c] "memory")' > output/verification/live-activity-system.log 2>&1 || true
+xcrun simctl spawn "$DEVICE" log show --last 15m --style compact --predicate 'subsystem CONTAINS[c] "AlarmKit" OR (eventMessage CONTAINS[c] "dragonisle" AND eventMessage CONTAINS[c] "alarm")' > output/verification/alarm-system.log 2>&1 || true
 APP_DATA="$(xcrun simctl get_app_container "$DEVICE" com.dragonisle.prototype.app data)"
 if [[ -f "$APP_DATA/Documents/motion-capture.json" ]]; then
   cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json

@@ -9,8 +9,16 @@ enum AlarmCancellation {
     @MainActor static func cancel(id: UUID) throws {
         #if canImport(AlarmKit)
         if #available(iOS 26.0, *), AlarmManager.shared.authorizationState == .authorized {
-            if try AlarmManager.shared.alarms.contains(where: { $0.id == id }) {
-                try AlarmManager.shared.cancel(id: id)
+            let manager = AlarmManager.shared
+            if let alarm = try manager.alarms.first(where: { $0.id == id }) {
+                if alarm.state == .alerting { try manager.stop(id: id) }
+                if try manager.alarms.contains(where: { $0.id == id }) {
+                    do { try manager.cancel(id: id) }
+                    catch {
+                        // A simultaneous system stop may already have removed it.
+                        if try manager.alarms.contains(where: { $0.id == id }) { throw error }
+                    }
+                }
             }
         }
         #endif

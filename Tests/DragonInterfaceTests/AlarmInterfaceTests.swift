@@ -115,14 +115,20 @@ final class AlarmInterfaceTests: XCTestCase {
         save(app)
         XCUIDevice.shared.press(.home)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let alertTitle = springboard.staticTexts["小白的提醒"].firstMatch
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 75), "The real scheduled AlarmKit alert must appear outside the app")
+        let alertTitle = springboard.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "小白的提醒")).firstMatch
+        // AlarmKit may show a compact island while the device is unlocked.
+        // Let the real one-minute schedule fire, then expand its presentation.
+        sleep(62)
+        if !alertTitle.exists {
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.035)).press(forDuration: 1.2)
+        }
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 10), "The real scheduled AlarmKit alert must appear outside the app")
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "one-minute-system-alarm-fired"
         shot.lifetime = .keepAlways
         add(shot)
         // Newer iOS versions own the stop control (button or slide-to-stop).
-        let stop = springboard.buttons.matching(NSPredicate(format: "label IN %@", ["知道啦", "Stop", "停止"])).firstMatch
+        let stop = springboard.buttons.matching(NSPredicate(format: "label IN %@", ["知道啦", "Stop", "停止", "停止响铃"])).firstMatch
         if stop.exists { stop.tap() }
         else if springboard.sliders.firstMatch.exists {
             springboard.sliders.firstMatch.adjust(toNormalizedSliderPosition: 1)
@@ -133,6 +139,7 @@ final class AlarmInterfaceTests: XCTestCase {
             app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch.tap()
         }
         app.activate()
+        app.tabBars.buttons["闹钟"].tap()
         XCTAssertTrue(app.staticTexts["还没有约好的时间"].waitForExistence(timeout: 8), "System stop reconciles saved alarms")
     }
 }

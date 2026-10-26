@@ -32,7 +32,7 @@ jobs:
               for i,line in enumerate(lines):
                   if 'error:' in line or "failed (" in line:
                       print('\n'.join(lines[max(0,i-14):i+4]))
-          for pattern in ('*contact.png','scene-*.png','*alarm*.png','alarm-system-state.json','live-session-before-home.png','system-island-expanded.png','video-timing.json','motion-capture.json','motion-travel.json','video-analysis.json','walking-travel.json','pose-continuity.json','video-start-unix.txt','font-summary.json','live-activity-system.log'):
+          for pattern in ('*contact.png','scene-*.png','*alarm*.png','alarm-system-state.json','alarm-system.log','live-session-before-home.png','system-island-expanded.png','video-timing.json','motion-capture.json','motion-travel.json','video-analysis.json','walking-travel.json','pose-continuity.json','video-start-unix.txt','font-summary.json','live-activity-system.log'):
               for p in root.rglob(pattern):shutil.copy2(p,dest/p.name)
           for manifest in root.rglob('manifest.json'):
               if manifest.parent.name!='ui-test-attachments':continue

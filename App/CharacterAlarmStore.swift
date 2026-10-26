@@ -7,14 +7,6 @@ import UserNotifications
 import AlarmKit
 #endif
 
-#if canImport(AlarmKit)
-@available(iOS 26.0, *)
-private struct CharacterAlarmMetadata: AlarmMetadata {
-    let characterID: String
-    let voiceID: String
-}
-#endif
-
 enum VoiceAlarmError: LocalizedError {
     case permission, missingVoice, tooSoon, limit
     var errorDescription: String? {
@@ -157,7 +149,8 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
                     stopButton: AlarmButton(text: "知道啦", textColor: .white, systemImageName: "checkmark"))
             }
             let attributes = AlarmAttributes<CharacterAlarmMetadata>(presentation: AlarmPresentation(alert: alert),
-                metadata: CharacterAlarmMetadata(characterID: alarm.characterID, voiceID: voice.id),
+                metadata: CharacterAlarmMetadata(characterID: alarm.characterID, voiceID: voice.id,
+                    alarmID: alarm.id.uuidString, title: alarm.title),
                 tintColor: Color(red: 0.76, green: 0.67, blue: 0.94))
             // A fixed alarm fires at the same end date as the companion countdown.
             // No second countdown Live Activity competes with the character's island.
