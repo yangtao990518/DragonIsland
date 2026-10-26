@@ -116,21 +116,30 @@ final class AlarmInterfaceTests: XCTestCase {
         XCUIDevice.shared.press(.home)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let alertTitle = springboard.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "小白的提醒")).firstMatch
-        // AlarmKit may show a compact island while the device is unlocked.
-        // Let the real one-minute schedule fire, then expand its presentation.
+        // SpringBoard exposes offscreen expanded text in its accessibility tree.
+        // Its existence alone does not mean the compact island has expanded.
         sleep(62)
-        if !alertTitle.exists {
-            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.035)).press(forDuration: 1.2)
-        }
         XCTAssertTrue(alertTitle.waitForExistence(timeout: 10), "The real scheduled AlarmKit alert must appear outside the app")
+        let stop = springboard.buttons.matching(NSPredicate(format: "identifier == %@ OR label IN %@", "stopCharacterAlarm", ["知道啦", "Stop", "停止", "停止响铃"])).firstMatch
+        if !stop.isHittable {
+            // Press the visible portrait, away from the camera cutout.
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.31, dy: 0.035)).press(forDuration: 1.2)
+            let deadline = Date().addingTimeInterval(8)
+            while !stop.isHittable && Date() < deadline {
+                RunLoop.current.run(until: Date().addingTimeInterval(0.4))
+            }
+        }
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "one-minute-system-alarm-fired"
         shot.lifetime = .keepAlways
         add(shot)
+        let hierarchy = XCTAttachment(string: springboard.debugDescription)
+        hierarchy.name = "one-minute-system-alarm-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
         // Newer iOS versions own the stop control (button or slide-to-stop).
-        let stop = springboard.buttons.matching(NSPredicate(format: "label IN %@", ["知道啦", "Stop", "停止", "停止响铃"])).firstMatch
-        if stop.exists { stop.tap() }
-        else if springboard.sliders.firstMatch.exists {
+        if stop.isHittable { stop.tap() }
+        else if springboard.sliders.firstMatch.isHittable {
             springboard.sliders.firstMatch.adjust(toNormalizedSliderPosition: 1)
         } else {
             // Preserve the system screenshot on failure; never leave a ringing alarm for later tests.

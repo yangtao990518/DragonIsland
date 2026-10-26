@@ -59,6 +59,7 @@ struct CharacterAlarmWidget: Widget {
             Button(intent: StopCharacterAlarmIntent(alarmID: metadata.alarmID)) {
                 Label("停止响铃", systemImage: "stop.fill")
             }.tint(DragonPalette.lavender)
+                .accessibilityIdentifier("stopCharacterAlarm")
         }
     }
 }

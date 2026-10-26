@@ -18,7 +18,7 @@ jobs:
   build:
     name: Test and build app + Live Activity
     runs-on: macos-26
-    timeout-minutes: 25
+    timeout-minutes: 30
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
       MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
@@ -51,7 +51,7 @@ jobs:
         run: bash Scripts/build_unsigned.sh
 
       - name: Render actual app previews in iPhone simulator
-        timeout-minutes: 15
+        timeout-minutes: 20
         run: bash Scripts/capture_previews.sh
 
       - name: Downloadable IPA
