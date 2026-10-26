@@ -1,0 +1,72 @@
+[
+  {
+    "id": "xiaobai-01",
+    "duration": 3.5836,
+    "integratedLUFS": -18.02,
+    "truePeakDBTP": -5.27,
+    "file": "xiaobai-alarm-01.wav"
+  },
+  {
+    "id": "xiaobai-02",
+    "duration": 3.6698,
+    "integratedLUFS": -18.02,
+    "truePeakDBTP": -3.17,
+    "file": "xiaobai-alarm-02.wav"
+  },
+  {
+    "id": "xiaobai-03",
+    "duration": 4.2817,
+    "integratedLUFS": -18.0,
+    "truePeakDBTP": -4.77,
+    "file": "xiaobai-alarm-03.wav"
+  },
+  {
+    "id": "xiaobai-04",
+    "duration": 3.448,
+    "integratedLUFS": -18.03,
+    "truePeakDBTP": -3.84,
+    "file": "xiaobai-alarm-04.wav"
+  },
+  {
+    "id": "xiaobai-05",
+    "duration": 4.9751,
+    "integratedLUFS": -18.0,
+    "truePeakDBTP": -5.25,
+    "file": "xiaobai-alarm-05.wav"
+  },
+  {
+    "id": "xiaobai-06",
+    "duration": 4.0005,
+    "integratedLUFS": -18.02,
+    "truePeakDBTP": -5.02,
+    "file": "xiaobai-alarm-06.wav"
+  },
+  {
+    "id": "xiaobai-07",
+    "duration": 4.769,
+    "integratedLUFS": -18.06,
+    "truePeakDBTP": -3.16,
+    "file": "xiaobai-alarm-07.wav"
+  },
+  {
+    "id": "xiaobai-08",
+    "duration": 4.8446,
+    "integratedLUFS": -18.04,
+    "truePeakDBTP": -4.56,
+    "file": "xiaobai-alarm-08.wav"
+  },
+  {
+    "id": "xiaobai-09",
+    "duration": 4.9477,
+    "integratedLUFS": -18.02,
+    "truePeakDBTP": -3.44,
+    "file": "xiaobai-alarm-09.wav"
+  },
+  {
+    "id": "xiaobai-10",
+    "duration": 5.958,
+    "integratedLUFS": -18.04,
+    "truePeakDBTP": -3.62,
+    "file": "xiaobai-alarm-10.wav"
+  }
+]

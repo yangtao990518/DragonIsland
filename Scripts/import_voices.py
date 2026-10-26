@@ -7,6 +7,7 @@ Original MP3 files are retained under Art/Voices; runtime sounds are short mono 
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -52,8 +53,15 @@ def main():
         # Only trim outer silence, preserving pauses inside the spoken line.
         trim = "silenceremove=start_periods=1:start_duration=0.12:start_threshold=-48dB,areverse," \
                "silenceremove=start_periods=1:start_duration=0.12:start_threshold=-48dB,areverse"
+        measure = subprocess.run([ffmpeg, "-hide_banner", "-i", str(original), "-vn", "-af",
+            trim + ",loudnorm=I=-18:TP=-2:LRA=7:print_format=json", "-f", "null", "-"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        levels = json.loads(re.search(rb'\{\s*"input_i".*?\}', measure.stderr, re.S)[0])
+        normalize = ",loudnorm=I=-18:TP=-2:LRA=7:linear=true" + \
+            f":measured_I={levels['input_i']}:measured_TP={levels['input_tp']}:measured_LRA={levels['input_lra']}" + \
+            f":measured_thresh={levels['input_thresh']}:offset={levels['target_offset']}"
         subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", str(original), "-vn",
-                        "-af", trim + ",loudnorm=I=-18:TP=-2:LRA=7,afade=t=in:d=0.015",
+                        "-af", trim + normalize + ",afade=t=in:d=0.015",
                         "-ac", "1", "-ar", "24000", "-c:a", "pcm_s16le", str(output)], check=True)
         with wave.open(str(output), "rb") as audio:
             duration = audio.getnframes() / audio.getframerate()
