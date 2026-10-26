@@ -58,6 +58,14 @@ struct CharacterAlarmSnapshot: Codable, Equatable {
     var preferences: [String: CharacterVoicePreference] = [:]
     var alarms: [CharacterAlarm] = []
 
+    /// Preserve alarms created while an asynchronous system query was in flight.
+    mutating func reconcile(inspectedIDs: Set<UUID>, systemAlarmIDs: Set<UUID>, notificationIDs: Set<String>) {
+        alarms.removeAll {
+            guard inspectedIDs.contains($0.id) else { return false }
+            return $0.backend == .alarmKit ? !systemAlarmIDs.contains($0.id) : !notificationIDs.contains($0.notificationID)
+        }
+    }
+
     static func load(defaults: UserDefaults = .standard) -> CharacterAlarmSnapshot {
         guard let data = defaults.data(forKey: storageKey),
               let value = try? JSONDecoder().decode(Self.self, from: data) else { return Self() }

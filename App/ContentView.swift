@@ -68,11 +68,10 @@ struct ContentView: View {
             #endif
         }
         .alert("mAIverse", isPresented: Binding(
-            get: { store.notice != nil || alarms.error != nil },
-            set: { if !$0 { store.notice = nil; alarms.error = nil } }
+            get: { store.notice != nil }, set: { if !$0 { store.notice = nil } }
         )) {
-            Button("知道了", role: .cancel) { store.notice = nil; alarms.error = nil }
-        } message: { Text(store.notice ?? alarms.error ?? "") }
+            Button("知道了", role: .cancel) { store.notice = nil }
+        } message: { Text(store.notice ?? "") }
     }
 
     private var worldPage: some View {
@@ -149,7 +148,7 @@ struct ContentView: View {
                 .foregroundStyle(AppPalette.background)
                 .background(AppPalette.accent, in: RoundedRectangle(cornerRadius: 15))
             }
-            .buttonStyle(.plain).disabled(store.busy).accessibilityIdentifier("startCompanion")
+            .buttonStyle(.plain).disabled(store.busy || alarms.busy).accessibilityIdentifier("startCompanion")
         }
         .worldCard()
     }

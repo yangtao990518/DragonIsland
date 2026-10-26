@@ -46,7 +46,12 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
     }
 
     var deliveryExplanation: String {
-        usesAlarmKit ? "使用系统闹钟，到点由系统唤起提醒。首次使用需允许闹钟权限。"
+        #if canImport(AlarmKit)
+        if #available(iOS 26.0, *), AlarmManager.shared.authorizationState == .denied {
+            return "闹钟权限已关闭，提醒可能无法响铃。请在系统设置中重新允许。"
+        }
+        #endif
+        return usesAlarmKit ? "使用系统闹钟，到点由系统唤起提醒。首次使用需允许闹钟权限。"
         : "此系统版本使用通知语音提醒，会受静音、专注模式和通知声音设置影响，不会持续响铃。"
     }
 
@@ -84,6 +89,7 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
     func refresh() async {
         guard !busy else { return }
         reload()
+        let inspectedIDs = Set(snapshot.alarms.map(\.id))
         var liveIDs = Set<UUID>()
         #if canImport(AlarmKit)
         if #available(iOS 26.0, *) {
@@ -100,9 +106,7 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         guard !busy else { return }
         reload()
         let notificationIDs = Set(pending.map(\.identifier) + delivered.map { $0.request.identifier })
-        snapshot.alarms.removeAll {
-            $0.backend == .alarmKit ? !liveIDs.contains($0.id) : !notificationIDs.contains($0.notificationID)
-        }
+        snapshot.reconcile(inspectedIDs: inspectedIDs, systemAlarmIDs: liveIDs, notificationIDs: notificationIDs)
         snapshot.save()
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--maiverse-capture"),
@@ -145,8 +149,13 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         var saved = alarm
         #if canImport(AlarmKit)
         if #available(iOS 26.0, *) {
-            let alert = AlarmPresentation.Alert(title: LocalizedStringResource(stringLiteral: alarm.title),
-                stopButton: AlarmButton(text: "知道啦", textColor: .white, systemImageName: "checkmark"))
+            let alert: AlarmPresentation.Alert
+            if #available(iOS 26.1, *) {
+                alert = AlarmPresentation.Alert(title: LocalizedStringResource(stringLiteral: alarm.title))
+            } else {
+                alert = AlarmPresentation.Alert(title: LocalizedStringResource(stringLiteral: alarm.title),
+                    stopButton: AlarmButton(text: "知道啦", textColor: .white, systemImageName: "checkmark"))
+            }
             let attributes = AlarmAttributes<CharacterAlarmMetadata>(presentation: AlarmPresentation(alert: alert),
                 metadata: CharacterAlarmMetadata(characterID: alarm.characterID, voiceID: voice.id),
                 tintColor: Color(red: 0.76, green: 0.67, blue: 0.94))
@@ -165,8 +174,18 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         if let old {
             do { try AlarmCancellation.cancel(id: old.id) }
             catch {
-                try? AlarmCancellation.cancel(id: alarm.id)
-                throw error
+                let originalError = error
+                do { try AlarmCancellation.cancel(id: alarm.id) }
+                catch {
+                    // Keep both records visible if the daemon rejects rollback too.
+                    reload()
+                    snapshot.alarms.append(saved)
+                    snapshot.alarms.sort { $0.date < $1.date }
+                    snapshot.save()
+                    throw NSError(domain: "mAIverse.Alarm", code: 1, userInfo: [NSLocalizedDescriptionKey:
+                        "系统未能完成闹钟替换，两个提醒均已保留在列表中。请返回列表逐个检查并取消。"])
+                }
+                throw originalError
             }
         }
         reload()

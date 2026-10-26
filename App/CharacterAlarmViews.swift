@@ -39,6 +39,9 @@ struct CharacterVoicePicker: View {
         }
         .navigationTitle("选择语音").navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .cancellationAction) { Button("完成") { dismiss() } } }
+        .alert("语音试听", isPresented: Binding(get: { alarms.error != nil }, set: { if !$0 { alarms.error = nil } })) {
+            Button("知道了", role: .cancel) { alarms.error = nil }
+        } message: { Text(alarms.error ?? "") }
         .onDisappear { alarms.stopPreview() }
     }
 }
@@ -80,7 +83,7 @@ struct CompanionVoiceSettings: View {
                     set: { alarms.setPreference(characterID: character.id,
                         enabled: alarms.preference(for: character.id).enabled, voiceID: $0) }
                 ))
-            }.preferredColorScheme(nil)
+            }
         }
     }
 }
@@ -190,9 +193,10 @@ struct CharacterAlarmEditor: View {
         .sheet(isPresented: $choosing) {
             NavigationStack { CharacterVoicePicker(alarms: alarms, character: character, voiceID: $voiceID) }
         }
-        .alert("提醒未保存", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
-            Button("知道了", role: .cancel) { failure = nil }
-        } message: { Text(failure ?? "") }
+        .alert("角色提醒", isPresented: Binding(get: { failure != nil || alarms.error != nil },
+            set: { if !$0 { failure = nil; alarms.error = nil } })) {
+            Button("知道了", role: .cancel) { failure = nil; alarms.error = nil }
+        } message: { Text(failure ?? alarms.error ?? "") }
         .onAppear {
             voiceID = editing?.voiceID ?? alarms.voice(for: character.id)?.id ?? ""
             title = editing?.title ?? "\(character.name)的提醒"
@@ -264,7 +268,7 @@ struct CharacterAlarmsPage: View {
                         Spacer()
                         Button(alarms.ringingIDs.contains(alarm.id) ? "停止响铃" : "取消提醒", role: .destructive) { alarms.cancel(alarm) }
                             .accessibilityIdentifier("cancelAlarm-\(alarm.id)")
-                    }.font(.subheadline)
+                    }.font(.subheadline).disabled(alarms.busy)
                 }.worldCard().accessibilityIdentifier("scheduledAlarm-\(alarm.id)")
             }
             Text(alarms.deliveryExplanation).font(.caption).foregroundStyle(.secondary)
@@ -275,6 +279,9 @@ struct CharacterAlarmsPage: View {
             }
         }
         .task { await alarms.refresh() }
+        .alert("角色提醒", isPresented: Binding(get: { alarms.error != nil }, set: { if !$0 { alarms.error = nil } })) {
+            Button("知道了", role: .cancel) { alarms.error = nil }
+        } message: { Text(alarms.error ?? "") }
     }
 }
 

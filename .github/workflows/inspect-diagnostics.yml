@@ -24,7 +24,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import shutil
+          import shutil,json
           root=Path('diagnostics');dest=Path('report');dest.mkdir()
           for p in root.rglob('interface-tests.log'):
               shutil.copy2(p,dest/p.name)
@@ -32,8 +32,17 @@ jobs:
               for i,line in enumerate(lines):
                   if 'error:' in line or "failed (" in line:
                       print('\n'.join(lines[max(0,i-14):i+4]))
-          for pattern in ('*contact.png','scene-*.png','live-session-before-home.png','system-island-expanded.png','video-timing.json','motion-capture.json','video-analysis.json','walking-travel.json','pose-continuity.json','video-start-unix.txt','font-summary.json','live-activity-system.log'):
+          for pattern in ('*contact.png','scene-*.png','*alarm*.png','alarm-system-state.json','live-session-before-home.png','system-island-expanded.png','video-timing.json','motion-capture.json','motion-travel.json','video-analysis.json','walking-travel.json','pose-continuity.json','video-start-unix.txt','font-summary.json','live-activity-system.log'):
               for p in root.rglob(pattern):shutil.copy2(p,dest/p.name)
+          for manifest in root.rglob('manifest.json'):
+              if manifest.parent.name!='ui-test-attachments':continue
+              shutil.copy2(manifest,dest/'attachments-manifest.json')
+              for group in json.loads(manifest.read_text()):
+                  if 'AlarmInterfaceTests' not in str(group):continue
+                  for attachment in group.get('attachments',[]):
+                      p=manifest.parent/attachment['exportedFileName']
+                      if p.suffix.lower() in ('.png','.txt','.json') and p.stat().st_size<8000000:
+                          shutil.copy2(p,dest/p.name)
           PY
       - uses: actions/upload-artifact@v7
         with:

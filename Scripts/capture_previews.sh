@@ -57,6 +57,9 @@ APP_DATA="$(xcrun simctl get_app_container "$DEVICE" com.dragonisle.prototype.ap
 if [[ -f "$APP_DATA/Documents/motion-capture.json" ]]; then
   cp "$APP_DATA/Documents/motion-capture.json" output/verification/motion-capture.json
 fi
+if [[ -f "$APP_DATA/Documents/alarm-system-state.json" ]]; then
+  cp "$APP_DATA/Documents/alarm-system-state.json" output/verification/alarm-system-state.json
+fi
 if [[ "$TEST_STATUS" != "0" ]]; then
   python3 - <<'PY'
 from pathlib import Path

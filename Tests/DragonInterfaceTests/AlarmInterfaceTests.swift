@@ -97,13 +97,23 @@ final class AlarmInterfaceTests: XCTestCase {
         save(app)
         XCUIDevice.shared.press(.home)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let stop = springboard.buttons["知道啦"].firstMatch
-        XCTAssertTrue(stop.waitForExistence(timeout: 75), "The real scheduled AlarmKit alert must appear outside the app")
+        let alertTitle = springboard.staticTexts["小白的提醒"].firstMatch
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 75), "The real scheduled AlarmKit alert must appear outside the app")
         let shot = XCTAttachment(screenshot: springboard.screenshot())
         shot.name = "one-minute-system-alarm-fired"
         shot.lifetime = .keepAlways
         add(shot)
-        stop.tap()
+        // Newer iOS versions own the stop control (button or slide-to-stop).
+        let stop = springboard.buttons.matching(NSPredicate(format: "label IN %@", ["知道啦", "Stop", "停止"])).firstMatch
+        if stop.exists { stop.tap() }
+        else if springboard.sliders.firstMatch.exists {
+            springboard.sliders.firstMatch.adjust(toNormalizedSliderPosition: 1)
+        } else {
+            // Preserve the system screenshot on failure; never leave a ringing alarm for later tests.
+            XCTFail("The system alarm must provide a stop control")
+            app.activate()
+            app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch.tap()
+        }
         app.activate()
         XCTAssertTrue(app.staticTexts["还没有约好的时间"].waitForExistence(timeout: 8), "System stop reconciles saved alarms")
     }

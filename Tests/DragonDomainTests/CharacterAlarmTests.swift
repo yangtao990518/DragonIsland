@@ -59,4 +59,22 @@ final class CharacterAlarmTests: XCTestCase {
         XCTAssertEqual(decoded, alarm)
         XCTAssertEqual(decoded.notificationID, "maiverse.alarm.\(id.uuidString)")
     }
+
+    func testStaleSystemQueryCannotEraseNewlyScheduledAlarm() {
+        let old = CharacterAlarm(id: UUID(), characterID: "xiaobai", voiceID: "xiaobai-01", title: "old", date: .now)
+        let new = CharacterAlarm(id: UUID(), characterID: "xiaobai", voiceID: "xiaobai-02", title: "new", date: .now)
+        var snapshot = CharacterAlarmSnapshot(alarms: [old, new])
+        snapshot.reconcile(inspectedIDs: [old.id], systemAlarmIDs: [], notificationIDs: [])
+        XCTAssertEqual(snapshot.alarms, [new])
+    }
+
+    func testReconciliationKeepsPendingAndDeliveredNotificationsAndActiveSystemAlarms() {
+        let native = CharacterAlarm(id: UUID(), characterID: "xiaobai", voiceID: "01", title: "native", date: .now, backend: .alarmKit)
+        let legacy = CharacterAlarm(id: UUID(), characterID: "xiaobai", voiceID: "02", title: "notification", date: .now)
+        var snapshot = CharacterAlarmSnapshot(alarms: [native, legacy])
+        snapshot.reconcile(inspectedIDs: [native.id, legacy.id], systemAlarmIDs: [native.id], notificationIDs: [legacy.notificationID])
+        XCTAssertEqual(snapshot.alarms, [native, legacy])
+        snapshot.reconcile(inspectedIDs: [native.id, legacy.id], systemAlarmIDs: [], notificationIDs: [])
+        XCTAssertTrue(snapshot.alarms.isEmpty)
+    }
 }
