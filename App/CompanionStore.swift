@@ -5,6 +5,7 @@ import UIKit
 
 @MainActor
 final class CompanionStore: ObservableObject {
+    let alarms = CharacterAlarmStore()
     @Published private(set) var motionSettings = MotionSettings.load()
     @Published private(set) var islandScene = IslandScene.load()
     @Published private(set) var session: CompanionSession?
@@ -84,6 +85,19 @@ final class CompanionStore: ObservableObject {
         busy = true
         defer { busy = false }
         notice = nil
+        let voicePreference = alarms.preference(for: selectedCharacter.id)
+        if voicePreference.enabled {
+            do { try await alarms.authorize() }
+            catch { notice = error.localizedDescription; return }
+        }
+        do {
+            for previous in alarms.snapshot.alarms where previous.sessionID != nil {
+                try alarms.cancel(id: previous.id)
+            }
+            for previous in Activity<DragonAttributes>.activities {
+                try alarms.cancel(id: previous.attributes.sessionID)
+            }
+        } catch { notice = "旧提醒未能取消，请稍后重试：\(error.localizedDescription)"; return }
         // A previous stale session must not leave duplicate islands behind.
         for previous in Activity<DragonAttributes>.activities {
             await previous.end(previous.content, dismissalPolicy: .immediate)
@@ -113,15 +127,27 @@ final class CompanionStore: ObservableObject {
         }
         #endif
         do {
+            let sessionID = UUID()
             let created = try Activity.request(
-                attributes: DragonAttributes(companionName: selectedCharacter.name, sessionID: UUID(),
+                attributes: DragonAttributes(companionName: selectedCharacter.name, sessionID: sessionID,
                                              characterID: selectedCharacter.id),
                 content: ActivityContent(state: state, staleDate: state.endsAt),
                 pushType: nil
             )
+            if voicePreference.enabled {
+                do {
+                    guard let voice = alarms.voice(for: selectedCharacter.id) else { throw VoiceAlarmError.missingVoice }
+                    let alarm = CharacterAlarm(id: sessionID, characterID: selectedCharacter.id, voiceID: voice.id,
+                        title: "\(selectedCharacter.name) · 陪伴时间到啦", date: state.endsAt, sessionID: sessionID)
+                    try await alarms.schedule(alarm)
+                } catch {
+                    await created.end(created.content, dismissalPolicy: .immediate)
+                    throw error
+                }
+            }
             attach(created)
         } catch {
-            notice = "实时活动启动失败：\(error.localizedDescription)\n请确认签名保留了 Widget 扩展，并已允许实时活动。"
+            notice = "本轮未能启动：\(error.localizedDescription)\n请检查实时活动、提醒权限，以及签名是否保留 Widget 扩展。"
         }
     }
 
@@ -170,6 +196,10 @@ final class CompanionStore: ObservableObject {
         guard !busy else { return }
         busy = true
         defer { busy = false }
+        do {
+            for alarm in alarms.snapshot.alarms where alarm.sessionID != nil { try alarms.cancel(id: alarm.id) }
+            for current in Activity<DragonAttributes>.activities { try alarms.cancel(id: current.attributes.sessionID) }
+        } catch { notice = "提醒未能取消，本轮暂未结束：\(error.localizedDescription)"; return }
         for current in Activity<DragonAttributes>.activities {
             await current.end(current.content, dismissalPolicy: .immediate)
         }

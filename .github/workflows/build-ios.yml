@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build:
     name: Test and build app + Live Activity
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 25
     steps:
       - name: Checkout
@@ -26,7 +26,10 @@ jobs:
           persist-credentials: false
 
       - name: Show Xcode version
-        run: xcodebuild -version
+        run: |
+          xcodebuild -version
+          SDK_MAJOR="$(xcrun --sdk iphoneos --show-sdk-version | cut -d. -f1)"
+          test "$SDK_MAJOR" -ge 26 || { echo "AlarmKit requires the iOS 26 SDK"; exit 1; }
 
       - name: Install build tools
         run: |

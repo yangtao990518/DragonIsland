@@ -2,13 +2,14 @@ import SwiftUI
 import UIKit
 
 private enum WorldTab: Hashable {
-    case world, characters, tasks, about
+    case world, characters, tasks, alarms, about
 
     static var initial: WorldTab {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-characters") { return .characters }
         if ProcessInfo.processInfo.arguments.contains("--preview-tasks") { return .tasks }
         if ProcessInfo.processInfo.arguments.contains("--preview-about") { return .about }
+        if ProcessInfo.processInfo.arguments.contains("--preview-alarms") { return .alarms }
         #endif
         return .world
     }
@@ -16,11 +17,17 @@ private enum WorldTab: Hashable {
 
 struct ContentView: View {
     @ObservedObject var store: CompanionStore
+    @ObservedObject private var alarms: CharacterAlarmStore
     @State private var tab = WorldTab.initial
     @State private var minutes = 25
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
     @Environment(\.openURL) private var openURL
+
+    init(store: CompanionStore) {
+        self.store = store
+        self.alarms = store.alarms
+    }
 
     var body: some View {
         TabView(selection: $tab) {
@@ -30,6 +37,8 @@ struct ContentView: View {
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
             MotionSettingsView(store: store)
                 .tabItem { Label("任务", systemImage: "figure.play") }.tag(WorldTab.tasks)
+            CharacterAlarmsPage(alarms: store.alarms, characters: store.characters)
+                .tabItem { Label("闹钟", systemImage: "alarm") }.tag(WorldTab.alarms)
             aboutPage
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
@@ -59,10 +68,11 @@ struct ContentView: View {
             #endif
         }
         .alert("mAIverse", isPresented: Binding(
-            get: { store.notice != nil }, set: { if !$0 { store.notice = nil } }
+            get: { store.notice != nil || alarms.error != nil },
+            set: { if !$0 { store.notice = nil; alarms.error = nil } }
         )) {
-            Button("知道了", role: .cancel) { store.notice = nil }
-        } message: { Text(store.notice ?? "") }
+            Button("知道了", role: .cancel) { store.notice = nil; alarms.error = nil }
+        } message: { Text(store.notice ?? alarms.error ?? "") }
     }
 
     private var worldPage: some View {
@@ -125,6 +135,7 @@ struct ContentView: View {
                     .accessibilityAddTraits(minutes == value ? .isSelected : [])
                 }
             }
+            CompanionVoiceSettings(alarms: store.alarms, character: store.selectedCharacter)
             Button { Task { await store.start(minutes: minutes) } } label: {
                 HStack(spacing: 8) {
                     if store.busy { ProgressView().tint(AppPalette.background) }
@@ -138,7 +149,7 @@ struct ContentView: View {
                 .foregroundStyle(AppPalette.background)
                 .background(AppPalette.accent, in: RoundedRectangle(cornerRadius: 15))
             }
-            .buttonStyle(.plain).disabled(store.busy)
+            .buttonStyle(.plain).disabled(store.busy).accessibilityIdentifier("startCompanion")
         }
         .worldCard()
     }
@@ -249,7 +260,7 @@ struct ContentView: View {
                 Divider().overlay(Color.primary.opacity(0.08))
                 Label("当前为本地陪伴，互动短句为预设内容。", systemImage: "iphone")
                 Label("尚未接入 AI 对话，无需账号或 API Key。", systemImage: "lock")
-                Label("到时不会自动响铃，可手动结束陪伴。", systemImage: "hourglass")
+                Label("可选择角色语音，到点由系统提醒；陪伴卡片仍可手动结束。", systemImage: "alarm")
             }
             .font(.system(size: 12)).foregroundStyle(Color.primary)
             .worldCard()
@@ -264,7 +275,7 @@ struct ContentView: View {
                 .font(.system(size: 14)).foregroundStyle(AppPalette.accent)
             }.worldCard()
             VStack(spacing: 7) {
-                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.6")")
+                Text("mAIverse V\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.8")")
                 Text("角色为非官方同人形象，与相关 AI 服务提供方无隶属关系。")
             }
             .font(.system(size: 10)).foregroundStyle(Color.primary.opacity(0.35))

@@ -60,6 +60,7 @@ struct EndDragonSessionIntent: LiveActivityIntent {
     init(sessionID: String) { self.sessionID = sessionID }
 
     func perform() async throws -> some IntentResult {
+        if let id = UUID(uuidString: sessionID) { try await AlarmCancellation.cancel(id: id) }
         guard let activity = Activity<DragonAttributes>.activities.first(where: { $0.attributes.sessionID.uuidString == sessionID }) else {
             return .result()
         }

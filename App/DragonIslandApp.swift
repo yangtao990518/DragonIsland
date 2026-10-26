@@ -17,9 +17,11 @@ struct DragonIslandApp: App {
         WindowGroup {
             ContentView(store: store)
                 .preferredColorScheme(appearance == "light" ? .light : .dark)
+                .task { await store.alarms.refresh() }
                 .onOpenURL { _ in store.restore() }
                 .onChange(of: scenePhase) { _, phase in
-                    if phase == .active { store.restore() }
+                    if phase == .active { store.restore(); Task { await store.alarms.refresh() } }
+                    if phase != .active { store.alarms.stopPreview() }
                 }
         }
     }

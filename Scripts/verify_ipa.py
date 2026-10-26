@@ -1,10 +1,31 @@
 #!/usr/bin/env python3
 """Fail if an IPA is missing the Live Activity extension or its resources."""
 import argparse
+from io import BytesIO
 import json
 import plistlib
 import zipfile
+import wave
 from pathlib import PurePosixPath
+
+
+def verify_voices(archive, app_root, app):
+    if not app.get('NSAlarmKitUsageDescription'):
+        raise ValueError('Missing AlarmKit permission usage description')
+    voices = json.loads(archive.read(f'{app_root}/Voices.json'))
+    if not voices or len({v['id'] for v in voices}) != len(voices):
+        raise ValueError('Missing or duplicate character voices')
+    characters = {c['id'] for c in json.loads(archive.read(f'{app_root}/Characters.json'))}
+    for voice in voices:
+        if voice['characterID'] not in characters or PurePosixPath(voice['file']).name != voice['file']:
+            raise ValueError('Invalid character voice mapping')
+        with wave.open(BytesIO(archive.read(f"{app_root}/{voice['file']}")), 'rb') as sound:
+            duration = sound.getnframes() / sound.getframerate()
+            if sound.getsampwidth() != 2 or sound.getnchannels() != 1 or not 0.5 < duration < 29:
+                raise ValueError('Invalid bundled alarm sound format or duration')
+            if abs(duration - voice['duration']) > 0.001:
+                raise ValueError('Bundled voice duration differs from catalog')
+    print(f'Alarm resources verified: {len(voices)} character voices, short mono PCM sounds, permission text.')
 
 
 def verify(path):
@@ -57,6 +78,8 @@ def verify(path):
         for key in ("CFBundleShortVersionString", "CFBundleVersion"):
             if app[key] != widget[key]:
                 raise ValueError(f"App and widget version differ: {key}")
+        if tuple(map(int, app['CFBundleShortVersionString'].split('.'))) >= (1, 8):
+            verify_voices(archive, app_root, app)
         print("IPA structure verified: main app, embedded WidgetKit extension, binaries, assets, versions.")
         print("Signing and physical-device behavior are NOT verified by this check.")
 
