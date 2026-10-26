@@ -19,25 +19,26 @@ from fontTools.ttLib.tables.sbixGlyph import Glyph
 from fontTools.ttLib.tables.sbixStrike import Strike
 
 ROOT=Path(__file__).resolve().parents[1]
-ART=ROOT/'Art/MotionV3'
+ART=ROOT/'Art/MotionV4'
 OUTPUT=ROOT/'Shared/Resources/MotionFonts'
 MANIFEST=json.loads((ART/'manifest.json').read_text())
 FPS=30
 PHASES=FPS*2
 SEEDS=2
 PERIOD=60
-WALK_END=5000
-WALK_MOVE_START=250
-WALK_MOVE_MS=4500
+SLOT_MS=5000
+WALK_END=10000
+WALK_MOVE_START=200
+WALK_MOVE_MS=9600
 WALK_EXTENT=50  # Native 3x pixels, inside the 180px-wide visible stage.
 GLYPH_PIXELS=96  # Exactly 32pt at 3x; avoid oversized bitmaps in 60 timer layers.
 STAGE_WIDTH=180
 ADVANCE=1875  # 60pt wide at a 32pt font size.
-ROLL_END=1000
+ROLL_END=5000
+ROLL_MOVE_START=600
+ROLL_MOVE_MS=3550
 SCENES={'black':'mAIverse','meadow':'mAIverseMeadow','night':'mAIverseNight'}
 DURATIONS={a:info['frameDurationsMs'] for a,info in MANIFEST['actions'].items()}
-for a in ('walk_left','walk_right'):DURATIONS[a]=[70,70,71]*5+[70]
-DURATIONS['roll']=[62,63]*8
 
 
 def scene_image(name,size=(STAGE_WIDTH,GLYPH_PIXELS)):
@@ -73,9 +74,11 @@ def scene_image(name,size=(STAGE_WIDTH,GLYPH_PIXELS)):
 
 
 def walk_clip(direction):
-    turns=[(62.5,'turn_left',i) for i in range(4)] if direction=='walk_left' else [(250,'idle',0)]
-    gait=[(d,direction,i) for i,d in enumerate(DURATIONS[direction])]*4
-    return turns+gait+list(reversed(turns))
+    # Six complete, unhurried two-step cycles. Travel lasts longer instead of
+    # speeding up the feet to cover the wider stage. Neutral poses never slide.
+    stand='roll_left' if direction=='walk_left' else 'roll_right'
+    gait=[(d,direction,i) for i,d in enumerate(DURATIONS[direction])]*6
+    return [(WALK_MOVE_START,stand,11)]+gait+[(200,stand,11)]
 
 
 def key(action,index):
@@ -96,48 +99,82 @@ def sample(entries,ms):
     return entries[-1][1:]
 
 
-def schedule(mask,seed):
+def movement_leg(action, direction):
+    """One grounded leg, shared by native fonts, previews and regression tests."""
+    left=direction=='left'
+    start=WALK_EXTENT if left else -WALK_EXTENT
+    end=-start
+    name=f'{action}_{direction}'
+    if action=='walk':
+        clip=walk_clip(name)
+        duration,move_start,move_ms=WALK_END,WALK_MOVE_START,WALK_MOVE_MS
+    else:
+        clip=[(d,name,i) for i,d in enumerate(DURATIONS[name])]
+        duration,move_start,move_ms=ROLL_END,ROLL_MOVE_START,ROLL_MOVE_MS
+    frames=[]
+    for j in range(round(duration*FPS/1000)):
+        ms=j*1000/FPS
+        # Keep the last moving pose at the exact end of travel, then settle.
+        pose_time=ms-0.001 if abs(ms-(move_start+move_ms))<0.000001 else ms
+        a,i=sample(clip,pose_time)
+        p=start+(end-start)*min(1,max(0,(ms-move_start)/move_ms))
+        frames.append({'asset':key(a,i),'x':round(p),'action':action})
+    return frames
+
+
+def idle_frames(duration, position):
+    clip=[(d,'idle',i) for i,d in enumerate(DURATIONS['idle'])]
+    period=sum(DURATIONS['idle'])
+    return [{'asset':key(*sample(clip,j*1000/FPS%period)), 'x':position,'action':'idle'}
+            for j in range(round(duration*FPS/1000))]
+
+
+def plan_blocks(mask,seed):
     rng=random.Random(5707+seed)
-    pool=['idle']+(['walk'] if mask&1 else [])+(['roll'] if mask&2 else [])
-    chosen=[]
-    for slot in range(12):
-        options=[a for a in pool if not chosen or a != chosen[-1]]
-        chosen.append(rng.choice(options or pool))
-    # A chosen walk reserves two adjacent five-second legs: reach the far edge,
-    # then return. Do not abandon the character at the other side until a later
-    # random walk. Every complete minute ends at its original physical position.
-    slot=0
-    while slot<len(chosen):
-        if chosen[slot]=='walk':
-            if slot==len(chosen)-1:chosen[slot]='idle'
-            else:chosen[slot+1]='walk';slot+=1
-        slot+=1
-    idle=timeline([{'action':'idle','frame':i,'durationMs':d} for i,d in enumerate(MANIFEST['actions']['idle']['frameDurationsMs'])])
-    roll=[(d,'roll',i) for i,d in enumerate(DURATIONS['roll'])]
-    right=walk_clip('walk_right')
-    left=walk_clip('walk_left')
-    frames=[];position=-WALK_EXTENT if 'walk' in chosen else 0
-    for slot,action in enumerate(chosen):
-        start=position
-        direction='walk_right' if start<0 else 'walk_left'
-        end=-start if action=='walk' else start
-        clip=right if direction=='walk_right' else left
-        for j in range(FPS*5):
-            ms=j*1000/FPS
-            if action=='walk' and ms<WALK_END:
-                # At the exact endpoint keep the final stepping pose for this
-                # sample; settle on the next sample, after root movement stops.
-                pose_time=ms-0.001 if abs(ms-(WALK_MOVE_START+WALK_MOVE_MS))<0.000001 else ms
-                a,i=sample(clip,pose_time)
-                # Actual root movement is baked into color glyphs, not a background task.
-                p=start+(end-start)*min(1,max(0,(ms-WALK_MOVE_START)/WALK_MOVE_MS))
-            elif action=='roll' and ms<ROLL_END:a,i=sample(roll,ms);p=start
-            else:
-                a,i=sample(idle,(ms-(WALK_END if action=='walk' else ROLL_END if action=='roll' else 0))%2000)
-                p=end
-            frames.append({'asset':key(a,i),'x':round(p),'action':action})
-        position=end
-    return chosen,frames
+    # Give the system time to present the island before either complete action.
+    blocks=['idle','idle']
+    if mask==3:
+        # Both variants exercise walking AND rolling, in opposite orders.
+        blocks += ['walk','roll'] if seed==0 else ['roll','walk']
+    used=sum(4 if a=='walk' else 2 if a=='roll' else 1 for a in blocks)
+    while used<12:
+        choices=['idle']+(['walk'] if mask&1 and used<=8 else [])+(['roll'] if mask&2 and used<=10 else [])
+        options=[a for a in choices if a!=blocks[-1]]
+        action=rng.choice(options or choices)
+        blocks.append(action)
+        used+=4 if action=='walk' else 2 if action=='roll' else 1
+    return blocks
+
+
+def plan_legs(mask,seed):
+    legs=[];start=0
+    for action in plan_blocks(mask,seed):
+        if action=='idle':start+=5;continue
+        duration=10 if action=='walk' else 5
+        for direction in ('right','left'):
+            legs.append({'action':action,'direction':direction,'start':start,'duration':duration})
+            start+=duration
+    return legs
+
+
+def schedule(mask,seed):
+    blocks=plan_blocks(mask,seed)
+    position=-WALK_EXTENT if any(a!='idle' for a in blocks) else 0
+    slots=[];frames=[]
+    for action in blocks:
+        if action=='idle':
+            slots.append(action);frames+=idle_frames(SLOT_MS,position)
+        else:
+            slots += [action]*(4 if action=='walk' else 2)
+            frames+=movement_leg(action,'right')+movement_leg(action,'left')
+    return slots,frames
+
+
+def preview_frames():
+    return {'idle':idle_frames(2000,0),
+            'walk_right':movement_leg('walk','right')+movement_leg('walk','left'),
+            'walk_left':movement_leg('walk','left')+movement_leg('walk','right'),
+            'roll':movement_leg('roll','right')+movement_leg('roll','left')}
 
 
 def render_frame(artwork,frame,*,opaque=True,scene='black'):
@@ -237,7 +274,7 @@ def main():
         for seed in range(SEEDS):
             bank=mask*SEEDS+seed
             chosen,frames=schedule(mask,seed)
-            plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames})
+            plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames,'legs':plan_legs(mask,seed)})
     unique=set()
     for scene,prefix in SCENES.items():
       for phase in range(PHASES):
@@ -264,7 +301,7 @@ def main():
     checks=[{'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
             for scene in SCENES for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
     (OUTPUT/'checks.json').write_text(json.dumps(checks),encoding='utf-8')
-    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'durations':DURATIONS,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2},separators=(',',':'))+'\n',encoding='utf-8')
+    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'previews':preview_frames(),'durations':DURATIONS,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2},separators=(',',':'))+'\n',encoding='utf-8')
     # XcodeGen includes this generated settings fragment in both Info.plists.
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
     (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':len(unique),'targetFPS':FPS,'phases':PHASES,'plans':len(plans)}),encoding='utf-8')
@@ -273,3 +310,4 @@ def main():
 
 
 if __name__=='__main__':main()
+

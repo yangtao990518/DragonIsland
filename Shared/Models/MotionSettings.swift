@@ -21,10 +21,12 @@ struct MotionFrame: Decodable {
 }
 
 struct MotionTimeline: Decodable {
-    struct Plan: Decodable { let id: Int; let mask: Int; let slots: [String]; let frames: [MotionFrame] }
+    struct Leg: Decodable { let action: String; let direction: String; let start: Int; let duration: Int }
+    struct Plan: Decodable { let id: Int; let mask: Int; let slots: [String]; let frames: [MotionFrame]; let legs: [Leg]? }
     let fps: Int
     let period: Int
     let plans: [Plan]
+    let previews: [String: [MotionFrame]]?
     let durations: [String: [Int]]?
     let stagePixels: [Int]?
     let travelPixels: Int?
@@ -38,4 +40,9 @@ struct MotionTimeline: Decodable {
         guard let value = plans.first(where: { $0.id == plan }), !value.frames.isEmpty else { return nil }
         return value.frames[max(0, Int(elapsed * Double(fps))) % value.frames.count]
     }
+    func preview(action: String, elapsed: TimeInterval) -> MotionFrame? {
+        guard let frames = previews?[action], !frames.isEmpty else { return nil }
+        return frames[max(0, Int(elapsed * Double(fps))) % frames.count]
+    }
 }
+

@@ -99,10 +99,13 @@ final class CompanionStore: ObservableObject {
             state.automaticMotionPlan = 6
             if ProcessInfo.processInfo.arguments.contains("--record-motion-metadata"),
                let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                let slots = MotionTimeline.shared?.plans.first(where: { $0.id == 6 })?.slots ?? []
-                let walkingSlots = slots.indices.filter { slots[$0] == "walk" }.map { $0 * 5 }
+                let legs = MotionTimeline.shared?.plans.first(where: { $0.id == 6 })?.legs ?? []
+                let walkingSlots = legs.filter { $0.action == "walk" }.map { $0.start }
+                let rollingSlots = legs.filter { $0.action == "roll" }.map { $0.start }
                 let data: [String: Any] = ["epoch": state.startedAt.timeIntervalSince1970, "plan": 6, "fps": 30,
-                                          "walkingSlots": walkingSlots, "scene": islandScene.rawValue]
+                                          "walkingSlots": walkingSlots, "walkingDuration": 10,
+                                          "rollingSlots": rollingSlots, "rollingDuration": 5,
+                                          "scene": islandScene.rawValue]
                 if let json = try? JSONSerialization.data(withJSONObject: data) {
                     try? json.write(to: documents.appendingPathComponent("motion-capture.json"), options: .atomic)
                 }
@@ -173,3 +176,4 @@ final class CompanionStore: ObservableObject {
         clear()
     }
 }
+

@@ -1,5 +1,7 @@
 # mAIverse · 我的 AI 小世界
 
+> 本分支为 **V1.7（build 13）候选**：使用低抬脚的落脚与经过姿势，以更长的行走时间覆盖完整行程；打滚随身体翻转向左右两端移动并折返。任务页与灵动岛共用位移时间线。改动与验证状态见 [V1.7 清单](docs/RELEASE_V1.7.md)。下文 V1.6 的交付记录保留作历史参考。
+
 属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前只有白紫色 ChatGPT 同人龙娘“小白”，角色目录和选择界面已准备好，后续可配置其他 AI 角色；目前没有 AI 对话。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
 
 ## 第一版做什么
@@ -118,3 +120,4 @@ mAIverse 是产品名称；源码 target、Bundle ID、URL scheme 与仓库暂�
 - [实时活动动画限制](https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities)
 - [GitHub macOS runners](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)
 - [Sideloadly](https://sideloadly.io/)
+
