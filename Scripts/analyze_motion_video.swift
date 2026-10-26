@@ -77,6 +77,11 @@ while let sample = output.copyNextSampleBuffer() {
         }
     }
     CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
+    // The clock can intrude when no Live Activity is rendered. It is much shorter
+    // than the character; reject that false positive before counting visibility.
+    if maxCharacterY - minCharacterY + 1 < Int(Double(height) * 50 / 2622) {
+        visiblePixels = 0
+    }
     var difference = 0.0
     if let old = previous, old.count == pixels.count {
         difference = zip(old, pixels).reduce(0.0) { $0 + Double(abs(Int($1.0) - Int($1.1))) } / Double(135 * 110 * 3)

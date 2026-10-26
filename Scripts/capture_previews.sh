@@ -3,8 +3,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p output/previews
 DEVICE="$(xcrun simctl list devices available --json | python3 -c '
-import json,sys
-devices=[d for group in json.load(sys.stdin)["devices"].values() for d in group if d.get("isAvailable") and "iPhone" in d["name"]]
+import json,sys,os
+runtime=os.environ.get("MAIVERSE_SIM_RUNTIME")
+devices=[d for key,group in json.load(sys.stdin)["devices"].items() if not runtime or key==runtime for d in group if d.get("isAvailable") and "iPhone" in d["name"]]
 devices.sort(key=lambda d: ("Pro" not in d["name"], d["name"]))
 if not devices: raise SystemExit("No available iPhone simulator")
 print(devices[0]["udid"])

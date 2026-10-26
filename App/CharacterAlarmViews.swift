@@ -193,7 +193,7 @@ struct CharacterAlarmEditor: View {
         .sheet(isPresented: $choosing) {
             NavigationStack { CharacterVoicePicker(alarms: alarms, character: character, voiceID: $voiceID) }
         }
-        .alert("角色提醒", isPresented: Binding(get: { failure != nil || alarms.error != nil },
+        .alert("角色提醒", isPresented: Binding(get: { !choosing && (failure != nil || alarms.error != nil) },
             set: { if !$0 { failure = nil; alarms.error = nil } })) {
             Button("知道了", role: .cancel) { failure = nil; alarms.error = nil }
         } message: { Text(failure ?? alarms.error ?? "") }
@@ -269,7 +269,7 @@ struct CharacterAlarmsPage: View {
                         Button(alarms.ringingIDs.contains(alarm.id) ? "停止响铃" : "取消提醒", role: .destructive) { alarms.cancel(alarm) }
                             .accessibilityIdentifier("cancelAlarm-\(alarm.id)")
                     }.font(.subheadline).disabled(alarms.busy)
-                }.worldCard().accessibilityIdentifier("scheduledAlarm-\(alarm.id)")
+                }.worldCard()
             }
             Text(alarms.deliveryExplanation).font(.caption).foregroundStyle(.secondary)
         }
@@ -279,7 +279,7 @@ struct CharacterAlarmsPage: View {
             }
         }
         .task { await alarms.refresh() }
-        .alert("角色提醒", isPresented: Binding(get: { alarms.error != nil }, set: { if !$0 { alarms.error = nil } })) {
+        .alert("角色提醒", isPresented: Binding(get: { editor == nil && alarms.error != nil }, set: { if !$0 { alarms.error = nil } })) {
             Button("知道了", role: .cancel) { alarms.error = nil }
         } message: { Text(alarms.error ?? "") }
     }

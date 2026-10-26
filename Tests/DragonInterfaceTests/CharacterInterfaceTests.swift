@@ -18,12 +18,19 @@ final class CharacterInterfaceTests: XCTestCase {
             return true
         }
         guard drawn else { return 0 }
-        return stride(from: 0, to: rgba.count, by: 4).filter {
+        let selected = stride(from: 0, to: rgba.count, by: 4).filter {
             let r = Int(rgba[$0]), g = Int(rgba[$0+1]), b = Int(rgba[$0+2])
             if scene == "meadow" { return g > r + 8 && g > b + 3 && g < 100 && g > 25 }
             if scene == "night" { return b > r + 9 && b > g + 9 && b < 100 && b > 25 }
             return min(r,g,b)>100 && r>=g-3 && b>=r-5
-        }.count
+        }
+        if scene == nil, let first = selected.first, let last = selected.last {
+            let height = (last / 4 / crop.width) - (first / 4 / crop.width) + 1
+            // A collapsed island leaves the status-bar clock inside this wide ROI.
+            // The clock is only ~38px high; never mistake it for a ~90px character.
+            if CGFloat(height) < 50 * scale { return 0 }
+        }
+        return selected.count
     }
     private func start(_ arguments: [String]) -> XCUIApplication {
         let app = XCUIApplication()

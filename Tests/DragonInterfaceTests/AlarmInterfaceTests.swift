@@ -1,6 +1,23 @@
 import XCTest
 
 final class AlarmInterfaceTests: XCTestCase {
+    override func tearDownWithError() throws {
+        // A failed stop-control assertion must not leave an alerting alarm in
+        // SpringBoard, where it can displace later character activity tests.
+        let app = XCUIApplication()
+        app.activate()
+        if app.alerts.buttons["知道了"].exists { app.alerts.buttons["知道了"].tap() }
+        guard app.tabBars.buttons["闹钟"].exists else { return }
+        app.tabBars.buttons["闹钟"].tap()
+        for _ in 0..<20 {
+            let cancel = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch
+            guard cancel.exists else { break }
+            if !cancel.isHittable { app.swipeUp() }
+            cancel.tap()
+        }
+        try super.tearDownWithError()
+    }
+
     private func launch(_ flags: [String] = ["--preview-alarms"]) -> XCUIApplication {
         addUIInterruptionMonitor(withDescription: "System alarm authorization") { alert in
             for label in ["Allow", "允许", "OK", "好"] where alert.buttons[label].exists {
@@ -26,6 +43,7 @@ final class AlarmInterfaceTests: XCTestCase {
             else { RunLoop.current.run(until: Date().addingTimeInterval(0.4)) }
         }
         XCTAssertFalse(app.buttons["saveCharacterAlarm"].exists, "Scheduling must succeed using the real system backend")
+        XCTAssertTrue(app.buttons["newAlarm-xiaobai"].isHittable, "The editor must close after a successful save")
     }
 
     func testVoiceSelectionPreviewScheduleEditRestoreAndCancel() {
