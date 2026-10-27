@@ -1,0 +1,154 @@
+import XCTest
+
+final class AlarmInterfaceTests: XCTestCase {
+    override func tearDownWithError() throws {
+        // A failed stop-control assertion must not leave an alerting alarm in
+        // SpringBoard, where it can displace later character activity tests.
+        let app = XCUIApplication()
+        app.activate()
+        if app.alerts.buttons["知道了"].exists { app.alerts.buttons["知道了"].tap() }
+        guard app.tabBars.buttons["闹钟"].exists else { return }
+        app.tabBars.buttons["闹钟"].tap()
+        for _ in 0..<20 {
+            let cancel = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch
+            guard cancel.exists else { break }
+            if !cancel.isHittable { app.swipeUp() }
+            cancel.tap()
+        }
+        try super.tearDownWithError()
+    }
+
+    private func launch(_ flags: [String] = ["--preview-alarms"]) -> XCUIApplication {
+        addUIInterruptionMonitor(withDescription: "System alarm authorization") { alert in
+            for label in ["Allow", "允许", "OK", "好"] where alert.buttons[label].exists {
+                alert.buttons[label].tap()
+                return true
+            }
+            return false
+        }
+        let app = XCUIApplication()
+        app.launchArguments = ["--maiverse-capture", "--appearance-light"] + flags
+        app.launch()
+        return app
+    }
+
+    private func save(_ app: XCUIApplication) {
+        app.buttons["saveCharacterAlarm"].tap()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let deadline = Date().addingTimeInterval(15)
+        while app.buttons["saveCharacterAlarm"].exists && Date() < deadline {
+            if let allow = springboard.alerts.buttons.allElementsBoundByIndex.first(where: {
+                ["Allow", "允许", "OK", "好"].contains($0.label)
+            }) { allow.tap() }
+            else { RunLoop.current.run(until: Date().addingTimeInterval(0.4)) }
+        }
+        XCTAssertFalse(app.buttons["saveCharacterAlarm"].exists, "Scheduling must succeed using the real system backend")
+        XCTAssertTrue(app.buttons["newAlarm-xiaobai"].isHittable, "The editor must close after a successful save")
+    }
+
+    func testVoiceSelectionPreviewScheduleEditRestoreAndCancel() {
+        let app = launch()
+        XCTAssertTrue(app.buttons["newAlarm-xiaobai"].waitForExistence(timeout: 10))
+        app.buttons["newAlarm-xiaobai"].tap()
+        app.buttons["alarmPreset-5"].tap()
+        app.buttons["chooseAlarmVoice"].tap()
+        XCTAssertTrue(app.buttons["previewVoice-xiaobai-03"].waitForExistence(timeout: 5))
+        app.buttons["previewVoice-xiaobai-03"].tap()
+        XCTAssertTrue(app.buttons["停止试听"].waitForExistence(timeout: 3))
+        app.buttons["selectVoice-xiaobai-03"].tap()
+        XCTAssertTrue(app.buttons["saveCharacterAlarm"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["俏皮报到"].exists)
+        save(app)
+        let cancel = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 6))
+        let initialID = cancel.identifier
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.buttons[initialID].waitForExistence(timeout: 8), "Alarm survives app relaunch")
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "editAlarm-")).firstMatch.tap()
+        XCTAssertTrue(app.buttons["saveCharacterAlarm"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["俏皮报到"].exists)
+        save(app)
+        let afterEdit = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch
+        XCTAssertTrue(afterEdit.waitForExistence(timeout: 5))
+        XCTAssertNotEqual(afterEdit.identifier, initialID, "Editing replaces the old system alarm")
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "character-alarm-scheduled"
+        shot.lifetime = .keepAlways
+        add(shot)
+        afterEdit.tap()
+        XCTAssertTrue(app.staticTexts["还没有约好的时间"].waitForExistence(timeout: 5))
+    }
+
+    func testCompanionReminderIsCanceledWhenSessionEnds() {
+        let app = launch([])
+        let toggle = app.switches["companionVoiceToggle"]
+        if !toggle.isHittable { app.swipeUp() }
+        XCTAssertTrue(toggle.waitForExistence(timeout: 6))
+        if toggle.value as? String != "1" { toggle.tap() }
+        let start = app.buttons["startCompanion"]
+        if !start.isHittable { app.swipeUp() }
+        start.tap()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        if springboard.alerts.firstMatch.waitForExistence(timeout: 2) {
+            springboard.alerts.buttons["Allow"].tap()
+        }
+        let end = app.buttons["结束本轮陪伴"]
+        XCTAssertTrue(end.waitForExistence(timeout: 15))
+        app.tabBars.buttons["闹钟"].tap()
+        XCTAssertTrue(app.staticTexts["随本轮陪伴结束而取消"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["我的世界"].tap()
+        if !end.isHittable { app.swipeUp() }
+        end.tap()
+        app.tabBars.buttons["闹钟"].tap()
+        XCTAssertTrue(app.staticTexts["还没有约好的时间"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["我的世界"].tap()
+        if !toggle.isHittable { app.swipeUp() }
+        if toggle.value as? String == "1" { toggle.tap() }
+    }
+
+    func testOneMinuteAlarmActuallyFiresAfterLeavingApp() {
+        let app = launch()
+        XCTAssertTrue(app.buttons["newAlarm-xiaobai"].waitForExistence(timeout: 10))
+        app.buttons["newAlarm-xiaobai"].tap()
+        app.buttons["alarmPreset-1"].tap()
+        save(app)
+        XCUIDevice.shared.press(.home)
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let alertTitle = springboard.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "小白的提醒")).firstMatch
+        // SpringBoard exposes offscreen expanded text in its accessibility tree.
+        // Its existence alone does not mean the compact island has expanded.
+        sleep(62)
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 10), "The real scheduled AlarmKit alert must appear outside the app")
+        let stop = springboard.buttons.matching(NSPredicate(format: "identifier == %@ OR label IN %@", "stopCharacterAlarm", ["知道啦", "Stop", "停止", "停止响铃"])).firstMatch
+        if !stop.isHittable {
+            // Press the visible portrait, away from the camera cutout.
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.31, dy: 0.035)).press(forDuration: 1.2)
+            let deadline = Date().addingTimeInterval(8)
+            while !stop.isHittable && Date() < deadline {
+                RunLoop.current.run(until: Date().addingTimeInterval(0.4))
+            }
+        }
+        let shot = XCTAttachment(screenshot: springboard.screenshot())
+        shot.name = "one-minute-system-alarm-fired"
+        shot.lifetime = .keepAlways
+        add(shot)
+        let hierarchy = XCTAttachment(string: springboard.debugDescription)
+        hierarchy.name = "one-minute-system-alarm-hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        // Newer iOS versions own the stop control (button or slide-to-stop).
+        if stop.isHittable { stop.tap() }
+        else if springboard.sliders.firstMatch.isHittable {
+            springboard.sliders.firstMatch.adjust(toNormalizedSliderPosition: 1)
+        } else {
+            // Preserve the system screenshot on failure; never leave a ringing alarm for later tests.
+            XCTFail("The system alarm must provide a stop control")
+            app.activate()
+            app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "cancelAlarm-")).firstMatch.tap()
+        }
+        app.activate()
+        app.tabBars.buttons["闹钟"].tap()
+        XCTAssertTrue(app.staticTexts["还没有约好的时间"].waitForExistence(timeout: 8), "System stop reconciles saved alarms")
+    }
+}

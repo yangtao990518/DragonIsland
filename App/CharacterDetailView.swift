@@ -13,6 +13,7 @@ struct CharacterDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var artwork: ArtworkSelection?
     @State private var preview = 0
+    @State private var showingAlarm = false
 
     private func showChibi() {
         artwork = ArtworkSelection(asset: character.chibiAsset + "Detail", title: "\(character.name) · 岛上小人物")
@@ -46,6 +47,13 @@ struct CharacterDetailView: View {
                 Text("这是尺寸效果示意，实际显示由系统安排。")
                     .font(.system(size: 10)).foregroundStyle(.secondary)
             }.worldCard()
+            VStack(alignment: .leading, spacing: 15) {
+                Label("\(character.name)的时间约定", systemImage: "alarm").font(.headline)
+                CompanionVoiceSettings(alarms: store.alarms, character: character)
+                Button("设置角色闹钟") { showingAlarm = true }
+                    .buttonStyle(.borderedProminent).tint(AppPalette.accent)
+                    .accessibilityIdentifier("characterAlarmSettings")
+            }.worldCard()
             Button(action: invite) {
                 Text(store.session == nil ? "邀请\(character.name)上岛" : "查看当前陪伴")
                     .font(.system(size: 15, weight: .semibold))
@@ -68,6 +76,9 @@ struct CharacterDetailView: View {
         .toolbarBackground(AppPalette.background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $artwork) { item in ArtworkViewer(item: item) }
+        .sheet(isPresented: $showingAlarm) {
+            NavigationStack { CharacterAlarmEditor(alarms: store.alarms, character: character) }
+        }
         .task {
             #if DEBUG
             try? await Task.sleep(nanoseconds: 700_000_000)

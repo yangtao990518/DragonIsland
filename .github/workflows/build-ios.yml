@@ -2,6 +2,8 @@ name: Build iOS IPA
 
 "on":
   workflow_dispatch:
+  pull_request:
+    branches: [main]
   push:
     branches: [main, master]
 
@@ -16,7 +18,10 @@ jobs:
   build:
     name: Test and build app + Live Activity
     runs-on: macos-15
-    timeout-minutes: 25
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -24,7 +29,10 @@ jobs:
           persist-credentials: false
 
       - name: Show Xcode version
-        run: xcodebuild -version
+        run: |
+          xcodebuild -version
+          SDK_MAJOR="$(xcrun --sdk iphoneos --show-sdk-version | cut -d. -f1)"
+          test "$SDK_MAJOR" -ge 26 || { echo "AlarmKit requires the iOS 26 SDK"; exit 1; }
 
       - name: Install build tools
         run: |
@@ -42,9 +50,20 @@ jobs:
         id: build
         run: bash Scripts/build_unsigned.sh
 
-      - name: Render actual app previews in iPhone simulator
-        timeout-minutes: 15
-        run: bash Scripts/capture_previews.sh
+      - name: Record IPA validation scope
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          note = (
+              'App / Widget 已编译，IPA 结构和资源检查通过。\n'
+              '本 IPA 在后续模拟器界面与系统录像验收之前上传；完整验收结论请查看同一次构建的最终结果。\n'
+              '真机签名安装、声音和静音 / 专注表现尚未验证。\n'
+              f'源码：{os.environ["GITHUB_SHA"]}\n'
+              f'构建：https://github.com/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n'
+          )
+          Path('output/BUILD_STATUS.md').write_text(note, encoding='utf-8')
+          PY
 
       - name: Downloadable IPA
         uses: actions/upload-artifact@v7
@@ -56,6 +75,10 @@ jobs:
             output/*.txt
           if-no-files-found: error
           retention-days: 7
+
+      - name: Render actual app previews in iPhone simulator
+        timeout-minutes: 20
+        run: bash Scripts/capture_previews.sh
 
       - name: System motion review sheets and video analysis
         uses: actions/upload-artifact@v7
@@ -94,9 +117,11 @@ jobs:
             build/build.log
             build/simulator.log
             build/interface-tests.log
-            build/InterfaceTests.xcresult
             output/previews/
-            output/ui-test-attachments/
+            output/ui-test-attachments/manifest.json
+            output/ui-test-attachments/*.txt
             output/verification/
+            !output/verification/system-island-motion.mp4
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
+

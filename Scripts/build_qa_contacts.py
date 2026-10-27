@@ -5,8 +5,8 @@ import json,re
 from PIL import Image,ImageDraw
 
 root=Path('output');dest=root/'verification';dest.mkdir(exist_ok=True)
-pages=['world','characters','tasks','detail','gallery-chibi','gallery-standing','about']
-contact=Image.new('RGB',(7*240,3*550),'#34323a');d=ImageDraw.Draw(contact)
+pages=['world','characters','tasks','alarms','detail','gallery-chibi','gallery-standing','about']
+contact=Image.new('RGB',(len(pages)*240,3*550),'#34323a');d=ImageDraw.Draw(contact)
 for theme,row in [('dark',0),('light',1)]:
     for column,page in enumerate(pages):
         p=root/f'previews/{page}-{theme}.png'
@@ -35,6 +35,8 @@ for group in manifest:
             Image.open(p).crop((0,0,1206,620)).save(dest/'system-island-expanded.png')
         elif name.startswith('live-session-before-home'):
             Image.open(p).save(dest/'live-session-before-home.png')
+        elif name.startswith('character-alarm-scheduled') or name.startswith('one-minute-system-alarm-fired'):
+            Image.open(p).save(dest/(name.split('_')[0]+'.png'))
         elif name.startswith('scene-'):
             title=re.match(r'(scene-(?:meadow|night)-(?:compact|expanded))',name)
             if title:

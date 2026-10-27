@@ -1,5 +1,20 @@
 # 验证记录 · 2026-10-25
 
+## V1.8 最新候选（2026-10-27，录像行程检查失败，未交付）
+
+- 用户授权备用账号后，在私有仓库 `yangtao-google-0518/DragonIsland` 执行[运行 40352604515](https://github.com/yangtao-google-0518/DragonIsland/actions/runs/40352604515)，job `121676408716`，源码 `d762382c4f0cfda29ac84ccb4f5fd2b68c383e05`。
+- 修正一分钟测试以真实可点击的停止控件判断是否展开，并长按可见头像；保留系统截图和控件树。24 项 Swift、20 项 Python、App / Widget 编译及真实 IPA 校验通过；完整界面测试阶段返回成功并进入视频分析，包含此前失败的闹钟停止交互。
+- 最终录像分析抛出 `SystemMotionQA Code=4`：走路 / 打滚各方向行程或有符号位移未满足门槛。连续性与三分钟人物可见检查已越过，行程数据尚未取回，不能称动画验收通过。流程没有执行最终 IPA 发布。
+- 完整 job 日志已保存于本机 `DragonIsland/build/v18-backup-first.log`。失败诊断 artifact `12664719191`，692,428,362 字节，GitHub digest `02ca7480943fc598e481ed340154eb4e1c75727f187f0f2661d16a72baa141bf`；未完成下载或本机哈希核对。精简诊断运行 `40355965259` 已请求，其结果尚不可读。
+- 随后备用账号 API 返回 `HTTP 403: Sorry. Your account was suspended`，原因未提供。取证下载被阻断；原账户仍有计费限制。完整代码保留在本地，需用户处理账号状态后再继续取证、修复并完整重跑。没有新 IPA 可交付，也未进行真机签名或声音验证。
+
+## V1.8 候选保存（2026-10-26，尚未交付）
+
+- 功能源码 `9e04f0ff4daf3a58d36831a1d673342c1b4c44d3`，分支 `codex/character-voice-alarms`；恢复说明见 `V1.8_RESUME.md`。
+- [运行 40345351544](https://github.com/yangtao990518/DragonIsland/actions/runs/40345351544)：App / Widget 编译、真实 IPA 结构、24 项 Swift、20 项 Python、336 个 CoreText 检查通过；10 项界面测试中 9 项通过。
+- 未通过项为真实一分钟闹钟的系统停止控件检查。系统标题存在断言通过，保存截图为紧凑态；停止控件未找到，展开与系统停止操作仍待验证。失败后从 App 取消并确认记录清空通过。后续视频分析和最终 IPA 发布未执行，不能把候选编译通过说成最终验收完成。
+- [诊断运行 40348647821](https://github.com/yangtao990518/DragonIsland/actions/runs/40348647821) 因账户付款 / Actions 支出限制未启动任何步骤。用户要求先保存代码，待通知后继续；当前暂停触发云端构建。手机签名、实际音频听感及静音 / 专注模式仍未实机验证。
+
 ## 源码包交接时已完成的检查
 
 - 10 个 Swift 文件经 tree-sitter Swift 语法树解析，无 ERROR 或缺失节点；这是语法检查，不是 Swift 类型检查。

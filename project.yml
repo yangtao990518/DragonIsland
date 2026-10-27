@@ -9,8 +9,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.6"
-    CURRENT_PROJECT_VERSION: "12"
+    MARKETING_VERSION: "1.8"
+    CURRENT_PROJECT_VERSION: "14"
     TARGETED_DEVICE_FAMILY: "1"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: ""
@@ -29,6 +29,7 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         NSSupportsLiveActivities: true
+        NSAlarmKitUsageDescription: "让你选择的角色在约定时间通过系统闹钟播放语音提醒。"
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -88,3 +89,4 @@ schemes:
     test:
       targets:
         - DragonInterfaceTests
+

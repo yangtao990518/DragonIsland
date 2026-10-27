@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "characterReference": "Art/xiaobai-chibi-v2.png",
+  "walkRight": {
+    "source": "sources/walk-right.png",
+    "assembly": "Scripts/assemble_walk_keys.py",
+    "keyposes": [
+      {"source": "sources/walk-right-keys/00.png", "prompt": "walk-right-four-prompt.txt", "role": "near heel contact; extracted from first generated atlas cell"},
+      {"source": "sources/walk-right-keys/01.png", "prompt": "walk-right-near-support-prompt.txt", "role": "near leg support; far foot passes low"},
+      {"source": "sources/walk-right-keys/02.png", "prompt": "walk-right-opposite-contact-prompt.txt", "role": "opposite heel contact; near leg trails"},
+      {"source": "sources/walk-right-keys/03.png", "prompt": "walk-right-far-support-prompt.txt", "role": "far leg support; near foot passes low"}
+    ],
+    "durationMs": 1600
+  },
+  "walkLeft": {"source": "sources/walk-left.png", "prompt": "walk-left-matching-keys-prompt.txt", "role": "ImageGen directional edit of the accepted four-keypose atlas"},
+  "rollRight": {"source": "sources/roll-right.png", "prompt": "roll-right-prompt.txt"},
+  "rollLeft": {"source": "sources/roll-left.png", "prompt": "roll-left-prompt.txt"},
+  "rejected": "Earlier high-knee, excessive-tail-width and unclear-alternation candidates are excluded from runtime frames. Their prompts are preserved; their image files are in ignored build/motion-v4-rejected."
+}

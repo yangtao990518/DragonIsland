@@ -1,0 +1,82 @@
+[
+  {
+    "id": "xiaobai-01",
+    "characterID": "xiaobai",
+    "title": "温柔早安",
+    "text": "早安，该醒啦。今天也让小白陪着你吧。",
+    "file": "xiaobai-alarm-01.wav",
+    "duration": 3.5836
+  },
+  {
+    "id": "xiaobai-02",
+    "characterID": "xiaobai",
+    "title": "温柔提醒",
+    "text": "你定好的时间到了哦。先睁开眼睛，好不好？",
+    "file": "xiaobai-alarm-02.wav",
+    "duration": 3.6698
+  },
+  {
+    "id": "xiaobai-03",
+    "characterID": "xiaobai",
+    "title": "俏皮报到",
+    "text": "叮咚，你的小白来报到了！被窝里的你，听见了吗？",
+    "file": "xiaobai-alarm-03.wav",
+    "duration": 4.2817
+  },
+  {
+    "id": "xiaobai-04",
+    "characterID": "xiaobai",
+    "title": "一起起床",
+    "text": "唔……天亮了呀。我们一起起床吧。",
+    "file": "xiaobai-alarm-04.wav",
+    "duration": 3.448
+  },
+  {
+    "id": "xiaobai-05",
+    "characterID": "xiaobai",
+    "title": "慢慢清醒",
+    "text": "还困的话，先伸个懒腰。慢慢来，我陪你清醒一下。",
+    "file": "xiaobai-alarm-05.wav",
+    "duration": 4.9751
+  },
+  {
+    "id": "xiaobai-06",
+    "characterID": "xiaobai",
+    "title": "我先醒啦",
+    "text": "今天可是我先醒的哦。这一次，换我来叫你起床！",
+    "file": "xiaobai-alarm-06.wav",
+    "duration": 4.0005
+  },
+  {
+    "id": "xiaobai-07",
+    "characterID": "xiaobai",
+    "title": "轻声催促",
+    "text": "再睡下去，可要错过约好的时间啦。来，先坐起来。",
+    "file": "xiaobai-alarm-07.wav",
+    "duration": 4.769
+  },
+  {
+    "id": "xiaobai-08",
+    "characterID": "xiaobai",
+    "title": "起床任务",
+    "text": "起床任务已经送达。完成之后，奖励你一句……早安呀。",
+    "file": "xiaobai-alarm-08.wav",
+    "duration": 4.8446
+  },
+  {
+    "id": "xiaobai-09",
+    "characterID": "xiaobai",
+    "title": "新的一天",
+    "text": "新的一天开始了。不用一下子打起精神，先迈出第一步就好。",
+    "file": "xiaobai-alarm-09.wav",
+    "duration": 4.9477
+  },
+  {
+    "id": "xiaobai-10",
+    "characterID": "xiaobai",
+    "title": "早餐约定",
+    "text": "醒了吗？今天也有很多事情等着你。不过现在，先好好吃顿早餐吧。",
+    "file": "xiaobai-alarm-10.wav",
+    "duration": 5.958
+  }
+]

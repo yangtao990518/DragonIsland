@@ -12,6 +12,7 @@ command -v xcodebuild >/dev/null || { echo "Missing Xcode" >&2; exit 1; }
 
 python3 Scripts/prepare_assets.py
 python3 Scripts/prepare_motion.py
+python3 Scripts/verify_motion_resources.py
 xcrun swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
 xcodegen generate --spec project.yml
 mkdir -p build output
@@ -43,3 +44,4 @@ if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
 fi
 echo "Ready: output/$IPA_NAME (unsigned; must be signed with its widget extension)."
+

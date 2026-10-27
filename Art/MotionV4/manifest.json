@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 3,
+  "characterID": "xiaobai",
+  "artworkGeneration": "built-in image_gen",
+  "canvas": [
+    512,
+    640
+  ],
+  "anchor": {
+    "x": 256,
+    "groundY": 600
+  },
+  "status": "V1.7_natural_gait_and_directional_travel_roll",
+  "actions": {
+    "idle": {
+      "frames": [
+        "../MotionV2/frames/idle/000.png",
+        "../MotionV2/frames/idle/001.png",
+        "../MotionV2/frames/idle/002.png",
+        "../MotionV2/frames/idle/003.png",
+        "../MotionV2/frames/idle/004.png",
+        "../MotionV2/frames/idle/005.png",
+        "../MotionV2/frames/idle/006.png",
+        "../MotionV2/frames/idle/007.png"
+      ],
+      "frameDurationsMs": [
+        500,
+        180,
+        180,
+        350,
+        90,
+        120,
+        90,
+        490
+      ],
+      "durationMs": 2000,
+      "loop": true,
+      "uniqueDrawings": 8,
+      "mirrorAllowed": false
+    },
+    "turn_left": {
+      "frames": [
+        "../MotionV2/frames/turn_left/000.png",
+        "../MotionV2/frames/turn_left/001.png",
+        "../MotionV2/frames/turn_left/002.png",
+        "../MotionV2/frames/turn_left/003.png"
+      ],
+      "frameDurationsMs": [
+        100,
+        100,
+        100,
+        100
+      ],
+      "durationMs": 400,
+      "loop": false,
+      "uniqueDrawings": 4,
+      "mirrorAllowed": false
+    },
+    "walk_right": {
+      "frames": [
+        "frames/walk_right/000.png",
+        "frames/walk_right/001.png",
+        "frames/walk_right/002.png",
+        "frames/walk_right/003.png"
+      ],
+      "frameDurationsMs": [
+        400,
+        400,
+        400,
+        400
+      ],
+      "durationMs": 1600,
+      "loop": true,
+      "uniqueDrawings": 4,
+      "direction": "right",
+      "mirrorAllowed": false,
+      "note": "Independently generated poses; no optical flow or blended intermediate poses."
+    },
+    "walk_left": {
+      "frames": [
+        "frames/walk_left/000.png",
+        "frames/walk_left/001.png",
+        "frames/walk_left/002.png",
+        "frames/walk_left/003.png"
+      ],
+      "frameDurationsMs": [
+        400,
+        400,
+        400,
+        400
+      ],
+      "durationMs": 1600,
+      "loop": true,
+      "uniqueDrawings": 4,
+      "direction": "left",
+      "mirrorAllowed": false,
+      "note": "Independently generated poses; no optical flow or blended intermediate poses."
+    },
+    "roll_right": {
+      "frames": [
+        "frames/roll_right/000.png",
+        "frames/roll_right/001.png",
+        "frames/roll_right/002.png",
+        "frames/roll_right/003.png",
+        "frames/roll_right/004.png",
+        "frames/roll_right/005.png",
+        "frames/roll_right/006.png",
+        "frames/roll_right/007.png",
+        "frames/roll_right/008.png",
+        "frames/roll_right/009.png",
+        "frames/roll_right/010.png",
+        "frames/roll_right/011.png"
+      ],
+      "frameDurationsMs": [
+        200,
+        400,
+        400,
+        550,
+        550,
+        550,
+        550,
+        550,
+        400,
+        400,
+        250,
+        200
+      ],
+      "durationMs": 5000,
+      "loop": false,
+      "uniqueDrawings": 11,
+      "direction": "right",
+      "mirrorAllowed": false,
+      "note": "Independently generated poses; no optical flow or blended intermediate poses."
+    },
+    "roll_left": {
+      "frames": [
+        "frames/roll_left/000.png",
+        "frames/roll_left/001.png",
+        "frames/roll_left/002.png",
+        "frames/roll_left/003.png",
+        "frames/roll_left/004.png",
+        "frames/roll_left/005.png",
+        "frames/roll_left/006.png",
+        "frames/roll_left/007.png",
+        "frames/roll_left/008.png",
+        "frames/roll_left/009.png",
+        "frames/roll_left/010.png",
+        "frames/roll_left/011.png"
+      ],
+      "frameDurationsMs": [
+        200,
+        400,
+        400,
+        550,
+        550,
+        550,
+        550,
+        550,
+        400,
+        400,
+        250,
+        200
+      ],
+      "durationMs": 5000,
+      "loop": false,
+      "uniqueDrawings": 11,
+      "direction": "left",
+      "mirrorAllowed": false,
+      "note": "Independently generated poses; no optical flow or blended intermediate poses."
+    }
+  }
+}
