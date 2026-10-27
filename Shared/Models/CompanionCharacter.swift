@@ -19,8 +19,8 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
     }
 
     static let xiaobai = CompanionCharacter(
-        id: "xiaobai", name: "小白", subtitle: "白紫龙娘",
-        introduction: "你忙你的，我就在这里。", origin: "ChatGPT 同人角色",
+        id: "xiaobai", name: "С��", subtitle: "��������",
+        introduction: "��æ��ģ��Ҿ������", origin: "ChatGPT ͬ�˽�ɫ",
         chibiAsset: "XiaobaiChibi", portraitAsset: "XiaobaiStanding", heroAsset: "XiaobaiHero",
         chibiSource: "Art/xiaobai-chibi-v2.png", standingSource: "Art/xiaobai-standing.png"
     )
@@ -31,9 +31,11 @@ struct CharacterMotionProfile: Codable, Hashable, Sendable {
     let fontPrefix: String
     let assetPrefix: String
     let timelineResource: String
+    var greetingFrames: [String]? = nil
 
     static let xiaobai = CharacterMotionProfile(manifest: "Art/MotionV4/manifest.json",
-        fontPrefix: "mAIverse", assetPrefix: "Motion", timelineResource: "MotionTimeline")
+        fontPrefix: "mAIverse", assetPrefix: "Motion", timelineResource: "MotionTimeline",
+        greetingFrames: ["Motion_idle_004", "Motion_idle_005", "Motion_idle_006", "Motion_idle_000"])
 }
 
 enum CharacterCatalog {

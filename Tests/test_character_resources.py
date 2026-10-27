@@ -22,6 +22,9 @@ class CharacterResourcesTests(unittest.TestCase):
             x,y,w,h=character['avatarCrop']
             self.assertTrue(0<=x<x+w<=1 and 0<=y<y+h<=1)
         self.assertNotEqual(characters[1]['motion']['fontPrefix'],'mAIverse')
+        profile=characters[1]['motion']
+        self.assertEqual(len(profile['greetingFrames']),4)
+        self.assertTrue(all(name.startswith(profile['assetPrefix']+'_') for name in profile['greetingFrames']))
 
     def test_fish_poses_have_safe_alpha_scale_and_expressive_actions(self):
         folder=ROOT/'Art/DafeiyuMotion'

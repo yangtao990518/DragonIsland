@@ -1,10 +1,10 @@
 [
   {
     "id": "xiaobai",
-    "name": "小白",
-    "subtitle": "白紫龙娘",
-    "introduction": "你忙你的，我就在这里。",
-    "origin": "ChatGPT 同人角色",
+    "name": "С��",
+    "subtitle": "��������",
+    "introduction": "��æ��ģ��Ҿ������",
+    "origin": "ChatGPT ͬ�˽�ɫ",
     "chibiAsset": "XiaobaiChibi",
     "portraitAsset": "XiaobaiStanding",
     "heroAsset": "XiaobaiHero",
@@ -14,10 +14,10 @@
   },
   {
     "id": "dafeiyu",
-    "name": "大肥鱼",
-    "subtitle": "活泼可爱的鲸鱼女仆",
-    "introduction": "嘿嘿，今天也要一起开开心心呀！",
-    "origin": "用户提供角色",
+    "name": "�����",
+    "subtitle": "���ÿɰ��ľ���Ů��",
+    "introduction": "�ٺ٣�����ҲҪһ�𿪿�����ѽ��",
+    "origin": "�û��ṩ��ɫ",
     "chibiAsset": "DafeiyuChibi",
     "portraitAsset": "DafeiyuStanding",
     "heroAsset": "DafeiyuHero",
@@ -29,7 +29,8 @@
       "manifest": "Art/DafeiyuMotion/manifest.json",
       "fontPrefix": "mAIverseDafeiyu",
       "assetPrefix": "MotionDafeiyu",
-      "timelineResource": "MotionTimelineDafeiyu"
+      "timelineResource": "MotionTimelineDafeiyu",
+      "greetingFrames": ["MotionDafeiyu_idle_005", "MotionDafeiyu_idle_001", "MotionDafeiyu_idle_002", "MotionDafeiyu_idle_007"]
     }
   }
 ]
