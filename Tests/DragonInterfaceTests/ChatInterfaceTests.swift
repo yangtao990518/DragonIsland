@@ -18,11 +18,15 @@ final class ChatInterfaceTests: XCTestCase {
         }
         app.buttons["chatSelect-xiaobai"].tap()
         app.buttons["saveChat"].tap()
-        XCTAssertTrue(app.textFields["chatInput"].waitForExistence(timeout: 5))
+        XCTAssertTrue(input(app).waitForExistence(timeout: 5))
+    }
+
+    private func input(_ app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: "chatInput").firstMatch
     }
 
     private func send(_ app: XCUIApplication, _ text: String) {
-        let field = app.textFields["chatInput"]
+        let field = input(app)
         field.tap()
         field.typeText(text)
         app.buttons["sendChat"].tap()

@@ -175,7 +175,7 @@ private struct ChatEditor: View {
                 }
                 Section(
                     header: Text(kind == .direct ? "选择聊天角色" : "选择群成员 · 已选 \(availableSelection.count) 位角色"),
-                    footer: Text(kind == .direct ? "同一角色会继续已有的单聊。" : "你会自动加入群组。现在只有小白，也可以先建群；以后可加入更多角色。")
+                    footer: Text(kind == .direct ? "同一角色会继续已有的单聊。" : "你会自动加入群组。至少选择一位角色，之后可随时添加或移除成员。")
                 ) {
                     ForEach(store.characters.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }) { character in
                         Button {

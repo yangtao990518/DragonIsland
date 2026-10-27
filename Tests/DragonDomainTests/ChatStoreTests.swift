@@ -106,7 +106,7 @@ final class ChatStoreTests: XCTestCase {
         XCTAssertTrue(try file.load().conversations.isEmpty)
     }
 
-    func testDraftEditingAndClearArePersisted() throws {
+    func testDraftEditingAndClearArePersisted() async throws {
         let store = ChatStore(characters: [.xiaobai, future], file: file)
         let id = try XCTUnwrap(store.create(kind: .group, name: "旧群", characterIDs: ["xiaobai"]))
         store.setDraft("稍后发送", in: id)
@@ -117,7 +117,7 @@ final class ChatStoreTests: XCTestCase {
         XCTAssertEqual(try file.load().conversations.first?.draft, "")
     }
 
-    func testCorruptHistoryCannotBeOverwrittenByCreate() throws {
+    func testCorruptHistoryCannotBeOverwrittenByCreate() async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let corrupt = Data("bad history".utf8)
         try corrupt.write(to: file.url)

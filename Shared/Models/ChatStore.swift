@@ -106,11 +106,19 @@ final class ChatStore: ObservableObject {
 
     @discardableResult
     private func setDelivery(_ delivery: ChatDelivery, in id: UUID, messageID: UUID) -> Bool {
-        change { value in
+        let saved = change { value in
             guard let i = value.conversations.firstIndex(where: { $0.id == id }),
                   let j = value.conversations[i].messages.firstIndex(where: { $0.id == messageID }) else { throw ChatError.missingConversation }
             value.conversations[i].messages[j].delivery = delivery
         }
+        // Disk errors must not leave an inactive turn permanently waiting in the UI.
+        // The next launch derives the same final/retryable state from persisted replies.
+        if !saved, delivery != .waiting,
+           let i = history.conversations.firstIndex(where: { $0.id == id }),
+           let j = history.conversations[i].messages.firstIndex(where: { $0.id == messageID }) {
+            history.conversations[i].messages[j].delivery = delivery
+        }
+        return saved
     }
 
     private func beginReply(in id: UUID, to messageID: UUID) {
@@ -135,7 +143,10 @@ final class ChatStore: ObservableObject {
                         guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.missingConversation }
                         value.conversations[i].messages.append(.reply(text, character: character, to: messageID))
                         value.conversations[i].updatedAt = .now
-                    }) else { throw ChatError.invalidHistory }
+                    }) else {
+                        setDelivery(.failed, in: id, messageID: messageID)
+                        return
+                    }
                 }
                 setDelivery(.sent, in: id, messageID: messageID)
             } catch is CancellationError {

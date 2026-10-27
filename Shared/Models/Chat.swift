@@ -137,10 +137,20 @@ struct ChatHistory: Codable, Equatable, Sendable {
             guard !ids.isEmpty, ids.allSatisfy({ !$0.isEmpty }), Set(ids).count == ids.count,
                   conversation.kind != .direct || ids.count == 1,
                   Set(conversation.messages.map(\.id)).count == conversation.messages.count else { throw ChatError.invalidHistory }
+            let users = Dictionary(uniqueKeysWithValues: conversation.messages.filter(\.isUser).map { ($0.id, $0) })
             for message in conversation.messages {
                 guard !message.text.isEmpty,
                       (message.isUser ? message.replyToID == nil : message.replyToID != nil),
                       message.isUser || message.delivery == .sent else { throw ChatError.invalidHistory }
+                if message.isUser {
+                    guard !message.replyCharacterIDs.isEmpty,
+                          Set(message.replyCharacterIDs).count == message.replyCharacterIDs.count,
+                          message.replyCharacterIDs.allSatisfy({ !$0.isEmpty }) else { throw ChatError.invalidHistory }
+                } else {
+                    guard let parentID = message.replyToID, let parent = users[parentID],
+                          let characterID = message.characterID,
+                          parent.replyCharacterIDs.contains(characterID) else { throw ChatError.invalidHistory }
+                }
             }
         }
     }
