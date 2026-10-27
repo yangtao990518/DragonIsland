@@ -40,6 +40,10 @@
 
 已配置 `.github/workflows/chat-checks.yml`，只执行 `swift test`、模拟器编译和聊天界面测试，不生成或上传 IPA。首次运行 [40444731817](https://github.com/yangtao990518/DragonIsland/actions/runs/40444731817) 在开始执行步骤前失败，返回空步骤列表且没有测试日志，因此没有取得 Xcode 编译或 XCTest 结果。仓库保持私有。
 
+2026-10-27 补查 GitHub 网页，Annotations 明确提示账户付款失败或支出额度需要提高，任务未启动。失败页面截图保存于本地 `output/chat-verification/github-test-blocked.jpg`，这不是 App 的运行截图。
+
+已补齐真实截图采集：角色选择、会话列表、恢复后的单聊回复、群组创建、群聊回复、成员管理、改名及清空。XCTest 使用 `XCTAttachment(screenshot:)`，工作流从 xcresult 导出并上传 `chat-test-screenshots-and-logs`，不包含 IPA。截图尚需等待模拟器任务实际执行。
+
 可运行检查的 macOS 环境：
 
 ```sh
