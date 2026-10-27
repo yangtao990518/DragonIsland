@@ -27,3 +27,7 @@
 动作配置以角色为单位提供 manifest、图片命名空间、字体前缀和时间轴文件名。两位角色共享移动几何和计时机制，但表情帧、待机停留时间、预览、字体与资源彼此独立。当前两位角色共生成 361 个计时字体（每位三种背景各 60 个，加一个共用遮罩字体）；这是生成产物，不提交字体二进制。
 
 验证包括原有 14 项动作回归、4 项跨角色资源检查、Swift 领域测试、CoreText 实际字形校验，以及 iPhone 模拟器界面测试和截图。本次不打包 IPA。模拟器结果不等于实体 iPhone 动画、声音或后台耗电已验收。
+
+最终代码提交 `a000d9a661b50bc1af2d0738a99e8adc731b7a7c` 已通过 [GitHub Actions 模拟器验证](https://github.com/yangtao990518/DragonIsland/actions/runs/40469188795)：42 项 Swift 单元测试、18 项 Python 资源/动作回归、672 组 CoreText 字形校验及 4 项 iPhone 16 Pro / iOS 26.2 界面测试。包含大肥鱼单聊与记录恢复、双角色群聊、正常版头像、首页立绘、点击回应、左右动作预览和系统提示音闹钟编辑入口。App 与 Widget 编译成功。
+
+测试原始附件共 16 张，保存在 Actions 的 `chat-test-screenshots-and-logs` 中（保留 7 天），本次工作区另存于 `output/dafeiyu/verification/final/`。该目录有原始截图、日志与 `VERIFICATION.json`；ZIP 的 SHA-256 为 `5c2becbf7c6ce45e0e32b838706984b28777c374af423dae780dafd8326a6ef8`。
