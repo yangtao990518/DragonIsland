@@ -36,13 +36,18 @@
 - 失败后重试、删除时取消任务且不恢复已删除会话、群名/成员编辑、清空记录。
 - 界面建立单聊和群聊、固定回复、重新进入原会话、重启恢复、群组改名和清空。
 
-本机 Windows 没有 Swift / Xcode，已完成全部 41 个 Swift 文件的语法树检查，未发现语法错误；原有走路、打滚资源的 14 项 Python 回归测试全部通过。语法检查不等同于 Swift 类型检查或模拟器验收；上述聊天 XCTest 当前尚未执行通过。
+2026-10-27 已在 [GitHub Actions 40448657287](https://github.com/yangtao990518/DragonIsland/actions/runs/40448657287) 完成真实验证，整体结果 **success**。验证源码为 `ddc7f96e46c5bffeda3dd231817cd1c70ad9a31e`，环境为 macOS 15、Xcode 26.2、iPhone 16 Pro / iOS 26.2 模拟器。
 
-已配置 `.github/workflows/chat-checks.yml`，只执行 `swift test`、模拟器编译和聊天界面测试，不生成或上传 IPA。首次运行 [40444731817](https://github.com/yangtao990518/DragonIsland/actions/runs/40444731817) 在开始执行步骤前失败，返回空步骤列表且没有测试日志，因此没有取得 Xcode 编译或 XCTest 结果。仓库保持私有。
+- 全部 40 项 Swift 单元测试通过，其中包含新增的 16 项聊天领域和会话管理测试。
+- App、Widget、界面测试程序编译通过。
+- 两条聊天界面流程通过：单聊发送/回复、重启恢复、再次选择同一角色复用会话；群组创建、发送/回复、管理、改名保留消息和清空记录。
+- 本机另已完成全部 41 个 Swift 文件的语法树检查，以及原有走路、打滚资源的 14 项 Python 回归测试。
 
-2026-10-27 补查 GitHub 网页，Annotations 明确提示账户付款失败或支出额度需要提高，任务未启动。失败页面截图保存于本地 `output/chat-verification/github-test-blocked.jpg`，这不是 App 的运行截图。
+真实截图共八张：角色选择、会话列表、恢复后的单聊回复、群组创建、群聊回复、成员管理、改名及清空。均来自 XCTest 的 `XCTAttachment(screenshot:)`，由 xcresult 导出；测试输入和群名使用英文，角色的测试回复为中文。可在本次运行的 `chat-test-screenshots-and-logs` artifact 下载原图和日志，本地保存于 `output/chat-verification/screenshots/`，验证摘要为 `output/chat-verification/VERIFICATION.json`。
 
-已补齐真实截图采集：角色选择、会话列表、恢复后的单聊回复、群组创建、群聊回复、成员管理、改名及清空。XCTest 使用 `XCTAttachment(screenshot:)`，工作流从 xcresult 导出并上传 `chat-test-screenshots-and-logs`，不包含 IPA。截图尚需等待模拟器任务实际执行。
+`.github/workflows/chat-checks.yml` 明确启动 iOS 26.2 模拟器后，分别编译和执行界面用例，并保留截图及日志，不生成或上传 IPA。此验证覆盖模拟器中的聊天流程，未做新版本真机安装或 AI 联网验证。
+
+用户已授权仓库持续保持公开，之后由用户自行改回私有；本任务不自动恢复私有。
 
 可运行检查的 macOS 环境：
 
