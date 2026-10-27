@@ -29,7 +29,7 @@ struct CharacterAlarmWidget: Widget {
             let character = CharacterCatalog.resolve(metadata?.characterID, in: CharacterCatalog.load())
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    DragonPortrait(character: character, size: 28)
+                    CharacterAvatar(character: character, size: 28)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Image(systemName: "alarm.fill").foregroundStyle(DragonPalette.lavender)
@@ -45,11 +45,11 @@ struct CharacterAlarmWidget: Widget {
                     }.foregroundStyle(DragonPalette.softWhite).padding(.bottom, 6)
                 }
             } compactLeading: {
-                DragonPortrait(character: character, size: 28)
+                CharacterAvatar(character: character, size: 28)
             } compactTrailing: {
                 Image(systemName: "alarm.fill").foregroundStyle(DragonPalette.lavender)
             } minimal: {
-                DragonPortrait(character: character, size: 24)
+                CharacterAvatar(character: character, size: 24)
             }
         }
     }
@@ -64,3 +64,4 @@ struct CharacterAlarmWidget: Widget {
     }
 }
 #endif
+

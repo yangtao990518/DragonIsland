@@ -28,6 +28,8 @@ struct CharacterVoicePreference: Codable, Equatable {
 }
 
 struct CharacterAlarm: Codable, Equatable, Identifiable {
+    /// A real system tone, independent of character recordings or voice IDs.
+    static let systemSoundID = "system-default"
     enum Backend: String, Codable { case alarmKit, notification }
     let id: UUID
     let characterID: String
@@ -36,6 +38,7 @@ struct CharacterAlarm: Codable, Equatable, Identifiable {
     let date: Date
     var backend: Backend = .notification
     var sessionID: UUID?
+    var usesSystemSound: Bool { voiceID == Self.systemSoundID }
 
     var notificationID: String { Self.notificationID(id) }
     static func notificationID(_ id: UUID) -> String { "maiverse.alarm.\(id.uuidString)" }
@@ -76,3 +79,4 @@ struct CharacterAlarmSnapshot: Codable, Equatable {
         if let data = try? JSONEncoder().encode(self) { defaults.set(data, forKey: Self.storageKey) }
     }
 }
+

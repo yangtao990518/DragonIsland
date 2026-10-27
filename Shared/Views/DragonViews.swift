@@ -21,6 +21,20 @@ struct DragonPortrait: View {
     }
 }
 
+struct CharacterAvatar: View {
+    var character: CompanionCharacter = .xiaobai
+    var size: CGFloat = 32
+
+    var body: some View {
+        Image(character.avatarAsset)
+            .resizable().scaledToFill()
+            .frame(width: size, height: size)
+            .background(DragonPalette.lavender.opacity(0.12))
+            .clipShape(Circle())
+            .accessibilityLabel("\(character.name)的正常版头像")
+    }
+}
+
 struct CharacterStanding: View {
     let character: CompanionCharacter
     var width: CGFloat = 72
@@ -45,10 +59,10 @@ struct IslandMotionPortrait: View {
     var body: some View {
         ZStack {
             Image(state.islandScene.asset).resizable()
-            if character.id == "xiaobai", let plan = state.automaticMotionPlan,
+            if character.motionProfile != nil, let plan = state.automaticMotionPlan,
                (0..<8).contains(plan), !reduceMotion, !luminanceReduced {
                 TimerMotionPortrait(plan: plan, epoch: state.motionEpoch ?? state.startedAt,
-                                    endsAt: state.endsAt, size: size + 8, scene: state.islandScene)
+                                    endsAt: state.endsAt, size: size + 8, scene: state.islandScene, character: character)
             } else {
                 DragonPortrait(character: character, size: size)
             }
@@ -57,7 +71,7 @@ struct IslandMotionPortrait: View {
             // A scene uses a different timer-font family. Reusing native text
             // identities can retain its old font until another presentation
             // refreshes. Replace the scene atomically, without a pose crossfade.
-            .id(state.islandScene.rawValue)
+            .id(character.id + state.islandScene.rawValue)
             .transition(.identity)
             .transaction { transaction in
                 transaction.animation = nil
@@ -94,3 +108,4 @@ struct DragonCountdown: View {
         .accessibilityLabel("陪伴剩余时间")
     }
 }
+

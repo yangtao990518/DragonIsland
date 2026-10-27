@@ -390,7 +390,7 @@ private struct ChatAvatar: View {
         ZStack {
             Circle().fill(AppPalette.accent.opacity(0.10))
             if let character, !group, !user {
-                DragonPortrait(character: character, size: size - 6)
+                CharacterAvatar(character: character, size: size - 6)
             } else {
                 Image(systemName: group ? "person.3.fill" : user ? "person.fill" : "person.crop.circle.badge.questionmark")
                     .font(.system(size: size * 0.40)).foregroundStyle(AppPalette.accent)

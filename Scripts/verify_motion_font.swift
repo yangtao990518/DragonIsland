@@ -3,7 +3,9 @@ import CoreText
 
 let directory = URL(fileURLWithPath: CommandLine.arguments[1], isDirectory: true)
 let prefixes = ["black": "mAIverse", "meadow": "mAIverseMeadow", "night": "mAIverseNight"]
-for prefix in prefixes.values {
+struct Check: Decodable { let fontPrefix: String?; let scene: String; let bank: Int; let phase: Int; let second: Int; let glyph: Int }
+let tests = try JSONDecoder().decode([Check].self, from: Data(contentsOf: directory.appendingPathComponent("checks.json")))
+for prefix in Set(tests.map { $0.fontPrefix ?? prefixes[$0.scene]! }) {
  for phase in 0..<60 {
     let url = directory.appendingPathComponent("\(prefix)F\(phase).ttf")
     var error: Unmanaged<CFError>?
@@ -12,10 +14,8 @@ for prefix in prefixes.values {
     }
  }
 }
-struct Check: Decodable { let scene: String; let bank: Int; let phase: Int; let second: Int; let glyph: Int }
-let tests = try JSONDecoder().decode([Check].self, from: Data(contentsOf: directory.appendingPathComponent("checks.json")))
 for test in tests {
-    let name = "\(prefixes[test.scene]!)F\(test.phase)"
+    let name = "\(test.fontPrefix ?? prefixes[test.scene]!)F\(test.phase)"
     let font = CTFontCreateWithName(name as CFString, 32, nil)
     let value = test.bank == 0 ? String(format: "1:%02d", test.second) : String(format: "%d:01:%02d", test.bank * 3, test.second)
     let text = NSAttributedString(string: value, attributes: [NSAttributedString.Key(kCTFontAttributeName as String): font])
@@ -31,3 +31,4 @@ for test in tests {
     }
 }
 print("CoreText shaped all \(tests.count) scene/bank/phase cases with the expected glyphs.")
+

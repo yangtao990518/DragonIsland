@@ -46,11 +46,28 @@ def main():
         raise ValueError("Character IDs must be nonempty and unique")
     for character in characters:
         chibi = Image.open(ROOT / character["chibiSource"]).convert("RGBA")
+        if tiles := character.get("standingSourceTiles"):
+            # Lossless source tiles keep individual source uploads small. Paste
+            # straight RGBA pixels, preserving the original alpha exactly.
+            parts = [Image.open(ROOT / path).convert("RGBA") for path in tiles]
+            if len({part.width for part in parts}) != 1:
+                raise ValueError("Standing source tiles must have identical widths")
+            joined = Image.new("RGBA", (parts[0].width, sum(part.height for part in parts)))
+            y = 0
+            for part in parts:
+                joined.paste(part, (0, y))
+                y += part.height
+            joined.save(ROOT / character["standingSource"])
         standing = Image.open(ROOT / character["standingSource"]).convert("RGBA")
         if standing.getchannel("A").getextrema()[0] == 255:
             raise ValueError(f"Standing art needs transparency: {character['id']}")
         imageset(SHARED, character["chibiAsset"], chibi, 26)
         imageset(SHARED, character["portraitAsset"], standing, (100, 134))
+        # Normal-proportion head art for identity avatars; island actors remain Q版.
+        x, y, w, h = character["avatarCrop"]
+        sw, sh = standing.size
+        avatar = standing.crop((round(x*sw), round(y*sh), round((x+w)*sw), round((y+h)*sh)))
+        imageset(SHARED, character["portraitAsset"] + "Avatar", avatar, 64)
         imageset(APP, character["heroAsset"], standing, (300, 400))
         imageset(APP, character["chibiAsset"] + "Detail", chibi, 400)
 
@@ -70,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

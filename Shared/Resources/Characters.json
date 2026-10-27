@@ -9,6 +9,28 @@
     "portraitAsset": "XiaobaiStanding",
     "heroAsset": "XiaobaiHero",
     "chibiSource": "Art/xiaobai-chibi-v2.png",
-    "standingSource": "Art/xiaobai-standing.png"
+    "standingSource": "Art/xiaobai-standing.png",
+    "avatarCrop": [0.28, 0.0, 0.40, 0.24]
+  },
+  {
+    "id": "dafeiyu",
+    "name": "大肥鱼",
+    "subtitle": "活泼可爱的鲸鱼女仆",
+    "introduction": "嘿嘿，今天也要一起开开心心呀！",
+    "origin": "用户提供角色",
+    "chibiAsset": "DafeiyuChibi",
+    "portraitAsset": "DafeiyuStanding",
+    "heroAsset": "DafeiyuHero",
+    "chibiSource": "Art/dafeiyu-chibi.png",
+    "standingSource": "Art/dafeiyu-standing.png",
+    "standingSourceTiles": ["Art/dafeiyu-standing-top.png", "Art/dafeiyu-standing-bottom.png"],
+    "avatarCrop": [0.24, 0.0, 0.50, 0.24],
+    "motion": {
+      "manifest": "Art/DafeiyuMotion/manifest.json",
+      "fontPrefix": "mAIverseDafeiyu",
+      "assetPrefix": "MotionDafeiyu",
+      "timelineResource": "MotionTimelineDafeiyu"
+    }
   }
 ]
+

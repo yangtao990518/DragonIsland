@@ -11,6 +11,12 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
     let heroAsset: String
     let chibiSource: String
     let standingSource: String
+    var motion: CharacterMotionProfile? = nil
+
+    var avatarAsset: String { portraitAsset + "Avatar" }
+    var motionProfile: CharacterMotionProfile? {
+        motion ?? (id == "xiaobai" ? .xiaobai : nil)
+    }
 
     static let xiaobai = CompanionCharacter(
         id: "xiaobai", name: "小白", subtitle: "白紫龙娘",
@@ -18,6 +24,16 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
         chibiAsset: "XiaobaiChibi", portraitAsset: "XiaobaiStanding", heroAsset: "XiaobaiHero",
         chibiSource: "Art/xiaobai-chibi-v2.png", standingSource: "Art/xiaobai-standing.png"
     )
+}
+
+struct CharacterMotionProfile: Codable, Hashable, Sendable {
+    let manifest: String
+    let fontPrefix: String
+    let assetPrefix: String
+    let timelineResource: String
+
+    static let xiaobai = CharacterMotionProfile(manifest: "Art/MotionV4/manifest.json",
+        fontPrefix: "mAIverse", assetPrefix: "Motion", timelineResource: "MotionTimeline")
 }
 
 enum CharacterCatalog {
@@ -44,3 +60,4 @@ enum CharacterCatalog {
 
     enum CatalogError: Error { case invalidCharacters }
 }
+

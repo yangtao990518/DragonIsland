@@ -24,9 +24,23 @@ final class CharacterCatalogTests: XCTestCase {
         XCTAssertThrowsError(try CharacterCatalog.decode(duplicate))
     }
 
+    func testDafeiyuHasIndependentNormalAvatarAndMotionNamespace() throws {
+        let characters = try CharacterCatalog.decode(catalogData())
+        let fish = try XCTUnwrap(characters.first { $0.id == "dafeiyu" })
+        XCTAssertEqual(fish.name, "大肥鱼")
+        XCTAssertEqual(CharacterCatalog.resolve("dafeiyu", in: characters), fish)
+        XCTAssertEqual(fish.avatarAsset, "DafeiyuStandingAvatar")
+        XCTAssertNotEqual(fish.avatarAsset, fish.chibiAsset)
+        let motion = try XCTUnwrap(fish.motionProfile)
+        XCTAssertNotEqual(motion.fontPrefix, CompanionCharacter.xiaobai.motionProfile?.fontPrefix)
+        XCTAssertNotEqual(motion.timelineResource, CompanionCharacter.xiaobai.motionProfile?.timelineResource)
+        XCTAssertNotEqual(motion.assetPrefix, CompanionCharacter.xiaobai.motionProfile?.assetPrefix)
+    }
+
     func testLegacyAndUnknownCharacterIDsResolveSafely() {
         XCTAssertEqual(CharacterCatalog.resolve(nil, in: [.xiaobai]), .xiaobai)
         XCTAssertEqual(CharacterCatalog.resolve("removed-character", in: [.xiaobai]), .xiaobai)
         XCTAssertEqual(CharacterCatalog.resolve("xiaobai", in: []), .xiaobai)
     }
 }
+

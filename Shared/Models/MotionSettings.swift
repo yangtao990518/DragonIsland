@@ -36,6 +36,20 @@ struct MotionTimeline: Decodable {
               let data = try? Data(contentsOf: url) else { return nil }
         return try? JSONDecoder().decode(MotionTimeline.self, from: data)
     }()
+    private static let characterTimelines: [String: MotionTimeline] = {
+        var result: [String: MotionTimeline] = [:]
+        for character in CharacterCatalog.load() {
+            guard let profile = character.motionProfile,
+                  let url = Bundle.main.url(forResource: profile.timelineResource, withExtension: "json"),
+                  let data = try? Data(contentsOf: url),
+                  let value = try? JSONDecoder().decode(MotionTimeline.self, from: data) else { continue }
+            result[character.id] = value
+        }
+        return result
+    }()
+    static func timeline(for character: CompanionCharacter) -> MotionTimeline? {
+        characterTimelines[character.id] ?? (character.id == "xiaobai" ? shared : nil)
+    }
     func frame(plan: Int, elapsed: TimeInterval) -> MotionFrame? {
         guard let value = plans.first(where: { $0.id == plan }), !value.frames.isEmpty else { return nil }
         return value.frames[max(0, Int(elapsed * Double(fps))) % value.frames.count]
@@ -45,4 +59,5 @@ struct MotionTimeline: Decodable {
         return frames[max(0, Int(elapsed * Double(fps))) % frames.count]
     }
 }
+
 

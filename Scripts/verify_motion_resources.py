@@ -10,7 +10,9 @@ from fontTools.ttLib import TTFont
 ROOT=Path(__file__).resolve().parents[1]
 folder=ROOT/'Shared/Resources/MotionFonts'
 files=sorted(folder.glob('*.ttf'))
-if len(files)!=181:raise ValueError('Expected three 60-phase banks and one gate font')
+characters=json.loads((ROOT/'Shared/Resources/Characters.json').read_text(encoding='utf-8'))
+expected=1+180*sum(c['id']=='xiaobai' or bool(c.get('motion')) for c in characters)
+if len(files)!=expected:raise ValueError(f'Expected {expected} character/scene motion fonts')
 direct=0;references=0;unique=set()
 for path in files:
     with TTFont(path) as font:
@@ -32,3 +34,4 @@ destination=ROOT/'output/verification/motion-font-verification.json'
 destination.parent.mkdir(parents=True,exist_ok=True)
 destination.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(report))
+

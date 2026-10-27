@@ -134,8 +134,12 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         defer { busy = false }
         try await authorize()
         guard alarm.date.timeIntervalSinceNow >= 5 else { throw VoiceAlarmError.tooSoon }
-        guard let voice = voices.first(where: { $0.id == alarm.voiceID && $0.characterID == alarm.characterID }),
-              Bundle.main.url(forResource: voice.file, withExtension: nil) != nil else { throw VoiceAlarmError.missingVoice }
+        let voice = voices.first(where: { $0.id == alarm.voiceID && $0.characterID == alarm.characterID })
+        if !alarm.usesSystemSound {
+            guard let voice, Bundle.main.url(forResource: voice.file, withExtension: nil) != nil else {
+                throw VoiceAlarmError.missingVoice
+            }
+        }
         reload()
         guard snapshot.alarms.count < 20 || old != nil else { throw VoiceAlarmError.limit }
         var saved = alarm
@@ -149,13 +153,14 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
                     stopButton: AlarmButton(text: "知道啦", textColor: .white, systemImageName: "checkmark"))
             }
             let attributes = AlarmAttributes<CharacterAlarmMetadata>(presentation: AlarmPresentation(alert: alert),
-                metadata: CharacterAlarmMetadata(characterID: alarm.characterID, voiceID: voice.id,
+                metadata: CharacterAlarmMetadata(characterID: alarm.characterID, voiceID: alarm.voiceID,
                     alarmID: alarm.id.uuidString, title: alarm.title),
                 tintColor: Color(red: 0.76, green: 0.67, blue: 0.94))
             // A fixed alarm fires at the same end date as the companion countdown.
             // No second countdown Live Activity competes with the character's island.
             let configuration = AlarmManager.AlarmConfiguration<CharacterAlarmMetadata>.alarm(
-                schedule: .fixed(alarm.date), attributes: attributes, sound: .named(voice.file))
+                schedule: .fixed(alarm.date), attributes: attributes,
+                sound: alarm.usesSystemSound ? .default : .named(voice!.file))
             _ = try await AlarmManager.shared.schedule(id: alarm.id, configuration: configuration)
             saved.backend = .alarmKit
         } else {
@@ -189,11 +194,12 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         return saved
     }
 
-    private func scheduleNotification(_ alarm: CharacterAlarm, voice: CharacterVoice) async throws {
+    private func scheduleNotification(_ alarm: CharacterAlarm, voice: CharacterVoice?) async throws {
         let content = UNMutableNotificationContent()
         content.title = alarm.title
-        content.body = voice.text
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(voice.file))
+        content.body = alarm.usesSystemSound ? "约好的时间到啦。" : voice?.text ?? ""
+        if alarm.usesSystemSound { content.sound = .default }
+        else if let voice { content.sound = UNNotificationSound(named: UNNotificationSoundName(voice.file)) }
         content.userInfo = ["characterID": alarm.characterID, "alarmID": alarm.id.uuidString]
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, alarm.date.timeIntervalSinceNow), repeats: false)
         try await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: alarm.notificationID,
@@ -252,3 +258,4 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
 
     private func reload() { snapshot = CharacterAlarmSnapshot.load() }
 }
+

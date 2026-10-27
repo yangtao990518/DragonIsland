@@ -6,12 +6,12 @@ struct MotionSettingsView: View {
     var body: some View {
         WorldPage {
             HStack {
-                PageHeading(eyebrow: "DAILY LIFE", title: "小白的日常", subtitle: "挑选喜欢的小动作，让她自己玩一会儿。")
+                PageHeading(eyebrow: "DAILY LIFE", title: "\(store.displayCharacter.name)的日常", subtitle: "挑选喜欢的小动作，让她自己玩一会儿。")
                 Spacer(minLength: 0)
                 AppearanceToggle()
             }
             VStack(spacing: 12) {
-                MotionArtworkPreview(settings: store.motionSettings, action: previewAction, scene: store.islandScene)
+                MotionArtworkPreview(settings: store.motionSettings, action: previewAction, scene: store.islandScene, character: store.displayCharacter)
                     .frame(height: 220)
                     .frame(maxWidth: .infinity)
                 Picker("动作预览", selection: $previewAction) {
@@ -53,6 +53,7 @@ struct MotionArtworkPreview: View {
     let settings: MotionSettings
     var action = "random"
     var scene: IslandScene = .black
+    var character: CompanionCharacter = .xiaobai
     @State private var began = Date()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
@@ -66,9 +67,9 @@ struct MotionArtworkPreview: View {
                 Image(frame.asset).resizable().scaledToFit()
                     .frame(width: width * 72 / 180, height: width * 90 / 180)
                     .offset(x: CGFloat(frame.x) * width / 180)
-                    .accessibilityLabel("小白动作预览")
+                    .accessibilityLabel("\(character.name)动作预览")
             } else {
-                Image("XiaobaiChibiDetail").resizable().scaledToFit()
+                Image(character.chibiAsset + "Detail").resizable().scaledToFit()
                     .frame(width: width * 72 / 180, height: width * 90 / 180)
             }
             }.frame(width: width, height: width * 96 / 180)
@@ -77,14 +78,16 @@ struct MotionArtworkPreview: View {
         }
         .onChange(of: action) { _, _ in began = Date() }
         .onChange(of: settings) { _, _ in began = Date() }
+        .onChange(of: character.id) { _, _ in began = Date() }
     }
     private func frame(elapsed: TimeInterval) -> MotionFrame? {
         guard !reduceMotion else { return nil }
         if action == "random" {
             guard let plan = settings.plan(seed: 0) else { return nil }
-            return MotionTimeline.shared?.frame(plan: plan, elapsed: elapsed)
+            return MotionTimeline.timeline(for: character)?.frame(plan: plan, elapsed: elapsed)
         }
-        return MotionTimeline.shared?.preview(action: action, elapsed: elapsed)
+        return MotionTimeline.timeline(for: character)?.preview(action: action, elapsed: elapsed)
     }
 }
+
 

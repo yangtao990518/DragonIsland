@@ -7,6 +7,8 @@ name: Check chat functionality
       - 'App/**'
       - 'Shared/**'
       - 'Tests/**'
+      - 'Art/**'
+      - 'Scripts/**'
       - '.github/workflows/chat-checks.yml'
   workflow_dispatch:
 
@@ -40,6 +42,10 @@ jobs:
           .asset-venv/bin/python -m pip install -r requirements-build.txt
           .asset-venv/bin/python Scripts/prepare_assets.py
           .asset-venv/bin/python Scripts/prepare_motion.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_motion_resources.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_character_resources.py
+          .asset-venv/bin/python Scripts/verify_motion_resources.py
+          swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
           xcodegen generate --spec project.yml
       - name: Boot the iOS 26.2 iPhone simulator
         run: |
@@ -89,5 +95,6 @@ jobs:
             build/chat-domain-tests.log
             build/chat-build.log
             build/chat-interface-tests.log
+            output/verification/
           if-no-files-found: warn
           retention-days: 7

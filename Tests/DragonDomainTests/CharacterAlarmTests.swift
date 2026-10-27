@@ -3,6 +3,14 @@ import XCTest
 @testable import DragonDomain
 
 final class CharacterAlarmTests: XCTestCase {
+    func testSystemToneReminderRoundTripsWithoutBorrowingCharacterVoice() throws {
+        let alarm = CharacterAlarm(id: UUID(), characterID: "dafeiyu", voiceID: CharacterAlarm.systemSoundID,
+            title: "大肥鱼的提醒", date: Date(timeIntervalSince1970: 1000))
+        let restored = try JSONDecoder().decode(CharacterAlarm.self, from: JSONEncoder().encode(alarm))
+        XCTAssertEqual(restored, alarm)
+        XCTAssertTrue(restored.usesSystemSound)
+        XCTAssertEqual(restored.characterID, "dafeiyu")
+    }
     func testCountdownUsesExactEndDateAndRejectsInvalidDurations() {
         let now = Date(timeIntervalSince1970: 1000)
         XCTAssertEqual(CharacterAlarm.countdownDate(minutes: 25, now: now), now.addingTimeInterval(1500))
@@ -78,3 +86,4 @@ final class CharacterAlarmTests: XCTestCase {
         XCTAssertTrue(snapshot.alarms.isEmpty)
     }
 }
+

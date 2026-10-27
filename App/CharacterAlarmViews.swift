@@ -54,7 +54,7 @@ struct CompanionVoiceSettings: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Toggle("到点语音提醒", isOn: Binding(
+            Toggle(alarms.voice(for: character.id) == nil ? "到点提醒" : "到点语音提醒", isOn: Binding(
                 get: { alarms.preference(for: character.id).enabled },
                 set: { alarms.setPreference(characterID: character.id, enabled: $0, voiceID: alarms.voice(for: character.id)?.id) }
             )).accessibilityIdentifier("companionVoiceToggle")
@@ -70,12 +70,11 @@ struct CompanionVoiceSettings: View {
                     }.contentShape(Rectangle())
                 }.buttonStyle(.plain).accessibilityIdentifier("chooseCompanionVoice")
             } else {
-                Text("这位角色的语音还在准备中。可先使用无语音陪伴。")
+                Text("到点播放系统提示音。角色语音还在准备中。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Text(alarms.deliveryExplanation).font(.caption).foregroundStyle(.secondary)
         }
-        .disabled(VoiceCatalog.voices(for: character.id, in: alarms.voices).isEmpty)
         .sheet(isPresented: $choosing) {
             NavigationStack {
                 CharacterVoicePicker(alarms: alarms, character: character, voiceID: Binding(
@@ -111,10 +110,10 @@ struct CharacterAlarmEditor: View {
         Form {
             Section {
                 HStack {
-                    DragonPortrait(character: character, size: 38)
+                    CharacterAvatar(character: character, size: 38)
                     VStack(alignment: .leading) {
                         Text("让\(character.name)叫你").font(.headline)
-                        Text("一次提醒 · 到点播放所选语音").font(.caption).foregroundStyle(.secondary)
+                        Text(voiceID == CharacterAlarm.systemSoundID ? "一次提醒 · 到点播放系统提示音" : "一次提醒 · 到点播放所选语音").font(.caption).foregroundStyle(.secondary)
                     }
                 }
                 TextField("提醒名称", text: $title).accessibilityIdentifier("alarmTitle")
@@ -145,7 +144,13 @@ struct CharacterAlarmEditor: View {
                         .accessibilityIdentifier("alarmFireDate")
                 }
             }
-            Section("到点语音") {
+            Section(voiceID == CharacterAlarm.systemSoundID ? "提醒声音" : "到点语音") {
+                if voiceID == CharacterAlarm.systemSoundID {
+                    Label("系统提示音", systemImage: "bell.badge")
+                        .accessibilityIdentifier("alarmSystemSound")
+                    Text("\(character.name)的角色语音还在准备中，不影响设置闹钟和到点提醒。")
+                        .font(.caption).foregroundStyle(.secondary)
+                } else {
                 Button { choosing = true } label: {
                     HStack {
                         Text(alarms.voices.first { $0.id == voiceID }?.title ?? "选择语音")
@@ -157,6 +162,7 @@ struct CharacterAlarmEditor: View {
                     Text(voice.text).font(.subheadline).foregroundStyle(.secondary)
                     Button(alarms.playingID == voice.id ? "停止试听" : "试听这句") { alarms.play(voice) }
                         .accessibilityIdentifier("previewSelectedVoice")
+                }
                 }
             }
             Section {
@@ -198,7 +204,7 @@ struct CharacterAlarmEditor: View {
             Button("知道了", role: .cancel) { failure = nil; alarms.error = nil }
         } message: { Text(failure ?? alarms.error ?? "") }
         .onAppear {
-            voiceID = editing?.voiceID ?? alarms.voice(for: character.id)?.id ?? ""
+            voiceID = editing?.voiceID ?? alarms.voice(for: character.id)?.id ?? CharacterAlarm.systemSoundID
             title = editing?.title ?? "\(character.name)的提醒"
             if let editing { mode = 1; clockTime = editing.date }
         }
@@ -221,16 +227,15 @@ struct CharacterAlarmsPage: View {
             ForEach(characters) { character in
                 Button { editor = AlarmEditorSelection(character: character) } label: {
                     HStack(spacing: 13) {
-                        DragonPortrait(character: character, size: 48)
+                        CharacterAvatar(character: character, size: 48)
                         VStack(alignment: .leading, spacing: 5) {
                             Text("\(character.name)的闹钟").font(.headline)
-                            Text("选择时间和语音").font(.caption).foregroundStyle(.secondary)
+                            Text(alarms.voice(for: character.id) == nil ? "选择时间 · 系统提示音" : "选择时间和语音").font(.caption).foregroundStyle(.secondary)
                         }
                         Spacer()
                         Image(systemName: "plus.circle.fill").font(.title2).foregroundStyle(AppPalette.accent)
                     }.worldCard()
                 }.buttonStyle(.plain).accessibilityIdentifier("newAlarm-\(character.id)")
-                .disabled(VoiceCatalog.voices(for: character.id, in: alarms.voices).isEmpty)
             }
             Text("已安排 \(alarms.snapshot.alarms.count) 个提醒").font(.headline)
             if alarms.snapshot.alarms.isEmpty {
@@ -257,7 +262,7 @@ struct CharacterAlarmsPage: View {
                         Text("已到提醒时间").font(.caption).foregroundStyle(.secondary)
                     }
                     Text(alarm.date.formatted(date: .abbreviated, time: .shortened)).font(.caption).foregroundStyle(.secondary)
-                    Text(alarms.voices.first { $0.id == alarm.voiceID }?.title ?? "语音提醒").font(.subheadline)
+                    Text(alarm.usesSystemSound ? "系统提示音" : alarms.voices.first { $0.id == alarm.voiceID }?.title ?? "语音提醒").font(.subheadline)
                     HStack {
                         if alarm.sessionID == nil {
                             Button("修改") { editor = AlarmEditorSelection(character: character, alarm: alarm) }
@@ -290,3 +295,4 @@ private struct AlarmEditorSelection: Identifiable {
     let character: CompanionCharacter
     var alarm: CharacterAlarm?
 }
+

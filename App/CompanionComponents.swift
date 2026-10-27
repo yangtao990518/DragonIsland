@@ -208,6 +208,7 @@ struct CharacterResidentCard: View {
                     .background(selected ? AppPalette.status.opacity(0.08) : AppPalette.accent,
                                 in: RoundedRectangle(cornerRadius: 13))
             }.buttonStyle(.plain).disabled(active || selected)
+                .accessibilityIdentifier("selectCharacter-\(character.id)")
         }.worldCard()
     }
 }
@@ -219,3 +220,4 @@ extension View {
             .overlay(RoundedRectangle(cornerRadius: 23).stroke(Color.primary.opacity(0.055), lineWidth: 1))
     }
 }
+

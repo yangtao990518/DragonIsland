@@ -25,7 +25,7 @@ struct DragonLiveActivity: Widget {
             return DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     HStack(spacing: 3) {
-                        DragonPortrait(character: character, size: 22)
+                        CharacterAvatar(character: character, size: 22)
                         Text(context.attributes.companionName)
                     }
                         .font(.system(size: 12, weight: .medium))
@@ -159,3 +159,4 @@ private struct ActivityControlLabel: View {
         .contentShape(Capsule())
     }
 }
+

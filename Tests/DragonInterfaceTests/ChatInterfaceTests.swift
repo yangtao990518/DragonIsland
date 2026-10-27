@@ -20,6 +20,7 @@ final class ChatInterfaceTests: XCTestCase {
         }
         capture(app, name: group ? "chat-group-create" : "chat-character-picker")
         app.buttons["chatSelect-xiaobai"].tap()
+        if group { app.buttons["chatSelect-dafeiyu"].tap() }
         app.buttons["saveChat"].tap()
         XCTAssertTrue(input(app).waitForExistence(timeout: 5))
     }
@@ -40,7 +41,7 @@ final class ChatInterfaceTests: XCTestCase {
         field.tap()
         field.typeText(text)
         app.buttons["sendChat"].tap()
-        XCTAssertTrue(app.staticTexts["聊天功能测试中"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["聊天功能测试中"].firstMatch.waitForExistence(timeout: 5))
     }
 
     func testDirectChatRepliesAndRestoresHistoryWithoutDuplicateConversation() {
@@ -69,6 +70,8 @@ final class ChatInterfaceTests: XCTestCase {
         let app = launch()
         create(app, group: true)
         send(app, "Hello group")
+        expectation(for: NSPredicate(format: "count == 2"), evaluatedWith: app.staticTexts.matching(NSPredicate(format: "label == %@", "聊天功能测试中")))
+        waitForExpectations(timeout: 5)
         capture(app, name: "chat-group-reply")
         app.buttons["chatSettings"].tap()
         app.buttons["管理群组"].tap()
@@ -87,5 +90,53 @@ final class ChatInterfaceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["打个招呼吧"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["Hello group"].exists)
         capture(app, name: "chat-group-empty")
+    }
+
+    func testDafeiyuDirectChatUsesNormalAvatarAndRestores() {
+        let app = launch()
+        app.buttons["startDirectChat"].tap()
+        XCTAssertTrue(app.buttons["chatSelect-dafeiyu"].waitForExistence(timeout: 5))
+        capture(app, name: "dafeiyu-normal-avatar-picker")
+        app.buttons["chatSelect-dafeiyu"].tap()
+        app.buttons["saveChat"].tap()
+        XCTAssertTrue(input(app).waitForExistence(timeout: 5))
+        send(app, "Hello Dafeiyu")
+        capture(app, name: "dafeiyu-direct-reply")
+        app.terminate(); app.launch()
+        let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "chat-")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 8)); row.tap()
+        XCTAssertTrue(app.navigationBars["大肥鱼"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Hello Dafeiyu"].exists)
+        XCTAssertTrue(app.staticTexts["聊天功能测试中"].exists)
+    }
+
+    func testDafeiyuWorldMotionGalleryAndNonVoiceReminder() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["--maiverse-capture", "--appearance-light", "--character-dafeiyu"]
+        app.launch()
+        XCTAssertTrue(app.buttons["startCompanion"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["startCompanion"].label.contains("大肥鱼"))
+        capture(app, name: "dafeiyu-world-standing")
+        for _ in 0..<4 {
+            if app.buttons["worldMotionSettings"].isHittable { break }
+            app.swipeUp()
+        }
+        app.buttons["worldMotionSettings"].tap()
+        XCTAssertTrue(app.staticTexts["大肥鱼的日常"].waitForExistence(timeout: 5))
+        app.buttons["待机"].tap()
+        capture(app, name: "dafeiyu-idle-preview")
+        app.buttons["右走"].tap()
+        capture(app, name: "dafeiyu-walk-preview")
+        app.buttons["打滚"].tap()
+        capture(app, name: "dafeiyu-roll-preview")
+        app.buttons["完成"].tap()
+        app.tabBars.buttons["闹钟"].tap()
+        XCTAssertTrue(app.buttons["newAlarm-dafeiyu"].waitForExistence(timeout: 5))
+        app.buttons["newAlarm-dafeiyu"].tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "alarmSystemSound").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["saveCharacterAlarm"].isEnabled)
+        capture(app, name: "dafeiyu-system-tone-alarm")
+        app.buttons["取消"].tap()
     }
 }

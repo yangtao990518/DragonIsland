@@ -73,11 +73,12 @@ def scene_image(name,size=(STAGE_WIDTH,GLYPH_PIXELS)):
     return image
 
 
-def walk_clip(direction):
+def walk_clip(direction, durations=None):
+    durations = durations or DURATIONS
     # Six complete, unhurried two-step cycles. Travel lasts longer instead of
     # speeding up the feet to cover the wider stage. Neutral poses never slide.
     stand='roll_left' if direction=='walk_left' else 'roll_right'
-    gait=[(d,direction,i) for i,d in enumerate(DURATIONS[direction])]*6
+    gait=[(d,direction,i) for i,d in enumerate(durations[direction])]*6
     return [(WALK_MOVE_START,stand,11)]+gait+[(200,stand,11)]
 
 
@@ -99,17 +100,18 @@ def sample(entries,ms):
     return entries[-1][1:]
 
 
-def movement_leg(action, direction):
+def movement_leg(action, direction, durations=None):
+    durations = durations or DURATIONS
     """One grounded leg, shared by native fonts, previews and regression tests."""
     left=direction=='left'
     start=WALK_EXTENT if left else -WALK_EXTENT
     end=-start
     name=f'{action}_{direction}'
     if action=='walk':
-        clip=walk_clip(name)
+        clip=walk_clip(name, durations)
         duration,move_start,move_ms=WALK_END,WALK_MOVE_START,WALK_MOVE_MS
     else:
-        clip=[(d,name,i) for i,d in enumerate(DURATIONS[name])]
+        clip=[(d,name,i) for i,d in enumerate(durations[name])]
         duration,move_start,move_ms=ROLL_END,ROLL_MOVE_START,ROLL_MOVE_MS
     frames=[]
     for j in range(round(duration*FPS/1000)):
@@ -122,9 +124,10 @@ def movement_leg(action, direction):
     return frames
 
 
-def idle_frames(duration, position):
-    clip=[(d,'idle',i) for i,d in enumerate(DURATIONS['idle'])]
-    period=sum(DURATIONS['idle'])
+def idle_frames(duration, position, durations=None):
+    durations = durations or DURATIONS
+    clip=[(d,'idle',i) for i,d in enumerate(durations['idle'])]
+    period=sum(durations['idle'])
     return [{'asset':key(*sample(clip,j*1000/FPS%period)), 'x':position,'action':'idle'}
             for j in range(round(duration*FPS/1000))]
 
@@ -157,24 +160,24 @@ def plan_legs(mask,seed):
     return legs
 
 
-def schedule(mask,seed):
+def schedule(mask,seed,durations=None):
     blocks=plan_blocks(mask,seed)
     position=-WALK_EXTENT if any(a!='idle' for a in blocks) else 0
     slots=[];frames=[]
     for action in blocks:
         if action=='idle':
-            slots.append(action);frames+=idle_frames(SLOT_MS,position)
+            slots.append(action);frames+=idle_frames(SLOT_MS,position,durations)
         else:
             slots += [action]*(4 if action=='walk' else 2)
-            frames+=movement_leg(action,'right')+movement_leg(action,'left')
+            frames+=movement_leg(action,'right',durations)+movement_leg(action,'left',durations)
     return slots,frames
 
 
-def preview_frames():
-    return {'idle':idle_frames(2000,0),
-            'walk_right':movement_leg('walk','right')+movement_leg('walk','left'),
-            'walk_left':movement_leg('walk','left')+movement_leg('walk','right'),
-            'roll':movement_leg('roll','right')+movement_leg('roll','left')}
+def preview_frames(durations=None):
+    return {'idle':idle_frames(sum((durations or DURATIONS)['idle']),0,durations),
+            'walk_right':movement_leg('walk','right',durations)+movement_leg('walk','left',durations),
+            'walk_left':movement_leg('walk','left',durations)+movement_leg('walk','right',durations),
+            'roll':movement_leg('roll','right',durations)+movement_leg('roll','left',durations)}
 
 
 def render_frame(artwork,frame,*,opaque=True,scene='black'):
@@ -234,15 +237,19 @@ def mask_font():
     font.save(OUTPUT/'mAIverseGate.ttf')
 
 
-def main():
+def compile_character(profile):
     from prepare_assets import imageset,SHARED
     OUTPUT.mkdir(parents=True,exist_ok=True)
+    art=(ROOT/profile['manifest']).parent
+    manifest=json.loads((ROOT/profile['manifest']).read_text(encoding='utf-8'))
+    durations={a:info['frameDurationsMs'] for a,info in manifest['actions'].items()}
+    scenes={scene:profile['fontPrefix']+prefix.removeprefix('mAIverse') for scene,prefix in SCENES.items()}
     artwork={}
-    for action,info in MANIFEST['actions'].items():
+    for action,info in manifest['actions'].items():
         for i,path in enumerate(info['frames']):
-            image=Image.open((ART/path).resolve()).convert('RGBA')
+            image=Image.open((art/path).resolve()).convert('RGBA')
             artwork[key(action,i)]=image
-            imageset(SHARED,key(action,i),image,(64,80))
+            imageset(SHARED,key(action,i).replace('Motion_',profile['assetPrefix']+'_',1),image,(64,80))
     # A fixed palette per scene keeps its grass/sky identical across frames;
     # per-frame adaptive palettes would make the background shimmer.
     palettes={}
@@ -262,10 +269,6 @@ def main():
         return rendered[k]
     # One ordinary, WidgetKit-compatible font per phase, all banks in each file.
     # Avoid runtime CTFont bridging and unsupported named variable instances.
-    for old in OUTPUT.glob('*.ttf'):
-        assert old.resolve().parent==OUTPUT.resolve()
-        old.unlink()
-    mask_font()
     plans=[]
     order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'H{i}' for i in range(1,8)]
     def glyph_name(bank,second):return f'f{second:02}' if bank==0 else f'b{bank}s{second:02}'
@@ -273,10 +276,10 @@ def main():
     for mask in range(4):
         for seed in range(SEEDS):
             bank=mask*SEEDS+seed
-            chosen,frames=schedule(mask,seed)
+            chosen,frames=schedule(mask,seed,durations)
             plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames,'legs':plan_legs(mask,seed)})
     unique=set()
-    for scene,prefix in SCENES.items():
+    for scene,prefix in scenes.items():
       for phase in range(PHASES):
         name=f'{prefix}F{phase}'
         font=base_font(name,order)
@@ -298,16 +301,43 @@ def main():
         sbix=newTable('sbix');sbix.strikes={GLYPH_PIXELS:strike};font['sbix']=sbix
         addOpenTypeFeaturesFromString(font,bank_features())
         font.save(OUTPUT/f'{name}.ttf')
-    checks=[{'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
+    checks=[{'fontPrefix':scenes[scene],'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
             for scene in SCENES for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
+
+    data={'fps':FPS,'period':PERIOD,'plans':plans,'previews':preview_frames(durations),'durations':durations,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2}
+    # Runtime timelines and asset names are isolated per character. Movement
+    # geometry/timer banks stay identical; expressions may have their own holds.
+    for frames in [p['frames'] for p in data['plans']]+list(data['previews'].values()):
+        for frame in frames:
+            frame['asset']=frame['asset'].replace('Motion_',profile['assetPrefix']+'_',1)
+    (ROOT/'Shared/Resources'/f"{profile['timelineResource']}.json").write_text(json.dumps(data,separators=(',',':'))+'\n',encoding='utf-8')
+    print(f"{profile['fontPrefix']}: {len(artwork)} poses, {len(plans)} plans")
+    return checks,len(unique)
+
+
+def main():
+    characters=json.loads((ROOT/'Shared/Resources/Characters.json').read_text(encoding='utf-8'))
+    profiles=[]
+    for character in characters:
+        profile=character.get('motion')
+        if profile is None and character['id']=='xiaobai':
+            profile={'manifest':'Art/MotionV4/manifest.json','fontPrefix':'mAIverse','assetPrefix':'Motion','timelineResource':'MotionTimeline'}
+        if profile:profiles.append(profile)
+    for field in ('fontPrefix','assetPrefix','timelineResource'):
+        if len({p[field] for p in profiles})!=len(profiles):raise ValueError('Duplicate motion namespace')
+    OUTPUT.mkdir(parents=True,exist_ok=True)
+    for old in OUTPUT.glob('*.ttf'):
+        assert old.resolve().parent==OUTPUT.resolve()
+        old.unlink()
+    mask_font()
+    checks=[];unique=0
+    for profile in profiles:
+        result,count=compile_character(profile);checks+=result;unique+=count
     (OUTPUT/'checks.json').write_text(json.dumps(checks),encoding='utf-8')
-    (ROOT/'Shared/Resources/MotionTimeline.json').write_text(json.dumps({'fps':FPS,'period':PERIOD,'plans':plans,'previews':preview_frames(),'durations':DURATIONS,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2},separators=(',',':'))+'\n',encoding='utf-8')
-    # XcodeGen includes this generated settings fragment in both Info.plists.
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
-    (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':len(unique),'targetFPS':FPS,'phases':PHASES,'plans':len(plans)}),encoding='utf-8')
+    (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':unique,'targetFPS':FPS,'phases':PHASES,'plans':8,'characters':len(profiles)}),encoding='utf-8')
     (ROOT/'motion-fonts.yml').write_text('targets:\n  DragonIsland:\n    info:\n      properties:\n        UIAppFonts: &motionFonts\n'+''.join(f'          - {n}\n' for n in paths)+'  DragonIslandWidget:\n    info:\n      properties:\n        UIAppFonts: *motionFonts\n',encoding='utf-8')
-    print(f'Motion resources: {len(artwork)} PNG poses, {len(plans)} plans, {len(paths)} fonts; native timer rendering.')
+    print(f'Motion resources: {len(profiles)} characters, {len(paths)} fonts; native timer rendering.')
 
 
 if __name__=='__main__':main()
-

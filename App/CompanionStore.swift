@@ -136,8 +136,8 @@ final class CompanionStore: ObservableObject {
             )
             if voicePreference.enabled {
                 do {
-                    guard let voice = alarms.voice(for: selectedCharacter.id) else { throw VoiceAlarmError.missingVoice }
-                    let alarm = CharacterAlarm(id: sessionID, characterID: selectedCharacter.id, voiceID: voice.id,
+                    let soundID = alarms.voice(for: selectedCharacter.id)?.id ?? CharacterAlarm.systemSoundID
+                    let alarm = CharacterAlarm(id: sessionID, characterID: selectedCharacter.id, voiceID: soundID,
                         title: "\(selectedCharacter.name) · 陪伴时间到啦", date: state.endsAt, sessionID: sessionID)
                     try await alarms.schedule(alarm)
                 } catch {
@@ -206,4 +206,5 @@ final class CompanionStore: ObservableObject {
         clear()
     }
 }
+
 

@@ -70,6 +70,9 @@ struct ContentView: View {
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
+            if args.contains("--character-dafeiyu"), let character = store.characters.first(where: { $0.id == "dafeiyu" }) {
+                store.select(character)
+            }
             if args.contains("--preview-tasks") { showingMotion = true }
             for scene in IslandScene.allCases where args.contains("--scene-\(scene.rawValue)") {
                 await store.setIslandScene(scene)
@@ -98,7 +101,7 @@ struct ContentView: View {
                 Spacer()
                 AppearanceToggle()
                 Button { tab = .characters } label: {
-                    DragonPortrait(character: store.displayCharacter, size: 32)
+                    CharacterAvatar(character: store.displayCharacter, size: 32)
                         .padding(7)
                         .background(Color.primary.opacity(0.06), in: Circle())
                         .overlay(Circle().stroke(AppPalette.accent.opacity(0.35), lineWidth: 1))
