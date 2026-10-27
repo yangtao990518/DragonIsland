@@ -6,7 +6,7 @@ struct MotionSettingsView: View {
     var body: some View {
         WorldPage {
             HStack {
-                PageHeading(eyebrow: "DAILY LIFE", title: "\(store.displayCharacter.name)���ճ�", subtitle: "��ѡϲ����С�����������Լ���һ�����")
+                PageHeading(eyebrow: "DAILY LIFE", title: "\(store.displayCharacter.name)的日常", subtitle: "挑选喜欢的小动作，让她自己玩一会儿。")
                 Spacer(minLength: 0)
                 AppearanceToggle()
             }
@@ -14,31 +14,31 @@ struct MotionSettingsView: View {
                 MotionArtworkPreview(settings: store.motionSettings, action: previewAction, scene: store.islandScene, character: store.displayCharacter)
                     .frame(height: 220)
                     .frame(maxWidth: .infinity)
-                Picker("����Ԥ��", selection: $previewAction) {
-                    Text("���").tag("random")
-                    Text("����").tag("idle")
-                    Text("����").tag("walk_right")
-                    Text("����").tag("walk_left")
-                    Text("���").tag("roll")
+                Picker("动作预览", selection: $previewAction) {
+                    Text("随机").tag("random")
+                    Text("待机").tag("idle")
+                    Text("右走").tag("walk_right")
+                    Text("左走").tag("walk_left")
+                    Text("打滚").tag("roll")
                 }.pickerStyle(.segmented)
-                Text("����Ԥ��").font(.caption).foregroundStyle(.secondary)
-                Text("���С�����������к���")
+                Text("动作预览").font(.caption).foregroundStyle(.secondary)
+                Text("轻点小人物，和她打个招呼。")
                     .font(.caption).foregroundStyle(.secondary)
             }.worldCard()
             VStack(alignment: .leading, spacing: 17) {
-                Toggle("�Զ��", isOn: binding(\.automatic))
+                Toggle("自动活动", isOn: binding(\.automatic))
                     .accessibilityIdentifier("automaticMotionToggle")
-                Text("��ʼ����ص����棬�����ٵ㶯����ť��")
+                Text("开始陪伴后回到桌面，无需再点动作按钮。")
                     .font(.system(size: 12)).foregroundStyle(.secondary)
                 Divider()
-                Toggle("��· �� �ߵ��߱��ٻ���", isOn: binding(\.walk))
+                Toggle("走路 · 走到边边再回来", isOn: binding(\.walk))
                     .accessibilityIdentifier("walkMotionToggle")
-                Toggle("��� �� �����߹����ٻ���", isOn: binding(\.roll))
+                Toggle("打滚 · 向两边滚，再回来", isOn: binding(\.roll))
                     .accessibilityIdentifier("rollMotionToggle")
-                Text("��·������������Լ 10 ���ߵ���һ�ˣ����۷����������Ҳ�����������ƶ���Լ 5 ��һ������δ��ѡ�Ķ���������룬������ѡʱֻ������")
+                Text("走路会慢慢迈步，约 10 秒走到另一端，再折返回来。打滚也会向左、向右移动，约 5 秒一个方向。未勾选的动作不会参与，都不勾选时只待机。")
                     .font(.system(size: 12)).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
-            Text("���ûᱣ�沢Ӧ�õ�ǰ��顣�����ճ�Ƭ��Ϊ 60 ��ѭ����������̬Ч����Ϣ��������ʱ��ʾ��̬���")
+            Text("设置会保存并应用当前陪伴。本版日常片段为 60 秒循环；减弱动态效果或息屏低亮度时显示静态人物。")
                 .font(.system(size: 11)).foregroundStyle(.secondary)
         }
     }
@@ -71,7 +71,7 @@ struct MotionArtworkPreview: View {
                 Image(frame.asset).resizable().scaledToFit()
                     .frame(width: width * 72 / 180, height: width * 90 / 180)
                     .offset(x: CGFloat(frame.x) * width / 180)
-                    .accessibilityLabel("\(character.name)����Ԥ��")
+                    .accessibilityLabel("\(character.name)动作预览")
             } else {
                 Image(character.chibiAsset + "Detail").resizable().scaledToFit()
                     .frame(width: width * 72 / 180, height: width * 90 / 180)
@@ -82,9 +82,9 @@ struct MotionArtworkPreview: View {
              .onTapGesture { greet() }
              .accessibilityElement(children: .ignore)
              .accessibilityIdentifier("motionPreviewStage")
-             .accessibilityLabel("\(character.name)����Ԥ��")
-             .accessibilityValue(reactionBegan.map { context.date.timeIntervalSince($0) < 1.2 } == true ? "���ڴ��к�" : reactionBegan != nil ? "�ѻ�Ӧ�к�" : "����Ԥ��")
-             .accessibilityHint("���������к�")
+             .accessibilityLabel("\(character.name)动作预览")
+             .accessibilityValue(reactionBegan.map { context.date.timeIntervalSince($0) < 1.2 } == true ? "正在打招呼" : reactionBegan != nil ? "已回应招呼" : "正在预览")
+             .accessibilityHint("轻点和她打招呼")
              .accessibilityAddTraits(.isButton)
              .accessibilityAction { greet() }
           }.frame(maxWidth: .infinity, maxHeight: .infinity)

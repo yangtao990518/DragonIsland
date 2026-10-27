@@ -19,8 +19,8 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
     }
 
     static let xiaobai = CompanionCharacter(
-        id: "xiaobai", name: "С��", subtitle: "��������",
-        introduction: "��æ��ģ��Ҿ������", origin: "ChatGPT ͬ�˽�ɫ",
+        id: "xiaobai", name: "小白", subtitle: "白紫龙娘",
+        introduction: "你忙你的，我就在这里。", origin: "ChatGPT 同人角色",
         chibiAsset: "XiaobaiChibi", portraitAsset: "XiaobaiStanding", heroAsset: "XiaobaiHero",
         chibiSource: "Art/xiaobai-chibi-v2.png", standingSource: "Art/xiaobai-standing.png"
     )
