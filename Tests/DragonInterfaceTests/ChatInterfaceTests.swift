@@ -2,6 +2,7 @@ import XCTest
 
 final class ChatInterfaceTests: XCTestCase {
     private func launch() -> XCUIApplication {
+        continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["--preview-chat", "--appearance-light", "--chat-test-store", UUID().uuidString]
         app.launch()
