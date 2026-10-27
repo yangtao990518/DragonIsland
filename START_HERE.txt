@@ -1,5 +1,11 @@
 mAIverse · 我的 AI 小世界
 
+2026-10-27 最新接续入口：docs/HANDOFF_2026-10-27.md。
+当前开发分支 codex/character-chat，已加入聊天、大肥鱼和正常人物版头像。
+完整动作资料与最新预览在 AnimationDrafts/2026-10-27/，运行 restore.py 恢复原 output/ 目录。
+第一批御剑/骑鲸眨眼修正版已确认；第二批步态未通过，有穿模、腿抖、接缝和步幅问题。先保存交接，尚未接入新动作，不生成 IPA。
+下面保留早期 V1.8 安装说明，旧盘符、仓库可见性与功能范围不代表今天最新状态。
+
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。
 当前分支为 mAIverse V1.8，主 App 与扩展内部版本为 1.8（build 14）。本机安装包使用独立目录 D:\gpt_workspace\ios_ldd\mAIverse-V1.8\，保留旧版目录。IPA 名称为 mAIverse-V1.8-unsigned.ipa；源码本身仍不包含编译产物。
 
@@ -14,3 +20,4 @@ mAIverse · 我的 AI 小世界
 V1.8 新增角色语音闹钟、10 句小白录音与试听、倒计时/指定时间、独立闹钟管理、陪伴到点语音。iOS 26+ 使用系统 AlarmKit，旧版使用受静音与专注模式影响的通知提醒。首次使用需允许对应权限。
 V1.7 走路约 10 秒单程、打滚约 5 秒单程，左右往返；三种场景、动作筛选、主题、角色看图和图标均保留。30Hz 是目标采样频率，不代表每秒 30 张独立姿势或真机固定帧率。
 本次改动和验证状态见 docs/RELEASE_V1.8.md；手机安装后按 docs/TEST_GUIDE.md 检查。
+

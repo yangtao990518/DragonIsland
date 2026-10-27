@@ -1,5 +1,13 @@
 # 验证记录 · 2026-10-25
 
+## 2026-10-27 聊天与双角色功能；新动作试稿另记
+
+`codex/character-chat` 的功能源码 `a000d9a661b50bc1af2d0738a99e8adc731b7a7c` 已通过 [Actions 40469188795](https://github.com/yangtao990518/DragonIsland/actions/runs/40469188795)：42 项 Swift、18 项 Python、672 组 CoreText、4 项 iPhone 16 Pro / iOS 26.2 界面测试，App/Widget 编译成功，16 张原始附件。详情见 [DAFEIYU.md](DAFEIYU.md)、[CHAT.md](CHAT.md)。
+
+下午的新御剑/骑鲸/遛宠物均为本地动画资料，未接入该构建、未生成 IPA。第一批眨眼 v3 获用户确认；第二批最新 v3 仍被指出衣服穿模、迈步后腿抖、腿部拼接和步幅过小。局部数值与视频解码检查不能替代视觉验收。完整过程、当前待办及原始资料入口见 [2026-10-27 交接](HANDOFF_2026-10-27.md)。
+
+以下保留早期版本验证历史，不应将当时的账号/构建阻塞当作当前聊天开发状态。
+
 ## V1.8 最新候选（2026-10-27，录像行程检查失败，未交付）
 
 - 用户授权备用账号后，在私有仓库 `yangtao-google-0518/DragonIsland` 执行[运行 40352604515](https://github.com/yangtao-google-0518/DragonIsland/actions/runs/40352604515)，job `121676408716`，源码 `d762382c4f0cfda29ac84ccb4f5fd2b68c383e05`。
@@ -190,3 +198,4 @@
 - 最终本机 IPA：`D:\gpt_workspace\ios_ldd\mAIverse-V1.6\mAIverse-V1.6-unsigned.ipa`，66,172,253 字节；SHA-256 `b3cd275551a8724522ace9bddaf96e14f938e145dd2d8e07f8305c1348e23024`，与产物清单一致，真实 IPA 结构检查再次通过。安装说明、改动、测试说明及实际截图 / 视频裁剪位于同一版本目录，现有 V1.5 目录未修改。
 - 大体积原始录像单列为[系统录像 artifact](https://github.com/yangtao990518/DragonIsland/actions/runs/40220525320/artifacts/12609587711)，完整截图单列为[截图 artifact](https://github.com/yangtao990518/DragonIsland/actions/runs/40220525320/artifacts/12608944909)，GitHub 保留七天。本机保留最终实际裁剪和分析，未用中间候选冒充最终验收。
 - 原有竖屏警告和视频脚本 AVFoundation API 弃用提示未阻止构建。系统黑色外壳保留，彩色图形是 App 内容；仅普通紧凑态装载完整动画，最小态与展开名称旁静态。保持 30fps 目标、预排 60 秒循环、减弱动态 / 息屏低亮度静态；未操作 Sideloadly 或用户 iPhone，不声称已完成真机签名、长期稳定性、内存或耗电测量。升级后结束旧活动再开始，并保留、签名 Widget 扩展。
+

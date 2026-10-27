@@ -1,8 +1,10 @@
 # mAIverse · 我的 AI 小世界
 
+> **2026-10-27 当前进度：**开发分支为 `codex/character-chat`，已加入单聊/群聊、大肥鱼和正常人物版头像；测试回复为“聊天功能测试中”，尚未接 AI。今日完整改动与待办见 [交接记录](docs/HANDOFF_2026-10-27.md)，原图/脚本及最新预览见 [动作资料归档](AnimationDrafts/2026-10-27/README.md)。御剑/骑鲸眨眼修正版已获确认；遛宠物步态仍有穿模、腿抖、接缝和步幅问题，未集成，不生成 IPA。
+
 > 本分支为 **V1.8（build 14）角色语音闹钟**：在 V1.7 动作修复基础上加入 10 句小白语音、试听、角色独立定时及陪伴到点提醒。改动与验证状态见 [V1.8 清单](docs/RELEASE_V1.8.md)。V1.7 动作保持不变。
 
-属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前只有白紫色 ChatGPT 同人龙娘“小白”，角色目录和选择界面已准备好，后续可配置其他 AI 角色；目前没有 AI 对话。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
+属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前有白紫色龙娘“小白”和活泼可爱的“大肥鱼”，角色目录支持继续扩展；单聊和群聊目前使用固定测试回复，没有调用 AI。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
 
 ## 第一版做什么
 
@@ -10,7 +12,7 @@
 - App 内有轻微上下浮动的待机效果，尊重系统“减弱动态效果”设置。
 - 选择 1 / 25 / 50 / 120 分钟的一轮陪伴。
 - 日常灵动岛紧凑态和最小态使用 Q 版小人物；长按展开和锁屏使用用户提供立绘的透明版本，主界面展示大尺寸立绘。
-- 主 App 包含“我的世界 / 角色 / 任务 / 闹钟 / 关于”，提供日常、展开和锁屏预览。更多角色可通过统一目录配置，当前只有小白。
+- 主 App 包含“我的世界 / 角色 / 聊天 / 闹钟 / 关于”；日常动作设置位于“我的世界”。提供日常、展开和锁屏预览，小白与大肥鱼均由统一角色目录驱动。
 - 角色详情可设置一次性闹钟；陪伴开始前可开启到点语音。语音按角色筛选、试听并保存默认选择。iOS 26 及以上使用 AlarmKit，旧版使用受系统通知设置影响的通知提醒。
 - V1.2 增加人物卡片与详情，Q 版和立绘分别支持全屏缩放、双击与拖动；详情可查看日常、展开与锁屏预览。
 - V1.3 看图支持单击返回、未缩放时单指下滑关闭；放大后的拖动保留为查看图片，双击仍用于缩放。
@@ -121,4 +123,5 @@ mAIverse 是产品名称；源码 target、Bundle ID、URL scheme 与仓库暂�
 - [实时活动动画限制](https://developer.apple.com/documentation/widgetkit/animating-data-updates-in-widgets-and-live-activities)
 - [GitHub macOS runners](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)
 - [Sideloadly](https://sideloadly.io/)
+
 
