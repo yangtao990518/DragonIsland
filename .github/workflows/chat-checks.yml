@@ -1,0 +1,48 @@
+name: Check chat functionality
+
+"on":
+  push:
+    branches: [codex/character-chat]
+    paths:
+      - 'App/**'
+      - 'Shared/**'
+      - 'Tests/**'
+      - '.github/workflows/chat-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chat-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chat:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Test chat domain, persistence and reply lifecycle
+        run: swift test
+      - name: Prepare simulator resources
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          .asset-venv/bin/python Scripts/prepare_assets.py
+          .asset-venv/bin/python Scripts/prepare_motion.py
+          xcodegen generate --spec project.yml
+      - name: Run chat interface tests (no IPA)
+        run: |
+          set -euo pipefail
+          DEVICE_ID="$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for k,vs in d["devices"].items() if "iOS-26" in k for v in vs if v["name"].startswith("iPhone")))')"
+          xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
+            -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath build/ChatTests -resultBundlePath build/ChatTests.xcresult \
+            -only-testing:DragonInterfaceTests/ChatInterfaceTests \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test

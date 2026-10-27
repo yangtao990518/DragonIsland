@@ -2,12 +2,12 @@ import SwiftUI
 import UIKit
 
 private enum WorldTab: Hashable {
-    case world, characters, tasks, alarms, about
+    case world, characters, chat, alarms, about
 
     static var initial: WorldTab {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-characters") { return .characters }
-        if ProcessInfo.processInfo.arguments.contains("--preview-tasks") { return .tasks }
+        if ProcessInfo.processInfo.arguments.contains("--preview-chat") { return .chat }
         if ProcessInfo.processInfo.arguments.contains("--preview-about") { return .about }
         if ProcessInfo.processInfo.arguments.contains("--preview-alarms") { return .alarms }
         #endif
@@ -18,15 +18,18 @@ private enum WorldTab: Hashable {
 struct ContentView: View {
     @ObservedObject var store: CompanionStore
     @ObservedObject private var alarms: CharacterAlarmStore
+    @StateObject private var chatStore: ChatStore
     @State private var tab = WorldTab.initial
     @State private var minutes = 25
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
+    @State private var showingMotion = false
     @Environment(\.openURL) private var openURL
 
     init(store: CompanionStore) {
         self.store = store
         self.alarms = store.alarms
+        _chatStore = StateObject(wrappedValue: ChatStore(characters: store.characters))
     }
 
     var body: some View {
@@ -35,8 +38,8 @@ struct ContentView: View {
                 .tabItem { Label("我的世界", systemImage: "sparkles") }.tag(WorldTab.world)
             charactersPage
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
-            MotionSettingsView(store: store)
-                .tabItem { Label("任务", systemImage: "figure.play") }.tag(WorldTab.tasks)
+            ChatPage(store: chatStore)
+                .tabItem { Label("聊天", systemImage: "bubble.left.and.bubble.right") }.tag(WorldTab.chat)
             CharacterAlarmsPage(alarms: store.alarms, characters: store.characters)
                 .tabItem { Label("闹钟", systemImage: "alarm") }.tag(WorldTab.alarms)
             aboutPage
@@ -55,9 +58,19 @@ struct ContentView: View {
             }
             .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $showingMotion) {
+            NavigationStack {
+                MotionSettingsView(store: store)
+                    .navigationTitle("日常动作").navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) { Button("完成") { showingMotion = false } }
+                    }
+            }
+        }
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
+            if args.contains("--preview-tasks") { showingMotion = true }
             for scene in IslandScene.allCases where args.contains("--scene-\(scene.rawValue)") {
                 await store.setIslandScene(scene)
             }
@@ -101,6 +114,14 @@ struct ContentView: View {
                 setupSession
             }
             islandPreview
+            Button { showingMotion = true } label: {
+                HStack {
+                    Label("日常动作", systemImage: "figure.play")
+                    Spacer()
+                    Text("走路、打滚与自动活动").font(.caption).foregroundStyle(.secondary)
+                    Image(systemName: "chevron.right").font(.caption)
+                }.font(.subheadline).foregroundStyle(AppPalette.accent)
+            }.worldCard().accessibilityIdentifier("worldMotionSettings")
             HStack(spacing: 6) {
                 Image(systemName: "heart")
                 Text("把一小段日常，留给喜欢的角色。")
@@ -182,7 +203,7 @@ struct ContentView: View {
                             await store.changeMood()
                         }
                     }
-                    Button("挑选自动动作") { tab = .tasks }.font(.system(size: 12)).accessibilityIdentifier("openMotionSettings")
+                    Button("挑选自动动作") { showingMotion = true }.font(.system(size: 12)).accessibilityIdentifier("openMotionSettings")
                 }
                 Button { Task { await store.finish() } } label: {
                     Text(expired ? "收起这一轮，准备再出发" : "结束本轮陪伴")
@@ -257,7 +278,8 @@ struct ContentView: View {
                 Text("让喜欢的角色住进手机，陪你专注，也陪你放松。小白是这里的第一位住民。")
                     .font(.system(size: 14)).foregroundStyle(Color.primary.opacity(0.65)).lineSpacing(5)
                 Divider().overlay(Color.primary.opacity(0.08))
-                Label("当前为本地陪伴，互动短句为预设内容。", systemImage: "iphone")
+                Label("当前为本地陪伴，聊天支持单聊与群组，角色回复为测试内容。", systemImage: "iphone")
+                Label("聊天记录保存在本机，删除 App 会同时删除本机记录。", systemImage: "bubble.left.and.bubble.right")
                 Label("尚未接入 AI 对话，无需账号或 API Key。", systemImage: "lock")
                 Label("可选择角色语音，到点由系统提醒；陪伴卡片仍可手动结束。", systemImage: "alarm")
             }
@@ -283,3 +305,4 @@ struct ContentView: View {
     }
 
 }
+
