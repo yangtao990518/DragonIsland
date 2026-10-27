@@ -50,9 +50,20 @@ jobs:
         id: build
         run: bash Scripts/build_unsigned.sh
 
-      - name: Render actual app previews in iPhone simulator
-        timeout-minutes: 20
-        run: bash Scripts/capture_previews.sh
+      - name: Record IPA validation scope
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          note = (
+              'App / Widget 已编译，IPA 结构和资源检查通过。\n'
+              '本 IPA 在后续模拟器界面与系统录像验收之前上传；完整验收结论请查看同一次构建的最终结果。\n'
+              '真机签名安装、声音和静音 / 专注表现尚未验证。\n'
+              f'源码：{os.environ["GITHUB_SHA"]}\n'
+              f'构建：https://github.com/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n'
+          )
+          Path('output/BUILD_STATUS.md').write_text(note, encoding='utf-8')
+          PY
 
       - name: Downloadable IPA
         uses: actions/upload-artifact@v7
@@ -64,6 +75,10 @@ jobs:
             output/*.txt
           if-no-files-found: error
           retention-days: 7
+
+      - name: Render actual app previews in iPhone simulator
+        timeout-minutes: 20
+        run: bash Scripts/capture_previews.sh
 
       - name: System motion review sheets and video analysis
         uses: actions/upload-artifact@v7
