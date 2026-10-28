@@ -250,6 +250,15 @@ struct ContentView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .frame(height: 470)
                 .accessibilityIdentifier("characterCardPager")
+                .overlay(alignment: .top) {
+                    HStack {
+                        characterPageArrow(offset: -1)
+                        Spacer()
+                        characterPageArrow(offset: 1)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.top, 112)
+                }
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 18) {
@@ -274,7 +283,7 @@ struct ContentView: View {
                         withAnimation { proxy.scrollTo(id, anchor: .center) }
                     }
                 }
-                Text("左右滑动卡片，或点头像快速查看角色；点卡片设置她的日常动作。")
+                Text("左右滑动、点两侧箭头或头像切换角色；点卡片设置她的日常动作。")
                     .font(.caption).foregroundStyle(.secondary)
             } else {
                 ForEach(store.characters) { character in residentCard(character) }
@@ -292,6 +301,32 @@ struct ContentView: View {
                     .font(.system(size: 12)).foregroundStyle(Color.primary.opacity(0.5))
             }
         }
+    }
+
+    private func characterPageArrow(offset: Int) -> some View {
+        let current = store.characters.firstIndex(where: { $0.id == browsedCharacterID }) ?? 0
+        let next = current + offset
+        let available = store.characters.indices.contains(next)
+        return Button {
+            guard available else { return }
+            withAnimation(.easeInOut(duration: 0.25)) {
+                browsedCharacterID = store.characters[next].id
+            }
+        } label: {
+            Image(systemName: offset < 0 ? "chevron.left" : "chevron.right")
+                .font(.system(size: 19, weight: .semibold))
+                .foregroundStyle(AppPalette.accent)
+                .frame(width: 44, height: 44)
+                .background(.regularMaterial, in: Circle())
+                .overlay(Circle().stroke(AppPalette.accent.opacity(0.12), lineWidth: 1))
+                .opacity(available ? 1 : 0.28)
+        }
+        .buttonStyle(.plain)
+        .disabled(!available)
+        .accessibilityIdentifier(offset < 0 ? "previousCharacterCard" : "nextCharacterCard")
+        .accessibilityLabel(available
+            ? "\(offset < 0 ? "上" : "下")一个角色：\(store.characters[next].name)"
+            : offset < 0 ? "已是第一个角色" : "已是最后一个角色")
     }
 
     private func residentCard(_ character: CompanionCharacter) -> some View {
