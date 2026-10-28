@@ -1,0 +1,1294 @@
+{
+  "status": "unaccepted_local_draft",
+  "revision": "v12",
+  "branch": "codex/character-chat",
+  "base_commit": "bafc996fb3a70cace014d182163af863e90c1713",
+  "archive": {
+    "path": "sources-v12.zip",
+    "bytes": 59791822,
+    "sha256": "0155ccc0b1bb5f025f464e44259866b06a9288bb992af519af58ccf4c16cc49d"
+  },
+  "files": [
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/000.png",
+      "bytes": 178195,
+      "sha256": "f8e8a2d02862cd7e390a70e1cb608c366b868dfcd26da2c2f46025f5affea22c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/001.png",
+      "bytes": 177556,
+      "sha256": "95d6bed3bca0fd7b6918b5fabe1c1779c4eaee7e68e9df39904f68c29c21c4db"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/002.png",
+      "bytes": 177576,
+      "sha256": "7f6b3f4ea9b22f8c02651d1ad4d25a9a176e2e425f0031460b3ed0bb2dfa610e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/003.png",
+      "bytes": 177570,
+      "sha256": "d4f58ae78280c41135c0d33e7e07bfe020853527f66dfc4405703f9f6fbf47bf"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/004.png",
+      "bytes": 177459,
+      "sha256": "7a3d94e54fc5fe32b920374a7a75db7640d1bd8cf0ddd50b7efca0ff42a4911d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/005.png",
+      "bytes": 177385,
+      "sha256": "0bb6b2924a8c270c434b7ee9440aa2e9fb1794d86edbe60eda0d7f1453294618"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/006.png",
+      "bytes": 177080,
+      "sha256": "2b921f4e0df4b4bb4a8be2e197556a6219d65ee77bb225250d1f86d526a374bb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/007.png",
+      "bytes": 177047,
+      "sha256": "cf716b38bd90ac0035544f8aed1f032c06773db49bc9f1fc8b7347bedf07eb0b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/008.png",
+      "bytes": 176783,
+      "sha256": "012e6074d385ee923a2be25b23a701e75d6cd6fd59a277edb7e015169948fa5c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/009.png",
+      "bytes": 176687,
+      "sha256": "1f8b6fe33b8dfefa2401494f19a8715e6adee5d479f82c125e5e5f2e6c1a2b88"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/010.png",
+      "bytes": 176878,
+      "sha256": "e86e5211156bc0b3de9287dd2bd36965462782e340984b24e0ac68cd21feaa07"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/011.png",
+      "bytes": 176514,
+      "sha256": "72707cc54005bdae73ce594671ddec97d8b1786fd9fa412098071448ed4e71b2"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/012.png",
+      "bytes": 176957,
+      "sha256": "3ed5bce240050baa8ba1e8487d034a4ce6ee09106839c82d1c3c572627816fa8"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/013.png",
+      "bytes": 176912,
+      "sha256": "085699429e7fb1311748460956d1b67fdf07d8523515e6b47c9834f2ea0a777b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/014.png",
+      "bytes": 177257,
+      "sha256": "1f465517bbf79704e0793dfab3ce9e8e57d1d2df9ce408f06706b83aa3844e8c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/015.png",
+      "bytes": 177081,
+      "sha256": "8057a28679a490b8d779a100cc697c3f3a0643bcc5f495be83fe329800995779"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/016.png",
+      "bytes": 177137,
+      "sha256": "ff5f7798496fccd3741b5d00903c1e4776fa87320b57da1ab70b77246cced213"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/017.png",
+      "bytes": 177133,
+      "sha256": "528124a244cc74e2b4505a65d19adf41994d0f1d9a6d9e2ace6979e809c9f17e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/018.png",
+      "bytes": 176956,
+      "sha256": "db3e123aee6cc2a51cef608daa7064cc8228ef383cbed3aea704fbf181819046"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/019.png",
+      "bytes": 176136,
+      "sha256": "940c9f2f09c622b73f9cb6def3e72f5960d10d9d81bdb690fec2cdde110361bb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/020.png",
+      "bytes": 176249,
+      "sha256": "f71e6c6757a84043f68ffe4c67bf9daacd2533eb83464258f54329ecdd838e8e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/021.png",
+      "bytes": 175435,
+      "sha256": "2a3d36caa01e7eec7f8e25eee711d03fe9bec172fe82b966fc938d50d0af22a6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/022.png",
+      "bytes": 175464,
+      "sha256": "96634186080ffc42f2f63855a29b645dab9db7af2310c8c6d27460c341c1551c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/023.png",
+      "bytes": 175176,
+      "sha256": "8c0515a86e737f7439ac0894dba85f5b8156fc9d4bc3f3d90c54a02c0685ea0f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/024.png",
+      "bytes": 174782,
+      "sha256": "4aaccb234654e92478f790fb2b2feadac5b8fc5ab4254a93e03fe06f415cccab"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/025.png",
+      "bytes": 175061,
+      "sha256": "42ad85a111d0fa323907dedd1eac46ab31ca40810aec178efeec4c8863e8caad"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/026.png",
+      "bytes": 175063,
+      "sha256": "6a864c1f0f787a08051d919bfa63e98be734c3a2f0e1813fc958352bcc71e83d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/027.png",
+      "bytes": 175257,
+      "sha256": "ef9bd043ba5ab9906ffc480c99eb272922c968150af906b6a5a4326f07d864f7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/028.png",
+      "bytes": 175556,
+      "sha256": "50d76b51ef22f002903fce38c00c9373036fa80aa302e090a8a1754c00e50ad0"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/029.png",
+      "bytes": 175394,
+      "sha256": "578faaeb752eb14aeb94ee90c692cdc1f5e99c68b263e9cb6a4c43df374aab12"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/030.png",
+      "bytes": 174824,
+      "sha256": "fb1fcda908fa83970695ee31fa780fbbfe14a6a366d0af004451867fb2bf5a1c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/031.png",
+      "bytes": 173958,
+      "sha256": "f629b6cb787ecf24050789ed38c2b6cc813977964666b5b61e3717fab8fc702e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/032.png",
+      "bytes": 171651,
+      "sha256": "ae26b32b3d2727e115f27290c1083ac63094de61370751c462a219a0276140fb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/033.png",
+      "bytes": 173999,
+      "sha256": "6bb6b2bb86318b325e2a12bc404807e2a6c0fbfdae3f8870bc5e9a72362589dd"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/034.png",
+      "bytes": 174305,
+      "sha256": "61b209cfd9408c6e8ce5693a680a590d1db44a6a3d31f866071fb89df1076444"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/035.png",
+      "bytes": 174396,
+      "sha256": "e577e2ec7e1366ec0bf4288f1d546c4c23f7c49c685077eb475fca579b8b44f7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/036.png",
+      "bytes": 175081,
+      "sha256": "d30080af215f4904c4570f942b5b57ded9b357fe77d771b57fde750c3b6456f7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/037.png",
+      "bytes": 174605,
+      "sha256": "dff7d5c7bf1716b3e6b869203e7fb80fccccf81c7d3ad0338789c1ddfc9938a0"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/038.png",
+      "bytes": 174698,
+      "sha256": "92c3bc4d94c4d5764b727010e37a657679e2372b49a6abebcaff7a96cd95235e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/039.png",
+      "bytes": 174660,
+      "sha256": "b389d99e223c8569bc1a3f288df0fceffe7d26f727ddf1c1d863b3bc1e25472b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/040.png",
+      "bytes": 175447,
+      "sha256": "10760b27ee3d9697437512e2db546f162bd31e249ccc28be2708cef08af46eca"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/041.png",
+      "bytes": 175687,
+      "sha256": "05d884ea90c9a7eb875e3ec428fba56df938f5fccafa0fc5899e5f995ed9ccc4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/042.png",
+      "bytes": 175696,
+      "sha256": "9312947794525d03e3a08955633f2f4a829916e54afc6aaec61a4c8d9854b756"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/043.png",
+      "bytes": 176975,
+      "sha256": "c4235ed2c48e958eafcf000518b01bd51d05c7c624b1f52c37bca357f532b0c2"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/044.png",
+      "bytes": 176784,
+      "sha256": "1817e87bdd25c38260d75eb6bd9e429a4567791a7bed3ace8fc1f3c2f510f78d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/045.png",
+      "bytes": 177009,
+      "sha256": "bc9e54d7688274c05cdd42e8e57332bf27d24470edf4b4d5ea67a5a9d65f9509"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/046.png",
+      "bytes": 176646,
+      "sha256": "0f5af24920d6eedd6381848b277c4264a24ec7191f521c7fd0c8483fdb4dfe24"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/047.png",
+      "bytes": 175855,
+      "sha256": "fdf5e9457e76e1df192ad3e43b907cf20e1b720b82ccf27ecb3f4302653fcd0b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/048.png",
+      "bytes": 176664,
+      "sha256": "5d70d7b8329a4661c9a80ef54b27cef2a1afbd302248bd7f17b6ca13f53c1d61"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/049.png",
+      "bytes": 175609,
+      "sha256": "1e01b253a3e9e18b97146d83cabd7a1235220698b5afad732399c99750bf1144"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/050.png",
+      "bytes": 177030,
+      "sha256": "a8540985c6d5811585091a8ce22b66c06c723d4a2f1b30e087b6d2f95abf651e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/051.png",
+      "bytes": 176080,
+      "sha256": "ffe919448f871b1d7786f31be008900d063672f18aad91bec250433eea73f3e6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/052.png",
+      "bytes": 175371,
+      "sha256": "27de336f6fc4ba081f2e5481a0f36d14901cc4e30026b955985a95165e375742"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/053.png",
+      "bytes": 175593,
+      "sha256": "0ff31b191d0cf0024c3d5ba63670425590a451abc36cf8202e775985f8e76b68"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/054.png",
+      "bytes": 176055,
+      "sha256": "312e001087f5b1ccf2da17ce64f524505c66942ca5708f3147f0de26568a93de"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/055.png",
+      "bytes": 175737,
+      "sha256": "7d0273ed50c2bea6b3064cbd09edd877d49bfc06d633be21f2ca97d243571a4e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/056.png",
+      "bytes": 174891,
+      "sha256": "c405565895e45c2fc7a762108814e36cdcc53c3cccfd8f11fa590eaf08d427fe"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/057.png",
+      "bytes": 174450,
+      "sha256": "a9c1bf1b390598c819f4d1e1a202affdae08564b5221672f21d860ced4f86552"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/058.png",
+      "bytes": 175526,
+      "sha256": "43599c044c87e4ab72c646bd268fbf59e802acad039e0ec251fe0f7979c037ec"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/059.png",
+      "bytes": 175891,
+      "sha256": "5efc5c8a77deea2006e2c03800f61e806818d8f51b88647bd04befcad186f665"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/060.png",
+      "bytes": 174795,
+      "sha256": "6f1514317bcfe1dcafe446a43e66eefc87e8d1db3dfe4289edde00a7b5ea600d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/061.png",
+      "bytes": 175646,
+      "sha256": "5260dd69f91ce95987df525ca0595056aa980446543eba6c7c8e6b40d59b8062"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/062.png",
+      "bytes": 174610,
+      "sha256": "795b8ddb2cda853c8ba38b709cf118013888266ceb326db2956ca01a93f01b18"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/063.png",
+      "bytes": 175978,
+      "sha256": "2240ee0d90bb1bd1392b459a63eff7fdd92e6c84799d8b7a458cb9a56ed28c12"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/064.png",
+      "bytes": 175893,
+      "sha256": "2e17bcfb03a8bddba566cbfde65dc818e2f877035585fd4b3def2f46e5315376"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/065.png",
+      "bytes": 174956,
+      "sha256": "e214be4c6ae57c1a0b3dc6fbbde97ea494bca5c07144408333631af4c946f076"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/066.png",
+      "bytes": 174788,
+      "sha256": "19470a9d8dfff593c94b7be139344c57ccddff0e795812b9448a3fba409dc2c8"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/067.png",
+      "bytes": 175085,
+      "sha256": "ef761573c26a127784ff7859f7322ff579e1fd6bae87f6067cd4c88942ba21fa"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/068.png",
+      "bytes": 173851,
+      "sha256": "a6a8d9023eb7c86e6ffb95b81cd5e93644a42f4709b6a995490f5a219ebc7810"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/069.png",
+      "bytes": 174490,
+      "sha256": "cd28ccff85b6e4e3c357c6359499762d113c04ac16e02ff177698c72a1dcdb4b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/070.png",
+      "bytes": 174828,
+      "sha256": "960a09aaa2de9367ca65c312f57901bcc321dd25a0aad3613a2b026456e85638"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/071.png",
+      "bytes": 173636,
+      "sha256": "4a8627ceda6f6a193b1b13f8184600d4c984d10cdd719055dbf10f7d8808963a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/072.png",
+      "bytes": 173343,
+      "sha256": "b5aa7c3e14bf8fd845b61945024873db979a74b8d84acf6028761bb7cb2a827a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/073.png",
+      "bytes": 173708,
+      "sha256": "c0ec3bd6eec9314d8332f5d67fafd5a3edae443d9ed9ae42f92c93440535f53a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/074.png",
+      "bytes": 173322,
+      "sha256": "13409b6ed12dbe8addaf3c189086816aaaeaa7b6ddcb11b47684166aa2195deb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/075.png",
+      "bytes": 172994,
+      "sha256": "42fd3f2a25baba4ae289edccae151905085f6346fefd2364425cc173969596a4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/076.png",
+      "bytes": 173430,
+      "sha256": "b4a6fdf7fc9942e75ec7b115eb0c69dd1a2a9e85e7627f7035aef985d537aa40"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/077.png",
+      "bytes": 173650,
+      "sha256": "c8866b3e6e263ebbd2d01000a726b296044f57af680d3d7fff9a88c8e45b4573"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/078.png",
+      "bytes": 174587,
+      "sha256": "7239894633c1733f8e2eb81bc1d44773471f44c559ecf6076d9354267ff942c4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/079.png",
+      "bytes": 174917,
+      "sha256": "2fa88285de41e8565a5808ba67e8ef3e9131d5d0e511b4f95becc04eb6f1f29a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/080.png",
+      "bytes": 174763,
+      "sha256": "3d5f4401c09063d12e10d1f996fe99584154d95f655f1bbd5f19ec37d6f9a00f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/081.png",
+      "bytes": 175025,
+      "sha256": "308caade5c2e68b595ba637a4a9098b6c6a14a9398dad528c70e1d6e3ee07110"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/082.png",
+      "bytes": 174771,
+      "sha256": "894e67b32575b40d41ae30aa8c634da3a74b57290fa757ee01d2fbc52f3bded7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/083.png",
+      "bytes": 175241,
+      "sha256": "c013105e3a437313954e354c444c451ae7aaaa61221479d445dc32e5dd6a9826"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/084.png",
+      "bytes": 175834,
+      "sha256": "946e8b5e5029a81c984868776ccb19f50b20cfb397d0f82b2f2f726ef6c0e5fd"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/085.png",
+      "bytes": 175985,
+      "sha256": "c74931d148a744a7271540d6a258e66c603ccf7ed234a841278a1b95166ed68e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/086.png",
+      "bytes": 175979,
+      "sha256": "1bd563b8e41e534cf9a54cd6da4faae02d9b54d994eebc7646daa1464f2781f4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/087.png",
+      "bytes": 175972,
+      "sha256": "1f055aa0697f6c8d0f2cf42370ebba31da9356a025a05e86e8a6ce0596ee88a5"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/088.png",
+      "bytes": 176454,
+      "sha256": "102697f14027d458c97a05d07cbb08b5519d87d3a9a814bbed633eea996348e6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/089.png",
+      "bytes": 176794,
+      "sha256": "2d88d5f906ab93b143b2e510fa099ad2640f250dbc56812b7f5767d9d275297d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/090.png",
+      "bytes": 177479,
+      "sha256": "d219ba274a928567a993fd8a0b45bf53f958eef179fd3a3d23c3870f7e9a9e4f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/091.png",
+      "bytes": 178150,
+      "sha256": "8eb5e87c988f6bda838fcfe7ac13cc45e8a107fff14cd998995ac72f11aa32d4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/092.png",
+      "bytes": 178284,
+      "sha256": "29b56f0937f671ee0cf9c7cc17cd5f37a51b22d99a0b4f554fe80eb9305a427b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/093.png",
+      "bytes": 178380,
+      "sha256": "ec76cf54e18034796f685cf66b5aa8049389bbe4aa950efb86ced9d532b6bf99"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/094.png",
+      "bytes": 178535,
+      "sha256": "5e06de088ae95aeafb54d45eecb93fabacc1f38229f8b114ec08e9a2cda71ccd"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/frames-60fps/095.png",
+      "bytes": 178320,
+      "sha256": "9d2b839cb584e4db49ebde6cae0e3d6a9b6b5e44db595a6d07d9f3da571ae3b1"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/dafeiyu/joints.json",
+      "bytes": 289555,
+      "sha256": "9f458f9eb7ecc24aa4f18e57cf0f3b92577e872516aae8b576a420af41b5bb39"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/generation-prompts.json",
+      "bytes": 24428,
+      "sha256": "acf6556b227d96f91a02ff2cb7d81494a30065fb1bebf9898a7a78b59d443bea"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/reference-comparison.png",
+      "bytes": 1152984,
+      "sha256": "dab0976b49a5aecdf030cb883640680593ca4da6656e6fae236ac46db4b3dad3"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/verification.json",
+      "bytes": 3793,
+      "sha256": "8576c96fbaf514966f130cdc5973c8908a3e91e80a7ad9770ab8b36ec730ac7d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/000.png",
+      "bytes": 191863,
+      "sha256": "e106f58dd1b05175bc9ad6ff19ffdda4052f78205209094921b48b652f832741"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/001.png",
+      "bytes": 193111,
+      "sha256": "0ffe96308121448a56ff502fdde7d018678b511c539db9be800d2e2b52da8c4a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/002.png",
+      "bytes": 193886,
+      "sha256": "d4c58c9ad28afa623c0ece93c28c1590eafe1b1ae7c2aca76094d2e842918848"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/003.png",
+      "bytes": 193731,
+      "sha256": "116abd7603f31ba164bb6692f85fa0e1bc1da307b10ac30918bc303d60d43682"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/004.png",
+      "bytes": 193724,
+      "sha256": "17d984e97e8fc8b6a9a4016ce689eb88a8fa9e14cd43a396a9ed06b561139a37"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/005.png",
+      "bytes": 192723,
+      "sha256": "30ce470016f7c5ee436699e109358349c101bb15c0f4804ef74149cc1c35eff9"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/006.png",
+      "bytes": 191547,
+      "sha256": "780c47758ee3935d124d2df5e5b09761367e61245409c6d0dec8b805d6faf940"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/007.png",
+      "bytes": 189648,
+      "sha256": "168947926cc4d5940c5d892f8f4c6f5494ac236d9fc2aac20fdb9aafacfdf918"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/008.png",
+      "bytes": 188744,
+      "sha256": "fa58e4719c85edd80dbfce9dff8b10558d27db28e3bfb2357962027c5709fc71"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/009.png",
+      "bytes": 188576,
+      "sha256": "301c155a72ce1220501024810d07ab5666c7b51286f1cb2f35e8f5773c34ce33"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/010.png",
+      "bytes": 190858,
+      "sha256": "8d535093e6197b2dd89c470d8a47649a912a847e6a13a4ad9693e1d7ae021f69"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/011.png",
+      "bytes": 192877,
+      "sha256": "00f3a1840cdced7f62e80522ed5c5934b484d414e8879aa71c75ddc6e37d338b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/012.png",
+      "bytes": 192526,
+      "sha256": "71671dcba5c126618343828e5023599f68f9fb5bdd326d97666ab5ecf4ca5dff"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/013.png",
+      "bytes": 192974,
+      "sha256": "1801dfec8158812937129069d48fa0151d0f7a2424612fd9cc701851dd83b4e6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/014.png",
+      "bytes": 190557,
+      "sha256": "acb5c6d1b34c80c8000d9d069859b2ac8772914699db3f66af9b801e4c590a14"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/015.png",
+      "bytes": 188502,
+      "sha256": "4c02c2c01b9f8bcb6f8294ccdaf01ebcbd196a087a2f28599c87f1671f3dd8d5"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/016.png",
+      "bytes": 189011,
+      "sha256": "8d29d1a4df0c4560744e229ea92a203895b95f92c68db6580a1dc028c1599751"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/017.png",
+      "bytes": 190036,
+      "sha256": "eb41c6b49ff182a10601d166928adbf5f2fe8bc0ccafefa55bdd2bad4d98a171"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/018.png",
+      "bytes": 189866,
+      "sha256": "d77169b50f85fbff042b21a39ed4df3183921a23f4737a62edbc9d04552d40dc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/019.png",
+      "bytes": 188648,
+      "sha256": "fb56b4ec291d3a924f55199da5b4fb063013818294b214e2446e07ab4f426c9c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/020.png",
+      "bytes": 190276,
+      "sha256": "e0c9f6c108ea549c12853fd7375f3e3caa64d2c27c8b06109e00f2adfe74f2b2"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/021.png",
+      "bytes": 193424,
+      "sha256": "21998c9c23edfc93bb6f11be67859973851bef7aed48ae6f272486c4c9ada6ee"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/022.png",
+      "bytes": 189456,
+      "sha256": "c59780668b7dd4e378ca933d007368eab035203a0ec29f98a4ed7680bdbd55c3"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/023.png",
+      "bytes": 193448,
+      "sha256": "c5765c404982254b008ad5ea390183b3d635c490294060d2deb3dc78896fe92f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/024.png",
+      "bytes": 189020,
+      "sha256": "4d9cf6b2c32f314fa833b3d18059c79d2d54f7838bfc3f8cdc69200a56d98636"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/025.png",
+      "bytes": 194081,
+      "sha256": "267048a660a2d604b658d74ca409e546685c2d28ae0920137594f772a1bb9baf"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/026.png",
+      "bytes": 188771,
+      "sha256": "fcfc42f9d13e4ff48ceede6b8ee5d8bd50595f0c6f9534b5f86544a7a205dbcc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/027.png",
+      "bytes": 191915,
+      "sha256": "846645e5d2b04de0d865e09dcdb666496bb9bc5c815e9babfdaa093a16a55d29"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/028.png",
+      "bytes": 192330,
+      "sha256": "28edcea7bbf06f776143b3696f6268bb658846527c4d4a25776da9c1fcda5410"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/029.png",
+      "bytes": 193095,
+      "sha256": "b707ed18912eae374799a021aedeb86068ccf50a712a45e37526c03ffe4dbffc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/030.png",
+      "bytes": 192166,
+      "sha256": "289e61ba54156b66c81118f0c763935ce623f62f8496a084533fa7efb9f5da7f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/031.png",
+      "bytes": 192235,
+      "sha256": "4791eed3016cc09e7e4fcbf1107993db5f37ab3ae3e2989bf870b58b10d0e206"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/032.png",
+      "bytes": 192254,
+      "sha256": "d9875a9f6e22d6799fe1dad34a8bf37cf2f528ed61a7519196ede1ad4a9496cb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/033.png",
+      "bytes": 192004,
+      "sha256": "f25ef91196671e7adbf5cb80385c8bb4cd86fcb7cd3cb648928fc855df3465a4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/034.png",
+      "bytes": 192205,
+      "sha256": "389771c2c81199b9df14fcee4feb9d798da4849154ae711027863ec24666820b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/035.png",
+      "bytes": 187579,
+      "sha256": "306a29ee658900061a7f9aba95394ce801ba112829171a1bf4b6b6ed37dc15cf"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/036.png",
+      "bytes": 191473,
+      "sha256": "4552fcd0b5375747a790fbbca94f9f572d1496b4f171dbdc241fce79a0fed0bc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/037.png",
+      "bytes": 188211,
+      "sha256": "e8b57af750f15e4b844e826edff08afe12a05fb8dd9742856e2077e0a31fe2d8"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/038.png",
+      "bytes": 192593,
+      "sha256": "4917cb10191b828ab38591ed0223d677def2bb7904f1f40be7405f0c295e6315"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/039.png",
+      "bytes": 188208,
+      "sha256": "0822b6c508253a551c59321d01b15f3154eed6a43caeb88c11c024e6c88535f9"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/040.png",
+      "bytes": 192028,
+      "sha256": "414bf74af45e82ec63ae64d6223528b8eae0f519ec708da24d18e24c27ba7cb4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/041.png",
+      "bytes": 191664,
+      "sha256": "9d72679c68b23025f397a517465b0d27ac15fbd891add3457849b31e46144491"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/042.png",
+      "bytes": 188310,
+      "sha256": "666caa46ed35e621db0083dac99a33040c2482f0f10d600e4ce9f8a67a83af63"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/043.png",
+      "bytes": 189371,
+      "sha256": "5ac31079a2695bd1535c0ee03d6263f9c7f933c98403dae4d3830ae059edcbca"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/044.png",
+      "bytes": 189755,
+      "sha256": "daca2d3f79610314a1f66467beca9575e51d600d2c716d16a98bd29f64f88aa2"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/045.png",
+      "bytes": 189886,
+      "sha256": "86c4e82d98d5627fce2bd067b7903769fd8696bd912ff59eb0a883bb9ed21bdc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/046.png",
+      "bytes": 188945,
+      "sha256": "5a54744e6410e095acff198cddea703008868ba79627dadae865203d6e96b2ce"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/047.png",
+      "bytes": 189517,
+      "sha256": "4c22d0dbb3e8be35165d15e2512149379b3b294af73853770b4d6bc6da4ed92c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/048.png",
+      "bytes": 192392,
+      "sha256": "77db2b225452a1d7e46884fdf9498fb3aa5b279d6146c02fb7109ab23e0416b0"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/049.png",
+      "bytes": 194044,
+      "sha256": "5debd5878e329a834dd2874afc8a2186794a31551fe5afde1089a0c9a6eb64d3"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/050.png",
+      "bytes": 193668,
+      "sha256": "29828c2771a93ec47af00c4f8ce0f9815e8beb6991a6f6a37f075c7748220288"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/051.png",
+      "bytes": 191659,
+      "sha256": "074d55730a2c6a1558a194e8b67b383b35b67a67a27822c373dc9fc79dbb7976"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/052.png",
+      "bytes": 189069,
+      "sha256": "dcb0885b7e6d3235adeebe88390d9b2ec784428e161049961c2a91b611dad7de"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/053.png",
+      "bytes": 187913,
+      "sha256": "549847757a3b6379aa4c1a5db11e0622b00cbab091005959a897319ca4f0eb34"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/054.png",
+      "bytes": 188232,
+      "sha256": "c9af57b97546fecd76712ba2827086ec547e7f1879f885186a177355d4ad8467"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/055.png",
+      "bytes": 189974,
+      "sha256": "714edabca807c57279b233d65fcc49047e2aae762ede06c888de5c02d9e3579c"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/056.png",
+      "bytes": 191125,
+      "sha256": "f040517f0eda0cbcc5cd270a25630ed1ac8b9408546c60f6f06407a8045aa680"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/057.png",
+      "bytes": 191725,
+      "sha256": "02ac892e6bb1f293e80a91a0a72e111b5f2d4547ed0235d94e8844519410d263"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/058.png",
+      "bytes": 191693,
+      "sha256": "8c77320395aa19bc60312d42803a08b2cfcd5f01efc8bc8b819ba9539ef646f6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/059.png",
+      "bytes": 191755,
+      "sha256": "86ded4805b7304772c0e8b444b66492f105b2178e77cae172e3dc353bb0242c2"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/060.png",
+      "bytes": 191059,
+      "sha256": "4025cbe17102ea73eefe5ccd7dc42c1652fe66e689605bbb5f5862fc6a14b02e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/061.png",
+      "bytes": 190079,
+      "sha256": "fa7966ebda5b026be242020314625f746a03284f2824c8926d09c5da6f7d530b"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/062.png",
+      "bytes": 188128,
+      "sha256": "a8753cdf8772bc5505765a1dcebdf5d56f3d17133c8edd68bb6472bf100661a1"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/063.png",
+      "bytes": 187526,
+      "sha256": "e2f3d9a00ae1ad2b29e1625d05e10e200c4989b92bb65175996083d14a89d634"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/064.png",
+      "bytes": 188282,
+      "sha256": "480f1881a9e6f66d7ab42362a45eeaa338e4f0721329c9c70ce30613834aafbf"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/065.png",
+      "bytes": 189680,
+      "sha256": "67dda10180a94bbed99efdb0c0ab85ca2f733276156be29f8aaa368fd56ce338"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/066.png",
+      "bytes": 188845,
+      "sha256": "6982540c93016ce09588f3e7aca05f9163b6f0dd26817d248291299de011993d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/067.png",
+      "bytes": 187564,
+      "sha256": "b4a857c0adb9a5e6e47e3ede894f696f562a434761eb93b1b6219183c5921839"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/068.png",
+      "bytes": 188440,
+      "sha256": "e865ffd515460a434ec29fbc40c3381a3bdf7ebe5f305612d49b63a35345babf"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/069.png",
+      "bytes": 192333,
+      "sha256": "ae143834a7fb8c254b3123549374623b873b7e622dc0d24f19c2249df1f9422a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/070.png",
+      "bytes": 189987,
+      "sha256": "dcbb1ac09aa46bc4f0cf0390de071f703232b1050e3ccb9f7c730f73321e8708"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/071.png",
+      "bytes": 188163,
+      "sha256": "6937fa07fbc30d3e7176c0235e5316da9c587a5e0b004e4dfcf4b9490e5a73c3"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/072.png",
+      "bytes": 192293,
+      "sha256": "791f1e1c79afab68f348c08dd88ee7c551b177f4f011351b44d7e7676d74a898"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/073.png",
+      "bytes": 192670,
+      "sha256": "d419af9f027298b702ffeecb6bab5b4be84353a39ffeb1add603ad389db1e24e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/074.png",
+      "bytes": 191847,
+      "sha256": "8326ef7352c18275e0b8558492c139e4eb97c92b129ea13dc12946815b6a62dc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/075.png",
+      "bytes": 191678,
+      "sha256": "f08dd9de04553158ef55f97501c534db9046da14b36428e21ead4fc7c62ac14f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/076.png",
+      "bytes": 191246,
+      "sha256": "87cab1cdb4f8221f81fe31876b98a7c29e850cc197a1df4717d992cade600fa8"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/077.png",
+      "bytes": 191371,
+      "sha256": "a46c75c9905dd6d1e4d981446caec58db69722e5d87cb7c2c1f4b86643b6c6b4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/078.png",
+      "bytes": 191133,
+      "sha256": "fb442f1f18b3cd45f5d773d796a9ebffa0ee509ac2da64554360e49e30daeefc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/079.png",
+      "bytes": 191491,
+      "sha256": "a00c19cba4ba3969b6d67559452029d5d4000eb7bf661dfaa3700aa54ff92de5"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/080.png",
+      "bytes": 191823,
+      "sha256": "d8c8f9a2f12b551d603d7f5512a2dd57246f21e1b66767aa8bdc9f090def1594"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/081.png",
+      "bytes": 191553,
+      "sha256": "5b9e919d6051499b27ed6a69771a4bc6e42cfa3742a70ad82f4e4a8bd80fb6c1"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/082.png",
+      "bytes": 192492,
+      "sha256": "eaa55436e4a64c87d62e575c3197b788c496ae0591966d850046d3e3d4def939"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/083.png",
+      "bytes": 193025,
+      "sha256": "f92c477a13c1cd51b7a54599aadf0165f05189c5a52b03f979d507a3152f0f00"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/084.png",
+      "bytes": 193836,
+      "sha256": "0c4da5ea809576b33e682edfa6cb8a557f30990545d003de173d02f1fe118f7e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/085.png",
+      "bytes": 193580,
+      "sha256": "b47da7886856916f6aa46dd320f63825e6cd550f6ba2a30877350e6b4cf5f1dc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/086.png",
+      "bytes": 192305,
+      "sha256": "264ab3a43fb94c6e5aae820d585b2b601ed29ba6c0da48a087b3cd4346d1d934"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/087.png",
+      "bytes": 189038,
+      "sha256": "bcd283ec688f1c1b1937d5ed1bb59218f79cb3438722736ffe14a1392329a276"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/088.png",
+      "bytes": 193882,
+      "sha256": "72e6d59ce11b823bd7058654f89f6e13eb3bd7417da1083af79b9ee0bd2fade4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/089.png",
+      "bytes": 192412,
+      "sha256": "db9c2fedcef235bf59464f149b5517381f136cf34b36f21665bc50b195e6a413"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/090.png",
+      "bytes": 189379,
+      "sha256": "4453bc84015504516133e9364f006c9a9e04187241ff21eecf29c65d62fbcadc"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/091.png",
+      "bytes": 190727,
+      "sha256": "6c9128f1cc60cbd8a09b5021225b371d9a38f1d6bc3e1afc3009ed98cd682b8e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/092.png",
+      "bytes": 191684,
+      "sha256": "977815eb8e3cb269e8eba202c8d810278e2e00d62fa86006bb144a5b4e5201e1"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/093.png",
+      "bytes": 191391,
+      "sha256": "6338791131ad4cf79743f03b8db7ed062ef39780c604802811a44e18a90a2c39"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/094.png",
+      "bytes": 190358,
+      "sha256": "690806bdf7ddaa72ace0432fd725c1365d21c2078581aede14277b9ceefcf232"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/frames-60fps/095.png",
+      "bytes": 190276,
+      "sha256": "bc83fe2f480435ebaa4f8ffa0ec8458465ee37c889bd341b83e5fcef2a0b6edb"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v12/xiaobai/joints.json",
+      "bytes": 288574,
+      "sha256": "f2ba5df4615824f030df9496d3ff398a2fd3ba63c436d2f22ebbd4f4c5995693"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/00.png",
+      "bytes": 184121,
+      "sha256": "62d61e97253288c026011fb4ed65bbffd0ed40da05335a9ec1f89d46608c38f8"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/01.png",
+      "bytes": 184462,
+      "sha256": "622cf9f8db4d554d83c1ce978bd39caac3ac54fcc9ed61537a05c9ef38c14297"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/02.png",
+      "bytes": 182041,
+      "sha256": "8948aefe35478c8ad2e6da2ffc32a31aaf82165b6fc79eaa4109ac8c4be9d66a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/03.png",
+      "bytes": 183825,
+      "sha256": "2b0cf1f0d26bf1b344eb5fd622ee7a25b13f98dcde03aacb2d31049737c94342"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/04.png",
+      "bytes": 189801,
+      "sha256": "ffd84cb24b32e69ed83c582248fac4d436355bfa7d018a3f26b06e2a8748da45"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/05.png",
+      "bytes": 188085,
+      "sha256": "47c3773885094f0d51ae0051b4a252230042a7321cf0f610f6455bea5b2812d7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/06.png",
+      "bytes": 183664,
+      "sha256": "321354836c3a7930475f0ff9cab0bb44b73d877d90b168e95d6a1c0968e98446"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu/keys/07.png",
+      "bytes": 187958,
+      "sha256": "ab1834a5ef86c25ec3bc2a34bb2165390fb90c004543c3c2af4de773820d28d4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu-four-pose-guide.png",
+      "bytes": 361482,
+      "sha256": "ec7271f8eccfd266a84eab35f35555638cf3b8bba9015eed2907b5e414b236b6"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/dafeiyu-opposite-pose-guide.png",
+      "bytes": 181082,
+      "sha256": "bb57693b1eea425e3e21e1534bc8b45318c4d0df9262d246a4f017a696564717"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-0ac280f5-10a1-4882-98dc-42f5ba6adbb7.png",
+      "bytes": 1580777,
+      "sha256": "c3b8bf36f69561b641f8795f7cc31225baed5501fbfec971c3c1ece8f243aaf4"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-1c526681-8c89-4fcc-b397-51e21d5569af.png",
+      "bytes": 1178360,
+      "sha256": "540b35a0da486dcac769e647a7b5d0f92de7ff8abc34849373117f8c80eeca38"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-1fbb2d32-2b58-4f76-bfc4-54f29560ad32.png",
+      "bytes": 1990624,
+      "sha256": "753dc90c3d3106821e867e6b0a4118a2ffffa999e27199a93f36260d402e5e62"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-2909df58-9892-44c9-b28f-676a697f8520.png",
+      "bytes": 2344259,
+      "sha256": "1b1a691ac5ea5f4ec5a0ad23e7ed06d17b3b0cc5852646249cd0af05f7c6894e"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-6ff35da1-8063-478b-b28b-7454e9e5fcd4.png",
+      "bytes": 1092179,
+      "sha256": "b6c27459b880b7bd9a069405629a838a2ff8be2c24c7ffc8bd2f7edf00c73d74"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-943cffba-0408-46fe-bf94-a3a1d7287516.png",
+      "bytes": 2007443,
+      "sha256": "f4dc5b7cd1c385aae8fbcc8166d7013ca30898a9b79575c3ba7ad43dd25c3ce7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-9f540cfe-e77a-446e-b243-0006f8e70038.png",
+      "bytes": 2066455,
+      "sha256": "c95f0315dafb9dc54ac2662dc6907a3750df35fb109899f75e16c8188cf06fa1"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-d75e07ae-f58c-4bb6-a1ef-5c3c898f3c3a.png",
+      "bytes": 1698764,
+      "sha256": "d1163329ea20eade744ba81746efb7627d585fbfb43f75fdb08a389cbb8f76ac"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-e3f3a6d3-45bc-4afb-81bf-16a2e1e4caee.png",
+      "bytes": 1533437,
+      "sha256": "138fd867d8282f948eee9d2cf46391faab40c13c943e2448856dfee0ab6a88db"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-f986ba59-fe95-4e36-ba3b-0ecef8917a01.png",
+      "bytes": 2409572,
+      "sha256": "a4400a5a713a2a4d5b7257dd00cd1acc67f7055882338167c9dc7a1282deb8ed"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generated/exec-fe80b765-bd8a-4135-90c0-0457595859c0.png",
+      "bytes": 1580695,
+      "sha256": "41834bedbbde279582e0dee697b773d256a49effdb9650a1fe60846d08978d5a"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/generation-prompts.json",
+      "bytes": 20607,
+      "sha256": "383e84bf60991a2f0f11d1832d7ee6bce57187d19e66edf63bedf0db92592efd"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/00.png",
+      "bytes": 195888,
+      "sha256": "71c664d892d3b55c51cad1ca221fb8dba740b1161d5adf71ee8874e111798ca7"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/01.png",
+      "bytes": 194420,
+      "sha256": "dabfa85aa63310092c12a19e3c73d059958bbbcf01343a43ef26afbd85a6dd7f"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/02.png",
+      "bytes": 196513,
+      "sha256": "84df4f99f24ee09a6ad8b90e87d55ec30b63acb90138e44d552a33afe78785cd"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/03.png",
+      "bytes": 196999,
+      "sha256": "d716c3e1dd1d080e591ffdaea8130f61505cb2efb04caac57e1c4efb50ac57c9"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/04.png",
+      "bytes": 197330,
+      "sha256": "028d1c70f6fa64b36ad220f7f0eddee2afcfe139c5afd6c71612659d07d83747"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/05.png",
+      "bytes": 197872,
+      "sha256": "77d43481e728e7069dc1983df100c7fb8747dde4a514b6ea1a9cae62a1e5165d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/06.png",
+      "bytes": 199439,
+      "sha256": "6b71c1a6f00f3b99c4d8d394ec934cf02f146cf4396c852484f0bde80033cb0d"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai/keys/07.png",
+      "bytes": 201567,
+      "sha256": "56f0ee03cc9a24c92a8957b9b1763442e02f8b9456b54c87e66e333ab1243d28"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai-four-pose-guide.png",
+      "bytes": 383666,
+      "sha256": "979c6a07d199c6febe893b0230237d253c316041af0a951bc02cb74b17462d31"
+    },
+    {
+      "path": "output/pet-walk-batch2/walk-painted-v7/xiaobai-opposite-pose-guide.png",
+      "bytes": 192133,
+      "sha256": "b778255dd38797dd155e4390fbf2aac0e9360e241b3e7ad7248c96d166da45a8"
+    },
+    {
+      "path": "Scripts/animation_runtime.py",
+      "bytes": 1422,
+      "sha256": "a6d90ba8466e3382493871cf3c39e973831f8ccfe91088e69c1deb78b4bf2a9a"
+    },
+    {
+      "path": "Scripts/archive_walk_revision.py",
+      "bytes": 3274,
+      "sha256": "47baf16f3137bbd839d8ae277be884f1a07137bdc1ce4fd3d4cd97920524ed58"
+    },
+    {
+      "path": "Scripts/assemble_walk_keys.py",
+      "bytes": 1442,
+      "sha256": "4ec9c98194ee57e6357e270c609d7711952bbdc92f7c95c9f431d297631f8618"
+    },
+    {
+      "path": "Scripts/export_painted_walk.py",
+      "bytes": 4632,
+      "sha256": "e05876b184993f3b9b85353fb7574f5d691eedf52391746425935d0f28285053"
+    },
+    {
+      "path": "Scripts/export_walk_v11.py",
+      "bytes": 11069,
+      "sha256": "bf6a7644d66071b875b584fad8bb83154784bbb24800427cedc516457fee5354"
+    },
+    {
+      "path": "Scripts/export_walk_v12.py",
+      "bytes": 230,
+      "sha256": "f31d494225153df9e5d87569649591ee90c77a99f1290a80a1ef28d2ee4ca472"
+    },
+    {
+      "path": "Scripts/fetch_animation_rife.py",
+      "bytes": 3880,
+      "sha256": "c98065488f174fb0803c2bb9ada61bf83d67920194bb9fdbbaf0bfd30c74e5b8"
+    },
+    {
+      "path": "Scripts/guide_opposite_walk.py",
+      "bytes": 3484,
+      "sha256": "2cbcdd00f7a9d1b79ca81f59514ae67c45d79b95bbc7cf45493c82f1240875ec"
+    },
+    {
+      "path": "Scripts/import_walk_v3.py",
+      "bytes": 5551,
+      "sha256": "d62eb24b57141ee2f6c4fe4bb1545a09df41ac26e784ba599039fe6365ddc4b0"
+    },
+    {
+      "path": "Scripts/inspect_painted_walk.py",
+      "bytes": 2099,
+      "sha256": "43a1904537d719803a34782c63db16680bfa91c035480bb64d208cee8090fbf3"
+    },
+    {
+      "path": "Scripts/painted_pet_walk.py",
+      "bytes": 7178,
+      "sha256": "5f2d9d3fef9434fca2cf314ab396291e8249fd0600ec938859757bbd69d295c1"
+    },
+    {
+      "path": "Scripts/painted_walk_v10.py",
+      "bytes": 1681,
+      "sha256": "43744d48a93d56dfc0cc48f7bcfa03470e4983842fb736cdd400397b4387b996"
+    },
+    {
+      "path": "Scripts/painted_walk_v11.py",
+      "bytes": 9763,
+      "sha256": "f5fc35fd2097e1c15e24fea3205ff2fd10995753da79a9fb03871038295cc6fc"
+    },
+    {
+      "path": "Scripts/painted_walk_v12.py",
+      "bytes": 6458,
+      "sha256": "8c88fffa75f1d637df331f0186e5bf0d789cc9c38d02b493c67b68894cee242b"
+    },
+    {
+      "path": "Scripts/painted_walk_v8.py",
+      "bytes": 4831,
+      "sha256": "ffa609a785a6a807f9247a30df5482c1b2a4801837f95b025b347a5c1705bcf2"
+    },
+    {
+      "path": "Scripts/painted_walk_v9.py",
+      "bytes": 8013,
+      "sha256": "682a70f01f3ab83940e28ba41d007d6556f8a1e56859d22f11a9da9c271a19f1"
+    },
+    {
+      "path": "Scripts/pet_walk_native.py",
+      "bytes": 16872,
+      "sha256": "0da01acc99fda173a103e6b955e61ce6b131eef6f626877077107872dc53bfe0"
+    },
+    {
+      "path": "Scripts/pet_walk_reference.py",
+      "bytes": 15151,
+      "sha256": "77965d9861a9abd22a32c530944c2db14656ca764623fa3a71b19b30d1358e4e"
+    },
+    {
+      "path": "Scripts/pet_walk_rig.py",
+      "bytes": 9316,
+      "sha256": "9f563dcd1e2631bf3a5f142e1955b7c775867fdc5905e48754e68ed4998bf07d"
+    },
+    {
+      "path": "Scripts/port_animation_drafts.py",
+      "bytes": 2259,
+      "sha256": "b3fcde47a89636f77cd2534cddee086137ca8c0e30c586bba503360240f5e470"
+    },
+    {
+      "path": "Scripts/preview_pet_walk.py",
+      "bytes": 9384,
+      "sha256": "8bfbd74e750f5d99a80a2047fc06fba837d7ddccdb9a4d07d5cc75f247134261"
+    },
+    {
+      "path": "Scripts/preview_pet_walk_native.py",
+      "bytes": 9473,
+      "sha256": "860270680cb9fa9ac75ba36f993cc8c916f2467faa6737af4ae7d0b53fb811ae"
+    },
+    {
+      "path": "Scripts/verify_pet_walk_preview.py",
+      "bytes": 3104,
+      "sha256": "e70c2f3eb0bbe7ed3a152fe614efd3f115d75c977a03e3db756397c0fbf42917"
+    }
+  ],
+  "previews": [
+    {
+      "path": "previews/pet-walk-full-v12.mp4",
+      "bytes": 2458554,
+      "sha256": "d8b8970d3e0b20a8f95253e95122b2b653a3f5a07ff1a8e56733fda6e952586c"
+    },
+    {
+      "path": "previews/human-feet-v12.mp4",
+      "bytes": 1261311,
+      "sha256": "04423ac3ee91bddd4b8d6c65fc61d1c834bf0fd3bb6e38fbcda2ff94ec20c464"
+    },
+    {
+      "path": "previews/pet-feet-v12.mp4",
+      "bytes": 944772,
+      "sha256": "3b00435715764887870f30b2edbfaae9ed21f43c05ca781fb650b0277b22199a"
+    }
+  ],
+  "original_archive_modified": false,
+  "ios_integrated": false,
+  "ipa_generated": false,
+  "normal_speed_playback_review": false
+}
