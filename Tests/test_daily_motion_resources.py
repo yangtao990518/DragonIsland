@@ -22,7 +22,9 @@ class DailyMotionTests(unittest.TestCase):
 
     def test_mirror_timing_and_no_clipping_or_jumps_in_every_bank(self):
         for character in ('xiaobai','dafeiyu'):
-            clips=motion.load_daily_art(character)
+            # This regression retains all pre-existing travelling schedules;
+            # full-video additions have their own complete-range bank tests.
+            clips={a:c for a,c in motion.load_daily_art(character).items() if not c.get('full_source_once')}
             self.assertEqual(set(clips),{'ride'} if character=='xiaobai' else {'ride','pet_walk'})
             for clip in clips.values():
                 for right,left in zip(clip['right'],clip['left']):

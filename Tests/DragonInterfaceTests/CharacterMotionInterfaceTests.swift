@@ -11,6 +11,52 @@ final class CharacterMotionInterfaceTests: XCTestCase {
             app.swipeUp()
         }
     }
+    func testWorldPhotoSelectionPersistsWithoutChangingOtherCharacter() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--preview-characters", "--appearance-light"]
+        app.launch()
+        app.segmentedControls["characterBrowsingMode"].buttons["横向卡片"].tap()
+        let quick = app.buttons["quickCharacter-dafeiyu"]
+        reveal(quick, in: app); quick.tap(); app.swipeDown()
+        app.buttons["characterCard-dafeiyu"].tap()
+        let photo = app.buttons["worldArtwork_sea-breeze"]
+        XCTAssertTrue(photo.waitForExistence(timeout: 8)); photo.tap()
+        capture(app, "dafeiyu-world-photo-picker")
+        app.buttons["closeCharacterDetail"].tap()
+        app.tabBars.buttons["我的世界"].tap()
+        XCTAssertEqual(app.buttons["worldCharacterCard"].value as? String, "sea-breeze")
+        capture(app, "dafeiyu-world-selected-photo")
+        app.terminate(); app.launch(); app.tabBars.buttons["我的世界"].tap()
+        XCTAssertEqual(app.buttons["worldCharacterCard"].value as? String, "sea-breeze")
+        app.buttons["worldCharacterCard"].tap()
+        app.buttons["worldArtwork_default"].tap()
+    }
+
+    func testFullDanceActionsAndIndependentSwitches() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--preview-tasks", "--appearance-light"]
+        app.launch()
+        for id in ["dance1", "dance2"] {
+            let button = app.buttons["dailyMotion_\(id)"]
+            XCTAssertTrue(button.waitForExistence(timeout: 10)); reveal(button, in: app); button.tap()
+            app.swipeDown()
+            let stage = app.descendants(matching: .any).matching(identifier: "fullVideoActionStage").firstMatch
+            XCTAssertTrue(stage.waitForExistence(timeout: 8))
+            XCTAssertTrue(app.staticTexts["完整片段 · 12.10 秒"].exists)
+            capture(app, "dafeiyu-\(id)-full-source-preview")
+        }
+        let first = app.switches["dailyMotionToggle_dance1"], second = app.switches["dailyMotionToggle_dance2"]
+        reveal(first, in: app)
+        let original = second.value as? String
+        first.tap()
+        XCTAssertEqual(second.value as? String, original)
+        let saved = first.value as? String
+        app.terminate(); app.launch()
+        reveal(app.switches["dailyMotionToggle_dance1"], in: app)
+        XCTAssertEqual(app.switches["dailyMotionToggle_dance1"].value as? String, saved)
+    }
     func testCharacterCardsAndQuickAvatarNavigation() {
         continueAfterFailure = false
         let app = XCUIApplication()

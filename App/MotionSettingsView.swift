@@ -9,7 +9,11 @@ struct MotionSettingsView: View {
         WorldPage {
             PageHeading(eyebrow: "DAILY LIFE", title: "\(character.name)的日常", subtitle: "分别挑选她喜欢的动作，设置会单独保存。")
             VStack(spacing: 12) {
-                if previewAction == "pet_walk_video" {
+                if previewAction == "dance1" || previewAction == "dance2" {
+                    FullVideoActionPreview(characterID: character.id, action: previewAction)
+                        .id("\(character.id)-\(previewAction)")
+                        .frame(height: 250)
+                } else if previewAction == "pet_walk_video" {
                     DogWalkVideoPreview()
                         .frame(height: 220)
                 } else {
@@ -45,14 +49,23 @@ struct MotionSettingsView: View {
                 Toggle("打滚 · 向两边滚，再回来", isOn: binding(\.roll))
                     .accessibilityIdentifier("rollMotionToggle")
                 ForEach(character.motionProfile?.dailyActions ?? []) { item in
-                    Toggle(item.title + " · 来回活动", isOn: binding(item.id == "ride" ? \.ride : \.petWalk))
+                    Toggle(item.title + (item.id.hasPrefix("dance") ? " · 完整播放" : " · 来回活动"), isOn: actionBinding(item.id))
                         .accessibilityIdentifier("dailyMotionToggle_\(item.id)")
                 }
-                Text("每个动作独立开关，关闭走路不会关闭御剑、骑鲸或遛狗。全部关闭时只待机；每轮会安排所有已选动作。走动约 7～10 秒一个方向，打滚约 5 秒一个方向。")
+                Text("每个动作独立开关，全部关闭时只待机。舞蹈按完整片段播放，不截短或加速；勾选舞蹈后以两分钟安排所有已选动作。")
                     .font(.caption).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
             Text("设置仅应用于\(character.name)；她正在陪伴时立即生效。减弱动态效果或息屏低亮度时，岛上显示静态人物。")
                 .font(.caption).foregroundStyle(.secondary)
+        }
+    }
+    private func actionBinding(_ id: String) -> Binding<Bool> {
+        switch id {
+        case "ride": return binding(\.ride)
+        case "pet_walk": return binding(\.petWalk)
+        case "dance1": return binding(\.dance1)
+        case "dance2": return binding(\.dance2)
+        default: return .constant(false)
         }
     }
     private func previewButton(_ title: String, id: String) -> some View {
@@ -88,7 +101,7 @@ struct MotionArtworkPreview: View {
             ZStack {
               Image((character.id == "dafeiyu" && action == "pet_walk" ? IslandScene.black : scene).asset).resizable()
             if let frame = frame(elapsed: elapsed, at: context.date) {
-                Image(frame.asset).resizable().scaledToFit()
+                previewImage(frame).resizable().scaledToFit()
                     .frame(width: width * CGFloat(frame.width ?? 72) / 180, height: width * CGFloat(frame.height ?? 90) / 180)
                     .offset(y: width * CGFloat(90 - (frame.height ?? 90)) / 360)
                     .offset(x: CGFloat(frame.x) * width / 180)
@@ -123,6 +136,12 @@ struct MotionArtworkPreview: View {
         // Pause the activity playhead during the response so walking resumes
         // from the same position instead of jumping forward after the wave.
         began = began.addingTimeInterval(1.2)
+    }
+    private func previewImage(_ frame: MotionFrame) -> Image {
+        if let action = frame.videoAction, let index = frame.sourceFrame,
+           let clip = VideoActionFrames.clips.first(where: { $0.characterID == character.id && $0.action == action }),
+           let image = VideoActionFrames.image(clip, index: index) { return Image(uiImage: image) }
+        return Image(frame.asset)
     }
     private func frame(elapsed: TimeInterval, at date: Date) -> MotionFrame? {
         guard !reduceMotion else { return nil }

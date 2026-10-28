@@ -12,6 +12,14 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
     let chibiSource: String
     let standingSource: String
     var motion: CharacterMotionProfile? = nil
+    var artworks: [CharacterArtwork]? = nil
+
+    var availableArtworks: [CharacterArtwork] {
+        [CharacterArtwork(id: "default", title: "默认立绘", asset: heroAsset, source: standingSource)] + (artworks ?? [])
+    }
+    func artwork(id: String?) -> CharacterArtwork {
+        availableArtworks.first(where: { $0.id == id }) ?? availableArtworks[0]
+    }
 
     var avatarAsset: String { portraitAsset + "Avatar" }
     var motionProfile: CharacterMotionProfile? {
@@ -22,8 +30,17 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
         id: "xiaobai", name: "小白", subtitle: "白紫龙娘",
         introduction: "你忙你的，我就在这里。", origin: "ChatGPT 同人角色",
         chibiAsset: "XiaobaiChibi", portraitAsset: "XiaobaiStanding", heroAsset: "XiaobaiHero",
-        chibiSource: "Art/xiaobai-chibi-v2.png", standingSource: "Art/xiaobai-standing.png"
+        chibiSource: "Art/xiaobai-chibi-v2.png", standingSource: "Art/xiaobai-standing.png",
+        artworks: [CharacterArtwork(id: "white-dragon", title: "白羽龙裔精灵", asset: "WorldPhotoXiaobaiWhiteDragon",
+                                    source: "Art/CharacterPhotos/xiaobai/white-dragon.png")]
     )
+}
+
+struct CharacterArtwork: Codable, Hashable, Identifiable, Sendable {
+    let id: String
+    let title: String
+    let asset: String
+    let source: String
 }
 
 struct CharacterMotionProfile: Codable, Hashable, Sendable {
@@ -59,6 +76,11 @@ enum CharacterCatalog {
                   && !$0.portraitAsset.isEmpty && !$0.heroAsset.isEmpty }) else {
             throw CatalogError.invalidCharacters
         }
+        guard characters.allSatisfy({ character in
+            let pictures = character.artworks ?? []
+            return Set(pictures.map(\.id)).count == pictures.count
+                && pictures.allSatisfy { !$0.id.isEmpty && $0.id != "default" && !$0.asset.isEmpty && !$0.source.isEmpty }
+        }) else { throw CatalogError.invalidCharacters }
         return characters
     }
 

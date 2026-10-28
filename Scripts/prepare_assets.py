@@ -70,6 +70,11 @@ def main():
         imageset(SHARED, character["portraitAsset"] + "Avatar", avatar, 64)
         imageset(APP, character["heroAsset"], standing, (300, 400))
         imageset(APP, character["chibiAsset"] + "Detail", chibi, 400)
+        for photo in character.get("artworks", []):
+            # Photos can have their own backgrounds. Fit the entire supplied
+            # image; keep identity avatars and Widget standing art independent.
+            image = Image.open(ROOT / photo["source"]).convert("RGBA")
+            imageset(APP, photo["asset"], image, (400, 520))
 
     for name in ("GPT", "Claude", "DeepSeek", "Gemini", "Grok"):
         icon = Image.open(ROOT / f"Art/AppIcons/{name}.png").convert("RGB")
@@ -83,6 +88,8 @@ def main():
         })
         imageset(APP, f"IconPreview{name}", icon.convert("RGBA"), 64)
     print(f"Assets ready: {len(characters)} characters, separate chibi / standing / hero art, opaque app icon.")
+    from prepare_video_actions import main as prepare_video_actions
+    prepare_video_actions()
 
 
 if __name__ == "__main__":

@@ -20,5 +20,7 @@ Shared/Resources/Companion.xcassets/IslandSceneWide_*.imageset/
 motion-fonts.yml
 Art/dafeiyu-standing.png
 App/Resources/Assets.xcassets/*/
+App/Resources/VideoActionAtlases/
+App/Resources/VideoActions.json
 Shared/Resources/Companion.xcassets/*/
 

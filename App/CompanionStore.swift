@@ -17,6 +17,15 @@ final class CompanionStore: ObservableObject {
     @Published private(set) var busy = false
     @Published var notice: String?
     let characters = CharacterCatalog.load()
+    @Published private var worldArtworks = CharacterArtworkPreferences.load()
+    func worldArtwork(for character: CompanionCharacter) -> CharacterArtwork {
+        worldArtworks.selected(for: character)
+    }
+    func selectWorldArtwork(_ artworkID: String, for character: CompanionCharacter) {
+        guard characters.contains(where: { $0.id == character.id }) else { return }
+        worldArtworks.select(artworkID, for: character)
+        worldArtworks.save()
+    }
     @Published private(set) var selectedCharacterID = UserDefaults.standard.string(forKey: "selectedCharacterID") ?? "xiaobai"
     @Published private(set) var activeCharacterID: String?
 

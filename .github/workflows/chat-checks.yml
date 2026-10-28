@@ -23,7 +23,7 @@ jobs:
   chat:
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[package]')
     runs-on: macos-15
-    timeout-minutes: 25
+    timeout-minutes: 40
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
       MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
@@ -47,6 +47,7 @@ jobs:
           .asset-venv/bin/python -m unittest discover -s Tests -p test_character_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_daily_motion_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_video_comparison.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_full_video_actions.py
           .asset-venv/bin/python Scripts/verify_motion_resources.py
           swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
           xcodegen generate --spec project.yml

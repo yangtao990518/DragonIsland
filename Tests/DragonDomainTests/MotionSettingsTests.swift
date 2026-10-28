@@ -3,6 +3,29 @@ import XCTest
 @testable import DragonDomain
 
 final class MotionSettingsTests: XCTestCase {
+    func testIslandAcceptsAllSupportedActionBanksAndRejectsOutOfRangePlans() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let catalog = try CharacterCatalog.decode(Data(contentsOf: root.appendingPathComponent("Shared/Resources/Characters.json")))
+        let fish = try XCTUnwrap(catalog.first { $0.id == "dafeiyu" })
+        for plan in 0..<128 { XCTAssertTrue(MotionSettings.supports(plan: plan, for: fish)) }
+        for plan in 0..<16 { XCTAssertTrue(MotionSettings.supports(plan: plan, for: .xiaobai)) }
+        XCTAssertFalse(MotionSettings.supports(plan: -1, for: fish))
+        XCTAssertFalse(MotionSettings.supports(plan: 128, for: fish))
+        XCTAssertFalse(MotionSettings.supports(plan: 16, for: .xiaobai))
+    }
+    func testDanceSwitchesPersistIndependentlyAndUnsupportedCharacterIgnoresThem() throws {
+        var settings = MotionSettings(walk: false, roll: false, ride: false, petWalk: false, dance1: true, dance2: true)
+        XCTAssertEqual(settings.mask, 48)
+        settings.dance1 = false
+        let restored = try JSONDecoder().decode(MotionSettings.self, from: JSONEncoder().encode(settings))
+        XCTAssertFalse(restored.dance1)
+        XCTAssertTrue(restored.dance2)
+        XCTAssertEqual(restored.mask(for: .xiaobai), 0)
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let catalog = try CharacterCatalog.decode(Data(contentsOf: root.appendingPathComponent("Shared/Resources/Characters.json")))
+        let fish = try XCTUnwrap(catalog.first { $0.id == "dafeiyu" })
+        XCTAssertEqual(restored.plan(seed: 1, character: fish), 65)
+    }
     func testCheckedActionsSelectOnlyTheirBankAndOffIsStatic() {
         for mask in 0..<16 {
             let settings = MotionSettings(automatic: true, walk: mask & 1 != 0, roll: mask & 2 != 0, ride: mask & 4 != 0, petWalk: mask & 8 != 0)

@@ -27,6 +27,7 @@ struct CharacterDetailView: View {
         WorldPage {
             PageHeading(eyebrow: "CHARACTER", title: character.name, subtitle: "\(character.subtitle) · \(character.origin)")
             Text(character.introduction).font(.system(size: 17, weight: .medium))
+            worldArtworkPicker
             Button { showingMotion = true } label: {
                 HStack {
                     Label("日常动作", systemImage: "figure.play")
@@ -106,6 +107,40 @@ struct CharacterDetailView: View {
             if ProcessInfo.processInfo.arguments.contains("--preview-gallery-standing") { showStanding() }
             #endif
         }
+    }
+
+    private var worldArtworkPicker: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("我的世界展示照片").font(.headline)
+            Text("选择这位角色在主页显示的照片，每个角色会单独记住。")
+                .font(.caption).foregroundStyle(.secondary)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top, spacing: 12) {
+                    ForEach(character.availableArtworks) { item in
+                        let selected = store.worldArtwork(for: character).id == item.id
+                        VStack(spacing: 8) {
+                            Button { store.selectWorldArtwork(item.id, for: character) } label: {
+                                VStack(spacing: 8) {
+                                    Image(item.asset).resizable().scaledToFit()
+                                        .frame(width: 136, height: 164)
+                                        .background(AppPalette.accent.opacity(0.04), in: RoundedRectangle(cornerRadius: 12))
+                                    Label(item.title, systemImage: selected ? "checkmark.circle.fill" : "circle")
+                                        .font(.system(size: 12, weight: selected ? .semibold : .regular))
+                                        .lineLimit(2).frame(height: 32)
+                                }.padding(8)
+                                    .foregroundStyle(selected ? AppPalette.accent : Color.primary)
+                                    .overlay(RoundedRectangle(cornerRadius: 15).stroke(selected ? AppPalette.accent : Color.primary.opacity(0.12), lineWidth: selected ? 2 : 1))
+                            }.buttonStyle(.plain)
+                                .accessibilityIdentifier("worldArtwork_\(item.id)")
+                                .accessibilityLabel("在我的世界展示\(item.title)")
+                                .accessibilityAddTraits(selected ? .isSelected : [])
+                            Button("查看大图") { artwork = ArtworkSelection(asset: item.asset, title: "\(character.name) · \(item.title)") }
+                                .font(.caption).foregroundStyle(AppPalette.accent)
+                        }
+                    }
+                }.padding(2)
+            }
+        }.worldCard().accessibilityIdentifier("worldArtworkPicker")
     }
 
     private func artworkTile(title: String, subtitle: String, asset: String, action: @escaping () -> Void) -> some View {

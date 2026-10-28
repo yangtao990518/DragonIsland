@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "clips": [
+    {
+      "id": "dafeiyu-dance1",
+      "manifest": "dafeiyu-dance1/manifest.json"
+    },
+    {
+      "id": "dafeiyu-dance2",
+      "manifest": "dafeiyu-dance2/manifest.json"
+    }
+  ],
+  "upscaledVariants": "deferred_until_base_changes_are_complete_and_pushed"
+}

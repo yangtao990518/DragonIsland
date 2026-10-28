@@ -53,13 +53,15 @@ class CharacterResourcesTests(unittest.TestCase):
             if not path.exists():self.skipTest('Run prepare_motion.py to compile timelines')
             timeline=json.loads(path.read_text(encoding='utf-8'))
             self.assertEqual(timeline['fps'],30)
-            self.assertEqual(len(timeline['plans']),16 if name=='MotionTimeline' else 32)
+            self.assertEqual(len(timeline['plans']),16 if name=='MotionTimeline' else 128)
             for plan in timeline['plans']:
-                self.assertEqual(len(plan['frames']),1800)
-                self.assertTrue(all(f['asset'].startswith(prefix) for f in plan['frames']))
+                sequence=([timeline['frameTable'][i] for i in plan['frameIndices']] if 'frameIndices' in plan else plan['frames'])
+                self.assertEqual(len(sequence),timeline['period']*30)
+                self.assertTrue(all(f['asset'].startswith(prefix) for f in sequence))
                 for leg in plan['legs']:
-                    frames=plan['frames'][leg['start']*30:(leg['start']+leg['duration'])*30]
-                    self.assertEqual(max(f['x'] for f in frames)-min(f['x'] for f in frames),timeline.get('automaticTravelPixels',100))
+                    frames=sequence[leg['start']*30:(leg['start']+leg['duration'])*30]
+                    distance=max(f['x'] for f in frames)-min(f['x'] for f in frames)
+                    self.assertEqual(distance,0 if leg['direction']=='stationary' else timeline.get('automaticTravelPixels',100))
             for action in ('walk_right','walk_left','roll'):
                 frames=timeline['previews'][action]
                 self.assertEqual(frames[0]['x'],frames[-1]['x'])

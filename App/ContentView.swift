@@ -102,8 +102,11 @@ struct ContentView: View {
                 .accessibilityLabel("查看角色")
             }
             Button { detailCharacter = store.displayCharacter } label: {
-                CharacterHero(character: store.displayCharacter, active: store.session != nil)
+                CharacterHero(character: store.displayCharacter, active: store.session != nil,
+                              artworkAsset: store.worldArtwork(for: store.displayCharacter).asset)
             }.buttonStyle(.plain).accessibilityLabel("查看\(store.displayCharacter.name)角色详情")
+                .accessibilityIdentifier("worldCharacterCard")
+                .accessibilityValue(store.worldArtwork(for: store.displayCharacter).id)
             if let session = store.session {
                 activeSession(session)
             } else {

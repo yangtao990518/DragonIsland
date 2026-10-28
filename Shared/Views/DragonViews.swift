@@ -60,7 +60,7 @@ struct IslandMotionPortrait: View {
         ZStack {
             Image(state.islandScene.asset).resizable()
             if character.motionProfile != nil, let plan = state.automaticMotionPlan,
-               (0..<8).contains(plan), !reduceMotion, !luminanceReduced {
+               MotionSettings.supports(plan: plan, for: character), !reduceMotion, !luminanceReduced {
                 TimerMotionPortrait(plan: plan, epoch: state.motionEpoch ?? state.startedAt,
                                     endsAt: state.endsAt, size: size + 8, scene: state.islandScene, character: character)
             } else {

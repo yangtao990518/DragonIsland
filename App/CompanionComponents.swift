@@ -35,6 +35,7 @@ struct PageHeading: View {
 struct CharacterHero: View {
     let character: CompanionCharacter
     let active: Bool
+    var artworkAsset: String? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var floating = false
 
@@ -57,13 +58,16 @@ struct CharacterHero: View {
                 Image(systemName: "sparkle")
                     .font(.system(size: 16)).foregroundStyle(AppPalette.accent.opacity(0.6))
                     .position(x: geometry.size.width * 0.48, y: 44)
-                Image(character.heroAsset)
+                Image(artworkAsset ?? character.heroAsset)
                     .resizable().scaledToFit()
                     .frame(width: geometry.size.width * 0.60, height: 294)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .offset(x: 6, y: shouldAnimate ? (floating ? -4 : 2) : 0)
                     .animation(shouldAnimate ? .easeInOut(duration: 2.8).repeatForever(autoreverses: true) : nil,
                                value: floating)
                     .accessibilityLabel("\(character.name)的完整立绘")
+                    .accessibilityIdentifier("worldCharacterArtwork")
+                    .accessibilityValue(artworkAsset ?? character.heroAsset)
                 VStack(alignment: .leading, spacing: 0) {
                     Text("YOUR LITTLE\nUNIVERSE")
                         .font(.system(size: 8, weight: .medium, design: .monospaced))
