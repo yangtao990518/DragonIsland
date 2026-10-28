@@ -1,3 +1,6 @@
+2026-10-28 下班前最新交接：docs/HANDOFF_2026-10-28_EVENING.md。
+角色动作独立开关、遛狗视频测试及横向卡片已通过本轮模拟器验收（44 项 Swift + 6 项界面测试）；下次源码 build 16，已交付 IPA 仍是 build 15。
+
 mAIverse · 我的 AI 小世界
 
 2026-10-28 最新入口：docs/RELEASE_BUILD15.md。
