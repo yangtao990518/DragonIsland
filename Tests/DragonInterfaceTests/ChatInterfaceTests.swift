@@ -127,6 +127,7 @@ final class ChatInterfaceTests: XCTestCase {
         if !card.isHittable { app.swipeDown() }
         card.tap()
         XCTAssertTrue(app.buttons["characterMotionSettings"].waitForExistence(timeout: 5))
+        capture(app, name: "dafeiyu-character-detail-motion-entry")
         app.buttons["characterMotionSettings"].tap()
         XCTAssertTrue(app.staticTexts["大肥鱼的日常"].waitForExistence(timeout: 5))
         app.buttons["待机"].tap()
