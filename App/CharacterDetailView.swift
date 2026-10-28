@@ -94,7 +94,7 @@ struct CharacterDetailView: View {
                 MotionSettingsView(store: store, character: character)
                     .navigationTitle("\(character.name)的日常动作").navigationBarTitleDisplayMode(.inline)
                     .toolbar {
-                        ToolbarItem(placement: .confirmationAction) { Button("完成") { showingMotion = false } }
+                        ToolbarItem(placement: .confirmationAction) { Button("完成") { showingMotion = false }.accessibilityIdentifier("closeMotionSettings") }
                     }
             }
         }

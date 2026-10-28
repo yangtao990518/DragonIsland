@@ -56,13 +56,11 @@ jobs:
           DEVICE_ID="$(xcrun simctl list devices available --json | python3 -c 'import json,sys,os; d=json.load(sys.stdin); phones=[v for v in d["devices"].get(os.environ["MAIVERSE_SIM_RUNTIME"],[]) if v.get("isAvailable") and v["name"].startswith("iPhone")]; phones.sort(key=lambda v: ("Pro" not in v["name"],v["name"])); print(phones[0]["udid"])')"
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEVICE_ID" || true
-          xcrun simctl bootstatus "$DEVICE_ID" -b
-          xcrun simctl status_bar "$DEVICE_ID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Compile app, Widget and chat tests (no IPA)
         run: |
           set -euo pipefail
           xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
-            -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -configuration Debug -destination "generic/platform=iOS Simulator" \
             -derivedDataPath build/ChatTests \
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
@@ -70,6 +68,8 @@ jobs:
       - name: Run chat interface tests
         run: |
           set -euo pipefail
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl status_bar "$DEVICE_ID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
           xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
             -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath build/ChatTests -resultBundlePath build/ChatTests.xcresult \
@@ -80,7 +80,8 @@ jobs:
             -maximum-test-execution-time-allowance 180 \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test-without-building 2>&1 | tee build/chat-interface-tests.log
       - name: Export actual simulator screenshots
-        if: always()
+        if: always() && !cancelled()
+        timeout-minutes: 2
         run: |
           if [[ -d build/ChatTests.xcresult ]]; then
             mkdir -p output/chat-screenshots

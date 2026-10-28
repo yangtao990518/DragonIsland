@@ -140,7 +140,7 @@ final class ChatInterfaceTests: XCTestCase {
         capture(app, name: "dafeiyu-walk-preview")
         app.buttons["打滚"].tap()
         capture(app, name: "dafeiyu-roll-preview")
-        app.buttons["完成"].tap()
+        app.buttons["closeMotionSettings"].tap()
         app.buttons["closeCharacterDetail"].tap()
         app.tabBars.buttons["闹钟"].tap()
         XCTAssertTrue(app.buttons["newAlarm-dafeiyu"].waitForExistence(timeout: 5))
