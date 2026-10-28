@@ -195,7 +195,7 @@ struct CharacterResidentCard: View {
             }
             Text("“\(character.introduction)”")
                 .font(.system(size: 14)).foregroundStyle(Color.primary.opacity(0.65))
-            Label("查看角色与图片", systemImage: "arrow.up.right")
+            Label("查看角色、动作与图片", systemImage: "arrow.up.right")
                 .font(.system(size: 12, weight: .medium)).foregroundStyle(AppPalette.accent)
                 }
                 .contentShape(Rectangle())

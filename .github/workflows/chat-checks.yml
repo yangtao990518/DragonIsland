@@ -23,7 +23,7 @@ jobs:
   chat:
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[package]')
     runs-on: macos-15
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
       MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
@@ -45,6 +45,8 @@ jobs:
           .asset-venv/bin/python Scripts/prepare_motion.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_motion_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_character_resources.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_daily_motion_resources.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_video_comparison.py
           .asset-venv/bin/python Scripts/verify_motion_resources.py
           swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
           xcodegen generate --spec project.yml
@@ -63,6 +65,7 @@ jobs:
             -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath build/ChatTests \
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
+            -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
       - name: Run chat interface tests
         run: |
@@ -71,6 +74,7 @@ jobs:
             -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath build/ChatTests -resultBundlePath build/ChatTests.xcresult \
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
+            -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             -parallel-testing-enabled NO \
             -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
             -maximum-test-execution-time-allowance 180 \

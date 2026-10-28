@@ -14,6 +14,7 @@ struct CharacterDetailView: View {
     @State private var artwork: ArtworkSelection?
     @State private var preview = 0
     @State private var showingAlarm = false
+    @State private var showingMotion = false
 
     private func showChibi() {
         artwork = ArtworkSelection(asset: character.chibiAsset + "Detail", title: "\(character.name) · 岛上小人物")
@@ -26,6 +27,15 @@ struct CharacterDetailView: View {
         WorldPage {
             PageHeading(eyebrow: "CHARACTER", title: character.name, subtitle: "\(character.subtitle) · \(character.origin)")
             Text(character.introduction).font(.system(size: 17, weight: .medium))
+            Button { showingMotion = true } label: {
+                HStack {
+                    Label("日常动作", systemImage: "figure.play")
+                    Spacer()
+                    Text((character.motionProfile?.dailyActions ?? []).map(\.title).joined(separator: " · "))
+                        .font(.caption).foregroundStyle(.secondary)
+                    Image(systemName: "chevron.right").font(.caption)
+                }.foregroundStyle(AppPalette.accent)
+            }.worldCard().accessibilityIdentifier("characterMotionSettings")
             HStack(alignment: .top, spacing: 12) {
                 artworkTile(title: "展开立绘", subtitle: "展开 / 锁屏", asset: character.heroAsset, action: showStanding)
                     .accessibilityIdentifier("artwork-standing")
@@ -79,8 +89,18 @@ struct CharacterDetailView: View {
         .sheet(isPresented: $showingAlarm) {
             NavigationStack { CharacterAlarmEditor(alarms: store.alarms, character: character) }
         }
+        .sheet(isPresented: $showingMotion) {
+            NavigationStack {
+                MotionSettingsView(store: store, character: character)
+                    .navigationTitle("\(character.name)的日常动作").navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) { Button("完成") { showingMotion = false } }
+                    }
+            }
+        }
         .task {
             #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--preview-tasks") { showingMotion = true }
             try? await Task.sleep(nanoseconds: 700_000_000)
             if ProcessInfo.processInfo.arguments.contains("--preview-gallery-chibi") { showChibi() }
             if ProcessInfo.processInfo.arguments.contains("--preview-gallery-standing") { showStanding() }

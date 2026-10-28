@@ -4,13 +4,32 @@ import XCTest
 
 final class MotionSettingsTests: XCTestCase {
     func testCheckedActionsSelectOnlyTheirBankAndOffIsStatic() {
-        for mask in 0..<4 {
-            let settings = MotionSettings(automatic: true, walk: mask & 1 != 0, roll: mask & 2 != 0)
+        for mask in 0..<16 {
+            let settings = MotionSettings(automatic: true, walk: mask & 1 != 0, roll: mask & 2 != 0, ride: mask & 4 != 0, petWalk: mask & 8 != 0)
             XCTAssertEqual(settings.mask, mask)
             for seed in 0..<20 { XCTAssertEqual(settings.plan(seed: seed)! / 2, mask) }
         }
         XCTAssertNil(MotionSettings(automatic: false, walk: true, roll: true).plan(seed: 0))
     }
+    func testOldSettingsKeepPreviouslyDisabledDailyActionsOff() throws {
+        let old = Data(#"{"automatic":true,"walk":false,"roll":true}"#.utf8)
+        let settings = try JSONDecoder().decode(MotionSettings.self, from: old)
+        XCTAssertFalse(settings.ride)
+        XCTAssertFalse(settings.petWalk)
+        XCTAssertEqual(settings.mask, 2)
+    }
+
+    func testCharacterSettingsPersistIndependentlyAndIgnoreUnsupportedActions() throws {
+        let defaults = UserDefaults(suiteName: "motion-test-" + UUID().uuidString)!
+        let values = ["xiaobai": MotionSettings(walk: false, roll: false, ride: true, petWalk: false),
+                      "dafeiyu": MotionSettings(walk: true, roll: false, ride: false, petWalk: true)]
+        MotionSettings.saveCharacters(values, to: defaults)
+        XCTAssertEqual(MotionSettings.loadCharacters(from: defaults), values)
+        defaults.removeObject(forKey: "characterMotionSettings")
+        XCTAssertEqual(values["xiaobai"]!.plan(seed: 0, character: .xiaobai), 8)
+        XCTAssertEqual(MotionSettings().mask(for: .xiaobai), 7)
+    }
+
     func testLegacySessionDecodesWithoutAutomaticMotion() throws {
         let old = Data("{\"startedAt\":0,\"endsAt\":60,\"mood\":\"calm\",\"message\":\"hello\",\"greetings\":0,\"revision\":0}".utf8)
         let state = try JSONDecoder().decode(CompanionSession.self, from: old)

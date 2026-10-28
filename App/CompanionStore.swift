@@ -6,7 +6,12 @@ import UIKit
 @MainActor
 final class CompanionStore: ObservableObject {
     let alarms = CharacterAlarmStore()
-    @Published private(set) var motionSettings = MotionSettings.load()
+    @Published private var characterMotionSettings = MotionSettings.loadCharacters()
+    private let legacyMotionSettings = MotionSettings.load()
+    var motionSettings: MotionSettings { settings(for: displayCharacter) }
+    func settings(for character: CompanionCharacter) -> MotionSettings {
+        characterMotionSettings[character.id] ?? legacyMotionSettings
+    }
     @Published private(set) var islandScene = IslandScene.load()
     @Published private(set) var session: CompanionSession?
     @Published private(set) var busy = false
@@ -105,7 +110,7 @@ final class CompanionStore: ObservableObject {
         clear()
         var state = CompanionSession(minutes: minutes)
         state.islandSceneID = islandScene.rawValue
-        state.automaticMotionPlan = motionSettings.plan(seed: Int.random(in: 0..<2))
+        state.automaticMotionPlan = settings(for: selectedCharacter).plan(seed: Int.random(in: 0..<2), character: selectedCharacter)
         state.motionEpoch = state.startedAt
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-live-motion") {
@@ -156,11 +161,16 @@ final class CompanionStore: ObservableObject {
     func performMotion(_ motion: CompanionMotion) async { await mutate { $0.performMotion(motion) } }
 
     func setMotionSettings(_ value: MotionSettings) async {
+        await setMotionSettings(value, for: displayCharacter)
+    }
+
+    func setMotionSettings(_ value: MotionSettings, for character: CompanionCharacter) async {
         guard !busy else { return }
-        motionSettings = value
-        value.save()
+        characterMotionSettings[character.id] = value
+        MotionSettings.saveCharacters(characterMotionSettings)
+        guard session != nil, displayCharacter.id == character.id else { return }
         await mutate {
-            $0.automaticMotionPlan = value.plan(seed: 0)
+            $0.automaticMotionPlan = value.plan(seed: 0, character: character)
             $0.motionEpoch = Date()
             $0.revision += 1
         }

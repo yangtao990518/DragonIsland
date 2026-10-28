@@ -232,26 +232,36 @@ def daily_leg(action,direction,clip,*,fps=FPS):
 
 
 def daily_schedule(mask,seed,durations,clips):
-    slots,frames=schedule(mask,seed,durations)
-    legs=plan_legs(mask,seed)
+    # Each checkbox owns one bit. Never substitute a disabled activity for walk.
+    travelling=(['walk'] if mask&1 else [])+[a for a,b in (('ride',4),('pet_walk',8)) if mask&b and a in clips]
+    blocks=['idle','idle']
+    if travelling:blocks.append(travelling[seed%len(travelling)])
+    if mask&2:blocks.append('roll')
+    used=sum(1 if a=='idle' else 2 if a=='roll' else 4 for a in blocks)
+    next_travel=seed+1
+    while used<12:
+        if travelling and used<=8:
+            action=travelling[next_travel%len(travelling)];next_travel+=1
+        elif mask&2 and used<=10 and blocks[-1]!='roll':action='roll'
+        else:action='idle'
+        blocks.append(action);used+=1 if action=='idle' else 2 if action=='roll' else 4
+    slots=[];frames=[];legs=[];start=0
     extent=min([WALK_EXTENT]+[(STAGE_WIDTH-(112 if a=='pet_walk' else 86))//2-2 for a in clips])
-    for frame in frames:frame['x']=round(frame['x']*extent/WALK_EXTENT)
-    choices=['walk']+list(clips)
-    walk_index=seed+1
-    # Walk settings also control these travelling daily activities. Full round
-    # trips stay intact, while roll/idle and all eight timer banks remain valid.
-    for i in range(0,len(legs),2):
-        outward,back=legs[i:i+2]
-        if outward['action']!='walk':continue
-        selected=choices[walk_index%len(choices)];walk_index+=1
-        if selected=='walk':continue
-        for leg in (outward,back):
-            start=leg['start']*FPS
-            replacement=daily_leg(selected,leg['direction'],clips[selected])
+    position=-extent if travelling or mask&2 else 0
+    for action in blocks:
+        if action=='idle':
+            slots.append('idle');frames+=idle_frames(5000,position,durations);start+=5
+            continue
+        duration=5 if action=='roll' else 10
+        slots += [action]*(duration*2//5)
+        for direction in ('right','left'):
+            replacement=(daily_leg(action,direction,clips[action]) if action in clips
+                         else movement_leg(action,direction,durations))
             own_extent=max(abs(f['x']) for f in replacement)
             for frame in replacement:frame['x']=round(frame['x']*extent/own_extent)
-            frames[start:start+len(replacement)]=replacement
-            leg['action']=selected
+            frames+=replacement
+            legs.append({'action':action,'direction':direction,'start':start,'duration':duration})
+            start+=duration
     return slots,frames,legs
 
 
@@ -274,20 +284,20 @@ def features(names):
         f'sub d{s//10} d{s%10} by {names[s]};' for s in range(60))+'} liga;'
 
 
-def bank_features():
+def bank_features(banks=32):
     # Encode the selected bank in synthetic elapsed HOURS (3 hours per bank).
     # Prefix matching requires H:MM:SS, so M:SS cannot be mistaken for an hour.
     rules=['languagesystem DFLT dflt;','@digits=['+' '.join(f'd{i}' for i in range(10))+'];']
-    for b in range(8):rules.append(f'@bank{b}=['+' '.join(f'f{s:02}' if b==0 else f'b{b}s{s:02}' for s in range(60))+'];')
+    for b in range(banks):rules.append(f'@bank{b}=['+' '.join(f'f{s:02}' if b==0 else f'b{b}s{s:02}' for s in range(60))+'];')
     rules.append('lookup markHours {')
     # Two-digit hour contexts must win before their one-digit suffix (13 vs 3).
-    for h in reversed(range(3,24)):
+    for h in reversed(range(3,banks*3)):
         prefix=' '.join(f'd{x}' for x in str(h)[:-1])
         rules.append(f'sub {prefix} d{h%10}\' colon @digits @digits colon by H{h//3};')
     rules.append('} markHours; lookup pairs {')
     rules += [f'sub d{s//10} d{s%10} by f{s:02};' for s in range(60)]
     rules.append('} pairs; lookup selectBank {')
-    rules += [f'sub H{b} colon @bank0 colon @bank0\' by @bank{b};' for b in range(1,8)]
+    rules += [f'sub H{b} colon @bank0 colon @bank0\' by @bank{b};' for b in range(1,banks)]
     rules.append('} selectBank; feature liga {lookup markHours; lookup pairs; lookup selectBank;} liga;')
     return '\n'.join(rules)
 
@@ -342,10 +352,11 @@ def compile_character(profile):
     # One ordinary, WidgetKit-compatible font per phase, all banks in each file.
     # Avoid runtime CTFont bridging and unsupported named variable instances.
     plans=[]
-    order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'H{i}' for i in range(1,8)]
+    banks=32 if 'pet_walk' in daily else 16
+    order=['.notdef','space','colon']+[f'd{i}' for i in range(10)]+[f'H{i}' for i in range(1,banks)]
     def glyph_name(bank,second):return f'f{second:02}' if bank==0 else f'b{bank}s{second:02}'
-    order += [glyph_name(b,s) for b in range(8) for s in range(60)]
-    for mask in range(4):
+    order += [glyph_name(b,s) for b in range(banks) for s in range(60)]
+    for mask in range(banks//SEEDS):
         for seed in range(SEEDS):
             bank=mask*SEEDS+seed
             chosen,frames,legs=daily_schedule(mask,seed,durations,daily)
@@ -371,10 +382,10 @@ def compile_character(profile):
                     encoded[digest]=glyph
                     strike.glyphs[glyph]=Glyph(glyphName=glyph,originOffsetX=0,originOffsetY=0,graphicType='png ',imageData=data)
         sbix=newTable('sbix');sbix.strikes={GLYPH_PIXELS:strike};font['sbix']=sbix
-        addOpenTypeFeaturesFromString(font,bank_features())
+        addOpenTypeFeaturesFromString(font,bank_features(banks))
         font.save(OUTPUT/f'{name}.ttf')
     checks=[{'fontPrefix':scenes[scene],'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
-            for scene in SCENES for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
+            for scene in SCENES for b in range(banks) for p in (0,1,15,29,30,58,59) for s in (15,55)]
 
     previews=preview_frames(durations)
     app_previews={}
@@ -413,7 +424,7 @@ def main():
         result,count=compile_character(profile);checks+=result;unique+=count
     (OUTPUT/'checks.json').write_text(json.dumps(checks),encoding='utf-8')
     paths=[p.name for p in sorted(OUTPUT.glob('*.ttf'))]
-    (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':unique,'targetFPS':FPS,'phases':PHASES,'plans':8,'characters':len(profiles)}),encoding='utf-8')
+    (OUTPUT/'font-summary.json').write_text(json.dumps({'fontFiles':len(paths),'fontBytesPerBundle':sum((OUTPUT/p).stat().st_size for p in paths),'uniqueBitmaps':unique,'targetFPS':FPS,'phases':PHASES,'maxPlans':32,'characters':len(profiles)}),encoding='utf-8')
     (ROOT/'motion-fonts.yml').write_text('targets:\n  DragonIsland:\n    info:\n      properties:\n        UIAppFonts: &motionFonts\n'+''.join(f'          - {n}\n' for n in paths)+'  DragonIslandWidget:\n    info:\n      properties:\n        UIAppFonts: *motionFonts\n',encoding='utf-8')
     print(f'Motion resources: {len(profiles)} characters, {len(paths)} fonts; native timer rendering.')
 

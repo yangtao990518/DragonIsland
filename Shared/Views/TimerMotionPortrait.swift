@@ -35,7 +35,7 @@ struct TimerMotionPortrait: View {
         let prefix = character.motionProfile?.fontPrefix ?? "mAIverse"
         let suffix = String(scene.fontPrefix.dropFirst("mAIverse".count))
         let font = Font.custom("\(prefix)\(suffix)F\(index)", fixedSize: size)
-        // All banks share the phase font. Hidden hours select one of eight
+        // All banks share the phase font. Hidden hours select an action bank;
         // banks in font shaping; the maximum two-hour session stays in its bank.
         // Prepare the next glyph one phase BEFORE its gate opens. Native timer
         // texts and masks can commit separately; changing both at the same

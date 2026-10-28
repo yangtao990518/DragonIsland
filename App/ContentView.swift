@@ -23,7 +23,8 @@ struct ContentView: View {
     @State private var minutes = 25
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
-    @State private var showingMotion = false
+    @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
+    @State private var browsedCharacterID = "xiaobai"
     @Environment(\.openURL) private var openURL
 
     init(store: CompanionStore) {
@@ -46,6 +47,7 @@ struct ContentView: View {
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
         .tint(AppPalette.accent)
+        .onAppear { browsedCharacterID = store.selectedCharacterID }
         .toolbarBackground(AppPalette.background, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .sheet(item: $detailCharacter) { character in
@@ -58,22 +60,13 @@ struct ContentView: View {
             }
             .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $showingMotion) {
-            NavigationStack {
-                MotionSettingsView(store: store)
-                    .navigationTitle("日常动作").navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) { Button("完成") { showingMotion = false } }
-                    }
-            }
-        }
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
             if args.contains("--character-dafeiyu"), let character = store.characters.first(where: { $0.id == "dafeiyu" }) {
                 store.select(character)
             }
-            if args.contains("--preview-tasks") { showingMotion = true }
+            if args.contains("--preview-tasks") { detailCharacter = store.selectedCharacter }
             for scene in IslandScene.allCases where args.contains("--scene-\(scene.rawValue)") {
                 await store.setIslandScene(scene)
             }
@@ -117,14 +110,6 @@ struct ContentView: View {
                 setupSession
             }
             islandPreview
-            Button { showingMotion = true } label: {
-                HStack {
-                    Label("日常动作", systemImage: "figure.play")
-                    Spacer()
-                    Text("走路、打滚与自动活动").font(.caption).foregroundStyle(.secondary)
-                    Image(systemName: "chevron.right").font(.caption)
-                }.font(.subheadline).foregroundStyle(AppPalette.accent)
-            }.worldCard().accessibilityIdentifier("worldMotionSettings")
             HStack(spacing: 6) {
                 Image(systemName: "heart")
                 Text("把一小段日常，留给喜欢的角色。")
@@ -206,7 +191,6 @@ struct ContentView: View {
                             await store.changeMood()
                         }
                     }
-                    Button("挑选自动动作") { showingMotion = true }.font(.system(size: 12)).accessibilityIdentifier("openMotionSettings")
                 }
                 Button { Task { await store.finish() } } label: {
                     Text(expired ? "收起这一轮，准备再出发" : "结束本轮陪伴")
@@ -245,11 +229,47 @@ struct ContentView: View {
                 Spacer(minLength: 4)
                 AppearanceToggle()
             }
-            ForEach(store.characters) { character in
-                CharacterResidentCard(character: character,
-                                      selected: store.selectedCharacter.id == character.id,
-                                      active: store.session != nil,
-                                      open: { detailCharacter = character }) { store.select(character) }
+            Picker("角色浏览方式", selection: $characterBrowsingMode) {
+                Text("横向卡片").tag("cards")
+                Text("纵向列表").tag("list")
+            }.pickerStyle(.segmented).accessibilityIdentifier("characterBrowsingMode")
+            if characterBrowsingMode == "cards" {
+                TabView(selection: $browsedCharacterID) {
+                    ForEach(store.characters) { character in
+                        residentCard(character).padding(.horizontal, 2).tag(character.id)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(height: 565)
+                .accessibilityIdentifier("characterCardPager")
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 18) {
+                            ForEach(store.characters) { character in
+                                Button {
+                                    withAnimation { browsedCharacterID = character.id }
+                                } label: {
+                                    VStack(spacing: 7) {
+                                        CharacterAvatar(character: character, size: 48)
+                                            .padding(5)
+                                            .overlay(Circle().stroke(browsedCharacterID == character.id ? AppPalette.accent : .clear, lineWidth: 2))
+                                        Text(character.name).font(.caption)
+                                    }.foregroundStyle(browsedCharacterID == character.id ? AppPalette.accent : .secondary)
+                                }.buttonStyle(.plain).id(character.id)
+                                    .accessibilityIdentifier("quickCharacter-\(character.id)")
+                                    .accessibilityLabel("查看\(character.name)卡片")
+                                    .accessibilityAddTraits(browsedCharacterID == character.id ? .isSelected : [])
+                            }
+                        }.padding(4)
+                    }
+                    .onChange(of: browsedCharacterID) { _, id in
+                        withAnimation { proxy.scrollTo(id, anchor: .center) }
+                    }
+                }
+                Text("左右滑动卡片，或点头像快速查看角色；点卡片设置她的日常动作。")
+                    .font(.caption).foregroundStyle(.secondary)
+            } else {
+                ForEach(store.characters) { character in residentCard(character) }
             }
             VStack(spacing: 10) {
                 Image(systemName: "sparkles").font(.system(size: 24)).foregroundStyle(AppPalette.accent)
@@ -264,6 +284,13 @@ struct ContentView: View {
                     .font(.system(size: 12)).foregroundStyle(Color.primary.opacity(0.5))
             }
         }
+    }
+
+    private func residentCard(_ character: CompanionCharacter) -> some View {
+        CharacterResidentCard(character: character,
+                              selected: store.selectedCharacter.id == character.id,
+                              active: store.session != nil,
+                              open: { detailCharacter = character }) { store.select(character) }
     }
 
     private var aboutPage: some View {

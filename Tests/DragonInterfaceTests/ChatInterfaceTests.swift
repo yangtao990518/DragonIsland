@@ -118,11 +118,16 @@ final class ChatInterfaceTests: XCTestCase {
         XCTAssertTrue(app.buttons["startCompanion"].waitForExistence(timeout: 8))
         XCTAssertTrue(app.buttons["startCompanion"].label.contains("大肥鱼"))
         capture(app, name: "dafeiyu-world-standing")
-        for _ in 0..<4 {
-            if app.buttons["worldMotionSettings"].isHittable { break }
-            app.swipeUp()
-        }
-        app.buttons["worldMotionSettings"].tap()
+        app.tabBars.buttons["角色"].tap()
+        app.segmentedControls["characterBrowsingMode"].buttons["横向卡片"].tap()
+        let quick = app.buttons["quickCharacter-dafeiyu"]
+        if !quick.isHittable { app.swipeUp() }
+        quick.tap()
+        let card = app.buttons["characterCard-dafeiyu"]
+        if !card.isHittable { app.swipeDown() }
+        card.tap()
+        XCTAssertTrue(app.buttons["characterMotionSettings"].waitForExistence(timeout: 5))
+        app.buttons["characterMotionSettings"].tap()
         XCTAssertTrue(app.staticTexts["大肥鱼的日常"].waitForExistence(timeout: 5))
         app.buttons["待机"].tap()
         capture(app, name: "dafeiyu-idle-preview")
@@ -136,6 +141,7 @@ final class ChatInterfaceTests: XCTestCase {
         app.buttons["打滚"].tap()
         capture(app, name: "dafeiyu-roll-preview")
         app.buttons["完成"].tap()
+        app.buttons["closeCharacterDetail"].tap()
         app.tabBars.buttons["闹钟"].tap()
         XCTAssertTrue(app.buttons["newAlarm-dafeiyu"].waitForExistence(timeout: 5))
         app.buttons["newAlarm-dafeiyu"].tap()

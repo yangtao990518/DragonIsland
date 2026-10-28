@@ -53,7 +53,7 @@ class CharacterResourcesTests(unittest.TestCase):
             if not path.exists():self.skipTest('Run prepare_motion.py to compile timelines')
             timeline=json.loads(path.read_text(encoding='utf-8'))
             self.assertEqual(timeline['fps'],30)
-            self.assertEqual(len(timeline['plans']),8)
+            self.assertEqual(len(timeline['plans']),16 if name=='MotionTimeline' else 32)
             for plan in timeline['plans']:
                 self.assertEqual(len(plan['frames']),1800)
                 self.assertTrue(all(f['asset'].startswith(prefix) for f in plan['frames']))

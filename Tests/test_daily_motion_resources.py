@@ -28,7 +28,7 @@ class DailyMotionTests(unittest.TestCase):
                 for right,left in zip(clip['right'],clip['left']):
                     self.assertIsNone(ImageChops.difference(ImageOps.mirror(right),left).getbbox())
             selected=set()
-            for mask in range(4):
+            for mask in range(16):
                 for seed in range(2):
                     _,frames,legs=motion.daily_schedule(mask,seed,motion.DURATIONS,clips)
                     self.assertEqual(len(frames),1800)
@@ -39,9 +39,10 @@ class DailyMotionTests(unittest.TestCase):
                         self.assertGreaterEqual((180-w)//2+f['x'],0)
                         self.assertLessEqual((180-w)//2+f['x']+w,180)
                         if f['action'] in clips:
-                            self.assertTrue(mask&1)
+                            self.assertTrue(mask & {"ride":4,"pet_walk":8}[f["action"]])
                             selected.add(f['action'])
-                    if not mask&1:self.assertTrue(all(f['action'] not in clips for f in frames))
+                    for action,bit in (('walk',1),('roll',2),('ride',4),('pet_walk',8)):
+                        if not mask&bit:self.assertTrue(all(f['action']!=action for f in frames))
             self.assertEqual(selected,set(clips))
 
     def test_sixty_fps_dog_preview_visits_every_source_pose_in_order(self):

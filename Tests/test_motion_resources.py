@@ -203,7 +203,7 @@ class MotionResourcesTests(unittest.TestCase):
         self.assertEqual(len(set(backgrounds)),3)
 
     def test_hidden_bank_clock_does_not_cross_bank_during_two_hour_session(self):
-        for bank in range(8):
+        for bank in range(32):
             for elapsed in (0,1,59,60,3599,3600,7199,7200):
                 for phase in (0,29,30,59):
                     counter=bank*3*3600+60+elapsed-1-phase/30
