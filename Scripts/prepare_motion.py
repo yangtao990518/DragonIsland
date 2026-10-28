@@ -212,7 +212,7 @@ def load_daily_art(character_id):
     return result
 
 
-def daily_leg(action,direction,clip,*,fps=FPS):
+def daily_leg(action,direction,clip,*,fps=FPS,duration=10):
     """Travel while preserving clip timing and aspect ratio; fit at both edges."""
     width,height=(112,78) if action=='pet_walk' else (86,86)
     extent=(STAGE_WIDTH-width)//2-2
@@ -220,12 +220,12 @@ def daily_leg(action,direction,clip,*,fps=FPS):
     durations=clip['durations'];period=sum(durations)
     entries=[(d,action+'_'+direction,i) for i,d in enumerate(durations)]
     result=[]
-    for tick in range(10*fps):
+    for tick in range(duration*fps):
         ms=tick*1000/fps
         # A repeating 1000/60 duration accumulates binary float error. Bias
         # exact boundaries by a microsecond, avoiding duplicate/skipped poses.
         _,index=sample(entries,(ms%period+0.000001)%period)
-        x=round((-extent+2*extent*tick/(10*fps-1))*sign)
+        x=round((-extent+2*extent*tick/(duration*fps-1))*sign)
         result.append({'asset':key(action+'_'+direction,index),'x':x,'action':action,
                        'width':width,'height':height})
     return result
@@ -234,6 +234,25 @@ def daily_leg(action,direction,clip,*,fps=FPS):
 def daily_schedule(mask,seed,durations,clips):
     # Each checkbox owns one bit. Never substitute a disabled activity for walk.
     travelling=(['walk'] if mask&1 else [])+[a for a,b in (('ride',4),('pet_walk',8)) if mask&b and a in clips]
+    if len(travelling)==3:
+        # Fit EVERY enabled action into the repeating minute. Keep the source
+        # pose clock unchanged; only travel duration changes for wide scenes.
+        # Otherwise one selected activity could be absent for an entire session.
+        extent=min((STAGE_WIDTH-(112 if a=='pet_walk' else 86))//2-2 for a in clips)
+        frames=[];legs=[];start=0
+        ordered=travelling[seed:]+travelling[:seed]
+        for action in ordered+(['roll'] if mask&2 else []):
+            duration=5 if action=='roll' else 7 if action in clips and mask&2 else 10
+            for direction in ('right','left'):
+                part=(daily_leg(action,direction,clips[action],duration=duration) if action in clips
+                      else movement_leg(action,direction,durations))
+                own_extent=max(abs(f['x']) for f in part)
+                for frame in part:frame['x']=round(frame['x']*extent/own_extent)
+                frames+=part
+                legs.append({'action':action,'direction':direction,'start':start,'duration':duration})
+                start+=duration
+        if start<60:frames+=idle_frames((60-start)*1000,-extent,durations)
+        return [frames[i*5*FPS]['action'] for i in range(12)],frames,legs
     blocks=['idle','idle']
     if travelling:blocks.append(travelling[seed%len(travelling)])
     if mask&2:blocks.append('roll')

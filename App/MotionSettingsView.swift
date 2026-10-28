@@ -48,7 +48,7 @@ struct MotionSettingsView: View {
                     Toggle(item.title + " · 来回活动", isOn: binding(item.id == "ride" ? \.ride : \.petWalk))
                         .accessibilityIdentifier("dailyMotionToggle_\(item.id)")
                 }
-                Text("每个动作独立开关，关闭走路不会关闭御剑、骑鲸或遛狗。全部关闭时只待机；走动约 10 秒一个方向，打滚约 5 秒一个方向。")
+                Text("每个动作独立开关，关闭走路不会关闭御剑、骑鲸或遛狗。全部关闭时只待机；每轮会安排所有已选动作。走动约 7～10 秒一个方向，打滚约 5 秒一个方向。")
                     .font(.caption).foregroundStyle(.secondary).lineSpacing(4)
             }.disabled(store.busy).worldCard()
             Text("设置仅应用于\(character.name)；她正在陪伴时立即生效。减弱动态效果或息屏低亮度时，岛上显示静态人物。")

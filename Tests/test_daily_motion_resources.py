@@ -43,6 +43,8 @@ class DailyMotionTests(unittest.TestCase):
                             selected.add(f['action'])
                     for action,bit in (('walk',1),('roll',2),('ride',4),('pet_walk',8)):
                         if not mask&bit:self.assertTrue(all(f['action']!=action for f in frames))
+                        elif action in ('walk','roll') or action in clips:
+                            self.assertTrue(any(f['action']==action for f in frames), (character,mask,seed,action))
             self.assertEqual(selected,set(clips))
 
     def test_sixty_fps_dog_preview_visits_every_source_pose_in_order(self):
