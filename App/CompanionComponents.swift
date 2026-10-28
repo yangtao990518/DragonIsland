@@ -162,6 +162,7 @@ struct CharacterResidentCard: View {
     let character: CompanionCharacter
     let selected: Bool
     let active: Bool
+    var artworkHeight: CGFloat = 302
     let open: () -> Void
     let select: () -> Void
 
@@ -173,7 +174,7 @@ struct CharacterResidentCard: View {
                 LinearGradient(colors: [AppPalette.accent.opacity(0.12), .clear],
                                startPoint: .topLeading, endPoint: .bottomTrailing)
                 Image(character.heroAsset).resizable().scaledToFit()
-                    .frame(maxWidth: .infinity).frame(height: 285).padding(.top, 12)
+                    .frame(maxWidth: .infinity).frame(height: artworkHeight - 17).padding(.top, 12)
                 VStack(spacing: 5) {
                     DragonPortrait(character: character, size: 48)
                     Text("岛上形象").font(.system(size: 9)).foregroundStyle(Color.primary.opacity(0.5))
@@ -181,7 +182,7 @@ struct CharacterResidentCard: View {
                 .padding(12).background(AppPalette.background.opacity(0.8), in: RoundedRectangle(cornerRadius: 17))
                 .padding(13)
             }
-            .frame(height: 302).clipShape(RoundedRectangle(cornerRadius: 20))
+            .frame(height: artworkHeight).clipShape(RoundedRectangle(cornerRadius: 20))
             HStack {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 8) {

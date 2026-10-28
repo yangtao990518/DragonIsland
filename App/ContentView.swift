@@ -225,7 +225,15 @@ struct ContentView: View {
     private var charactersPage: some View {
         WorldPage {
             HStack {
-                PageHeading(eyebrow: "RESIDENTS", title: "住进你的世界", subtitle: "小小的身影，也有完整的模样。")
+                if characterBrowsingMode == "cards" {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("角色").font(.system(size: 27, weight: .bold, design: .rounded))
+                        Text("左右滑动，认识你的岛上伙伴。")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                } else {
+                    PageHeading(eyebrow: "RESIDENTS", title: "住进你的世界", subtitle: "小小的身影，也有完整的模样。")
+                }
                 Spacer(minLength: 4)
                 AppearanceToggle()
             }
@@ -240,7 +248,7 @@ struct ContentView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(height: 565)
+                .frame(height: 470)
                 .accessibilityIdentifier("characterCardPager")
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -290,6 +298,7 @@ struct ContentView: View {
         CharacterResidentCard(character: character,
                               selected: store.selectedCharacter.id == character.id,
                               active: store.session != nil,
+                              artworkHeight: characterBrowsingMode == "cards" ? 210 : 302,
                               open: { detailCharacter = character }) { store.select(character) }
     }
 
