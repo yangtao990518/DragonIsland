@@ -14,7 +14,7 @@ class VideoComparisonTests(unittest.TestCase):
         report = json.loads(path.with_suffix('.json').read_text(encoding='utf-8'))
         self.assertEqual(hashlib.sha256(data).hexdigest(), report['sha256'])
         self.assertEqual(len(data), report['bytes'])
-        self.assertEqual(hashlib.sha256((ROOT / 'Art/DailyMotions/manifest.json').read_bytes()).hexdigest(), report['sourceSHA256'])
+        self.assertEqual(hashlib.sha256(json.dumps(json.loads((ROOT / 'Art/DailyMotions/manifest.json').read_text(encoding='utf-8')), sort_keys=True, separators=(',', ':')).encode()).hexdigest(), report['sourceSHA256'])
         self.assertEqual((report['fps'], report['durationSeconds'], report['frames']), (60, 20, 1200))
         self.assertEqual(report['size'], [900, 480])
         self.assertTrue(report['appOnly'])

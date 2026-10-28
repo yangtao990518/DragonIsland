@@ -11,7 +11,8 @@
   "audio": false,
   "appOnly": true,
   "source": "Art/DailyMotions/manifest.json#dafeiyu-dog",
-  "sourceSHA256": "c360fbc83787035119e28a814f6f46cc0049c0776892cb21bcf62fea2f27e432",
+  "sourceSHA256": "cc7894b6a66625d7d9d30a7fd561b77a01787629c867f2c25ae9cbc65ab2dadb",
   "sha256": "d24b27770f9e7e62075a39df84761e1a0b3db41536e03988d76a1b190206f7da",
-  "bytes": 3275521
+  "bytes": 3275521,
+  "sourceHashFormat": "canonical-json-v1"
 }

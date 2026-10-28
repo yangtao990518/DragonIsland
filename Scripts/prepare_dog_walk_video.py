@@ -35,7 +35,8 @@ def encode(ffmpeg, output):
     report = {'fps': 60, 'durationSeconds': 20, 'frames': len(frames), 'size': [900, 480],
               'codec': 'H.264', 'background': 'black', 'audio': False, 'appOnly': True,
               'source': 'Art/DailyMotions/manifest.json#dafeiyu-dog',
-              'sourceSHA256': hashlib.sha256((ROOT / 'Art/DailyMotions/manifest.json').read_bytes()).hexdigest(),
+              'sourceHashFormat': 'canonical-json-v1',
+              'sourceSHA256': hashlib.sha256(json.dumps(json.loads((ROOT / 'Art/DailyMotions/manifest.json').read_text(encoding='utf-8')), sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
               'sha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'bytes': output.stat().st_size}
     output.with_suffix('.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report))
