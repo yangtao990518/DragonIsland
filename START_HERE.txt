@@ -1,9 +1,11 @@
 mAIverse · 我的 AI 小世界
 
-2026-10-27 最新接续入口：docs/HANDOFF_2026-10-27.md。
+2026-10-28 最新入口：docs/RELEASE_BUILD15.md。
 当前开发分支 codex/character-chat，已加入聊天、大肥鱼和正常人物版头像。
-完整动作资料与最新预览在 AnimationDrafts/2026-10-27/，运行 restore.py 恢复原 output/ 目录。
-第一批御剑/骑鲸眨眼修正版已确认；第二批步态未通过，有穿模、腿抖、接缝和步幅问题。先保存交接，尚未接入新动作，不生成 IPA。
+主 App 与 Widget 为 V1.8 build 15，新增已确认的小白御剑、大肥鱼骑鲸及遛狗。
+小白遛龙已取消；正式资源在 Art/DailyMotions/，构建不再依赖恢复 ZIP 或 output/。
+用户已明确批准删除旧恢复归档、失败走路试稿和重复视频，旧交接里的恢复路径不再适用。
+提交将触发 Actions → Package current unsigned IPA；编译结果与下载以该次运行实际状态为准。
 下面保留早期 V1.8 安装说明，旧盘符、仓库可见性与功能范围不代表今天最新状态。
 
 当前工作区已上传到私有仓库 https://github.com/yangtao990518/DragonIsland 并完成首次 Xcode 云端编译。

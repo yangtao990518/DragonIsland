@@ -2,6 +2,11 @@ name: Package current unsigned IPA
 
 "on":
   workflow_dispatch:
+  push:
+    branches: [codex/character-chat]
+    paths:
+      - '.github/workflows/package-ios.yml'
+      - 'Art/DailyMotions/**'
 
 permissions:
   contents: read
@@ -24,7 +29,11 @@ jobs:
           echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
       - name: Compile app and Widget, verify IPA resources
         id: build
-        run: bash Scripts/build_unsigned.sh
+        run: |
+          swift test
+          python3 Scripts/prepare_assets.py
+          python3 -m unittest discover -s Tests -p 'test_*.py' -v
+          bash Scripts/build_unsigned.sh
       - name: Record package validation scope
         run: |
           python3 - <<'PY'
@@ -35,7 +44,7 @@ jobs:
                   f'源码：{os.environ["GITHUB_SHA"]}\n'
                   f'构建：https://github.com/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n')
           Path('output/BUILD_STATUS.md').write_text(note, encoding='utf-8')
-          changes = Path('docs/RELEASE_V1.8.md').read_text(encoding='utf-8').split('当前为候选版本')[0]
+          changes = Path('docs/RELEASE_BUILD15.md').read_text(encoding='utf-8')
           Path('output/CHANGELOG.md').write_text(changes + note, encoding='utf-8')
           PY
       - uses: actions/upload-artifact@v7

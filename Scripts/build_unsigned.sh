@@ -39,6 +39,9 @@ cp docs/TEST_GUIDE.md output/TEST_GUIDE.md
 if [[ -f "docs/RELEASE_V${VERSION}.md" ]]; then
   cp "docs/RELEASE_V${VERSION}.md" output/CHANGELOG.md
 fi
+if [[ -f docs/RELEASE_BUILD15.md ]]; then
+  cp docs/RELEASE_BUILD15.md output/CHANGELOG.md
+fi
 shasum -a 256 "output/$IPA_NAME" > output/SHA256SUMS.txt
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"

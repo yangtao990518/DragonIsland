@@ -30,7 +30,8 @@
       "fontPrefix": "mAIverseDafeiyu",
       "assetPrefix": "MotionDafeiyu",
       "timelineResource": "MotionTimelineDafeiyu",
-      "greetingFrames": ["MotionDafeiyu_idle_005", "MotionDafeiyu_idle_001", "MotionDafeiyu_idle_002", "MotionDafeiyu_idle_007"]
+      "greetingFrames": ["MotionDafeiyu_idle_005", "MotionDafeiyu_idle_001", "MotionDafeiyu_idle_002", "MotionDafeiyu_idle_007"],
+      "dailyActions": [{"id": "ride", "title": "骑鲸"}, {"id": "pet_walk", "title": "遛狗"}]
     }
   }
 ]

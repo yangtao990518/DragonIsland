@@ -18,6 +18,8 @@ struct MotionFrame: Decodable {
     let asset: String
     let x: Int
     let action: String
+    var width: Int? = nil
+    var height: Int? = nil
 }
 
 struct MotionTimeline: Decodable {
@@ -27,6 +29,8 @@ struct MotionTimeline: Decodable {
     let period: Int
     let plans: [Plan]
     let previews: [String: [MotionFrame]]?
+    let appPreviews: [String: [MotionFrame]]?
+    let previewFPS: Int?
     let durations: [String: [Int]]?
     let stagePixels: [Int]?
     let travelPixels: Int?
@@ -55,6 +59,9 @@ struct MotionTimeline: Decodable {
         return value.frames[max(0, Int(elapsed * Double(fps))) % value.frames.count]
     }
     func preview(action: String, elapsed: TimeInterval) -> MotionFrame? {
+        if let frames = appPreviews?[action], !frames.isEmpty {
+            return frames[max(0, Int(elapsed * Double(previewFPS ?? fps))) % frames.count]
+        }
         guard let frames = previews?[action], !frames.isEmpty else { return nil }
         return frames[max(0, Int(elapsed * Double(fps))) % frames.count]
     }

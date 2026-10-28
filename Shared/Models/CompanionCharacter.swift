@@ -27,15 +27,21 @@ struct CompanionCharacter: Codable, Hashable, Identifiable, Sendable {
 }
 
 struct CharacterMotionProfile: Codable, Hashable, Sendable {
+    struct DailyAction: Codable, Hashable, Identifiable, Sendable {
+        let id: String
+        let title: String
+    }
     let manifest: String
     let fontPrefix: String
     let assetPrefix: String
     let timelineResource: String
     var greetingFrames: [String]? = nil
+    var dailyActions: [DailyAction]? = nil
 
     static let xiaobai = CharacterMotionProfile(manifest: "Art/MotionV4/manifest.json",
         fontPrefix: "mAIverse", assetPrefix: "Motion", timelineResource: "MotionTimeline",
-        greetingFrames: ["Motion_idle_004", "Motion_idle_005", "Motion_idle_006", "Motion_idle_000"])
+        greetingFrames: ["Motion_idle_004", "Motion_idle_005", "Motion_idle_006", "Motion_idle_000"],
+        dailyActions: [DailyAction(id: "ride", title: "御剑")])
 }
 
 enum CharacterCatalog {

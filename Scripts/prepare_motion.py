@@ -186,9 +186,73 @@ def render_frame(artwork,frame,*,opaque=True,scene='black'):
     # older pixels, including where a previous leg/tail used to be. This matte
     # is only for island fonts; app imagesets retain their original alpha.
     canvas=scene_image(scene) if opaque else Image.new('RGBA',(STAGE_WIDTH,GLYPH_PIXELS))
-    image=artwork[frame['asset']].resize((72,90),Image.Resampling.LANCZOS)
-    canvas.alpha_composite(image,((STAGE_WIDTH-72)//2+frame['x'],3))
+    width,height=frame.get('width',72),frame.get('height',90)
+    image=artwork[frame['asset']].resize((width,height),Image.Resampling.LANCZOS)
+    canvas.alpha_composite(image,((STAGE_WIDTH-width)//2+frame['x'],GLYPH_PIXELS-height-3))
     return canvas
+
+
+def load_daily_art(character_id):
+    """Read compact, accepted source atlases. No draft files are needed to build."""
+    from PIL import ImageOps
+    manifest_path=ROOT/'Art/DailyMotions/manifest.json'
+    if not manifest_path.exists():return {}
+    clips=json.loads(manifest_path.read_text(encoding='utf-8'))['clips']
+    result={}
+    for clip in clips.values():
+        if clip['characterID']!=character_id:continue
+        cells=[];w,h=clip['cellSize']
+        for relative in clip['atlases']:
+            with Image.open(manifest_path.parent/relative) as sheet:
+                cells += [sheet.crop((x,0,x+w,h)).convert('RGBA') for x in range(0,sheet.width,w)]
+        assert len(cells)==clip['uniqueFrames']
+        images=[cells[i] for i in clip['order']]
+        result[clip['action']]={'right':images,'left':[ImageOps.mirror(im) for im in images],
+                                'durations':clip['durationsMs']}
+    return result
+
+
+def daily_leg(action,direction,clip,*,fps=FPS):
+    """Travel while preserving clip timing and aspect ratio; fit at both edges."""
+    width,height=(112,78) if action=='pet_walk' else (86,86)
+    extent=(STAGE_WIDTH-width)//2-2
+    sign=1 if direction=='right' else -1
+    durations=clip['durations'];period=sum(durations)
+    entries=[(d,action+'_'+direction,i) for i,d in enumerate(durations)]
+    result=[]
+    for tick in range(10*fps):
+        ms=tick*1000/fps
+        # A repeating 1000/60 duration accumulates binary float error. Bias
+        # exact boundaries by a microsecond, avoiding duplicate/skipped poses.
+        _,index=sample(entries,(ms%period+0.000001)%period)
+        x=round((-extent+2*extent*tick/(10*fps-1))*sign)
+        result.append({'asset':key(action+'_'+direction,index),'x':x,'action':action,
+                       'width':width,'height':height})
+    return result
+
+
+def daily_schedule(mask,seed,durations,clips):
+    slots,frames=schedule(mask,seed,durations)
+    legs=plan_legs(mask,seed)
+    extent=min([WALK_EXTENT]+[(STAGE_WIDTH-(112 if a=='pet_walk' else 86))//2-2 for a in clips])
+    for frame in frames:frame['x']=round(frame['x']*extent/WALK_EXTENT)
+    choices=['walk']+list(clips)
+    walk_index=seed+1
+    # Walk settings also control these travelling daily activities. Full round
+    # trips stay intact, while roll/idle and all eight timer banks remain valid.
+    for i in range(0,len(legs),2):
+        outward,back=legs[i:i+2]
+        if outward['action']!='walk':continue
+        selected=choices[walk_index%len(choices)];walk_index+=1
+        if selected=='walk':continue
+        for leg in (outward,back):
+            start=leg['start']*FPS
+            replacement=daily_leg(selected,leg['direction'],clips[selected])
+            own_extent=max(abs(f['x']) for f in replacement)
+            for frame in replacement:frame['x']=round(frame['x']*extent/own_extent)
+            frames[start:start+len(replacement)]=replacement
+            leg['action']=selected
+    return slots,frames,legs
 
 
 def base_font(name,glyph_order):
@@ -250,6 +314,14 @@ def compile_character(profile):
             image=Image.open((art/path).resolve()).convert('RGBA')
             artwork[key(action,i)]=image
             imageset(SHARED,key(action,i).replace('Motion_',profile['assetPrefix']+'_',1),image,(64,80))
+    daily=load_daily_art(profile['characterID'])
+    for action,clip in daily.items():
+        for direction in ('right','left'):
+            for i,image in enumerate(clip[direction]):
+                name=key(action+'_'+direction,i)
+                artwork[name]=image
+                size=(112,78) if action=='pet_walk' else (86,86)
+                imageset(SHARED,name.replace('Motion_',profile['assetPrefix']+'_',1),image,size)
     # A fixed palette per scene keeps its grass/sky identical across frames;
     # per-frame adaptive palettes would make the background shimmer.
     palettes={}
@@ -276,8 +348,8 @@ def compile_character(profile):
     for mask in range(4):
         for seed in range(SEEDS):
             bank=mask*SEEDS+seed
-            chosen,frames=schedule(mask,seed,durations)
-            plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames,'legs':plan_legs(mask,seed)})
+            chosen,frames,legs=daily_schedule(mask,seed,durations,daily)
+            plans.append({'id':bank,'mask':mask,'slots':chosen,'frames':frames,'legs':legs})
     unique=set()
     for scene,prefix in scenes.items():
       for phase in range(PHASES):
@@ -304,10 +376,16 @@ def compile_character(profile):
     checks=[{'fontPrefix':scenes[scene],'scene':scene,'bank':b,'phase':p,'second':s,'glyph':font.getGlyphID(glyph_name(b,s))}
             for scene in SCENES for b in range(8) for p in (0,1,15,29,30,58,59) for s in (15,55)]
 
-    data={'fps':FPS,'period':PERIOD,'plans':plans,'previews':preview_frames(durations),'durations':durations,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2}
+    previews=preview_frames(durations)
+    app_previews={}
+    for action,clip in daily.items():
+        previews[action]=daily_leg(action,'right',clip)+daily_leg(action,'left',clip)
+        app_previews[action]=daily_leg(action,'right',clip,fps=60)+daily_leg(action,'left',clip,fps=60)
+    auto_extent=min([WALK_EXTENT]+[(STAGE_WIDTH-(112 if a=='pet_walk' else 86))//2-2 for a in daily])
+    data={'fps':FPS,'previewFPS':60,'period':PERIOD,'plans':plans,'previews':previews,'appPreviews':app_previews,'durations':durations,'scenes':list(SCENES),'stagePixels':[STAGE_WIDTH,GLYPH_PIXELS],'travelPixels':WALK_EXTENT*2,'automaticTravelPixels':auto_extent*2}
     # Runtime timelines and asset names are isolated per character. Movement
     # geometry/timer banks stay identical; expressions may have their own holds.
-    for frames in [p['frames'] for p in data['plans']]+list(data['previews'].values()):
+    for frames in [p['frames'] for p in data['plans']]+list(data['previews'].values())+list(app_previews.values()):
         for frame in frames:
             frame['asset']=frame['asset'].replace('Motion_',profile['assetPrefix']+'_',1)
     (ROOT/'Shared/Resources'/f"{profile['timelineResource']}.json").write_text(json.dumps(data,separators=(',',':'))+'\n',encoding='utf-8')
@@ -322,7 +400,7 @@ def main():
         profile=character.get('motion')
         if profile is None and character['id']=='xiaobai':
             profile={'manifest':'Art/MotionV4/manifest.json','fontPrefix':'mAIverse','assetPrefix':'Motion','timelineResource':'MotionTimeline'}
-        if profile:profiles.append(profile)
+        if profile:profiles.append(dict(profile,characterID=character['id']))
     for field in ('fontPrefix','assetPrefix','timelineResource'):
         if len({p[field] for p in profiles})!=len(profiles):raise ValueError('Duplicate motion namespace')
     OUTPUT.mkdir(parents=True,exist_ok=True)

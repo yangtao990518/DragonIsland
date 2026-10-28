@@ -12,6 +12,7 @@ ENCODER = os.environ.get('DRAGON_VIDEO_ENCODER', 'libx264')
 
 def ffmpeg():
     candidates = [os.environ.get('DRAGON_FFMPEG'), shutil.which('ffmpeg'),
+                  WORKSPACE / 'tools/python-animation/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe',
                   WORKSPACE / 'tools/ffmpeg/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe']
     for candidate in candidates:
         if candidate and Path(candidate).is_file():

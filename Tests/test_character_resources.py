@@ -59,7 +59,7 @@ class CharacterResourcesTests(unittest.TestCase):
                 self.assertTrue(all(f['asset'].startswith(prefix) for f in plan['frames']))
                 for leg in plan['legs']:
                     frames=plan['frames'][leg['start']*30:(leg['start']+leg['duration'])*30]
-                    self.assertEqual(max(f['x'] for f in frames)-min(f['x'] for f in frames),100)
+                    self.assertEqual(max(f['x'] for f in frames)-min(f['x'] for f in frames),timeline.get('automaticTravelPixels',100))
             for action in ('walk_right','walk_left','roll'):
                 frames=timeline['previews'][action]
                 self.assertEqual(frames[0]['x'],frames[-1]['x'])
