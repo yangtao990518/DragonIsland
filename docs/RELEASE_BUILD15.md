@@ -26,3 +26,11 @@
 提交前通过 Python 检查，包括角色/声音资源、打包结构测试、动作开关、八组计划闭环、方向镜像、原眨眼时长、全程边界与位置连续性，以及 60 FPS 预览逐帧顺序。已实际编译并核对 361 个不透明动作字体资源。
 
 Windows 本机不能执行 Xcode 编译。提交后由 `Package current unsigned IPA` 工作流执行 Swift 测试、Python 回归、资源生成、CoreText 字体校验及真机架构 App/Widget 编译，成功后上传未签名 IPA。本工作流不等同于模拟器或真机连续播放验收；安装时继续使用本机安装助手，并保留 Widget 扩展。
+
+## 云端构建结果
+
+- 构建源码：`e47b564521c2e64577e9ae0a6d78ef027f507d80`。
+- [GitHub Actions 40645085228](https://github.com/yangtao990518/DragonIsland/actions/runs/40645085228) 全部步骤成功，已生成 `mAIverse-V1.8-unsigned.ipa`，App/Widget 均为 1.8 build 15。
+- 42 项 Swift 测试通过；Python 报告 27 项、无失败、1 项因生成前尚无时间轴而跳过；本机生成后 27 项全部通过。后续资源编译、361 个字体的 PNG/CoreText 检查、真机 arm64 编译及 IPA 结构/声音资源检查成功。
+- 下载 artifact 为 `mAIverse-V1.8-unsigned`，ID `12796819433`，ZIP 大小 274048671 字节（约 274 MB），2026-11-04 到期。SHA256：`ed21e78064ea71a4c92b73140dbcfe374c0339a874b49988997c186c803c4511`。这是下载归档大小，不是清理后约 70.3 MB 的源码体积。运行时正式动画字体及 App/Widget 独立资源仍占安装包空间；没有把试稿/源图集装进 IPA。
+- 此包尚未签名安装或进行本轮真机连续动作验收。使用安装助手选择解压后的 IPA，签名时保留 Widget。
