@@ -58,8 +58,13 @@ final class AIChatInterfaceTests: XCTestCase {
         let toggle = app.switches["characterAIThinking"]
         reveal(toggle, app)
         XCTAssertEqual(toggle.value as? String, "0")
-        toggle.tap()
+        // SwiftUI exposes the whole Form row as a switch; its center is the label.
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.94, dy: 0.5)).tap()
+        expectation(for: NSPredicate(format: "value == %@", "1"), evaluatedWith: toggle)
+        waitForExpectations(timeout: 3)
         app.buttons["saveAISettings"].tap()
+        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.buttons["saveAISettings"])
+        waitForExpectations(timeout: 5)
         app.terminate(); app.launch()
         configure(app, "小白")
         reveal(toggle, app)
