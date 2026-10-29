@@ -123,10 +123,10 @@ final class CompanionStore: ObservableObject {
         state.motionEpoch = state.startedAt
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--preview-island-dances") {
-            // Use the real dance-only timer bank, starting ten seconds before
-            // its first dance. No source clock, frame order or speed changes.
+            // Use the real dance-only bank without skipping its warm-up slots.
+            // A cold simulator may need time to publish its first Widget view.
             state.automaticMotionPlan = 96
-            state.motionEpoch = state.startedAt.addingTimeInterval(-65)
+            state.motionEpoch = state.startedAt
             if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 let epoch = state.motionEpoch!.timeIntervalSince1970
                 let data: [String: Any] = ["startedAt": state.startedAt.timeIntervalSince1970,
