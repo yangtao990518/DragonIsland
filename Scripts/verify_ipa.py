@@ -63,7 +63,7 @@ def verify_current_video_atlases(archive, root):
             if abs(b - a - hold) > .001:
                 raise ValueError('Dance presentation timestamps differ')
         if (len(clip['atlases']) * clip['grid'][0] * clip['grid'][1] < 720
-                or any(f'{root}/VideoActionAtlases/{name}.png' not in names for name in clip['atlases'])):
+                or any(f'{root}/{name}.png' not in names for name in clip['atlases'])):
             raise ValueError('Missing full dance atlas resources')
 
 
