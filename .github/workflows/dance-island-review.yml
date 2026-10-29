@@ -53,7 +53,7 @@ jobs:
             -only-testing:DragonInterfaceTests/DanceIslandInterfaceTests \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/island-build.log
       - name: Record actual SpringBoard compact and expanded island
-        timeout-minutes: 8
+        timeout-minutes: 10
         run: bash Scripts/capture_dance_island.sh
       - name: Keep original system recording, screenshots and evidence
         if: always()
