@@ -59,4 +59,23 @@ final class AIChatInterfaceTests: XCTestCase {
         XCTAssertTrue(app.buttons["exportChatBackup"].isEnabled)
         XCTAssertTrue(app.buttons["importChatBackup"].isEnabled)
     }
+    func testRealProviderWithoutKeyShowsConfigurationErrorAndKeepsMessage() {
+        continueAfterFailure = false
+        let app = XCUIApplication()
+        // Deliberately omit the capture/mock flag. A fresh keychain namespace has no real key.
+        app.launchArguments = ["--preview-chat", "--appearance-light", "--chat-test-store", UUID().uuidString]
+        app.launch()
+        XCTAssertTrue(app.buttons["startDirectChat"].waitForExistence(timeout: 8))
+        app.buttons["startDirectChat"].tap()
+        XCTAssertTrue(app.buttons["chatSelect-xiaobai"].waitForExistence(timeout: 5))
+        app.buttons["chatSelect-xiaobai"].tap(); app.buttons["saveChat"].tap()
+        let input = app.descendants(matching: .any).matching(identifier: "chatInput").firstMatch
+        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        input.tap(); input.typeText("Hello without key"); app.buttons["sendChat"].tap()
+        XCTAssertTrue(app.alerts["聊天"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.alerts.staticTexts["请先在角色详情的「AI 与人格」中配置 DeepSeek 密钥。"].exists)
+        app.alerts.buttons["知道了"].tap()
+        XCTAssertTrue(app.staticTexts["Hello without key"].exists)
+        XCTAssertFalse(app.staticTexts["聊天功能测试中"].exists)
+    }
 }
