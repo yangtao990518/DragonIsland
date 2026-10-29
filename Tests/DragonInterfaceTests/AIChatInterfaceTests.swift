@@ -24,20 +24,32 @@ final class AIChatInterfaceTests: XCTestCase {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
     }
+    private func alignForCapture(_ element: XCUIElement, _ app: XCUIApplication) {
+        reveal(element, app)
+        for _ in 0..<4 {
+            let before = element.frame.minY
+            let delta = min(before - 205, 430)
+            if delta < 50 { return }
+            let from = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.82))
+            let to = from.withOffset(CGVector(dx: 0, dy: -delta))
+            from.press(forDuration: 0.1, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.15)
+            if abs(element.frame.minY - before) < 5 { return }
+        }
+    }
     func testCaptureNewSettingsPages() {
         let app = launch()
         configure(app, "大肥鱼")
         XCTAssertFalse(app.alerts["AI 配置"].exists, app.debugDescription)
         capture(app, "ai-01-api-and-key")
-        reveal(app.switches["characterAIThinking"], app)
+        alignForCapture(app.descendants(matching: .any).matching(identifier: "characterAIModel").firstMatch, app)
         capture(app, "ai-02-model-and-context")
         let background = app.descendants(matching: .any).matching(identifier: "aiBackground").firstMatch
-        reveal(background, app)
+        alignForCapture(background, app)
         capture(app, "ai-03-persona")
         let relationship = app.descendants(matching: .any).matching(identifier: "aiRelationship").firstMatch
-        reveal(relationship, app)
+        alignForCapture(relationship, app)
         capture(app, "ai-04-relationship-and-instructions")
-        reveal(app.switches["aiShareUserInfo"], app)
+        alignForCapture(app.switches["aiShareUserInfo"], app)
         capture(app, "ai-05-my-profile")
     }
     func testPerCharacterThinkingSettingPersistsAndDoesNotChangeOtherRole() {
