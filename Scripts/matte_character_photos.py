@@ -9,25 +9,22 @@ from pymatting import estimate_alpha_cf
 from pymatting.preconditioner import ichol
 
 ROOT=Path(__file__).resolve().parents[1]
-# Reviewed enclosed background holes, keyed to these immutable supplied plates.
-# These are connected white regions, never painted outlines or erased colors.
-HOLES={
- 'sea-breeze.png':[31,67,79,93,96,99,101,104,105,108,112,115,118,120,128,133,137,140,141,145,149,150,169,174,175,194,198,199,207,209,212,213,233,235,237,243,253,262,263,266,273,321,332,421,511,557,583,633,765],
- 'standing.png':[119,166,196,204,201,162,171,199,236],
- 'chibi.png':[129,132,197,201,191],
- 'omelet.png':[128,172,175,187,189,190,191,193,242,250,289,340,323,348,344],
- 'white-dragon.png':[],
-}
+# Reviewed white background anchors; coordinates survive component relabeling.
+SEEDS=json.loads((ROOT/'Art/CharacterPhotos/matting-seeds.json').read_text(encoding='utf-8'))
 
 def extract(path, destination, source_hash):
-    if hashlib.sha256(path.read_bytes()).hexdigest()!=source_hash:
+    seeds=SEEDS[path.relative_to(ROOT).as_posix()]
+    if hashlib.sha256(path.read_bytes()).hexdigest()!=source_hash or seeds['sha256']!=source_hash:
         raise ValueError('Reviewed background seeds do not match the supplied plate: '+str(path))
     rgb=np.array(Image.open(path).convert('RGB'))
     values=rgb.astype(np.int16)
     white=((values.min(2)>=245)&(values.max(2)-values.min(2)<=9)).astype('uint8')
     _,labels=cv2.connectedComponents(white,connectivity=8)
     border=np.unique(np.concatenate((labels[0],labels[-1],labels[:,0],labels[:,-1])))
-    bg=np.isin(labels,list(border[border!=0])+HOLES[path.name]).astype('uint8')
+    enclosed=[int(labels[y,x]) for x,y in seeds['backgroundHoleSeeds']]
+    if any(label==0 for label in enclosed):
+        raise ValueError('Background anchor is not on the reviewed white plate')
+    bg=np.isin(labels,list(border[border!=0])+enclosed).astype('uint8')
     kernel=np.ones((5,5),np.uint8)
     tri=np.full(bg.shape,.5)
     tri[cv2.erode(bg,kernel)>0]=0
