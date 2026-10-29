@@ -25,7 +25,9 @@ APP="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/DragonIsland.app"
 test -d "$APP/PlugIns/DragonIslandWidget.appex"
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Info.plist")"
 [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]] || { echo "Invalid app version: $VERSION" >&2; exit 1; }
-IPA_NAME="mAIverse-V${VERSION}-unsigned.ipa"
+BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP/Info.plist")"
+[[ "$BUILD" =~ ^[0-9]+$ ]] || { echo "Invalid build number: $BUILD" >&2; exit 1; }
+IPA_NAME="mAIverse-V${VERSION}-build${BUILD}-unsigned.ipa"
 IPA_PATH="$ROOT/output/$IPA_NAME"
 PACKAGE_DIR="$(mktemp -d "$ROOT/build/package.XXXXXX")"
 trap 'rm -rf "$PACKAGE_DIR"' EXIT
@@ -39,12 +41,13 @@ cp docs/TEST_GUIDE.md output/TEST_GUIDE.md
 if [[ -f "docs/RELEASE_V${VERSION}.md" ]]; then
   cp "docs/RELEASE_V${VERSION}.md" output/CHANGELOG.md
 fi
-if [[ -f docs/RELEASE_BUILD15.md ]]; then
-  cp docs/RELEASE_BUILD15.md output/CHANGELOG.md
+if [[ -f "docs/RELEASE_BUILD${BUILD}.md" ]]; then
+  cp "docs/RELEASE_BUILD${BUILD}.md" output/CHANGELOG.md
 fi
 shasum -a 256 "output/$IPA_NAME" > output/SHA256SUMS.txt
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+  printf 'build=%s\n' "$BUILD" >> "$GITHUB_OUTPUT"
 fi
 echo "Ready: output/$IPA_NAME (unsigned; must be signed with its widget extension)."
 
