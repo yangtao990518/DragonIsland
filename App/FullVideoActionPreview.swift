@@ -60,6 +60,7 @@ struct FullVideoActionPreview: View {
                                 Image(uiImage: image).resizable().scaledToFit().padding(8)
                             }
                         }.clipShape(RoundedRectangle(cornerRadius: 16))
+                            .accessibilityElement(children: .ignore)
                             .accessibilityIdentifier("fullVideoActionStage")
                             .accessibilityLabel("\(clip.title)完整抽帧预览")
                             .accessibilityValue(reduceMotion && !manuallyPlaying ? "已暂停" : completed ? "播放完成" : "正在播放")

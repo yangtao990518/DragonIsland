@@ -41,11 +41,14 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         for id in ["dance1", "dance2"] {
             let button = app.buttons["dailyMotion_\(id)"]
             XCTAssertTrue(button.waitForExistence(timeout: 10)); reveal(button, in: app); button.tap()
-            app.swipeDown()
             let stage = app.descendants(matching: .any).matching(identifier: "fullVideoActionStage").firstMatch
             XCTAssertTrue(stage.waitForExistence(timeout: 8))
             XCTAssertTrue(app.staticTexts["完整片段 · 12.10 秒"].exists)
             capture(app, "dafeiyu-\(id)-full-source-preview")
+            expectation(for: NSPredicate(format: "value == %@", "播放完成"), evaluatedWith: stage)
+            waitForExpectations(timeout: 16)
+            app.buttons["replayFullVideoAction"].tap()
+            XCTAssertEqual(stage.value as? String, "正在播放")
         }
         let first = app.switches["dailyMotionToggle_dance1"], second = app.switches["dailyMotionToggle_dance2"]
         reveal(first, in: app)
