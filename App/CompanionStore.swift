@@ -122,6 +122,23 @@ final class CompanionStore: ObservableObject {
         state.automaticMotionPlan = settings(for: selectedCharacter).plan(seed: Int.random(in: 0..<2), character: selectedCharacter)
         state.motionEpoch = state.startedAt
         #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--preview-island-dances") {
+            // Use the real dance-only timer bank, starting ten seconds before
+            // its first dance. No source clock, frame order or speed changes.
+            state.automaticMotionPlan = 96
+            state.motionEpoch = state.startedAt.addingTimeInterval(-65)
+            if let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let epoch = state.motionEpoch!.timeIntervalSince1970
+                let data: [String: Any] = ["startedAt": state.startedAt.timeIntervalSince1970,
+                    "motionEpoch": epoch, "plan": 96, "characterID": selectedCharacter.id,
+                    "dance1StartUnix": epoch + 75, "dance2StartUnix": epoch + 88,
+                    "sourceDurationSeconds": 12.096009, "scene": islandScene.rawValue,
+                    "compactPlayback": "native timer font", "expandedPlayback": "existing static standing artwork"]
+                if let json = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted) {
+                    try? json.write(to: documents.appendingPathComponent("dance-island-capture.json"), options: .atomic)
+                }
+            }
+        }
         if ProcessInfo.processInfo.arguments.contains("--preview-live-motion") {
             // Reproducible system-video QA: includes both directions and rolls.
             state.automaticMotionPlan = 6

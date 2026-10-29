@@ -74,6 +74,11 @@ struct ContentView: View {
                 detailCharacter = store.selectedCharacter
             }
             if args.contains("--preview-live-motion") { await store.setMotionSettings(MotionSettings()); await store.start(minutes: 25) }
+            if args.contains("--preview-island-dances") {
+                await store.setMotionSettings(MotionSettings(walk: false, roll: false, ride: false,
+                    petWalk: false, dance1: true, dance2: true))
+                await store.start(minutes: 25)
+            }
             #endif
         }
         .alert("mAIverse", isPresented: Binding(

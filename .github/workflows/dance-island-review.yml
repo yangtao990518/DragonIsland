@@ -1,0 +1,69 @@
+name: Dance system island review (no IPA)
+
+"on":
+  push:
+    branches: [codex/dance-island-review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dance-island-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Prepare the exact candidate artwork and native timer fonts
+        run: |
+          set -euo pipefail
+          mkdir -p build output/island-review
+          swift test 2>&1 | tee build/domain-tests.log
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          .asset-venv/bin/python Scripts/prepare_assets.py
+          .asset-venv/bin/python Scripts/prepare_motion.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_full_video_actions.py -v
+          .asset-venv/bin/python Scripts/verify_motion_resources.py
+          swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
+          xcodegen generate --spec project.yml
+      - name: Boot Dynamic Island iPhone simulator
+        run: |
+          set -euo pipefail
+          DEVICE_ID="$(xcrun simctl list devices available --json | python3 -c 'import json,sys,os; d=json.load(sys.stdin); phones=[v for v in d["devices"].get(os.environ["MAIVERSE_SIM_RUNTIME"],[]) if v.get("isAvailable") and "Pro" in v["name"] and v["name"].startswith("iPhone")]; phones.sort(key=lambda v:v["name"]); print(phones[0]["udid"])')"
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl status_bar "$DEVICE_ID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+      - name: Build actual App and Widget for simulator only
+        run: |
+          set -euo pipefail
+          xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland -configuration Debug \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/IslandReview \
+            -only-testing:DragonInterfaceTests/DanceIslandInterfaceTests \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/island-build.log
+      - name: Record actual SpringBoard compact and expanded island
+        timeout-minutes: 8
+        run: bash Scripts/capture_dance_island.sh
+      - name: Keep original system recording, screenshots and evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dance-system-island-review
+          path: |
+            output/island-review/
+            build/domain-tests.log
+            build/island-build.log
+            build/island-interface.log
+          if-no-files-found: warn
+          retention-days: 7
