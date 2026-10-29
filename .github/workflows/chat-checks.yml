@@ -50,6 +50,19 @@ jobs:
           .asset-venv/bin/python -m unittest discover -s Tests -p test_full_video_actions.py
           .asset-venv/bin/python Scripts/verify_motion_resources.py
           swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
+          python3 - <<'PY'
+          import pathlib, plistlib
+          with open('build/simulator-keychain.entitlements', 'wb') as f:
+              plistlib.dump({'application-identifier': 'MAITEST001.com.dragonisle.prototype.app'}, f)
+          # Xcode embeds simulated entitlements in Mach-O sections. Applying iOS
+          # entitlements with codesign afterwards applies them to the macOS host instead.
+          spec = pathlib.Path('project.yml')
+          text = spec.read_text()
+          anchor = '        PRODUCT_BUNDLE_IDENTIFIER: com.dragonisle.prototype.app\n'
+          assert text.count(anchor) == 1
+          text = text.replace(anchor, anchor + '        "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": build/simulator-keychain.entitlements\n')
+          spec.write_text(text)
+          PY
           xcodegen generate --spec project.yml
       - name: Boot the iOS 26.2 iPhone simulator
         run: |
@@ -66,21 +79,7 @@ jobs:
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
             -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
-      - name: Give the simulator app a local Keychain signing identity
-        run: |
-          set -euo pipefail
-          # Simulator-only ad-hoc identity. No Apple account, certificate or device signing cache.
-          python3 - <<'PY'
-          import plistlib
-          with open('build/simulator-keychain.entitlements', 'wb') as f:
-              plistlib.dump({'application-identifier': 'MAITEST001.com.dragonisle.prototype.app', 'get-task-allow': True}, f)
-          PY
-          APP=build/ChatTests/Build/Products/Debug-iphonesimulator/DragonIsland.app
-          codesign --force --sign - "$APP/PlugIns/DragonIslandWidget.appex"
-          codesign --force --sign - --entitlements build/simulator-keychain.entitlements "$APP"
-          codesign --verify --deep --strict "$APP"
-          codesign --display --entitlements - "$APP"
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
       - name: Run chat interface tests
         run: |
           set -euo pipefail
@@ -95,7 +94,7 @@ jobs:
             -parallel-testing-enabled NO \
             -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
             -maximum-test-execution-time-allowance 180 \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test-without-building 2>&1 | tee build/chat-interface-tests.log
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test-without-building 2>&1 | tee build/chat-interface-tests.log
       - name: Export actual simulator screenshots
         if: always() && !cancelled()
         timeout-minutes: 2
