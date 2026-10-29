@@ -104,6 +104,11 @@ class FullVideoActionTests(unittest.TestCase):
             for a in c['artworks']:
                 self.assertEqual(hashlib.sha256((ROOT/a['source']).read_bytes()).hexdigest(),a['sha256'])
                 self.assertTrue(a['asset'].startswith('WorldPhoto'))
+                display=Image.open(ROOT/a['displaySource']).convert('RGBA')
+                with Image.open(ROOT/a['source']) as original:
+                    self.assertEqual(display.size,original.size)
+                self.assertEqual(display.getchannel('A').getextrema(),(0,255))
+                self.assertLess(sum(display.getchannel('A').getdata())/(255*display.width*display.height),.85)
                 self.assertNotIn(a['asset'],[c['portraitAsset'],c['chibiAsset'],c['heroAsset']])
 
 

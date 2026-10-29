@@ -60,8 +60,7 @@ struct CharacterHero: View {
                     .position(x: geometry.size.width * 0.48, y: 44)
                 Image(artworkAsset ?? character.heroAsset)
                     .resizable().scaledToFit()
-                    .frame(width: geometry.size.width * 0.60, height: 294)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .frame(width: geometry.size.width * (artworkAsset == nil || artworkAsset == character.heroAsset ? 0.60 : 0.55), height: 294)
                     .offset(x: 6, y: shouldAnimate ? (floating ? -4 : 2) : 0)
                     .animation(shouldAnimate ? .easeInOut(duration: 2.8).repeatForever(autoreverses: true) : nil,
                                value: floating)

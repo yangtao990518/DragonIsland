@@ -23,7 +23,8 @@
         "asset": "WorldPhotoXiaobaiWhiteDragon",
         "source": "Art/CharacterPhotos/xiaobai/white-dragon.png",
         "sourceFilename": "白羽龙裔精灵少女.png",
-        "sha256": "942eda513a4366206d2a6060f5b18ca492f92762967d3ad75ca9ff695ac8c06f"
+        "sha256": "942eda513a4366206d2a6060f5b18ca492f92762967d3ad75ca9ff695ac8c06f",
+        "displaySource": "Art/CharacterPhotos/xiaobai/transparent/white-dragon.png"
       }
     ]
   },
@@ -85,7 +86,8 @@
         "asset": "WorldPhotoDafeiyuSeaBreeze",
         "source": "Art/CharacterPhotos/dafeiyu/sea-breeze.png",
         "sourceFilename": "海风中的蓝发海洋女仆.png",
-        "sha256": "00ea05b2efef0b84296cb13fd6f8b724c02b47bb2cde3deb3fb746b5f96b6072"
+        "sha256": "00ea05b2efef0b84296cb13fd6f8b724c02b47bb2cde3deb3fb746b5f96b6072",
+        "displaySource": "Art/CharacterPhotos/dafeiyu/transparent/sea-breeze.png"
       },
       {
         "id": "standing",
@@ -93,7 +95,8 @@
         "asset": "WorldPhotoDafeiyuStanding",
         "source": "Art/CharacterPhotos/dafeiyu/standing.png",
         "sourceFilename": "蓝发鲸尾女仆_全身立绘(少女版).png",
-        "sha256": "c244e45d317bccced4864fad6a32abd596aa06c6fb71edaf148560d8d74f33eb"
+        "sha256": "c244e45d317bccced4864fad6a32abd596aa06c6fb71edaf148560d8d74f33eb",
+        "displaySource": "Art/CharacterPhotos/dafeiyu/transparent/standing.png"
       },
       {
         "id": "chibi",
@@ -101,7 +104,8 @@
         "asset": "WorldPhotoDafeiyuChibi",
         "source": "Art/CharacterPhotos/dafeiyu/chibi.png",
         "sourceFilename": "蓝发鲸尾女仆_可爱Q版.png",
-        "sha256": "0689d2de2ec207c5d4b00c0e20bf3a8ea46b32a2d99b34d3abd9d6dc1d6170a6"
+        "sha256": "0689d2de2ec207c5d4b00c0e20bf3a8ea46b32a2d99b34d3abd9d6dc1d6170a6",
+        "displaySource": "Art/CharacterPhotos/dafeiyu/transparent/chibi.png"
       },
       {
         "id": "omelet",
@@ -109,7 +113,8 @@
         "asset": "WorldPhotoDafeiyuOmelet",
         "source": "Art/CharacterPhotos/dafeiyu/omelet.png",
         "sourceFilename": "蓝发鲸尾女仆幸福享用蛋包饭.png",
-        "sha256": "935ca0693eb73d7f8b3fe736f565df21917769078249ea9cb28b795671df3db3"
+        "sha256": "935ca0693eb73d7f8b3fe736f565df21917769078249ea9cb28b795671df3db3",
+        "displaySource": "Art/CharacterPhotos/dafeiyu/transparent/omelet.png"
       }
     ]
   }

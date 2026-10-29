@@ -71,9 +71,11 @@ def main():
         imageset(APP, character["heroAsset"], standing, (300, 400))
         imageset(APP, character["chibiAsset"] + "Detail", chibi, 400)
         for photo in character.get("artworks", []):
-            # Photos can have their own backgrounds. Fit the entire supplied
-            # image; keep identity avatars and Widget standing art independent.
-            image = Image.open(ROOT / photo["source"]).convert("RGBA")
+            # Display a reviewed transparent cutout; retain immutable originals.
+            image = Image.open(ROOT / photo["displaySource"]).convert("RGBA")
+            if image.getchannel("A").getextrema()[0] == 255:
+                raise ValueError(f"World artwork needs transparency: {photo['id']}")
+            image = image.crop(image.getbbox())
             imageset(APP, photo["asset"], image, (400, 520))
 
     for name in ("GPT", "Claude", "DeepSeek", "Gemini", "Grok"):
