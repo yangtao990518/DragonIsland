@@ -22,7 +22,8 @@ struct AIChatCredentials: AISecretSource {
         var result: CFTypeRef?
         let status = SecItemCopyMatching(lookup as CFDictionary, &result)
         if status == errSecItemNotFound { return nil }
-        guard status == errSecSuccess, let data = result as? Data, let key = String(data: data, encoding: .utf8) else { throw CredentialError.unavailable }
+        guard status == errSecSuccess else { throw CredentialError.system(status) }
+        guard let data = result as? Data, let key = String(data: data, encoding: .utf8) else { throw CredentialError.unavailable }
         return key
     }
     func save(_ key: String) throws {
@@ -32,15 +33,23 @@ struct AIChatCredentials: AISecretSource {
         let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
         if status == errSecItemNotFound {
             let insert = query.merging(attributes) { _, new in new }
-            guard SecItemAdd(insert as CFDictionary, nil) == errSecSuccess else { throw CredentialError.unavailable }
-        } else if status != errSecSuccess { throw CredentialError.unavailable }
+            let added = SecItemAdd(insert as CFDictionary, nil)
+            guard added == errSecSuccess else { throw CredentialError.system(added) }
+        } else if status != errSecSuccess { throw CredentialError.system(status) }
     }
     func delete() throws {
         let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else { throw CredentialError.unavailable }
+        guard status == errSecSuccess || status == errSecItemNotFound else { throw CredentialError.system(status) }
     }
     enum CredentialError: LocalizedError {
         case unavailable
-        var errorDescription: String? { "无法访问钥匙串，请解锁手机后重试。" }
+        case system(OSStatus)
+        var errorDescription: String? {
+            switch self {
+            case .system(errSecMissingEntitlement): return "当前安装包没有有效的钥匙串访问身份，请检查 App 签名。"
+            case .system(errSecInteractionNotAllowed): return "无法访问钥匙串，请解锁手机后重试。"
+            default: return "钥匙串暂不可用，请稍后重试。"
+            }
+        }
     }
 }

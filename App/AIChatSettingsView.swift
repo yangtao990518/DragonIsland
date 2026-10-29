@@ -73,6 +73,7 @@ struct AIChatSettingsView: View {
                 TextField("我的昵称", text: $user.nickname).accessibilityIdentifier("aiUserNickname")
                 field("想让角色了解的我", text: $user.information, id: "aiUserInformation")
                 Toggle("向角色提供我的资料", isOn: $user.shareWithCharacters)
+                    .accessibilityIdentifier("aiShareUserInfo")
             } header: { Text("我的资料 · 所有角色共用") } footer: {
                 Text("关闭后，新的请求不再附加此处资料。已经发出的聊天内容不会因此撤回。")
             }

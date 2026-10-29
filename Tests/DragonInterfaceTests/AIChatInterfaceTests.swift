@@ -20,6 +20,26 @@ final class AIChatInterfaceTests: XCTestCase {
         }
         XCTAssertTrue(element.isHittable)
     }
+    private func capture(_ app: XCUIApplication, _ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
+    }
+    func testCaptureNewSettingsPages() {
+        let app = launch()
+        configure(app, "大肥鱼")
+        XCTAssertFalse(app.alerts["AI 配置"].exists, app.debugDescription)
+        capture(app, "ai-01-api-and-key")
+        reveal(app.switches["characterAIThinking"], app)
+        capture(app, "ai-02-model-and-context")
+        let background = app.descendants(matching: .any).matching(identifier: "aiBackground").firstMatch
+        reveal(background, app)
+        capture(app, "ai-03-persona")
+        let relationship = app.descendants(matching: .any).matching(identifier: "aiRelationship").firstMatch
+        reveal(relationship, app)
+        capture(app, "ai-04-relationship-and-instructions")
+        reveal(app.switches["aiShareUserInfo"], app)
+        capture(app, "ai-05-my-profile")
+    }
     func testPerCharacterThinkingSettingPersistsAndDoesNotChangeOtherRole() {
         let app = launch()
         configure(app, "小白")
@@ -58,6 +78,7 @@ final class AIChatInterfaceTests: XCTestCase {
         XCTAssertTrue(app.buttons["exportChatBackup"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["exportChatBackup"].isEnabled)
         XCTAssertTrue(app.buttons["importChatBackup"].isEnabled)
+        capture(app, "ai-06-local-backup")
     }
     func testRealProviderWithoutKeyShowsConfigurationErrorAndKeepsMessage() {
         continueAfterFailure = false

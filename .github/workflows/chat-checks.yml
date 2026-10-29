@@ -67,6 +67,20 @@ jobs:
             -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
+      - name: Give the simulator app a local Keychain signing identity
+        run: |
+          set -euo pipefail
+          # Simulator-only ad-hoc identity. No Apple account, certificate or device signing cache.
+          python3 - <<'PY'
+          import plistlib
+          with open('build/simulator-keychain.entitlements', 'wb') as f:
+              plistlib.dump({'application-identifier': 'MAITEST001.com.dragonisle.prototype.app', 'get-task-allow': True}, f)
+          PY
+          APP=build/ChatTests/Build/Products/Debug-iphonesimulator/DragonIsland.app
+          codesign --force --sign - "$APP/PlugIns/DragonIslandWidget.appex"
+          codesign --force --sign - --entitlements build/simulator-keychain.entitlements "$APP"
+          codesign --verify --deep --strict "$APP"
+          codesign --display --entitlements - "$APP"
       - name: Run chat interface tests
         run: |
           set -euo pipefail
