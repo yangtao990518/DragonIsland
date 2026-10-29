@@ -9,6 +9,64 @@ import wave
 from pathlib import PurePosixPath
 
 
+def verify_current_timelines(archive, root, characters):
+    """Check every character bank, including two-minute indexed dance plans."""
+    for character in characters:
+        profile = character.get('motion', {})
+        resource = profile.get('timelineResource', 'MotionTimeline')
+        data = json.loads(archive.read(f'{root}/{resource}.json'))
+        actions = {a['id'] for a in profile.get('dailyActions', [])}
+        dances = actions & {'dance1', 'dance2'}
+        period, banks = (120, 128) if dances else (60, 32 if 'pet_walk' in actions else 16)
+        if (data['fps'] != 30 or data['period'] != period or len(data['plans']) != banks
+                or data['scenes'] != ['black', 'meadow', 'night']
+                or data['stagePixels'] != [180, 96] or data['travelPixels'] != 100):
+            raise ValueError(f'Incomplete automatic-motion plans: {character["id"]}')
+        if {p['id'] for p in data['plans']} != set(range(banks)):
+            raise ValueError('Missing motion bank')
+        for plan in data['plans']:
+            if 'frameIndices' in plan:
+                table = data.get('frameTable', [])
+                indices = plan['frameIndices']
+                if (len(indices) != period * 30 or not table
+                        or any(type(i) is not int or not 0 <= i < len(table) for i in indices)):
+                    raise ValueError('Invalid indexed motion sequence')
+                frames = [table[i] for i in indices]
+            else:
+                frames = plan['frames']
+            if len(frames) != period * 30:
+                raise ValueError('Incomplete motion sequence')
+            for action, bit in (('dance1', 16), ('dance2', 32)):
+                selected = [f for f in frames if f['action'] == action]
+                enabled = action in dances and bool(plan['mask'] & bit)
+                if bool(selected) != enabled:
+                    raise ValueError('Dance selection differs from motion bank')
+                if enabled and (selected[0]['sourceFrame'] != 0 or selected[-1]['sourceFrame'] != 719
+                                or len(selected) / 30 < 12.096009):
+                    raise ValueError('Dance was shortened in automatic motion plan')
+
+
+def verify_current_video_atlases(archive, root):
+    names = set(archive.namelist())
+    clips = json.loads(archive.read(f'{root}/VideoActions.json'))
+    if {c['action'] for c in clips} != {'dance1', 'dance2'} or len(clips) != 2:
+        raise ValueError('Missing full dance atlas catalog')
+    for clip in clips:
+        starts, holds = clip['frameStartMs'], clip['frameDurationsMs']
+        if (clip['frameCount'] != 720 or len(starts) != 720 or len(holds) != 720
+                or abs(clip['durationMs'] - 12096.009) > .001
+                or abs(sum(holds) - clip['durationMs']) > .001
+                or starts[0] != 0 or any(b <= a for a, b in zip(starts, starts[1:]))
+                or any(hold <= 0 for hold in holds)):
+            raise ValueError('Incomplete original dance timing')
+        for a, b, hold in zip(starts, starts[1:], holds):
+            if abs(b - a - hold) > .001:
+                raise ValueError('Dance presentation timestamps differ')
+        if (len(clip['atlases']) * clip['grid'][0] * clip['grid'][1] < 720
+                or any(f'{root}/VideoActionAtlases/{name}.png' not in names for name in clip['atlases'])):
+            raise ValueError('Missing full dance atlas resources')
+
+
 def verify_voices(archive, app_root, app):
     if not app.get('NSAlarmKitUsageDescription'):
         raise ValueError('Missing AlarmKit permission usage description')
@@ -72,7 +130,10 @@ def verify(path):
                 expected_fonts=1+180*sum(c['id']=='xiaobai' or bool(c.get('motion')) for c in characters) if scenes_version else 61 if required_fps==30 else 129
                 if len(fonts)!=expected_fonts or any(f'{root}/{font}' not in names for font in fonts):
                     raise ValueError(f'Missing registered system-timer motion fonts in {root}')
-                if fps!=required_fps or period!=60 or len(data['plans'])!=8 or any(len(p['frames'])!=fps*period for p in data['plans']):
+                current = tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,8) and int(app['CFBundleVersion']) >= 16
+                if current:
+                    verify_current_timelines(archive, root, characters)
+                elif fps!=required_fps or period!=60 or len(data['plans'])!=8 or any(len(p['frames'])!=fps*period for p in data['plans']):
                     raise ValueError(f'Incomplete automatic-motion plans in {root}')
                 if scenes_version and (data.get('scenes')!=['black','meadow','night'] or data.get('stagePixels')!=[180,96] or data.get('travelPixels')!=100):
                     raise ValueError(f'Missing scenery or full-width walking resources in {root}')
@@ -81,6 +142,8 @@ def verify(path):
                 raise ValueError(f"App and widget version differ: {key}")
         if tuple(map(int, app['CFBundleShortVersionString'].split('.'))) >= (1, 8):
             verify_voices(archive, app_root, app)
+            if int(app['CFBundleVersion']) >= 16:
+                verify_current_video_atlases(archive, app_root)
         print("IPA structure verified: main app, embedded WidgetKit extension, binaries, assets, versions.")
         print("Signing and physical-device behavior are NOT verified by this check.")
 
