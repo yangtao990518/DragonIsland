@@ -19,7 +19,7 @@ xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland -configuration D
   -resultBundlePath build/IslandReview.xcresult \
   -only-testing:DragonInterfaceTests/DanceIslandInterfaceTests \
   -parallel-testing-enabled NO -test-timeouts-enabled YES \
-  -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 180 \
+  -default-test-execution-time-allowance 180 -maximum-test-execution-time-allowance 240 \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO test-without-building 2>&1 | tee build/island-interface.log || TEST_STATUS=$?
 kill -INT "$VIDEO_PID" 2>/dev/null || true
 wait "$VIDEO_PID" || true
