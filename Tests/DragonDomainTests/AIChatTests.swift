@@ -104,6 +104,15 @@ final class AIChatTests: XCTestCase {
         try s.line("data: [DONE]")
         XCTAssertEqual(try s.finish(), "你好🐳")
     }
+    func testByteLinesPreserveEmptyEventBoundariesCRLFAndUnicode() throws {
+        var decoder = SSELines()
+        var lines: [String] = []
+        for byte in Data("data: 你好🐳\r\n\r\ndata: next\n\ndata: last\r\rTAIL".utf8) {
+            if let line = try decoder.byte(byte) { lines.append(line) }
+        }
+        if let tail = try decoder.finish() { lines.append(tail) }
+        XCTAssertEqual(lines, ["data: 你好🐳", "", "data: next", "", "data: last", "", "TAIL"])
+    }
     func testSSERejectsMissingDoneLengthAndServiceErrorsWithoutExposingBody() throws {
         var s = DeepSeekStream()
         try s.line("data: {\"choices\":[{\"delta\":{\"content\":\"部分\"},\"finish_reason\":\"stop\"}]}"); try s.line("")

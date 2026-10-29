@@ -15,6 +15,33 @@ struct DeepSeekModel: Decodable, Equatable, Identifiable, Sendable {
     static let defaults = [Self(id: "deepseek-flash", name: "DeepSeek Flash"), Self(id: "deepseek-v4-pro", name: "DeepSeek V4 Pro")]
 }
 
+/// AsyncBytes.lines can omit empty lines. SSE needs those lines as event boundaries.
+struct SSELines {
+    private var buffer: [UInt8] = []
+    private var previousCR = false
+    mutating func byte(_ value: UInt8) throws -> String? {
+        if previousCR {
+            previousCR = false
+            if value == 10 { return nil }
+        }
+        if value == 10 || value == 13 {
+            previousCR = value == 13
+            guard let line = String(bytes: buffer, encoding: .utf8) else { throw AIChatError.invalidResponse }
+            buffer.removeAll(keepingCapacity: true)
+            return line
+        }
+        guard buffer.count < 1_048_576 else { throw AIChatError.invalidResponse }
+        buffer.append(value)
+        return nil
+    }
+    mutating func finish() throws -> String? {
+        guard !buffer.isEmpty else { return nil }
+        guard let line = String(bytes: buffer, encoding: .utf8) else { throw AIChatError.invalidResponse }
+        buffer.removeAll(keepingCapacity: true)
+        return line
+    }
+}
+
 /// Only the public answer is accumulated; reasoning_content never enters history or backups.
 struct DeepSeekStream {
     private var eventLines: [String] = []
@@ -155,17 +182,20 @@ struct DeepSeekChatClient: @unchecked Sendable {
             try check(response)
             guard (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "Content-Type")?.lowercased().contains("text/event-stream") == true else { throw AIChatError.invalidResponse }
             var stream = DeepSeekStream()
+            var lines = SSELines()
             var lastPublished = ""
             var lastTime = Date.distantPast
             do {
-                for try await line in bytes.lines {
+                for try await byte in bytes {
                     try Task.checkCancellation()
+                    guard let line = try lines.byte(byte) else { continue }
                     try stream.line(line)
                     if stream.text != lastPublished, Date().timeIntervalSince(lastTime) >= 0.06 {
                         await onPartial(stream.text); lastPublished = stream.text; lastTime = .now
                     }
                     if stream.done { break }
                 }
+                if let tail = try lines.finish() { try stream.line(tail) }
                 let answer = try stream.finish()
                 await onPartial(answer)
                 return answer
