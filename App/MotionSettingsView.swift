@@ -35,7 +35,7 @@ struct MotionSettingsView: View {
                     Text("视频测试版仅在 App 内播放，与遛狗抽帧版使用同一份已确认动画、同样速度和尺寸。为方便直接比较，两者都在黑色背景上显示。")
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                Text(previewAction == "pet_walk_video" ? "视频预览 · 不参与岛上自动动作" : "动作预览 · 轻点小人物和她打招呼")
+                Text(previewAction.hasPrefix("dance") ? "完整片段预览 · 播放结束后可重播" : previewAction == "pet_walk_video" ? "视频预览 · 不参与岛上自动动作" : "动作预览 · 轻点小人物和她打招呼")
                     .font(.caption).foregroundStyle(.secondary)
             }.worldCard()
             VStack(alignment: .leading, spacing: 17) {
