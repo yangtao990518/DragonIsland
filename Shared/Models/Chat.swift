@@ -12,6 +12,7 @@ struct ChatMessage: Codable, Equatable, Identifiable, Sendable {
     let replyToID: UUID?
     let replyCharacterIDs: [String]
     var delivery: ChatDelivery
+    var interrupted: Bool? = nil
 
     var isUser: Bool { characterID == nil }
 
@@ -44,7 +45,7 @@ struct ChatConversation: Codable, Equatable, Identifiable, Sendable {
     }
 
     func missingReplies(to message: ChatMessage) -> [String] {
-        let replied = Set(messages.filter { $0.replyToID == message.id }.compactMap(\.characterID))
+        let replied = Set(messages.filter { $0.replyToID == message.id && $0.interrupted != true }.compactMap(\.characterID))
         return message.replyCharacterIDs.filter { !replied.contains($0) }
     }
 }
@@ -73,6 +74,7 @@ enum ChatError: LocalizedError {
 struct ChatHistory: Codable, Equatable, Sendable {
     var version = 1
     var conversations: [ChatConversation] = []
+    var configuration: AIChatPreferences? = nil
 
     mutating func create(kind: ChatKind, name: String, characterIDs: [String],
                          availableIDs: Set<String>, now: Date = .now) throws -> UUID {
@@ -131,6 +133,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
     }
 
     func validate() throws {
+        try configuration?.validate()
         guard version == 1, Set(conversations.map(\.id)).count == conversations.count else { throw ChatError.invalidHistory }
         for conversation in conversations {
             let ids = conversation.characterIDs
@@ -177,10 +180,19 @@ struct ChatReplyRequest: Sendable {
     let character: CompanionCharacter
     let userMessage: ChatMessage
     let history: [ChatMessage]
+    var profile: AICharacterProfile? = nil
+    var userProfile: AIUserProfile? = nil
 }
 
 protocol ChatReplyProvider: Sendable {
     func reply(to request: ChatReplyRequest) async throws -> String
+    func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String
+}
+
+extension ChatReplyProvider {
+    func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String {
+        try await reply(to: request)
+    }
 }
 
 struct TestChatReplyProvider: ChatReplyProvider {
@@ -220,5 +232,14 @@ struct ChatHistoryFile {
         try history.validate()
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(history).write(to: url, options: .atomic)
+        var directory = url.deletingLastPathComponent()
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try directory.setResourceValues(values)
+        var saved = url
+        try saved.setResourceValues(values)
+        #if os(iOS)
+        try FileManager.default.setAttributes([.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication], ofItemAtPath: url.path)
+        #endif
     }
 }

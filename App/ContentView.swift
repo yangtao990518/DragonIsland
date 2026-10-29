@@ -30,7 +30,15 @@ struct ContentView: View {
     init(store: CompanionStore) {
         self.store = store
         self.alarms = store.alarms
-        _chatStore = StateObject(wrappedValue: ChatStore(characters: store.characters))
+        let provider: any ChatReplyProvider
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--maiverse-capture") {
+            provider = TestChatReplyProvider()
+        } else { provider = DeepSeekChatReplyProvider(secrets: AIChatCredentials()) }
+        #else
+        provider = DeepSeekChatReplyProvider(secrets: AIChatCredentials())
+        #endif
+        _chatStore = StateObject(wrappedValue: ChatStore(characters: store.characters, provider: provider))
     }
 
     var body: some View {
@@ -52,7 +60,7 @@ struct ContentView: View {
         .toolbarBackground(.visible, for: .tabBar)
         .sheet(item: $detailCharacter) { character in
             NavigationStack {
-                CharacterDetailView(store: store, character: character) {
+                CharacterDetailView(store: store, chatStore: chatStore, character: character) {
                     store.select(character)
                     detailCharacter = nil
                     tab = .world
@@ -360,9 +368,9 @@ struct ContentView: View {
                 Text("让喜欢的角色住进手机，陪你专注，也陪你放松。小白是这里的第一位住民。")
                     .font(.system(size: 14)).foregroundStyle(Color.primary.opacity(0.65)).lineSpacing(5)
                 Divider().overlay(Color.primary.opacity(0.08))
-                Label("当前为本地陪伴，聊天支持单聊与群组，角色回复为测试内容。", systemImage: "iphone")
+                Label("陪伴与聊天记录保存在本机，AI 聊天支持单聊与群组。", systemImage: "iphone")
                 Label("聊天记录保存在本机，删除 App 会同时删除本机记录。", systemImage: "bubble.left.and.bubble.right")
-                Label("尚未接入 AI 对话，无需账号或 API Key。", systemImage: "lock")
+                Label("AI 聊天需配置自己的 DeepSeek 密钥；密钥保存在本机钥匙串。", systemImage: "lock")
                 Label("可选择角色语音，到点由系统提醒；陪伴卡片仍可手动结束。", systemImage: "alarm")
             }
             .font(.system(size: 12)).foregroundStyle(Color.primary)

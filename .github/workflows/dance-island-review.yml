@@ -3,6 +3,13 @@ name: Dance system island review (no IPA)
 "on":
   push:
     branches: [codex/dance-island-review]
+    paths:
+      - 'Art/DailyMotions/**'
+      - 'Widget/**'
+      - 'Shared/Models/Motion*'
+      - 'Scripts/*motion*'
+      - 'Scripts/*dance*'
+      - '.github/workflows/dance-island-review.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,6 +21,7 @@ concurrency:
 
 jobs:
   review:
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[chat]')
     runs-on: macos-15
     timeout-minutes: 40
     env:

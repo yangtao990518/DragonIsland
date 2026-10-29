@@ -9,12 +9,18 @@ final class ChatStore: ObservableObject {
     @Published private(set) var replyingIDs = Set<UUID>()
     @Published private(set) var ready = false
     @Published var error: String?
+    struct StreamingReply: Equatable {
+        let characterID: String
+        var text: String
+    }
+    @Published private(set) var streaming: [UUID: StreamingReply] = [:]
     private let file: ChatHistoryFile
     private let provider: any ChatReplyProvider
     private var tasks: [UUID: Task<Void, Never>] = [:]
+    private var generations: [UUID: UUID] = [:]
 
     init(characters: [CompanionCharacter], file: ChatHistoryFile = .standard,
-         provider: any ChatReplyProvider = TestChatReplyProvider()) {
+         provider: any ChatReplyProvider = DeepSeekChatReplyProvider(secrets: MissingAISecret())) {
         self.characters = characters
         self.file = file
         self.provider = provider
@@ -27,6 +33,32 @@ final class ChatStore: ObservableObject {
     private var availableIDs: Set<String> { Set(characters.map(\.id)) }
     func conversation(_ id: UUID) -> ChatConversation? { history.conversations.first { $0.id == id } }
     func character(_ id: String?) -> CompanionCharacter? { characters.first { $0.id == id } }
+    var configuration: AIChatPreferences { history.configuration ?? AIChatPreferences() }
+
+    @discardableResult
+    func saveConfiguration(_ configuration: AIChatPreferences) -> Bool {
+        change { $0.configuration = configuration }
+    }
+
+    func exportBackup() throws -> Data {
+        guard ready else { throw ChatError.invalidHistory }
+        guard replyingIDs.isEmpty else { throw AIChatError.busy }
+        return try JSONEncoder().encode(ChatBackup(history: history))
+    }
+
+    @discardableResult
+    func importBackup(_ data: Data) -> Bool {
+        guard replyingIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
+        do {
+            var restored = try ChatBackup.decode(data).history
+            restored.recoverInterruptedReplies()
+            try file.save(restored)
+            history = restored; ready = true; error = nil
+            return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+
+    func stop(_ id: UUID) { tasks[id]?.cancel() }
 
     func reload() {
         guard tasks.isEmpty else { return }
@@ -91,7 +123,9 @@ final class ChatStore: ObservableObject {
         if change({ $0.conversations.removeAll { $0.id == id } }) {
             tasks[id]?.cancel()
             tasks[id] = nil
+            generations[id] = nil
             replyingIDs.remove(id)
+            streaming[id] = nil
         }
     }
 
@@ -122,41 +156,75 @@ final class ChatStore: ObservableObject {
     }
 
     private func beginReply(in id: UUID, to messageID: UUID) {
+        let preferences = configuration
+        let generation = UUID()
+        generations[id] = generation
         replyingIDs.insert(id)
         tasks[id] = Task { [weak self] in
             guard let self else { return }
-            defer { tasks[id] = nil; replyingIDs.remove(id) }
+            defer {
+                if generations[id] == generation {
+                    tasks[id] = nil; generations[id] = nil; replyingIDs.remove(id); streaming[id] = nil
+                }
+            }
             do {
                 guard let chat = conversation(id), let turnIndex = chat.messages.firstIndex(where: { $0.id == messageID }) else { return }
                 let message = chat.messages[turnIndex]
                 let members = message.replyCharacterIDs.compactMap { self.character($0) }
-                let turnHistory = Array(chat.messages.prefix(through: turnIndex))
+                let allowedTurns = Set(chat.messages.prefix(through: turnIndex).filter(\.isUser).map(\.id))
                 for recipient in chat.missingReplies(to: message) {
                     try Task.checkCancellation()
                     guard let character = character(recipient) else { throw ChatError.unavailableCharacter }
+                    let turnHistory = (conversation(id)?.messages ?? []).filter {
+                        $0.isUser ? allowedTurns.contains($0.id) : $0.replyToID.map(allowedTurns.contains) == true
+                    }
                     let request = ChatReplyRequest(conversationID: id, kind: chat.kind, groupName: chat.name,
-                                                   members: members, character: character, userMessage: message, history: turnHistory)
-                    let text = try await provider.reply(to: request).trimmingCharacters(in: .whitespacesAndNewlines)
+                        members: members, character: character, userMessage: message, history: turnHistory,
+                        profile: preferences.profile(for: character), userProfile: preferences.user)
+                    streaming[id] = StreamingReply(characterID: recipient, text: "")
+                    let text = try await provider.reply(to: request, onPartial: { [weak self] text in
+                        await self?.updatePartial(text, in: id, characterID: recipient, generation: generation)
+                    }).trimmingCharacters(in: .whitespacesAndNewlines)
                     try Task.checkCancellation()
                     guard !text.isEmpty else { throw ChatError.emptyReply }
                     guard change({ value in
                         guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.missingConversation }
+                        value.conversations[i].messages.removeAll { $0.replyToID == messageID && $0.characterID == recipient && $0.interrupted == true }
                         value.conversations[i].messages.append(.reply(text, character: character, to: messageID))
                         value.conversations[i].updatedAt = .now
                     }) else {
                         setDelivery(.failed, in: id, messageID: messageID)
                         return
                     }
+                    streaming[id] = nil
                 }
                 setDelivery(.sent, in: id, messageID: messageID)
             } catch is CancellationError {
-                if conversation(id) != nil { setDelivery(.failed, in: id, messageID: messageID) }
+                if generations[id] == generation, conversation(id) != nil { preservePartial(in: id, messageID: messageID); setDelivery(.failed, in: id, messageID: messageID) }
             } catch {
-                if conversation(id) != nil {
+                if generations[id] == generation, conversation(id) != nil {
+                    preservePartial(in: id, messageID: messageID)
                     setDelivery(.failed, in: id, messageID: messageID)
                     self.error = error.localizedDescription
                 }
             }
+        }
+    }
+
+    private func updatePartial(_ text: String, in id: UUID, characterID: String, generation: UUID) {
+        guard conversation(id) != nil, generations[id] == generation else { return }
+        streaming[id] = StreamingReply(characterID: characterID, text: text)
+    }
+
+    private func preservePartial(in id: UUID, messageID: UUID) {
+        guard let partial = streaming[id], !partial.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let character = character(partial.characterID) else { return }
+        change { value in
+            guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { return }
+            value.conversations[i].messages.removeAll { $0.replyToID == messageID && $0.characterID == character.id && $0.interrupted == true }
+            var reply = ChatMessage.reply(partial.text, character: character, to: messageID)
+            reply.interrupted = true
+            value.conversations[i].messages.append(reply)
         }
     }
 }

@@ -2,7 +2,7 @@ name: Check chat functionality
 
 "on":
   push:
-    branches: [codex/character-chat]
+    branches: [codex/character-chat, codex/dance-island-review]
     paths:
       - 'App/**'
       - 'Shared/**'
@@ -64,6 +64,7 @@ jobs:
             -configuration Debug -destination "generic/platform=iOS Simulator" \
             -derivedDataPath build/ChatTests \
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
+            -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
       - name: Run chat interface tests
@@ -75,6 +76,7 @@ jobs:
             -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath build/ChatTests -resultBundlePath build/ChatTests.xcresult \
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
+            -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             -parallel-testing-enabled NO \
             -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \

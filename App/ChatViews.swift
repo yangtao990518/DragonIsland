@@ -13,6 +13,8 @@ struct ChatPage: View {
     @State private var pendingID: UUID?
     @State private var search = ""
     @State private var deleting: ChatConversation?
+    @State private var showingBackup = false
+    @State private var configuring: CompanionCharacter?
 
     private var filtered: [ChatConversation] {
         let term = search.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -32,7 +34,7 @@ struct ChatPage: View {
                         VStack(alignment: .leading, spacing: 5) {
                             Text("想说的话，都可以留在这里。雨天晴天，随时见面。")
                                 .font(.subheadline)
-                            Text("当前为测试聊天，角色回复为预设内容。")
+                            Text("配置 DeepSeek 后即可聊天，记录保存在本机。")
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }.padding(.vertical, 8)
@@ -73,6 +75,15 @@ struct ChatPage: View {
             .searchable(text: $search, prompt: "搜索角色、群组或最近消息")
             .navigationTitle("聊天")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        ForEach(store.characters) { character in
+                            Button("\(character.name) · AI 与人格") { configuring = character }
+                        }
+                        Button("本地备份", systemImage: "externaldrive") { showingBackup = true }
+                    } label: { Image(systemName: "slider.horizontal.3") }
+                    .accessibilityLabel("聊天设置").accessibilityIdentifier("chatPreferences")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button("和角色聊天", systemImage: "person.crop.circle.badge.plus") { sheet = .direct }
@@ -91,6 +102,8 @@ struct ChatPage: View {
                 pendingID = id
             }
         }
+        .sheet(isPresented: $showingBackup) { NavigationStack { ChatBackupView(store: store) } }
+        .sheet(item: $configuring) { character in NavigationStack { AIChatSettingsView(store: store, character: character) } }
         .confirmationDialog("删除这段聊天及全部记录？", isPresented: Binding(
             get: { deleting != nil }, set: { if !$0 { deleting = nil } }
         ), titleVisibility: .visible) {
@@ -315,7 +328,7 @@ private struct ChatRoom: View {
         ScrollViewReader { scroll in
             ScrollView {
                 LazyVStack(spacing: 18) {
-                    Text("聊天功能测试中 · 记录保存在本机")
+                    Text("记录保存在本机 · AI 回复可能存在错误")
                         .font(.caption2).foregroundStyle(.secondary).padding(.vertical, 12)
                     if chat.messages.isEmpty {
                         ContentUnavailableView("打个招呼吧", systemImage: "hand.wave",
@@ -334,7 +347,19 @@ private struct ChatRoom: View {
                         }
                     }
                     if replying {
-                        HStack(spacing: 8) { ProgressView(); Text("正在回复…").font(.caption).foregroundStyle(.secondary); Spacer() }
+                        if let partial = store.streaming[id], !partial.text.isEmpty {
+                            HStack(alignment: .top, spacing: 9) {
+                                ChatAvatar(character: store.character(partial.characterID), size: 36)
+                                Text(partial.text).font(.system(size: 16)).textSelection(.enabled)
+                                    .padding(14).background(AppPalette.surface, in: RoundedRectangle(cornerRadius: 18))
+                                Spacer(minLength: 40)
+                            }.accessibilityIdentifier("streamingChatReply")
+                        }
+                        HStack(spacing: 8) {
+                            ProgressView(); Text("正在回复…").font(.caption).foregroundStyle(.secondary)
+                            Spacer()
+                            Button("停止") { store.stop(id) }.font(.caption).accessibilityIdentifier("stopChatReply")
+                        }
                             .accessibilityIdentifier("chatReplying")
                     }
                     Color.clear.frame(height: 1).id("chat-bottom")
@@ -347,6 +372,9 @@ private struct ChatRoom: View {
             }
             .onChange(of: composing) { _, focused in
                 if focused { withAnimation { scroll.scrollTo("chat-bottom", anchor: .bottom) } }
+            }
+            .onChange(of: store.streaming[id]?.text) { _, _ in
+                if !composing { scroll.scrollTo("chat-bottom", anchor: .bottom) }
             }
         }
     }
@@ -418,6 +446,7 @@ private struct ChatMessageRow: View {
                                 in: RoundedRectangle(cornerRadius: 18))
                     .contextMenu { Button("复制", systemImage: "doc.on.doc") { UIPasteboard.general.string = message.text } }
                 Text(message.createdAt, style: .time).font(.system(size: 10)).foregroundStyle(.secondary)
+                if message.interrupted == true { Text("回复未完成").font(.caption2).foregroundStyle(.secondary) }
             }
             if message.isUser { ChatAvatar(user: true, size: 36) }
             else { Spacer(minLength: 40) }

@@ -8,6 +8,7 @@ struct ArtworkSelection: Identifiable {
 
 struct CharacterDetailView: View {
     @ObservedObject var store: CompanionStore
+    @ObservedObject var chatStore: ChatStore
     let character: CompanionCharacter
     let invite: () -> Void
     @Environment(\.dismiss) private var dismiss
@@ -15,6 +16,7 @@ struct CharacterDetailView: View {
     @State private var preview = 0
     @State private var showingAlarm = false
     @State private var showingMotion = false
+    @State private var showingAI = false
 
     private func showChibi() {
         artwork = ArtworkSelection(asset: character.chibiAsset + "Detail", title: "\(character.name) · 岛上小人物")
@@ -37,6 +39,13 @@ struct CharacterDetailView: View {
                     Image(systemName: "chevron.right").font(.caption)
                 }.foregroundStyle(AppPalette.accent)
             }.worldCard().accessibilityIdentifier("characterMotionSettings")
+            Button { showingAI = true } label: {
+                HStack {
+                    Label("AI 与人格", systemImage: "bubble.left.and.text.bubble.right")
+                    Spacer()
+                    Image(systemName: "chevron.right").font(.caption)
+                }.foregroundStyle(AppPalette.accent)
+            }.worldCard().accessibilityIdentifier("characterAISettings")
             HStack(alignment: .top, spacing: 12) {
                 artworkTile(title: "展开立绘", subtitle: "展开 / 锁屏", asset: character.heroAsset, action: showStanding)
                     .accessibilityIdentifier("artwork-standing")
@@ -89,6 +98,9 @@ struct CharacterDetailView: View {
         .fullScreenCover(item: $artwork) { item in ArtworkViewer(item: item) }
         .sheet(isPresented: $showingAlarm) {
             NavigationStack { CharacterAlarmEditor(alarms: store.alarms, character: character) }
+        }
+        .sheet(isPresented: $showingAI) {
+            NavigationStack { AIChatSettingsView(store: chatStore, character: character) }
         }
         .sheet(isPresented: $showingMotion) {
             NavigationStack {
