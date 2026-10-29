@@ -2,7 +2,7 @@
 
 > **2026-10-30 当前进度：**开发分支为 `codex/dance-island-review`，尚未合并回 `codex/character-chat`。DeepSeek 聊天、独立角色人格与模型、本地备份已接入，通过 67 项 Swift、13 项模拟器界面测试及 App/Widget 编译。详情见 [聊天开发交接](docs/HANDOFF_2026-10-29_CHAT.md)。日常动作和已确认的舞蹈素材见 [舞蹈与 build 16 交付记录](docs/DANCE_ISLAND_REVIEW_2026-10-29.md)。
 
-> 项目版本字段仍为 **V1.8（build 16）**。已交付的 build 16 包包含舞蹈；本次聊天功能尚未打新 IPA，下次打包前递增 build 号。真实账号联网、Sideloadly 覆盖安装和长期后台仍待真机验证。
+> 项目版本为 **V1.8（build 17）**，按用户要求打包含聊天功能的新 IPA。已交付的 build 16 包包含舞蹈，新包内容见 [build 17 清单](docs/RELEASE_BUILD17.md)，交付结论以构建及本机校验记录为准。真实账号联网、Sideloadly 覆盖安装和长期后台仍待真机验证。
 
 属于自己的 AI 角色小世界：让喜欢的角色在 iPhone 上陪伴你。当前有白紫色龙娘“小白”和活泼可爱的“大肥鱼”，角色目录支持继续扩展；单聊和群聊接入 DeepSeek 流式回复，需要填写自己的 API Key。SwiftUI 主 App + ActivityKit 实时活动 + WidgetKit 扩展。**Windows 用户通过 GitHub Actions 的 macOS runner 编译，无需本地 Mac。**
 
@@ -26,7 +26,7 @@
 
 ## 先读清楚这三点
 
-1. **当前分支版本为 mAIverse V1.8。** 主 App 和扩展版本字段均为 1.8（build 16），本次聊天代码尚未打包。最新改动和验证边界见[聊天开发交接](docs/HANDOFF_2026-10-29_CHAT.md)，模拟器验证不代替用户手机测试。
+1. **当前分支版本为 mAIverse V1.8。** 主 App 和扩展版本字段均为 1.8（build 17）。最新改动和验证边界见[聊天开发交接](docs/HANDOFF_2026-10-29_CHAT.md)及 [build 17 清单](docs/RELEASE_BUILD17.md)，模拟器验证不代替用户手机测试。
 2. **自动动作采用系统计时字形 / 遮罩播放预排片段。** 开启舞蹈时使用 120 秒排程，否则沿用 60 秒排程；两段舞蹈各保留约 12.096 秒完整时长，已确认的遛狗保持 1.6 秒。不靠后台常驻或每帧更新 Activity；30Hz 是目标采样频率，系统仍可能限帧，息屏低亮度与减弱动态时静态显示。
 3. **签名必须保留 Widget 扩展。** 删除 `PlugIns/*.appex`、只签主程序，可能导致 App 可打开而灵动岛无内容。源代码不要求 App Groups、推送或 iCloud 权限，首次编译无需上传 Apple 证书。
 
