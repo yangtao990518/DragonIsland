@@ -43,7 +43,9 @@ final class ChatStore: ObservableObject {
     func exportBackup() throws -> Data {
         guard ready else { throw ChatError.invalidHistory }
         guard replyingIDs.isEmpty else { throw AIChatError.busy }
-        return try JSONEncoder().encode(ChatBackup(history: history))
+        let data = try JSONEncoder().encode(ChatBackup(history: history))
+        guard data.count <= ChatBackup.maximumSize else { throw AIChatError.backupTooLarge }
+        return data
     }
 
     @discardableResult

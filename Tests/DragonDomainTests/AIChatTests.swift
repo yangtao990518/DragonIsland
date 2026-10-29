@@ -236,5 +236,19 @@ private actor PartialChatProvider: ChatReplyProvider {
         XCTAssertEqual(store.conversation(id)?.messages.count, 1)
         XCTAssertEqual(store.error, AIChatError.missingKey.localizedDescription)
     }
+    func testOversizedBackupCannotBeExportedAsAnUnrestorableFile() throws {
+        var history = ChatHistory()
+        let id = try history.create(kind: .direct, name: "", characterIDs: ["xiaobai"], availableIDs: ["xiaobai"])
+        var user = try history.enqueue("保留原始数据", in: id, availableIDs: ["xiaobai"])
+        user.delivery = .sent
+        history.conversations[0].messages = [user, .reply(String(repeating: "x", count: ChatBackup.maximumSize), character: .xiaobai, to: user.id)]
+        try file.save(history)
+        let store = ChatStore(characters: [.xiaobai], file: file)
+        XCTAssertTrue(store.ready)
+        XCTAssertThrowsError(try store.exportBackup()) { XCTAssertEqual($0.localizedDescription, AIChatError.backupTooLarge.localizedDescription) }
+        XCTAssertEqual(store.history, history)
+        XCTAssertThrowsError(try ChatBackup.decode(Data(count: ChatBackup.maximumSize + 1)))
+        XCTAssertEqual(try file.load(), history)
+    }
 }
 #endif

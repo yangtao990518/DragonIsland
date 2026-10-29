@@ -51,7 +51,7 @@ struct AIChatPreferences: Codable, Equatable, Sendable {
 
 enum AIChatError: LocalizedError {
     case missingKey, invalidKey, invalidConfiguration, unsupportedModel, invalidResponse
-    case http(Int), network, timeout, truncated, interrupted, backupVersion, busy
+    case http(Int), network, timeout, truncated, interrupted, backupVersion, backupTooLarge, busy
     var errorDescription: String? {
         switch self {
         case .missingKey: return "请先在角色详情的「AI 与人格」中配置 DeepSeek 密钥。"
@@ -73,6 +73,7 @@ enum AIChatError: LocalizedError {
         case .truncated: return "回复达到输出上限，已保留收到的内容。可提高输出上限后重试。"
         case .interrupted: return "回复未完整接收，已保留收到的内容，可以重试。"
         case .backupVersion: return "备份格式或版本不支持，原有记录未修改。"
+        case .backupTooLarge: return "备份超过当前版本的 20 MB 限制，无法导出或恢复。请保留 App 中的原始数据。"
         case .busy: return "请先停止当前回复，再进行此操作。"
         }
     }
@@ -121,6 +122,7 @@ enum AIChatContext {
 }
 
 struct ChatBackup: Codable {
+    static let maximumSize = 20 * 1024 * 1024
     let format: String
     let version: Int
     let createdAt: Date
@@ -130,7 +132,7 @@ struct ChatBackup: Codable {
         self.format = "mAIverse.chat.backup"; self.version = 1; self.createdAt = .now; self.history = history
     }
     static func decode(_ data: Data) throws -> Self {
-        guard data.count <= 20 * 1024 * 1024 else { throw AIChatError.backupVersion }
+        guard data.count <= maximumSize else { throw AIChatError.backupTooLarge }
         let value: Self
         do { value = try JSONDecoder().decode(Self.self, from: data) }
         catch { throw AIChatError.backupVersion }

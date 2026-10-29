@@ -160,7 +160,7 @@ struct ChatBackupView: View {
         Form {
             Section {
                 Text("聊天记录、群组、草稿、角色人格、模型选择和我的资料保存在此 App 的本地目录。卸载 App 会删除这些数据，请先导出备份。")
-                Text("备份不含 API 密钥，也不含角色动作、闹钟或其他 App 设置。聊天目录不参与 iCloud 备份。")
+                Text("备份不含 API 密钥，也不含角色动作、闹钟或其他 App 设置。聊天目录不参与系统备份，请使用此处导出保存。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
@@ -170,7 +170,7 @@ struct ChatBackupView: View {
                 }.accessibilityIdentifier("exportChatBackup").disabled(!store.ready || !store.replyingIDs.isEmpty)
                 Button("从文件恢复备份") { importing = true }
                     .accessibilityIdentifier("importChatBackup").disabled(!store.replyingIDs.isEmpty)
-                Text("可存到“文件 → 我的 iPhone”，再复制到电脑。恢复会替换当前全部聊天与人格设置；现有密钥保留。卸载前请把备份移到 App 目录之外。")
+                Text("可存到“文件 → 我的 iPhone”，再复制到电脑。单份备份上限 20 MB。恢复会替换当前全部聊天与人格设置；现有密钥保留。卸载前请把备份移到 App 目录之外。")
                     .font(.caption).foregroundStyle(.secondary)
                 if let status { Text(status).font(.caption) }
             }
@@ -189,11 +189,12 @@ struct ChatBackupView: View {
                     let scoped = url.startAccessingSecurityScopedResource()
                     defer { if scoped { url.stopAccessingSecurityScopedResource() } }
                     let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-                    guard size <= 20 * 1024 * 1024 else { throw AIChatError.backupVersion }
+                    guard size <= ChatBackup.maximumSize else { throw AIChatError.backupTooLarge }
                     let data = try Data(contentsOf: url)
                     _ = try ChatBackup.decode(data)
                     pending = data
-                } catch { failure = "无法读取有效的 mAIverse 备份，原有数据未修改。" }
+                } catch let error as AIChatError { failure = error.localizedDescription }
+                catch { failure = "无法读取有效的 mAIverse 备份，原有数据未修改。" }
             }
             .confirmationDialog("用此备份替换全部聊天和人格设置？建议先导出当前备份。", isPresented: Binding(
                 get: { pending != nil }, set: { if !$0 { pending = nil } }), titleVisibility: .visible) {
