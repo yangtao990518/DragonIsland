@@ -109,6 +109,14 @@ enum ProactiveChatError: LocalizedError {
 }
 
 extension ChatHistory {
+    mutating func recoverInterruptedProactivePlans() {
+        guard var state = proactive else { return }
+        for index in state.slots.indices where state.slots[index].status == .planned {
+            state.slots[index].status = .failed
+            state.slots[index].failure = "上次准备被中断，未发送消息。"
+        }
+        proactive = state
+    }
     mutating func cancelProactiveChats(in conversationID: UUID) {
         guard var state = proactive else { return }
         for index in state.slots.indices where state.slots[index].conversationID == conversationID && [.planned, .ready].contains(state.slots[index].status) {

@@ -139,10 +139,15 @@ final class ProactiveChatTests: XCTestCase {
 private actor ProactiveTestProvider: ChatReplyProvider {
     private(set) var requests: [ChatReplyRequest] = []
     let failing: Bool
-    init(failing: Bool = false) { self.failing = failing }
+    let blockSaveAt: URL?
+    init(failing: Bool = false, blockSaveAt: URL? = nil) { self.failing = failing; self.blockSaveAt = blockSaveAt }
     func reply(to request: ChatReplyRequest) async throws -> String {
         requests.append(request)
         if failing { throw AIChatError.missingKey }
+        if let path = blockSaveAt {
+            try FileManager.default.removeItem(at: path)
+            try FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
+        }
         return "想来问问你今天过得怎么样。"
     }
 }
@@ -237,6 +242,29 @@ final class ProactiveChatStoreTests: XCTestCase {
         XCTAssertTrue(restored.importBackup(try store.exportBackup()))
         XCTAssertEqual(restored.proactiveState, store.proactiveState)
         XCTAssertTrue(restored.conversations.allSatisfy { $0.messages.isEmpty })
+    }
+    func testRestoringAnUnfinishedPreparationDoesNotRepeatThePaidRequest() throws {
+        let (store, root) = store()
+        let (restored, other) = self.store()
+        defer { try? FileManager.default.removeItem(at: root); try? FileManager.default.removeItem(at: other) }
+        enable(store); _ = store.planProactiveChats()
+        XCTAssertTrue(restored.importBackup(try store.exportBackup()))
+        XCTAssertEqual(restored.proactiveState.slots.first?.status, .failed)
+        XCTAssertTrue(restored.planProactiveChats().isEmpty)
+    }
+    func testDiskFailureStopsAutomaticPreparationInMemoryToo() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let file = root.appendingPathComponent("history.json")
+        let provider = ProactiveTestProvider(blockSaveAt: file)
+        let store = ChatStore(characters: [.xiaobai], file: .init(url: file), provider: provider)
+        enable(store); let id = try XCTUnwrap(store.planProactiveChats().first)
+        do { try await store.prepareProactiveChat(id); XCTFail("Expected atomic save failure") } catch { }
+        XCTAssertEqual(store.proactiveState.slots.first?.status, .failed)
+        XCTAssertTrue(store.planProactiveChats().isEmpty)
+        let count = await provider.requests.count
+        XCTAssertEqual(count, 1)
+        XCTAssertTrue(store.conversations.allSatisfy { $0.messages.isEmpty })
     }
     func testBuiltinStickersAreOwnedReadOnlyAndUnusedPackDoesNotEnterBackup() throws {
         let bytes = try ChatMediaToolTests.image(gif: false)

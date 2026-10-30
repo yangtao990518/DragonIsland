@@ -60,7 +60,7 @@ final class ChatStore: ObservableObject {
 
     func exportBackup() throws -> Data {
         guard ready else { throw ChatError.invalidHistory }
-        guard replyingIDs.isEmpty else { throw AIChatError.busy }
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { throw AIChatError.busy }
         var files: [String: Data] = [:]
         var total = 0
         for asset in history.mediaAssets {
@@ -75,12 +75,13 @@ final class ChatStore: ObservableObject {
 
     @discardableResult
     func importBackup(_ data: Data) -> Bool {
-        guard replyingIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
         do {
             let backup = try ChatBackup.decode(data)
             for bytes in backup.media?.values ?? Dictionary<String, Data>().values { try media.store(bytes) }
             var restored = backup.history
             restored.recoverInterruptedReplies()
+            restored.recoverInterruptedProactivePlans()
             try file.save(restored)
             history = restored; ready = true; error = nil
             return true
@@ -94,12 +95,7 @@ final class ChatStore: ObservableObject {
         do {
             var loaded = try file.load()
             loaded.recoverInterruptedReplies()
-            if let slots = loaded.proactive?.slots {
-                for index in slots.indices where slots[index].status == .planned {
-                    loaded.proactive?.slots[index].status = .failed
-                    loaded.proactive?.slots[index].failure = "上次准备被中断，未发送消息。"
-                }
-            }
+            loaded.recoverInterruptedProactivePlans()
             history = loaded
             ready = true
         } catch { ready = false; self.error = error.localizedDescription }
@@ -396,10 +392,16 @@ final class ChatStore: ObservableObject {
                 value.proactive = state
             }) else { throw ProactiveChatError.unavailable }
         } catch {
-            _ = change { value in
+            let saved = change { value in
                 guard let index = value.proactive?.slots.firstIndex(where: { $0.id == slotID && $0.status == .planned }) else { return }
                 value.proactive?.slots[index].status = .failed
                 value.proactive?.slots[index].failure = String(error.localizedDescription.prefix(300))
+            }
+            // A failed disk write must not leave an in-memory planned slot that
+            // the foreground scheduler will repeatedly send to the paid API.
+            if !saved, let index = history.proactive?.slots.firstIndex(where: { $0.id == slotID && $0.status == .planned }) {
+                history.proactive?.slots[index].status = .failed
+                history.proactive?.slots[index].failure = "消息保存失败，已停止自动准备；请检查存储后手动重试。"
             }
             throw error
         }
