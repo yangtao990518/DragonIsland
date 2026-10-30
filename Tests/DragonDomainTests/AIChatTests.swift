@@ -154,7 +154,19 @@ final class AIChatTests: XCTestCase {
         var profile = AICharacterProfile(); profile.appControl = true; profile.thinking = true
         let spy = ToolTransportSpy()
         ChatURLProtocol.respond = { request in
-            let body = try XCTUnwrap(JSONSerialization.jsonObject(with: request.httpBody!) as? [String: Any])
+            var bytes = request.httpBody ?? Data()
+            if bytes.isEmpty, let stream = request.httpBodyStream {
+                stream.open(); defer { stream.close() }
+                var buffer = [UInt8](repeating: 0, count: 4096)
+                while true {
+                    let count = stream.read(&buffer, maxLength: buffer.count)
+                    guard count >= 0 else { throw AIChatError.invalidResponse }
+                    if count == 0 { break }
+                    bytes.append(contentsOf: buffer.prefix(count))
+                    guard bytes.count <= 4 * 1024 * 1024 else { throw AIChatError.invalidResponse }
+                }
+            }
+            let body = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
             let messages = try XCTUnwrap(body["messages"] as? [[String: Any]])
             let payload: [String: Any]
             if messages.last?["role"] as? String == "tool" {

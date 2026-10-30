@@ -50,7 +50,8 @@ final class ChatAppTools: ObservableObject {
                 "availableActions": ["walk", "roll"] + (character.motionProfile?.dailyActions ?? []).map(\.id),
                 "enabledActions": enabledActions(for: character),
                 "actionPlayback": "自动活动按既有时间表轮换；配置动作不会立即播放。",
-                "alarms": companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }
+                "alarmCount": companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }.count,
+                "alarms": companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }.prefix(20)
                     .map { ["id": $0.id.uuidString, "title": $0.title, "date": formatter.string(from: $0.date)] }
             ]
             return String(decoding: try JSONSerialization.data(withJSONObject: value, options: .sortedKeys), as: UTF8.self)
