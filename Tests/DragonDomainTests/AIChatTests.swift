@@ -85,6 +85,14 @@ final class AIChatTests: XCTestCase {
         XCTAssertThrowsError(try DeepSeekChatClient.validateKey("sk-test\nInjected: yes"))
         XCTAssertThrowsError(try DeepSeekChatClient.validateKey(""))
     }
+    func testClockContextUsesAppTimeForRelativeReminders() throws {
+        let now = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-10-30T12:00:00Z"))
+        let formatter = ISO8601DateFormatter(); formatter.timeZone = .current
+        let system = try AIChatContext.messages(for: request(), now: now)[0].content
+        XCTAssertTrue(system.contains(formatter.string(from: now)))
+        XCTAssertTrue(system.contains(TimeZone.current.identifier))
+        XCTAssertTrue(system.contains("相对时间以消息发送时刻为准"))
+    }
     func testRequestUsesOfficialHostAuthorizationAndExplicitThinkingMode() throws {
         var p = AICharacterProfile(); p.model = "deepseek-v4-pro"; p.thinking = true
         let r = try DeepSeekChatClient.request(key: "sk-unit-test-only", chat: request(profile: p))

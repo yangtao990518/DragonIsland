@@ -47,6 +47,8 @@ final class ChatAppTools: ObservableObject {
         if name == "app_state" {
             let formatter = ISO8601DateFormatter()
             var value: [String: Any] = [:]
+            value["currentTime"] = formatter.string(from: Date())
+            value["timeZone"] = TimeZone.current.identifier
             value["character"] = ["id": character.id, "name": character.name]
             value["selectedCharacterID"] = companion.selectedCharacterID
             value["activeCharacterID"] = companion.activeCharacterID ?? ""

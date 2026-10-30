@@ -121,7 +121,7 @@ struct AIChatMessage: Codable, Equatable, Sendable {
 }
 
 enum AIChatContext {
-    static func messages(for request: ChatReplyRequest) throws -> [AIChatMessage] {
+    static func messages(for request: ChatReplyRequest, now: Date = .now) throws -> [AIChatMessage] {
         let profile = request.profile ?? .standard(for: request.character)
         try profile.validate()
         let parts = [("身份背景", profile.background), ("性格", profile.personality),
@@ -129,6 +129,8 @@ enum AIChatContext {
                      ("与用户的关系", profile.relationship), ("称呼用户", profile.callsUser),
                      ("补充人设", profile.additionalInstructions)]
         var system = "你正在以\(request.character.name)的角色参与聊天。只以自己的身份回答，不代替用户或其他角色发言。\n"
+        let clock = ISO8601DateFormatter(); clock.timeZone = .current
+        system += "App 提供的当前时间：\(clock.string(from: now))，时区：\(TimeZone.current.identifier)。本条用户消息发送时间：\(clock.string(from: request.userMessage.createdAt))。相对时间以消息发送时刻为准，创建闹钟前用 app_state 核对当前时刻，不要猜日期。\n"
         system += parts.filter { !$0.1.isEmpty }.map { "\($0.0)：\($0.1)" }.joined(separator: "\n")
         if let user = request.userProfile, user.shareWithCharacters {
             system += "\n用户主动提供的资料：昵称「\(user.nickname)」。\(user.information)"
