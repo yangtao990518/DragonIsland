@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "sourceSHA256": "6cd1e7f513e483c009bebca70ec3d2eb3dd3e4e7f71cef1e4499714690ade06d",
+  "characterID": "dafeiyu",
+  "canvas": [
+    448,
+    448
+  ],
+  "entries": [
+    {
+      "theme": "fantasy",
+      "action": "actions",
+      "file": "fantasy-actions.png",
+      "crop": [
+        320,
+        0,
+        750,
+        354
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "2262571e9b47729f3a23ab48105406f1aae9fd0f5d184fff7968b2df01235d51"
+    },
+    {
+      "theme": "fantasy",
+      "action": "scene",
+      "file": "fantasy-scene.png",
+      "crop": [
+        320,
+        354,
+        750,
+        672
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "ac7c52904624a8e3e738dd40d964fa0c74bbe6d7dd62eda5e064463183693bb1"
+    },
+    {
+      "theme": "fantasy",
+      "action": "island",
+      "file": "fantasy-island.png",
+      "crop": [
+        320,
+        672,
+        750,
+        1024
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "a040030584da414111b5c5c949cf4c16e12aa1ec2d3b83ee44dc0cc4b0b7172d"
+    },
+    {
+      "theme": "candy",
+      "action": "actions",
+      "file": "candy-actions.png",
+      "crop": [
+        775,
+        0,
+        1200,
+        360
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "03bfbcbe3f8b27b74672da82f825fd53345df99efa8a857b96e6454a44d22afb"
+    },
+    {
+      "theme": "candy",
+      "action": "scene",
+      "file": "candy-scene.png",
+      "crop": [
+        775,
+        360,
+        1200,
+        677
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "8f6f70cf10649a71b7b8f17ea31251b54bf1d6fd6eecc65edbc6e1ba58e6cff4"
+    },
+    {
+      "theme": "candy",
+      "action": "island",
+      "file": "candy-island.png",
+      "crop": [
+        775,
+        677,
+        1200,
+        1024
+      ],
+      "labelAnchor": [
+        0.5,
+        0.84
+      ],
+      "sha256": "17ef2c61067df360c37346998559168f3f3b0b710e2305e76c62c8e9d5c402d8"
+    }
+  ]
+}

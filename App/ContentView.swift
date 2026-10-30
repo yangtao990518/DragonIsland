@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var minutes = 25
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
+    @State private var legacyHomePanel: HomeShortcutKind?
     private let homeScenes = HomeSceneAnimation.load()
     @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
     @State private var browsedCharacterID = "xiaobai"
@@ -86,6 +87,9 @@ struct ContentView: View {
             }
             .presentationDragIndicator(.visible)
         }
+        .sheet(item: $legacyHomePanel) { kind in
+            HomeShortcutPanel(store: store, character: store.displayCharacter, kind: kind)
+        }
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
@@ -147,6 +151,11 @@ struct ContentView: View {
             }.buttonStyle(.plain).accessibilityLabel("查看\(store.displayCharacter.name)角色详情")
                 .accessibilityIdentifier("worldCharacterCard")
                 .accessibilityValue(store.worldArtwork(for: store.displayCharacter).id)
+                .overlay(alignment: .topTrailing) {
+                    HomeGameShortcutRail(style: store.homeButtonStyle(for: store.displayCharacter),
+                        character: store.displayCharacter, open: { legacyHomePanel = $0 }, size: 64)
+                        .padding(.trailing, 8).padding(.top, 18)
+                }
             if let session = store.session {
                 activeSession(session)
             } else {

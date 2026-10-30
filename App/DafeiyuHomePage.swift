@@ -14,10 +14,8 @@ struct DafeiyuHomePage<Controls: View>: View {
     @State private var greetingError = false
     @State private var requesting = false
     @State private var greetingTask: Task<Void, Never>?
-    @State private var panel: Panel?
+    @State private var panel: HomeShortcutKind?
     @Environment(\.scenePhase) private var scenePhase
-
-    enum Panel: String, Identifiable { case actions, scene, island; var id: String { rawValue } }
 
     init(store: CompanionStore, chat: ChatStore, clip: HomeSceneAnimation, visible: Bool,
          @ViewBuilder controls: () -> Controls, openCharacters: @escaping () -> Void, openDetails: @escaping () -> Void) {
@@ -47,23 +45,7 @@ struct DafeiyuHomePage<Controls: View>: View {
         }
         .accessibilityIdentifier("dafeiyuAnimatedHome")
         .sheet(item: $panel) { destination in
-            NavigationStack {
-                Group {
-                    switch destination {
-                    case .actions: MotionSettingsView(store: store, character: store.displayCharacter)
-                    case .scene: WorldPage { IslandScenePicker(store: store) }
-                    case .island:
-                        WorldPage {
-                            PageHeading(eyebrow: "LIVE ACTIVITY", title: "灵动岛预览", subtitle: "开始陪伴后回到桌面，长按灵动岛展开。")
-                            IslandArtPreview(character: store.displayCharacter, expanded: false, scene: store.islandScene)
-                            IslandArtPreview(character: store.displayCharacter, expanded: true, scene: store.islandScene)
-                        }
-                    }
-                }
-                .navigationTitle(destination == .actions ? "日常动作" : destination == .scene ? "灵动岛场景" : "灵动岛预览")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("完成") { panel = nil }.accessibilityIdentifier("closeHomePanel") } }
-            }
+            HomeShortcutPanel(store: store, character: store.displayCharacter, kind: destination)
         }
         .onDisappear { cancelGreeting() }
         .onChange(of: visible) { _, value in if !value { cancelGreeting() } }
@@ -83,37 +65,31 @@ struct DafeiyuHomePage<Controls: View>: View {
             .overlay(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 7) {
                     Text("大肥鱼").font(.system(size: 21, weight: .bold, design: .rounded))
-                    Text("活泼可爱的\n鲸鱼女仆").font(.system(size: 10)).lineSpacing(3)
                     if requesting || greeting != nil || greetingError {
                         VStack(alignment: .leading, spacing: 5) {
                             Text(requesting ? "让我想想…" : greetingError ? "暂时没连上AI" : greeting ?? "")
-                                .font(.system(size: 13, weight: .medium)).lineLimit(3)
+                                .font(.system(size: 12, weight: .medium)).lineLimit(2)
                                 .accessibilityIdentifier("homeCharacterDialogue")
                             if greetingError {
                                 Button("去检查AI设置", action: openDetails).font(.caption2)
                             }
                         }
-                        .padding(10).frame(width: 120, alignment: .leading)
-                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 14))
-                        .padding(.top, 12)
+                        .padding(10).frame(width: 150, alignment: .leading)
+                        .background(.white.opacity(0.96), in: RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(red: 0.51, green: 0.65, blue: 0.86).opacity(0.35), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
+                        .padding(.top, 6)
+                    } else {
+                        Text("活泼可爱的\n鲸鱼女仆").font(.system(size: 10)).lineSpacing(3)
                     }
                 }
                 .foregroundStyle(Color(red: 0.09, green: 0.13, blue: 0.25))
                 .padding(.leading, 16).padding(.top, 22)
             }
             .overlay(alignment: .topTrailing) {
-                VStack(spacing: 2) {
-                    shortcut("动作", symbol: "figure.walk", panel: .actions)
-                    shortcutDivider
-                    shortcut("场景", symbol: "photo", panel: .scene)
-                    shortcutDivider
-                    shortcut("预览", symbol: "capsule", panel: .island)
-                }
-                .padding(.horizontal, 4).padding(.vertical, 7)
-                .background(.ultraThinMaterial, in: Capsule())
-                .overlay(Capsule().stroke(.white.opacity(0.7), lineWidth: 0.8))
-                .shadow(color: .black.opacity(0.05), radius: 8, y: 3)
-                .padding(.trailing, 12).padding(.top, 22)
+                HomeGameShortcutRail(style: store.homeButtonStyle(for: store.displayCharacter),
+                    character: store.displayCharacter, open: { panel = $0 })
+                    .padding(.trailing, 7).padding(.top, 16)
             }
     }
 
@@ -132,30 +108,6 @@ struct DafeiyuHomePage<Controls: View>: View {
         }
         .foregroundStyle(Color(red: 0.09, green: 0.13, blue: 0.25))
         .buttonStyle(.plain)
-    }
-
-    private var shortcutDivider: some View {
-        Color(red: 0.16, green: 0.22, blue: 0.34).opacity(0.12)
-            .frame(width: 18, height: 0.5).accessibilityHidden(true)
-    }
-
-    private func shortcut(_ title: String, symbol: String, panel destination: Panel) -> some View {
-        Button { panel = destination } label: {
-            VStack(spacing: 3) {
-                if destination == .island {
-                    ZStack {
-                        Capsule().stroke(lineWidth: 1.4).frame(width: 21, height: 10)
-                        Capsule().frame(width: 7, height: 2)
-                    }.frame(height: 21)
-                } else {
-                    Image(systemName: symbol).font(.system(size: 17, weight: .regular)).frame(height: 21)
-                }
-                Text(title).font(.system(size: 9))
-            }.frame(width: 44, height: 48).contentShape(Rectangle())
-        }.buttonStyle(.plain)
-            .foregroundStyle(Color(red: 0.09, green: 0.13, blue: 0.25))
-            .accessibilityLabel(destination == .island ? "灵动岛预览" : title)
-            .accessibilityIdentifier("homeShortcut-\(destination.rawValue)")
     }
 
     private func greet() {

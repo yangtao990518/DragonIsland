@@ -30,6 +30,7 @@ struct CharacterDetailView: View {
         WorldPage {
             PageHeading(eyebrow: "CHARACTER", title: character.name, subtitle: "\(character.subtitle) · \(character.origin)")
             Text(character.introduction).font(.system(size: 17, weight: .medium))
+            CharacterHomeButtonStylePicker(store: store, character: character)
             worldArtworkPicker
             Button { showingMotion = true } label: {
                 HStack {

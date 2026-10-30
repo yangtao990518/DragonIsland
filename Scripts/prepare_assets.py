@@ -94,6 +94,8 @@ def main():
     prepare_video_actions()
     from prepare_home_scene import prepare as prepare_home_scene
     prepare_home_scene()
+    from prepare_home_buttons import prepare as prepare_home_buttons
+    prepare_home_buttons()
 
 
 if __name__ == "__main__":

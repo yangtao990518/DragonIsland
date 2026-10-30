@@ -17,6 +17,15 @@ final class CompanionStore: ObservableObject {
     @Published private(set) var busy = false
     @Published var notice: String?
     let characters = CharacterCatalog.load()
+    @Published private var homeButtonPreferences = CharacterHomeButtonPreferences.load()
+    func homeButtonStyle(for character: CompanionCharacter) -> HomeButtonStyle {
+        homeButtonPreferences.style(for: character.id)
+    }
+    func setHomeButtonStyle(_ style: HomeButtonStyle, for character: CompanionCharacter) {
+        guard characters.contains(where: { $0.id == character.id }) else { return }
+        homeButtonPreferences.select(style, for: character.id)
+        homeButtonPreferences.save()
+    }
     @Published private var worldArtworks = CharacterArtworkPreferences.load()
     func worldArtwork(for character: CompanionCharacter) -> CharacterArtwork {
         worldArtworks.selected(for: character)
