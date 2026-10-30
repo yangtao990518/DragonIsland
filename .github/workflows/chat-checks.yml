@@ -11,6 +11,12 @@ name: Check chat functionality
       - 'Scripts/**'
       - '.github/workflows/chat-checks.yml'
   workflow_dispatch:
+    inputs:
+      test_suite:
+        description: Interface test scope
+        type: choice
+        options: [all, home]
+        default: all
 
 permissions:
   contents: read
@@ -27,11 +33,13 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
       MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
+      MAIVERSE_TEST_SUITE: ${{ inputs.test_suite || 'all' }}
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Test chat domain, persistence and reply lifecycle
+        if: inputs.test_suite != 'home'
         run: |
           set -euo pipefail
           mkdir -p build
@@ -74,28 +82,28 @@ jobs:
       - name: Compile app, Widget and chat tests (no IPA)
         run: |
           set -euo pipefail
+          TEST_FILTERS=(-only-testing:DragonInterfaceTests/HomeSceneInterfaceTests)
+          if [[ "$MAIVERSE_TEST_SUITE" != "home" ]]; then
+            TEST_FILTERS+=(-only-testing:DragonInterfaceTests/ChatInterfaceTests -only-testing:DragonInterfaceTests/AIChatInterfaceTests -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests)
+          fi
           xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
             -configuration Debug -destination "generic/platform=iOS Simulator" \
             -derivedDataPath build/ChatTests \
-            -only-testing:DragonInterfaceTests/ChatInterfaceTests \
-            -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
-            -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests \
-            -only-testing:DragonInterfaceTests/HomeSceneInterfaceTests \
-            -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
+            "${TEST_FILTERS[@]}" \
             CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
       - name: Run chat interface tests
         run: |
           set -euo pipefail
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl status_bar "$DEVICE_ID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+          TEST_FILTERS=(-only-testing:DragonInterfaceTests/HomeSceneInterfaceTests)
+          if [[ "$MAIVERSE_TEST_SUITE" != "home" ]]; then
+            TEST_FILTERS+=(-only-testing:DragonInterfaceTests/ChatInterfaceTests -only-testing:DragonInterfaceTests/AIChatInterfaceTests -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests)
+          fi
           xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
             -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -derivedDataPath build/ChatTests -resultBundlePath build/ChatTests.xcresult \
-            -only-testing:DragonInterfaceTests/ChatInterfaceTests \
-            -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
-            -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests \
-            -only-testing:DragonInterfaceTests/HomeSceneInterfaceTests \
-            -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
+            "${TEST_FILTERS[@]}" \
             -parallel-testing-enabled NO \
             -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
             -maximum-test-execution-time-allowance 180 \
