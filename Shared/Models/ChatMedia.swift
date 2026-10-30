@@ -48,8 +48,9 @@ struct ChatMediaAsset: Codable, Equatable, Hashable, Sendable {
         for index in 0..<count {
             guard CGImageSourceGetStatusAtIndex(source, index) == .statusComplete,
                   let p = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
-                  (p[kCGImagePropertyPixelWidth] as? Int) == width,
-                  (p[kCGImagePropertyPixelHeight] as? Int) == height else { throw ChatMediaError.invalid }
+                  let frameWidth = p[kCGImagePropertyPixelWidth] as? Int,
+                  let frameHeight = p[kCGImagePropertyPixelHeight] as? Int,
+                  (1...4096).contains(frameWidth), (1...4096).contains(frameHeight) else { throw ChatMediaError.invalid }
             if count > 1 {
                 let gif = p[kCGImagePropertyGIFDictionary] as? [CFString: Any] ?? [:]
                 duration += max(0.02, (gif[kCGImagePropertyGIFUnclampedDelayTime] as? Double)
@@ -137,8 +138,13 @@ struct ChatMediaFiles: Sendable {
 
 extension ChatHistory {
     var mediaAssets: [ChatMediaAsset] {
-        let all = (stickers ?? []).map(\.asset) + conversations.flatMap { chat in
-            (chat.draftAttachments ?? []).map(\.asset) + chat.messages.flatMap { ($0.attachments ?? []).map(\.asset) + ($0.toolReceipts ?? []).compactMap { $0.sticker?.asset } }
+        var all = (stickers ?? []).map(\.asset)
+        for chat in conversations {
+            all.append(contentsOf: (chat.draftAttachments ?? []).map(\.asset))
+            for message in chat.messages {
+                all.append(contentsOf: (message.attachments ?? []).map(\.asset))
+                all.append(contentsOf: (message.toolReceipts ?? []).compactMap { $0.sticker?.asset })
+            }
         }
         return Array(Set(all)).sorted { $0.filename < $1.filename }
     }

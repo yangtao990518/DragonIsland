@@ -165,7 +165,13 @@ struct ChatHistory: Codable, Equatable, Sendable {
                         guard item.kind == .sticker, item.sticker?.characterID == message.characterID else { throw ChatMediaError.invalid }
                     }
                 }
-                for receipt in message.toolReceipts ?? [] { try receipt.validate() }
+                let receipts = message.toolReceipts ?? []
+                guard receipts.count <= 32, Set(receipts.map(\.fingerprint)).count == receipts.count,
+                      receipts.isEmpty || message.isUser else { throw ChatError.invalidHistory }
+                for receipt in receipts {
+                    try receipt.validate()
+                    guard message.replyCharacterIDs.contains(receipt.characterID) else { throw ChatError.invalidHistory }
+                }
                 guard (!message.text.isEmpty || !(message.attachments ?? []).isEmpty),
                       (message.isUser ? message.replyToID == nil : message.replyToID != nil),
                       message.isUser || message.delivery == .sent else { throw ChatError.invalidHistory }

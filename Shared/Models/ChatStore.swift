@@ -219,7 +219,7 @@ final class ChatStore: ObservableObject {
                         guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.missingConversation }
                         value.conversations[i].messages.removeAll { $0.replyToID == messageID && $0.characterID == recipient && $0.interrupted == true }
                         var reply = ChatMessage.reply(text, character: character, to: messageID)
-                        reply.attachments = toolStickers(in: id, messageID: messageID, characterID: recipient)
+                        reply.attachments = self.toolStickers(in: id, messageID: messageID, characterID: recipient)
                         value.conversations[i].messages.append(reply)
                         value.conversations[i].updatedAt = .now
                     }) else {
@@ -266,7 +266,7 @@ final class ChatStore: ObservableObject {
             guard (conversation(id)?.draftAttachments ?? []).count < 4 else { throw ChatMediaError.limit }
             let asset = try media.store(data)
             return attach(.init(id: UUID(), kind: .image, asset: asset), in: id)
-        } catch { error = error.localizedDescription; return false }
+        } catch { self.error = error.localizedDescription; return false }
     }
     @discardableResult
     func attach(_ item: ChatAttachment, in id: UUID) -> Bool {
