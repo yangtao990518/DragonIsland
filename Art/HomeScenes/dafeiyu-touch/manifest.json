@@ -1,0 +1,2246 @@
+{
+  "version": 1,
+  "id": "dafeiyu-home-touch",
+  "characterID": "dafeiyu",
+  "title": "窗边触屏",
+  "sourceVideo": "source.mp4",
+  "sourceSHA256": "2c51f62fe4b7b55e9eeff2c900c61e6223dcb8f5565d560aef9c543a78484d26",
+  "sourceBytes": 29575282,
+  "sourceSize": [
+    3840,
+    2160
+  ],
+  "uniformCrop": [
+    1176,
+    0,
+    1854,
+    2160
+  ],
+  "nativeFrameSize": [
+    1854,
+    2160
+  ],
+  "runtimeFrameSize": [
+    1030,
+    1200
+  ],
+  "timeBase": [
+    1,
+    15360
+  ],
+  "firstPTS": 0,
+  "frameCount": 240,
+  "durationMs": 4064.0,
+  "containerDurationMs": 4064.0,
+  "fullOriginalRange": true,
+  "playbackSpeed": 1,
+  "droppedFrames": 0,
+  "synthesizedFrames": 0,
+  "frames": [
+    {
+      "index": 0,
+      "pts": 0,
+      "startMs": 0.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8f1936d20b8e636a465c7410b256760c",
+      "file": "Frames/DafeiyuHomeTouch_0000.jpg",
+      "sha256": "a6e08526cf52bc2c88b29458ae335039179f0ea3dc2aca55cd74838d4e8b7d28"
+    },
+    {
+      "index": 1,
+      "pts": 256,
+      "startMs": 16.666666666666668,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5a43b4cdfba8b37f7ea15e009a2932bc",
+      "file": "Frames/DafeiyuHomeTouch_0001.jpg",
+      "sha256": "5eda5aaea09ecc7a18dbeb1b42fd7b2d4f88732ab62d4433f8425dc46a1d9db4"
+    },
+    {
+      "index": 2,
+      "pts": 512,
+      "startMs": 33.333333333333336,
+      "durationMs": 33.333333333333336,
+      "nativeRGBMD5": "aca5afeffbb713d4c21695cd721202a6",
+      "file": "Frames/DafeiyuHomeTouch_0002.jpg",
+      "sha256": "ae80f5fa95712c62c42b8788d25de674dac599cedd1517427557e3417b9526d6"
+    },
+    {
+      "index": 3,
+      "pts": 1024,
+      "startMs": 66.66666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cc37c8d5aed98dff6760305a69de250e",
+      "file": "Frames/DafeiyuHomeTouch_0003.jpg",
+      "sha256": "04a9cfe17fe9deb810a346732038a306bae407592b54f1ab4c07c86a4545c6d4"
+    },
+    {
+      "index": 4,
+      "pts": 1280,
+      "startMs": 83.33333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "27b5ac8e6ef462bf4b44f80af039f927",
+      "file": "Frames/DafeiyuHomeTouch_0004.jpg",
+      "sha256": "bee6eb6de4d94085642bcbe9e318251d973f915819f8519e74543b07c23db74a"
+    },
+    {
+      "index": 5,
+      "pts": 1536,
+      "startMs": 100.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6f40b1b4fff3b859764880dc1acee152",
+      "file": "Frames/DafeiyuHomeTouch_0005.jpg",
+      "sha256": "26d8074001301f10e24af87995837014cf7a6014887ed049499833addb47465d"
+    },
+    {
+      "index": 6,
+      "pts": 1792,
+      "startMs": 116.66666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "79c34c890733ce4512749d5ebcd2a736",
+      "file": "Frames/DafeiyuHomeTouch_0006.jpg",
+      "sha256": "091f3eb5455b77e756d4271adcb79612fe35399df43a69bb6381b9ff35b2d42f"
+    },
+    {
+      "index": 7,
+      "pts": 2048,
+      "startMs": 133.33333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "69dbc29ece80b3fb9b0d09bf776a378d",
+      "file": "Frames/DafeiyuHomeTouch_0007.jpg",
+      "sha256": "c3e7fedeb236a4f8918cd799f354a5648faff636ee954672c3e69b5e3f2b0f3b"
+    },
+    {
+      "index": 8,
+      "pts": 2304,
+      "startMs": 150.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fa3cd4d65c8968045ffada758f9cfa49",
+      "file": "Frames/DafeiyuHomeTouch_0008.jpg",
+      "sha256": "d22b9cb67198f5b8858bbf72cd2121ad14ab664cae4183beed8f7855b9a8c2d6"
+    },
+    {
+      "index": 9,
+      "pts": 2560,
+      "startMs": 166.66666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5c4d1434e724b59ce270debbf286966d",
+      "file": "Frames/DafeiyuHomeTouch_0009.jpg",
+      "sha256": "4bccb475aed03e00adc26cbbd45ff0798b1186dd7a2f78d62e7b96af7fb97316"
+    },
+    {
+      "index": 10,
+      "pts": 2816,
+      "startMs": 183.33333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "819ffc33448497060842cb649710f44a",
+      "file": "Frames/DafeiyuHomeTouch_0010.jpg",
+      "sha256": "afe78322386a4364bd2aeec6633b53b28bdd2e941977706e703f8009ced96244"
+    },
+    {
+      "index": 11,
+      "pts": 3072,
+      "startMs": 200.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "82c27cf9d86fb18a8dd5e71b81c64bb2",
+      "file": "Frames/DafeiyuHomeTouch_0011.jpg",
+      "sha256": "ecb910de1219c208a11c6ab9eaa171a0ab88084d6e815a493a8ad7be598e01a5"
+    },
+    {
+      "index": 12,
+      "pts": 3328,
+      "startMs": 216.66666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ea6c2638ecc46c5fda3fc0d62556c25c",
+      "file": "Frames/DafeiyuHomeTouch_0012.jpg",
+      "sha256": "3dc3556a74b2a08de652205237bbc5c800b1461da87bac09e0cc5fe51820dd94"
+    },
+    {
+      "index": 13,
+      "pts": 3584,
+      "startMs": 233.33333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "91cfc66b35bf7567efaebb3f0c9dc654",
+      "file": "Frames/DafeiyuHomeTouch_0013.jpg",
+      "sha256": "056bccbe19ba022fcac9dd75d45f749e0c69f4841351eb7b8e737a735669c5eb"
+    },
+    {
+      "index": 14,
+      "pts": 3840,
+      "startMs": 250.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ef4fca5d66b9bc641750c23ca9d7d9ac",
+      "file": "Frames/DafeiyuHomeTouch_0014.jpg",
+      "sha256": "ef2fc9ef903f5c8ca80f072c20e32dd255c115028a840f4603123cfbd4052005"
+    },
+    {
+      "index": 15,
+      "pts": 4096,
+      "startMs": 266.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "14c36a6e57072c83a289722d5f4e9798",
+      "file": "Frames/DafeiyuHomeTouch_0015.jpg",
+      "sha256": "f4a4514f3a1d5e0f5a2a7fd4779a2884d0808c8a68186c5158279b4745fa0425"
+    },
+    {
+      "index": 16,
+      "pts": 4352,
+      "startMs": 283.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cfeab20e3a6a09471457aff787085644",
+      "file": "Frames/DafeiyuHomeTouch_0016.jpg",
+      "sha256": "584dffcdcd03a5a8059845ca0a3f8e8505445c30637bbb396e1721005df0b20d"
+    },
+    {
+      "index": 17,
+      "pts": 4608,
+      "startMs": 300.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "306e2c70c0673ab6e9f1e45358974449",
+      "file": "Frames/DafeiyuHomeTouch_0017.jpg",
+      "sha256": "f0782ec216527d68142921cde83f6a8e14a218d4a74678477c5b4deb487c0735"
+    },
+    {
+      "index": 18,
+      "pts": 4864,
+      "startMs": 316.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8de88fef345d83854e05d99fd171930d",
+      "file": "Frames/DafeiyuHomeTouch_0018.jpg",
+      "sha256": "e46b6deacbc411c41b006cee0b34fddcc04cbdf60e77c1e7eb478f15b57cd713"
+    },
+    {
+      "index": 19,
+      "pts": 5120,
+      "startMs": 333.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f2cbdade7d30987f2c1b08425a2d5ee7",
+      "file": "Frames/DafeiyuHomeTouch_0019.jpg",
+      "sha256": "c8fef1d84e12f6ee434449d0a9d95b8e44d3cac49010121c32da274e40eb8134"
+    },
+    {
+      "index": 20,
+      "pts": 5376,
+      "startMs": 350.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3786c56cef8eb132a6cf47fce32abf46",
+      "file": "Frames/DafeiyuHomeTouch_0020.jpg",
+      "sha256": "aa4c737366d72c8262dfd307cdb9485b72124b84bc9c1771e53042454d1017f3"
+    },
+    {
+      "index": 21,
+      "pts": 5632,
+      "startMs": 366.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cabab840261d04c19d0374363b89607b",
+      "file": "Frames/DafeiyuHomeTouch_0021.jpg",
+      "sha256": "835f58aa9a2bbe0cfba048f4d3f477b8c6fc5550212abc1fe389bbe6e1ec4a3e"
+    },
+    {
+      "index": 22,
+      "pts": 5888,
+      "startMs": 383.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "faac0f9360726717a3615a6ffe2458ba",
+      "file": "Frames/DafeiyuHomeTouch_0022.jpg",
+      "sha256": "c362db403487fc67bd696550de9471170ee3c3f9f2e3bdf6345e1ec7cf23e1da"
+    },
+    {
+      "index": 23,
+      "pts": 6144,
+      "startMs": 400.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9e7ef79162466a7aa8914d74c5487cb7",
+      "file": "Frames/DafeiyuHomeTouch_0023.jpg",
+      "sha256": "e29c04b85f66f35ea111a3d6588278a672c25bdcbe5039e6dfd292bb4296304b"
+    },
+    {
+      "index": 24,
+      "pts": 6400,
+      "startMs": 416.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "688891b5a4b2703656842380331dc285",
+      "file": "Frames/DafeiyuHomeTouch_0024.jpg",
+      "sha256": "18a7909b7de836f7ecbd35cca101cfefbae4f1628db27e2657e8d9105c29188a"
+    },
+    {
+      "index": 25,
+      "pts": 6656,
+      "startMs": 433.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "365db1d87da564d0f1475918b610aaf7",
+      "file": "Frames/DafeiyuHomeTouch_0025.jpg",
+      "sha256": "78dc3bc096ef6bfefa391d082ca3799a320a1be3f6750cdb97d7aa1eb5b47085"
+    },
+    {
+      "index": 26,
+      "pts": 6912,
+      "startMs": 450.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "eb3d87e8dc2c04501efda80ad4fe8479",
+      "file": "Frames/DafeiyuHomeTouch_0026.jpg",
+      "sha256": "42b911a2f80a39243a65d4967cf5b25b24c7039dd742293682df30a189e00566"
+    },
+    {
+      "index": 27,
+      "pts": 7168,
+      "startMs": 466.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "af4b576e33aac075b1753c26ad4ed602",
+      "file": "Frames/DafeiyuHomeTouch_0027.jpg",
+      "sha256": "dc68a88efb07fa17930c086c42c28c29cef52379de94044524560a81ce019571"
+    },
+    {
+      "index": 28,
+      "pts": 7424,
+      "startMs": 483.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d5df2bfbf50b22207be9b49f2c2cf61b",
+      "file": "Frames/DafeiyuHomeTouch_0028.jpg",
+      "sha256": "d2a7d8906c36394df291e551727969ad5b019204639a265e241c8b97173d3c36"
+    },
+    {
+      "index": 29,
+      "pts": 7680,
+      "startMs": 500.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "77cedf47d61e530a7b68650e09e4e800",
+      "file": "Frames/DafeiyuHomeTouch_0029.jpg",
+      "sha256": "e9ac645e52f5f1cac82cde760f4e5ac351af0ab1dc029a7037ff7ddd5a015186"
+    },
+    {
+      "index": 30,
+      "pts": 7936,
+      "startMs": 516.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "a393e8202dc8fe496164bf8d79fb067b",
+      "file": "Frames/DafeiyuHomeTouch_0030.jpg",
+      "sha256": "f5dd4f9ac4355627322f7e8b844889a151dafc9cbf5a9d8ec64e5c708f25cab0"
+    },
+    {
+      "index": 31,
+      "pts": 8192,
+      "startMs": 533.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ec295c99006fc859b3caaf67cf2fa1d7",
+      "file": "Frames/DafeiyuHomeTouch_0031.jpg",
+      "sha256": "9bdc9c8cb4d0798ed163c955e42d80b9cd6af01036dafdac8742d006532b7e05"
+    },
+    {
+      "index": 32,
+      "pts": 8448,
+      "startMs": 550.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "190c31b485506742ef685bd7bfb06b38",
+      "file": "Frames/DafeiyuHomeTouch_0032.jpg",
+      "sha256": "8ddfa8b59541031f6539414be15c2536dc33da8564aa7503127500ded9668be7"
+    },
+    {
+      "index": 33,
+      "pts": 8704,
+      "startMs": 566.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "b13fc645c1c4682ab45c90c88ad2537d",
+      "file": "Frames/DafeiyuHomeTouch_0033.jpg",
+      "sha256": "df977b62cdb85b24f9bec92ad3e3a62905d1a8170ef60204f465719a5242f409"
+    },
+    {
+      "index": 34,
+      "pts": 8960,
+      "startMs": 583.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "0417a85178bd8518f9e9efc3876fb702",
+      "file": "Frames/DafeiyuHomeTouch_0034.jpg",
+      "sha256": "b6070214ecaa2b8657ea12ae5aefffec4d7cac07c57a10120f9c0d5a3fb4b23a"
+    },
+    {
+      "index": 35,
+      "pts": 9216,
+      "startMs": 600.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "183f741ad5b2468ea6521e6972204829",
+      "file": "Frames/DafeiyuHomeTouch_0035.jpg",
+      "sha256": "537aeda6e952748585efb3ead665e345efcfe76fe2a19bf98617f1a88702490d"
+    },
+    {
+      "index": 36,
+      "pts": 9472,
+      "startMs": 616.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f6713e7753b0e5f941bcdbb788bd9c8f",
+      "file": "Frames/DafeiyuHomeTouch_0036.jpg",
+      "sha256": "32e5066cd9eac7175cfc14500487a1d6f42e70a00b57985568d1197e1c4999e7"
+    },
+    {
+      "index": 37,
+      "pts": 9728,
+      "startMs": 633.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6652c23f9db13c299430304f09652fe5",
+      "file": "Frames/DafeiyuHomeTouch_0037.jpg",
+      "sha256": "035112498ab362856657c3512f3eb80e7dde71bf3c9c155320c52f7ce78233c5"
+    },
+    {
+      "index": 38,
+      "pts": 9984,
+      "startMs": 650.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "4c4308a62dcfd63f73d4ef5eb34561e0",
+      "file": "Frames/DafeiyuHomeTouch_0038.jpg",
+      "sha256": "83f626e66be886ee4c65df7ed464f467f06975e4339f93270acc990cacefe8eb"
+    },
+    {
+      "index": 39,
+      "pts": 10240,
+      "startMs": 666.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1edfaadb8f9429a63d548e1413a3592c",
+      "file": "Frames/DafeiyuHomeTouch_0039.jpg",
+      "sha256": "2086c5f773ec2a55cbd67176eceeaa8814092b1ed3bbfb7ccf201c2f2a636c5e"
+    },
+    {
+      "index": 40,
+      "pts": 10496,
+      "startMs": 683.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5f31c822e0f3084bc3e16ead9b1be4c9",
+      "file": "Frames/DafeiyuHomeTouch_0040.jpg",
+      "sha256": "f86390595dabfe1546f27854b497b32a629b19e04408a9812d2c6125ffcce5cb"
+    },
+    {
+      "index": 41,
+      "pts": 10752,
+      "startMs": 700.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ba416ebab167cd8d4e2e146a9d265c28",
+      "file": "Frames/DafeiyuHomeTouch_0041.jpg",
+      "sha256": "61090a6a2793e0f9d2aad9fb8de0f1d0d960ad56e25446ecb56ac6769ac7b4e2"
+    },
+    {
+      "index": 42,
+      "pts": 11008,
+      "startMs": 716.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7e2e61ca1ed08d722624a58b3a9da962",
+      "file": "Frames/DafeiyuHomeTouch_0042.jpg",
+      "sha256": "63f6a056d96f7c48cdeb1a8bbe4340a7b007f39b804aaaa8818c9375ff6714b7"
+    },
+    {
+      "index": 43,
+      "pts": 11264,
+      "startMs": 733.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "331f0f4c2ff0347f628fdf47955ea8a8",
+      "file": "Frames/DafeiyuHomeTouch_0043.jpg",
+      "sha256": "0d019ba7a2361e9e7a8965ed1e8e5e66073933900a43483450714e08c3fb6f39"
+    },
+    {
+      "index": 44,
+      "pts": 11520,
+      "startMs": 750.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ceb249b6568d0d114d7c80045423100f",
+      "file": "Frames/DafeiyuHomeTouch_0044.jpg",
+      "sha256": "ae1b217c914a6fae3439ff29cb77181765e62a5353d16679bd0e9c494e61f372"
+    },
+    {
+      "index": 45,
+      "pts": 11776,
+      "startMs": 766.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "b8b4a471c6f3f333c027d13ed6c872e5",
+      "file": "Frames/DafeiyuHomeTouch_0045.jpg",
+      "sha256": "68dccc96cbfda989b79c062a37d497b801abd59da0b462a298d6d03966c9a174"
+    },
+    {
+      "index": 46,
+      "pts": 12032,
+      "startMs": 783.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "a732aeb68b81899b8ea554c15ed6c188",
+      "file": "Frames/DafeiyuHomeTouch_0046.jpg",
+      "sha256": "91da66b2f2ca5f9bb7babdf819048b4e595443f4d428642c120aea19fa50db28"
+    },
+    {
+      "index": 47,
+      "pts": 12288,
+      "startMs": 800.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "97bb7709aa349447aa18d1f69797a59f",
+      "file": "Frames/DafeiyuHomeTouch_0047.jpg",
+      "sha256": "72294e4167bc2c5e00f7f864b21cfc32c4d74c0d11738bb6e242f7a425b7aa7a"
+    },
+    {
+      "index": 48,
+      "pts": 12544,
+      "startMs": 816.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5281a2bb027619238a66e4a6649d233d",
+      "file": "Frames/DafeiyuHomeTouch_0048.jpg",
+      "sha256": "4fa28561cb7ecbdb803d746287f81eee785cbd61d3172d7600537063298b3454"
+    },
+    {
+      "index": 49,
+      "pts": 12800,
+      "startMs": 833.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "174c39075e52c2bab2c56f4458d807ea",
+      "file": "Frames/DafeiyuHomeTouch_0049.jpg",
+      "sha256": "f4e63e295e7493f2faf0744f9661fde1dbd19572c75e4307154d4edee1464418"
+    },
+    {
+      "index": 50,
+      "pts": 13056,
+      "startMs": 850.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3a2212abbeaf6ea18807e96105b6a1e6",
+      "file": "Frames/DafeiyuHomeTouch_0050.jpg",
+      "sha256": "406602128dae52985b49c39f26422a25d60088448899b327b39f1fbf69551c47"
+    },
+    {
+      "index": 51,
+      "pts": 13312,
+      "startMs": 866.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9c4aa5aad5f859e161d21deec62a1732",
+      "file": "Frames/DafeiyuHomeTouch_0051.jpg",
+      "sha256": "28bc471acff09f4cbbdb84624f7560447b37b1f5c147a41afa79f6b8162d3740"
+    },
+    {
+      "index": 52,
+      "pts": 13568,
+      "startMs": 883.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "470b4bc4e631a659445c274cc680f69c",
+      "file": "Frames/DafeiyuHomeTouch_0052.jpg",
+      "sha256": "0f2ca7820ab5c13fb40de6eff261fdfe2810ba9ef68ae9d9232907b798121eea"
+    },
+    {
+      "index": 53,
+      "pts": 13824,
+      "startMs": 900.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "dfd232369e42beeaaa0d2609b51e5e16",
+      "file": "Frames/DafeiyuHomeTouch_0053.jpg",
+      "sha256": "67b552bd46da58db8e64db55675d2170b6c73c1f87bf23e2d23630d8363fb5d3"
+    },
+    {
+      "index": 54,
+      "pts": 14080,
+      "startMs": 916.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "256b8ccc4fb7259a9a504fff8b01f978",
+      "file": "Frames/DafeiyuHomeTouch_0054.jpg",
+      "sha256": "b78ae3944e7f7f212e0b35d801292a339289de079aa7f49c20f14ecadc5098a0"
+    },
+    {
+      "index": 55,
+      "pts": 14336,
+      "startMs": 933.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1952c015cd8f6d9b90e6caf520397c06",
+      "file": "Frames/DafeiyuHomeTouch_0055.jpg",
+      "sha256": "26f0974bb4b1531a7602a142151d4de0dc794d7e1fe12e696bb1e154b7ac23a0"
+    },
+    {
+      "index": 56,
+      "pts": 14592,
+      "startMs": 950.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ce0e4b0e45631794c6f521b9269d5822",
+      "file": "Frames/DafeiyuHomeTouch_0056.jpg",
+      "sha256": "9693ef61ced12333096e8de6b5af1ee7db7c22843832eb9da15ecdcfea896a2f"
+    },
+    {
+      "index": 57,
+      "pts": 14848,
+      "startMs": 966.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6fd2d1c06c5533ed6a21ae01f259686d",
+      "file": "Frames/DafeiyuHomeTouch_0057.jpg",
+      "sha256": "017103a41959ca8651df061576e646434afa891c47e5ac786805d85d3d8e46c8"
+    },
+    {
+      "index": 58,
+      "pts": 15104,
+      "startMs": 983.3333333333334,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "bca684754ce51d7b6d103a6a039fcbd8",
+      "file": "Frames/DafeiyuHomeTouch_0058.jpg",
+      "sha256": "71780790628983c278508a54ad32a8df5c184809643c1f13c6e54d4a05505e62"
+    },
+    {
+      "index": 59,
+      "pts": 15360,
+      "startMs": 1000.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cba0eb48a188654d6ad6eb371cf90e22",
+      "file": "Frames/DafeiyuHomeTouch_0059.jpg",
+      "sha256": "ee5fb8e5cd330027a679696885c6854b7c50f4257476af23ec6831cce361d9ed"
+    },
+    {
+      "index": 60,
+      "pts": 15616,
+      "startMs": 1016.6666666666666,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "32b28da10492874afdf1ee0e38dd8d82",
+      "file": "Frames/DafeiyuHomeTouch_0060.jpg",
+      "sha256": "f521fe8d46cabdfe76812967671f8c9f0a8aa291eae325178c563b169a6bb133"
+    },
+    {
+      "index": 61,
+      "pts": 15872,
+      "startMs": 1033.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "67787a1dd38b4289e808482024057a10",
+      "file": "Frames/DafeiyuHomeTouch_0061.jpg",
+      "sha256": "c9624087bbc62339bc93b9fa2666e25299a3c9cac8ba48fda6c2349e20042452"
+    },
+    {
+      "index": 62,
+      "pts": 16128,
+      "startMs": 1050.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "0b5b7fe63585330f19c5ff24436ed9e3",
+      "file": "Frames/DafeiyuHomeTouch_0062.jpg",
+      "sha256": "0ae4b63aef5d455cf473c9e68494fcea943a55dc3ef398217cc4339cfd5f477a"
+    },
+    {
+      "index": 63,
+      "pts": 16384,
+      "startMs": 1066.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "49b569c15d44d3b763f36015de5ccb32",
+      "file": "Frames/DafeiyuHomeTouch_0063.jpg",
+      "sha256": "ac0bd58c8bba8774ae64138f7ed20664af79b069eef1ca406ad7294d89a6a5b0"
+    },
+    {
+      "index": 64,
+      "pts": 16640,
+      "startMs": 1083.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "09376012a300d185850813ba4dc5d0fa",
+      "file": "Frames/DafeiyuHomeTouch_0064.jpg",
+      "sha256": "9229ee4d1cbd802de6ab0549e532e83979db3949ebb4e75f65a3c89820d913b0"
+    },
+    {
+      "index": 65,
+      "pts": 16896,
+      "startMs": 1100.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8796985ff2485d1812a46f1151ac8242",
+      "file": "Frames/DafeiyuHomeTouch_0065.jpg",
+      "sha256": "0ea199214d40c32feee49fad434ee5aa004e9abbbdaa931f4e50e3ce97eadf14"
+    },
+    {
+      "index": 66,
+      "pts": 17152,
+      "startMs": 1116.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6133fec8b6f3da113c2f42803f45c929",
+      "file": "Frames/DafeiyuHomeTouch_0066.jpg",
+      "sha256": "2676336ec12b1ebfa94346889771b8312049cfb3f0744a6e9e616e6813c777e7"
+    },
+    {
+      "index": 67,
+      "pts": 17408,
+      "startMs": 1133.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d7f44df6237381a3027a3ac088467900",
+      "file": "Frames/DafeiyuHomeTouch_0067.jpg",
+      "sha256": "1dd952e993fef0ab6cc989b01b59b5116d3d03be16f5efa3d355a800b3ebda81"
+    },
+    {
+      "index": 68,
+      "pts": 17664,
+      "startMs": 1150.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "492eeaf8ef420c16eef62e13927a0fc6",
+      "file": "Frames/DafeiyuHomeTouch_0068.jpg",
+      "sha256": "16433766e5095a30eabc97aea485c240c9a5eef7dcbc46c1cbbb05fbadad9df5"
+    },
+    {
+      "index": 69,
+      "pts": 17920,
+      "startMs": 1166.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2648c9f5030139707017598d4cd7ef62",
+      "file": "Frames/DafeiyuHomeTouch_0069.jpg",
+      "sha256": "dc9276598ea4026c2eecbfa7beaeff6456202b019c43d67976f6d625b1d068f8"
+    },
+    {
+      "index": 70,
+      "pts": 18176,
+      "startMs": 1183.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "877b2b1d89575688b40c07d64db2a6c5",
+      "file": "Frames/DafeiyuHomeTouch_0070.jpg",
+      "sha256": "49de00a91f10f82f86c66b4a09b69b940d7ea9896ac8da302e7d98ac0a19c203"
+    },
+    {
+      "index": 71,
+      "pts": 18432,
+      "startMs": 1200.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d2c57e2823f9ee1d1b2d8e82feaafb6d",
+      "file": "Frames/DafeiyuHomeTouch_0071.jpg",
+      "sha256": "8509a30586b46e73c307591880a48ddde87c26c98e6dc8c7df0adfc4ac549162"
+    },
+    {
+      "index": 72,
+      "pts": 18688,
+      "startMs": 1216.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5aba77f7816ab64e7ac95cef60b5ee8a",
+      "file": "Frames/DafeiyuHomeTouch_0072.jpg",
+      "sha256": "becb868a64721637d11d0ed66ace84fe788d3c2e4538438063b10633892ebb88"
+    },
+    {
+      "index": 73,
+      "pts": 18944,
+      "startMs": 1233.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8881810407af59c3cf966e8fda4641ce",
+      "file": "Frames/DafeiyuHomeTouch_0073.jpg",
+      "sha256": "525a8a65d998aa46ede9084243832b1af320518474cc3f1234246985b7fea942"
+    },
+    {
+      "index": 74,
+      "pts": 19200,
+      "startMs": 1250.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d7b608160bba624fbb0e91ac5c7bb4a9",
+      "file": "Frames/DafeiyuHomeTouch_0074.jpg",
+      "sha256": "19eec8e6a251d510822f95565303d5117387b9b1ebf963a6d94fa7b4f7835ddb"
+    },
+    {
+      "index": 75,
+      "pts": 19456,
+      "startMs": 1266.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f0682c9051cced6560d7515222ab608f",
+      "file": "Frames/DafeiyuHomeTouch_0075.jpg",
+      "sha256": "2b4a431122f44fb19b5a6c40ed6282d17983b009e8304dce0bd44fa0df1fa860"
+    },
+    {
+      "index": 76,
+      "pts": 19712,
+      "startMs": 1283.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "aa52c756a78d3f48f1ef8a0268d931b3",
+      "file": "Frames/DafeiyuHomeTouch_0076.jpg",
+      "sha256": "dcab91e02874c58b857efcd4a0507194af60af9ae061246fc7f0897ab52eaab6"
+    },
+    {
+      "index": 77,
+      "pts": 19968,
+      "startMs": 1300.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1f415c3352f249916130b7546b7b09c5",
+      "file": "Frames/DafeiyuHomeTouch_0077.jpg",
+      "sha256": "685a7c57aa8d27b744b52b455ef03e2d0bb57650b1d3792cfff0d60783b80135"
+    },
+    {
+      "index": 78,
+      "pts": 20224,
+      "startMs": 1316.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c952b84ca27d129bc6dc0a162c80ee36",
+      "file": "Frames/DafeiyuHomeTouch_0078.jpg",
+      "sha256": "9b753a8d392497e093f9e2fedb4ba5cc48b96205a153856b259d0c908bc2075d"
+    },
+    {
+      "index": 79,
+      "pts": 20480,
+      "startMs": 1333.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6738dcb2f8ca2a2ffa5320c4209f82be",
+      "file": "Frames/DafeiyuHomeTouch_0079.jpg",
+      "sha256": "073e07ba4377dc80455b29f922fdfac5656ba00b7c6956cad2dbf4d55e49ecdb"
+    },
+    {
+      "index": 80,
+      "pts": 20736,
+      "startMs": 1350.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d02c3e2f7d93e1d3b2c58e0a876fc749",
+      "file": "Frames/DafeiyuHomeTouch_0080.jpg",
+      "sha256": "46630732b18b47475d97aeec1326a8f88e48bd2db1cb69be942d92e5a3ed90e4"
+    },
+    {
+      "index": 81,
+      "pts": 20992,
+      "startMs": 1366.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "04a85e2963fee0e6abc75a93b2c491c3",
+      "file": "Frames/DafeiyuHomeTouch_0081.jpg",
+      "sha256": "b341321bfb7dfddc581af6a48909b93a35518eec8e7fff9509ea6587ca34f8ae"
+    },
+    {
+      "index": 82,
+      "pts": 21248,
+      "startMs": 1383.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f915aa577a835bd99bed67e7a3ff7965",
+      "file": "Frames/DafeiyuHomeTouch_0082.jpg",
+      "sha256": "7cf62367fc7af47e17ab9096425dd51f8e4b99778faea05baa996b45870572ee"
+    },
+    {
+      "index": 83,
+      "pts": 21504,
+      "startMs": 1400.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "61bfb8600e8d9c0c07c96bb355d6945f",
+      "file": "Frames/DafeiyuHomeTouch_0083.jpg",
+      "sha256": "1e01da056e04ab8074cf17ac11fcc43c4a8b48330967943d7989d960ae2bbea7"
+    },
+    {
+      "index": 84,
+      "pts": 21760,
+      "startMs": 1416.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "54f0dc5ad8eebe17d9a8ddc4fe159536",
+      "file": "Frames/DafeiyuHomeTouch_0084.jpg",
+      "sha256": "c388f3ba87fb2ea21620b2ec473b93a7b2a87e5319b91fa8e7fbf7d61c0f25e7"
+    },
+    {
+      "index": 85,
+      "pts": 22016,
+      "startMs": 1433.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2b0bf9b00b02135d0a9e6d6a8ac99be2",
+      "file": "Frames/DafeiyuHomeTouch_0085.jpg",
+      "sha256": "66bf202004aaa52057d7c8bcdd3cde7af3da0a8d085e8cef417e195203a6de67"
+    },
+    {
+      "index": 86,
+      "pts": 22272,
+      "startMs": 1450.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fc81a52170f963f1983568d494be7006",
+      "file": "Frames/DafeiyuHomeTouch_0086.jpg",
+      "sha256": "56e836715e9f659cf3952cb1581bb5cf1d5551ac91836dfeeec17b8bf14b8b31"
+    },
+    {
+      "index": 87,
+      "pts": 22528,
+      "startMs": 1466.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6b2e12ee4be1df9fcaaf77db92995a02",
+      "file": "Frames/DafeiyuHomeTouch_0087.jpg",
+      "sha256": "ed2ec37430576f3c7ff9503ebb594729e9cf8cc7b0090fdc46963d865e930183"
+    },
+    {
+      "index": 88,
+      "pts": 22784,
+      "startMs": 1483.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "709c72364e644672c622a5142346d950",
+      "file": "Frames/DafeiyuHomeTouch_0088.jpg",
+      "sha256": "56ef9b273299b4b9623c7b6d73e1175e61deb3f120457a3c3d929a98f5ce652f"
+    },
+    {
+      "index": 89,
+      "pts": 23040,
+      "startMs": 1500.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3d04cb053c03a0e9e9ccc8ed380982b6",
+      "file": "Frames/DafeiyuHomeTouch_0089.jpg",
+      "sha256": "fce5cf6a53044905ceec4dc93d3f105b15b3c061fc1d83bb58837e00cd87b9d4"
+    },
+    {
+      "index": 90,
+      "pts": 23296,
+      "startMs": 1516.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "b0d7b73ecec32780416de239ae327f43",
+      "file": "Frames/DafeiyuHomeTouch_0090.jpg",
+      "sha256": "ff5b913ed099451ed5770efcd5462a8ee1231e37b9a4432a98814e906f20f887"
+    },
+    {
+      "index": 91,
+      "pts": 23552,
+      "startMs": 1533.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "bee5f03f7557a4e1b1029921b23dc507",
+      "file": "Frames/DafeiyuHomeTouch_0091.jpg",
+      "sha256": "b4b0851499b20ccf30565a5dd72c67dc351c1226347350f9abb348175cac3f48"
+    },
+    {
+      "index": 92,
+      "pts": 23808,
+      "startMs": 1550.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c82f00e2a4602a28d5c1da2844b69f16",
+      "file": "Frames/DafeiyuHomeTouch_0092.jpg",
+      "sha256": "70c5a866e6259ae10619508b09b3ff08fea8474650df242faea1f1bba06ee862"
+    },
+    {
+      "index": 93,
+      "pts": 24064,
+      "startMs": 1566.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "217100387e0fbcf3f4bcb07f4e1a35ac",
+      "file": "Frames/DafeiyuHomeTouch_0093.jpg",
+      "sha256": "25d8c49ec14e25fc4f9eedb2a9c583348ccc935b669fa1b829d9a0ccfcd04032"
+    },
+    {
+      "index": 94,
+      "pts": 24320,
+      "startMs": 1583.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2753190e7cdc64977988f10f10726136",
+      "file": "Frames/DafeiyuHomeTouch_0094.jpg",
+      "sha256": "55a1c0f596ae868301e78943a0206a9e400f4d702ff4c06faf021cdfa9e6e096"
+    },
+    {
+      "index": 95,
+      "pts": 24576,
+      "startMs": 1600.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "a55eac35d8f091876af56adf91830ac7",
+      "file": "Frames/DafeiyuHomeTouch_0095.jpg",
+      "sha256": "e91034ca785030121271aef6e6618d732930b618bd056bb8b47bb82fe8867dba"
+    },
+    {
+      "index": 96,
+      "pts": 24832,
+      "startMs": 1616.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1997dd3c1b0ef25eb008e4e15c058de3",
+      "file": "Frames/DafeiyuHomeTouch_0096.jpg",
+      "sha256": "41fe09e4266fcdf8c19a553a08a9aeb908c6e3a385de5edc83014c23db2a4345"
+    },
+    {
+      "index": 97,
+      "pts": 25088,
+      "startMs": 1633.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e3c7311e1e00e9999813f32c2b8f88c0",
+      "file": "Frames/DafeiyuHomeTouch_0097.jpg",
+      "sha256": "ba4c7b844acabcae97663d80c01e3eb3bcb9b5785db3f36aaabc0b0e080940e8"
+    },
+    {
+      "index": 98,
+      "pts": 25344,
+      "startMs": 1650.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3beebe7975454cbea6f97e25a13bc26c",
+      "file": "Frames/DafeiyuHomeTouch_0098.jpg",
+      "sha256": "8cfec457ca16cb252d3b41697837d5b9310ee165c42dbd09887c7b260613be79"
+    },
+    {
+      "index": 99,
+      "pts": 25600,
+      "startMs": 1666.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5fac039007b5dd7c4f32c243d652127e",
+      "file": "Frames/DafeiyuHomeTouch_0099.jpg",
+      "sha256": "42f7f3a2512c1704ea893ac5d6a736f8d5d108569d0e0476949780585f09d214"
+    },
+    {
+      "index": 100,
+      "pts": 25856,
+      "startMs": 1683.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "dfb26bff175edb0cfd9c7ad6386bb694",
+      "file": "Frames/DafeiyuHomeTouch_0100.jpg",
+      "sha256": "db8b408ff5a9565813affb7bb191d46c41e28abff1572e8a4ed55c6bb409ce97"
+    },
+    {
+      "index": 101,
+      "pts": 26112,
+      "startMs": 1700.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3ceaaec5082d23d140ddb80685b8b28a",
+      "file": "Frames/DafeiyuHomeTouch_0101.jpg",
+      "sha256": "12c398f8a622ae3123ef46dd826ecb8c72f6733f8ec0d9987b05c38103397123"
+    },
+    {
+      "index": 102,
+      "pts": 26368,
+      "startMs": 1716.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "bde3dd26d76bee14624197a6e2289bf1",
+      "file": "Frames/DafeiyuHomeTouch_0102.jpg",
+      "sha256": "aebc9509a534c3b16ee2d823222fa853dbd8f39e752b97ccfd9a69d373316c12"
+    },
+    {
+      "index": 103,
+      "pts": 26624,
+      "startMs": 1733.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8c0a0bbcd08ba5694bbe399117e30c5f",
+      "file": "Frames/DafeiyuHomeTouch_0103.jpg",
+      "sha256": "63d7f1e73568ef711abb1701994cfbdd4002b2a2cd2a5ef9f4af18248d84dd31"
+    },
+    {
+      "index": 104,
+      "pts": 26880,
+      "startMs": 1750.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "521e62cd50b19b75806801294e66159a",
+      "file": "Frames/DafeiyuHomeTouch_0104.jpg",
+      "sha256": "5bdaacecc788a8d9f9ab1a8b4840aad8563b0ba743bb1f007a28ce121d20d783"
+    },
+    {
+      "index": 105,
+      "pts": 27136,
+      "startMs": 1766.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "b65526d7d5de9f4d5e46b6855b849d32",
+      "file": "Frames/DafeiyuHomeTouch_0105.jpg",
+      "sha256": "181fc5ae69f47b14b7595cf837cce5fd584bc1d5229fec6e9bbf80764a91ba00"
+    },
+    {
+      "index": 106,
+      "pts": 27392,
+      "startMs": 1783.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "48e249089633dfa1f037eb39cafda4e2",
+      "file": "Frames/DafeiyuHomeTouch_0106.jpg",
+      "sha256": "3f5a585a51c61b2c0a3fef7a3ca560a83a7c7f53a98d6cf892e4392b61584f4f"
+    },
+    {
+      "index": 107,
+      "pts": 27648,
+      "startMs": 1800.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "4184e3ee9d00b2ef5e237b3dc52e75a7",
+      "file": "Frames/DafeiyuHomeTouch_0107.jpg",
+      "sha256": "75a144559dcbaca0c6021acfc5e4d891c9d3ffdeaaf8031df546e447cfe6f026"
+    },
+    {
+      "index": 108,
+      "pts": 27904,
+      "startMs": 1816.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f2042bab4145de226e90d64b4b2d2886",
+      "file": "Frames/DafeiyuHomeTouch_0108.jpg",
+      "sha256": "e02b7deeae1571581282639b4252a57f473322add8d62972d7765aa97f4e6c85"
+    },
+    {
+      "index": 109,
+      "pts": 28160,
+      "startMs": 1833.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "82022a7327eab5056635e4e975bb7243",
+      "file": "Frames/DafeiyuHomeTouch_0109.jpg",
+      "sha256": "55dc6a36d30108e092e6ef08981951025d4bb1f20bb52408b72c8c7f9869f897"
+    },
+    {
+      "index": 110,
+      "pts": 28416,
+      "startMs": 1850.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "444c9f14f7ec8ac960130b9749ece9f8",
+      "file": "Frames/DafeiyuHomeTouch_0110.jpg",
+      "sha256": "6edabec9340f40398f3edcd8f87d07870dfb9588595f8dd5efc325b44d95d7eb"
+    },
+    {
+      "index": 111,
+      "pts": 28672,
+      "startMs": 1866.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "917d3d25fe0661915dad300220a07b66",
+      "file": "Frames/DafeiyuHomeTouch_0111.jpg",
+      "sha256": "44a06987e4468d10008f4cdd38fb26aa6d7e9fd25cbdffad3492fa7760902bdd"
+    },
+    {
+      "index": 112,
+      "pts": 28928,
+      "startMs": 1883.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "bdcd57426631b8bf1968b74ce224453b",
+      "file": "Frames/DafeiyuHomeTouch_0112.jpg",
+      "sha256": "ddd11fd6802926f7013aeebd8edfc9e141176ceee1aa71f075113437c9edef2f"
+    },
+    {
+      "index": 113,
+      "pts": 29184,
+      "startMs": 1900.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "49725f55f52db66244d37d7316ce28bd",
+      "file": "Frames/DafeiyuHomeTouch_0113.jpg",
+      "sha256": "c518bd247639e2dac5209545618f4164e4d02db555a8b73a7a7362f8d52ea2b7"
+    },
+    {
+      "index": 114,
+      "pts": 29440,
+      "startMs": 1916.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f771012dc9b53401be490960efbfb013",
+      "file": "Frames/DafeiyuHomeTouch_0114.jpg",
+      "sha256": "0cff0f17bb7b9c3e269979072bd51bf1a24c902a232fbc154c01c5585434b244"
+    },
+    {
+      "index": 115,
+      "pts": 29696,
+      "startMs": 1933.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ff3ebc27d8c26b533a8eca4f6836406c",
+      "file": "Frames/DafeiyuHomeTouch_0115.jpg",
+      "sha256": "cfc611352e6ba132159d2cfdb144b069eaf8548abff63d3283facc57ed162bcd"
+    },
+    {
+      "index": 116,
+      "pts": 29952,
+      "startMs": 1950.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "aa55eb3c81c4d6cc2fbe4c2de4975960",
+      "file": "Frames/DafeiyuHomeTouch_0116.jpg",
+      "sha256": "ca7c687711aea8850b4bc76ea18b213451fe543b4315cb3397f744895592f172"
+    },
+    {
+      "index": 117,
+      "pts": 30208,
+      "startMs": 1966.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9cec21120704b8e0e85625e358a16ea2",
+      "file": "Frames/DafeiyuHomeTouch_0117.jpg",
+      "sha256": "c35b42d3ae8f1ebae698480b5620edb28d10f6f8366077dc4d950f83d3d022f0"
+    },
+    {
+      "index": 118,
+      "pts": 30464,
+      "startMs": 1983.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "27f4cd56003a89ba45db94a1a5210650",
+      "file": "Frames/DafeiyuHomeTouch_0118.jpg",
+      "sha256": "ce1fb33d1e1ebd90be859bd449deb3cccd698e3b014df68e80df733c434b5980"
+    },
+    {
+      "index": 119,
+      "pts": 30720,
+      "startMs": 2000.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "35cf1d3846373d08606592aac59399d4",
+      "file": "Frames/DafeiyuHomeTouch_0119.jpg",
+      "sha256": "0cfa60ade4de597f1fbd33ba0e6d43536eea43155651e6143501323b55302611"
+    },
+    {
+      "index": 120,
+      "pts": 30976,
+      "startMs": 2016.6666666666667,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "13eb9ffe797b420c7a881fe4c3ebee7c",
+      "file": "Frames/DafeiyuHomeTouch_0120.jpg",
+      "sha256": "8eca72826465ed920c6a3331380f5f5264ae9303575fe65f7dfd7d30c6c4e678"
+    },
+    {
+      "index": 121,
+      "pts": 31232,
+      "startMs": 2033.3333333333333,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "853e1706c576ce4c4018ce46d4cb6a61",
+      "file": "Frames/DafeiyuHomeTouch_0121.jpg",
+      "sha256": "7005a2262e78cd3f234b991068f95664201231ecc2e87cd98db940e946452a73"
+    },
+    {
+      "index": 122,
+      "pts": 31488,
+      "startMs": 2050.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3501f81f798674aa368b00e16d7dd0b7",
+      "file": "Frames/DafeiyuHomeTouch_0122.jpg",
+      "sha256": "db4aa310c2088e9a4b8928f587dde68a2ce17c57f3d7593a8a66fce56fb4f050"
+    },
+    {
+      "index": 123,
+      "pts": 31744,
+      "startMs": 2066.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "75038ab4479e969cd85fd68c775f01d3",
+      "file": "Frames/DafeiyuHomeTouch_0123.jpg",
+      "sha256": "8bb2048b5c51afcd5eb81eef24968cd75f4d9c401734e08c15dee704f6365975"
+    },
+    {
+      "index": 124,
+      "pts": 32000,
+      "startMs": 2083.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "b495751a9aac5c6af0ca620ee03d1751",
+      "file": "Frames/DafeiyuHomeTouch_0124.jpg",
+      "sha256": "59cbafe6bcbd67cfa6c061b6a1afc25681eb679df3690c8679121534782a5ff4"
+    },
+    {
+      "index": 125,
+      "pts": 32256,
+      "startMs": 2100.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7a2a34657c018f1ebefaf3852ba6703a",
+      "file": "Frames/DafeiyuHomeTouch_0125.jpg",
+      "sha256": "c228f9a29109f2a14e2b4ce916e9e046726a5517e72ca757611ae8835a0a211a"
+    },
+    {
+      "index": 126,
+      "pts": 32512,
+      "startMs": 2116.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9ba01cf74337408bb32b908694ffd93f",
+      "file": "Frames/DafeiyuHomeTouch_0126.jpg",
+      "sha256": "5db83122f33519e63a0a13e6f5a5f178f1a77c386eabc6822db05efc0f4ef6af"
+    },
+    {
+      "index": 127,
+      "pts": 32768,
+      "startMs": 2133.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cb29ad1c9849b7df35323a4c6c74815f",
+      "file": "Frames/DafeiyuHomeTouch_0127.jpg",
+      "sha256": "2864eba24799f445715346645553ff838c5ef54af3216953273601e7af55864c"
+    },
+    {
+      "index": 128,
+      "pts": 33024,
+      "startMs": 2150.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "a4eedd199bb71e590041ab0f38b0a8a4",
+      "file": "Frames/DafeiyuHomeTouch_0128.jpg",
+      "sha256": "93f0c2ce9ef7f59204d211b7c3b17540cf1c6d04de10d4bff6b2b9efdb348f47"
+    },
+    {
+      "index": 129,
+      "pts": 33280,
+      "startMs": 2166.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "162677e880acdb7e0ea1296771dc5eee",
+      "file": "Frames/DafeiyuHomeTouch_0129.jpg",
+      "sha256": "206e5a524d9087b5ba8f0dbdfcb10c988b93b25d727a26b189d787979b2eed35"
+    },
+    {
+      "index": 130,
+      "pts": 33536,
+      "startMs": 2183.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f5d555eb93c60894c5273f3b905af1dd",
+      "file": "Frames/DafeiyuHomeTouch_0130.jpg",
+      "sha256": "1a3c40c8065e9ae04cb50ac38299ba94c759d5f6a059e3fe851b43713f96f09d"
+    },
+    {
+      "index": 131,
+      "pts": 33792,
+      "startMs": 2200.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6f952fded66b87961d44c877746b32de",
+      "file": "Frames/DafeiyuHomeTouch_0131.jpg",
+      "sha256": "c640697580aac17bdc7cc8d19f8410ab0b91c1954df47df6c1f181acf467e648"
+    },
+    {
+      "index": 132,
+      "pts": 34048,
+      "startMs": 2216.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "55931131a935b88c8b5e26f4120e36bf",
+      "file": "Frames/DafeiyuHomeTouch_0132.jpg",
+      "sha256": "bdccfde0ba7a7fe9ab095ced00c8d92db3c091e33305462a075a3be5fcdf99a5"
+    },
+    {
+      "index": 133,
+      "pts": 34304,
+      "startMs": 2233.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ce532bb0921f208a0bb46c5d97f2d16a",
+      "file": "Frames/DafeiyuHomeTouch_0133.jpg",
+      "sha256": "5bbe706e325b938fec1798874bca8c478d48356b8a9c1edbd777ed2bbda0f794"
+    },
+    {
+      "index": 134,
+      "pts": 34560,
+      "startMs": 2250.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5954b1d0d5e6779ba637a46044cde882",
+      "file": "Frames/DafeiyuHomeTouch_0134.jpg",
+      "sha256": "3a8b2c29550abfaf7ec6f96a4642425aa8e810edf6219870e22c25238f46d2d2"
+    },
+    {
+      "index": 135,
+      "pts": 34816,
+      "startMs": 2266.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9aa5a9e22e7d165f8de30414e6edc8a6",
+      "file": "Frames/DafeiyuHomeTouch_0135.jpg",
+      "sha256": "f2d4ae45c29c3e281accc3d2e2b94f42b3209b7b07d4d01ec34da31eaf50dbd3"
+    },
+    {
+      "index": 136,
+      "pts": 35072,
+      "startMs": 2283.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "0b7539efc71fea31f4afcfe8c2498dc2",
+      "file": "Frames/DafeiyuHomeTouch_0136.jpg",
+      "sha256": "33f9d7fe62eeac37df2eff13554829ef9aa31cf0bc365c1f0ea46878126d5993"
+    },
+    {
+      "index": 137,
+      "pts": 35328,
+      "startMs": 2300.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "13883f9be1992318554624b8e51676fa",
+      "file": "Frames/DafeiyuHomeTouch_0137.jpg",
+      "sha256": "e099197aacf7971808e425697c9e6257d7dbb78ccd44ad47d70ee6f743d157c4"
+    },
+    {
+      "index": 138,
+      "pts": 35584,
+      "startMs": 2316.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3cfe842159e0a18f2ddb0b94a0a53b5c",
+      "file": "Frames/DafeiyuHomeTouch_0138.jpg",
+      "sha256": "d71012646905135bb59e8a703b971774f4fe01663b1ccc0a610cf55248c2bfe9"
+    },
+    {
+      "index": 139,
+      "pts": 35840,
+      "startMs": 2333.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ebdaa057a4e789324965b5819a3bf830",
+      "file": "Frames/DafeiyuHomeTouch_0139.jpg",
+      "sha256": "d9ab1cc7bd6fe9046f81e6e9b5b186dd02548fa55fd5feec88b750aa46c188fe"
+    },
+    {
+      "index": 140,
+      "pts": 36096,
+      "startMs": 2350.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2c7d536f4209628a3d69b4858bade25e",
+      "file": "Frames/DafeiyuHomeTouch_0140.jpg",
+      "sha256": "3d2e4843f114ec696937e276f1c033ba708efac792a69ab7714c80de6057f0a5"
+    },
+    {
+      "index": 141,
+      "pts": 36352,
+      "startMs": 2366.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ac847125381845772147c2ce7974bd3d",
+      "file": "Frames/DafeiyuHomeTouch_0141.jpg",
+      "sha256": "6bc50018bf887e3f4b0964804600139337b1b9e462dff5a39d7f1f5f95cb9596"
+    },
+    {
+      "index": 142,
+      "pts": 36608,
+      "startMs": 2383.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "99a86aec3e2dae63c15d5b0487345a3a",
+      "file": "Frames/DafeiyuHomeTouch_0142.jpg",
+      "sha256": "fc40bedd14eec83762b4cf2febeca1b36ea8730fc7122545b115228144fed65a"
+    },
+    {
+      "index": 143,
+      "pts": 36864,
+      "startMs": 2400.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "a853087f211e4dcb8da76e0d2a677667",
+      "file": "Frames/DafeiyuHomeTouch_0143.jpg",
+      "sha256": "448784c60c79035ae1317f75c192cadade27f8d5e5001c74ea1d357738ffa85f"
+    },
+    {
+      "index": 144,
+      "pts": 37120,
+      "startMs": 2416.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "68a61d292870c4e4835eab557267fa99",
+      "file": "Frames/DafeiyuHomeTouch_0144.jpg",
+      "sha256": "613654e9d7eafd178a80cf030649032551da741aefc7ef5111f2e62264e4d618"
+    },
+    {
+      "index": 145,
+      "pts": 37376,
+      "startMs": 2433.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d43beeef59ca36dfe9516cd9ece144ac",
+      "file": "Frames/DafeiyuHomeTouch_0145.jpg",
+      "sha256": "2d19585a34e2981c9cccf72c7449e45490d0ee046a5661d624bb10bdeb0a50ce"
+    },
+    {
+      "index": 146,
+      "pts": 37632,
+      "startMs": 2450.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d6f4a0d5f876858d6fcafedc9fdfb093",
+      "file": "Frames/DafeiyuHomeTouch_0146.jpg",
+      "sha256": "84a491ffdb4b93087ec8f0fc620282da90a92e9c29cb4a4cb4d3fed62366788a"
+    },
+    {
+      "index": 147,
+      "pts": 37888,
+      "startMs": 2466.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "170c15b007d8f8dc65044d4378ee692c",
+      "file": "Frames/DafeiyuHomeTouch_0147.jpg",
+      "sha256": "4382c2e1e521c7fa9ff6fda643b7bb0b09873023cd030dc1cadaf8b452e64450"
+    },
+    {
+      "index": 148,
+      "pts": 38144,
+      "startMs": 2483.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1a16d2508e9f238e718b03874da32745",
+      "file": "Frames/DafeiyuHomeTouch_0148.jpg",
+      "sha256": "dc7456623124085b56f65b0887e70b4f664191c6d28aaed59e8fa46210627a2e"
+    },
+    {
+      "index": 149,
+      "pts": 38400,
+      "startMs": 2500.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fea7422a3438b3ee6ffd24211ca2dca1",
+      "file": "Frames/DafeiyuHomeTouch_0149.jpg",
+      "sha256": "fce3b24e3f57aa176014f301f396dd83955e3ce2d46cf9a75e2bd9fb7c216048"
+    },
+    {
+      "index": 150,
+      "pts": 38656,
+      "startMs": 2516.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "de0699253e70a57a71ad5d4b989d0663",
+      "file": "Frames/DafeiyuHomeTouch_0150.jpg",
+      "sha256": "1ebb7515558ae76af962d3be8a48b8b80c3b77b5d6ed43bd33840e44144d29a5"
+    },
+    {
+      "index": 151,
+      "pts": 38912,
+      "startMs": 2533.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6b73269e953cc424e3c800c6ea13983e",
+      "file": "Frames/DafeiyuHomeTouch_0151.jpg",
+      "sha256": "54db56fee0a53f5b9e3ecb2b05383427fa710c57ddad8143aefea018419ac0f9"
+    },
+    {
+      "index": 152,
+      "pts": 39168,
+      "startMs": 2550.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "346ac66e50e2507d752f180713b4c249",
+      "file": "Frames/DafeiyuHomeTouch_0152.jpg",
+      "sha256": "35db7e92303dee7c3e7fe33847ecdf17e2fb466950bd1494f7e48b75ad9ae35d"
+    },
+    {
+      "index": 153,
+      "pts": 39424,
+      "startMs": 2566.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "479389b11d88b5ae7b9029bc737328c2",
+      "file": "Frames/DafeiyuHomeTouch_0153.jpg",
+      "sha256": "b9e302b574f025a8dd459ad1d74510c153e77469817e5c23bff3b2765afab534"
+    },
+    {
+      "index": 154,
+      "pts": 39680,
+      "startMs": 2583.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c8a43cc29494d61ae2fcbc7ac1c2bf11",
+      "file": "Frames/DafeiyuHomeTouch_0154.jpg",
+      "sha256": "d5c4c175b11a42d597be4c176fd5ad78da3b4921a31f7db23bd8699972596aba"
+    },
+    {
+      "index": 155,
+      "pts": 39936,
+      "startMs": 2600.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "65ca7c8cf8c13d111fc8623f5445a244",
+      "file": "Frames/DafeiyuHomeTouch_0155.jpg",
+      "sha256": "92212ae77e06a60b9ca779a16b9fc481d5a2a0184ba148888be5cc55b00f31d2"
+    },
+    {
+      "index": 156,
+      "pts": 40192,
+      "startMs": 2616.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2ed44b292958fb9e92586cbedb93643a",
+      "file": "Frames/DafeiyuHomeTouch_0156.jpg",
+      "sha256": "7da1218b11f00ed397f685db401d203a143883c15ed3146176bc7ec33cf12524"
+    },
+    {
+      "index": 157,
+      "pts": 40448,
+      "startMs": 2633.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c387190dde516556525e360d69715c44",
+      "file": "Frames/DafeiyuHomeTouch_0157.jpg",
+      "sha256": "2229fb043737d4f4487e42aab54b69939010e1e291a7defa39dc886b2624aa03"
+    },
+    {
+      "index": 158,
+      "pts": 40704,
+      "startMs": 2650.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e3815b92177d86e182523eeaa59a033e",
+      "file": "Frames/DafeiyuHomeTouch_0158.jpg",
+      "sha256": "d76bce3568c0acdfccdb3c5d71fda7185e1b95ec9fa403b8be884d9116d7596c"
+    },
+    {
+      "index": 159,
+      "pts": 40960,
+      "startMs": 2666.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "750ffbd3181ceadc13ef614d5eb68fec",
+      "file": "Frames/DafeiyuHomeTouch_0159.jpg",
+      "sha256": "4f4c50380f8bd367cffb36e4d73b76d066944079281ad1231172b563a3cd00b9"
+    },
+    {
+      "index": 160,
+      "pts": 41216,
+      "startMs": 2683.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c245b81c9a5a3de40e59b0a27e9cce1f",
+      "file": "Frames/DafeiyuHomeTouch_0160.jpg",
+      "sha256": "8d288e9d39e73be083aeb761c3c855b52d911951a1ac0e52139eff29089d7eff"
+    },
+    {
+      "index": 161,
+      "pts": 41472,
+      "startMs": 2700.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "2ec83a7d23a51b7a1029f17e749f0bd5",
+      "file": "Frames/DafeiyuHomeTouch_0161.jpg",
+      "sha256": "4a25292a5edb7c8eb5b533f417f2e1558d8971d6d458ea62cf3b0fcdb5a5975b"
+    },
+    {
+      "index": 162,
+      "pts": 41728,
+      "startMs": 2716.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e422edb4dac6b18dce8249cb8c7341c7",
+      "file": "Frames/DafeiyuHomeTouch_0162.jpg",
+      "sha256": "dca43d218c2d96a9632af64fff00ca40670ed8d1f601141806512493de162b7a"
+    },
+    {
+      "index": 163,
+      "pts": 41984,
+      "startMs": 2733.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "55cf8c646c1de1bc82f5c79d8a6ab68c",
+      "file": "Frames/DafeiyuHomeTouch_0163.jpg",
+      "sha256": "846ac0e0d0b8980e14c378606b2adeae3487bf8fd332a74376d06a84d353f7ed"
+    },
+    {
+      "index": 164,
+      "pts": 42240,
+      "startMs": 2750.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d82571c177d01b33e851378570de76d0",
+      "file": "Frames/DafeiyuHomeTouch_0164.jpg",
+      "sha256": "c66eb12a329af604d7c45a5bee88f2dbe2499ea238a0e9876608507b63dee7df"
+    },
+    {
+      "index": 165,
+      "pts": 42496,
+      "startMs": 2766.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ecc07e45e4a793eed0c2a2e48774750d",
+      "file": "Frames/DafeiyuHomeTouch_0165.jpg",
+      "sha256": "e0ceea1f2bf4f2cd03331239a0a133116b699870c80a2b5dc8f88d21586919a0"
+    },
+    {
+      "index": 166,
+      "pts": 42752,
+      "startMs": 2783.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f5d5b2c9993c07d30d36c226e19a8671",
+      "file": "Frames/DafeiyuHomeTouch_0166.jpg",
+      "sha256": "b7aeda50c5edb750910df7edd133c6e05bc3a8d3ef8d0135e29673fed1d9b0e5"
+    },
+    {
+      "index": 167,
+      "pts": 43008,
+      "startMs": 2800.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6e0e5ab44e8662b26a12b2fca3d436e9",
+      "file": "Frames/DafeiyuHomeTouch_0167.jpg",
+      "sha256": "8af73c8aecde6a72b6fffc0de44810de0b7c297cadfb84785200fa4db51bc3fc"
+    },
+    {
+      "index": 168,
+      "pts": 43264,
+      "startMs": 2816.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "22058817b6726307dba5a6d3b7360d8b",
+      "file": "Frames/DafeiyuHomeTouch_0168.jpg",
+      "sha256": "0ddb9a963eaf55efec2b885711076ee0e2127d1e851e8720b4019e6477d98b7e"
+    },
+    {
+      "index": 169,
+      "pts": 43520,
+      "startMs": 2833.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7a987ced849a05c64b3ebe7926748d1b",
+      "file": "Frames/DafeiyuHomeTouch_0169.jpg",
+      "sha256": "71ee3d70d4f34283f4d0da81780c0621e1a029915d0297bdbb68726c9905d6e5"
+    },
+    {
+      "index": 170,
+      "pts": 43776,
+      "startMs": 2850.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d819bf28bc9c4dee52b7a422949134f4",
+      "file": "Frames/DafeiyuHomeTouch_0170.jpg",
+      "sha256": "76a5db9769c51c44e416582134ff984b23e4e2caa1bba149f09ac839e223baff"
+    },
+    {
+      "index": 171,
+      "pts": 44032,
+      "startMs": 2866.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fe9811a7296653b5942e2b26a05b25d3",
+      "file": "Frames/DafeiyuHomeTouch_0171.jpg",
+      "sha256": "7b2c24be1174058b21f7438e66aaca5946326504467ec2e0e834168bdbc56bf6"
+    },
+    {
+      "index": 172,
+      "pts": 44288,
+      "startMs": 2883.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d9e9327f8fc1bf1c585282eba3f619e5",
+      "file": "Frames/DafeiyuHomeTouch_0172.jpg",
+      "sha256": "540602cd3bbded38c6e84d9ef8609f5e7cd37292fe990858b2406adee1b98e83"
+    },
+    {
+      "index": 173,
+      "pts": 44544,
+      "startMs": 2900.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "23db103cacb1e78a5b0a7be16bd02e19",
+      "file": "Frames/DafeiyuHomeTouch_0173.jpg",
+      "sha256": "6e216e487979cb237a1e3a14c42c522e0a7b785eae390416c172798935f3d0a5"
+    },
+    {
+      "index": 174,
+      "pts": 44800,
+      "startMs": 2916.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "adc075fefdb450fa8aca5c5d7855aefd",
+      "file": "Frames/DafeiyuHomeTouch_0174.jpg",
+      "sha256": "7f48ac04be394c3fa7ae3ac4ff86450fb48944af70da057bc835b878f0ba550a"
+    },
+    {
+      "index": 175,
+      "pts": 45056,
+      "startMs": 2933.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ee46ded0363588cda9bb1e5d1583356e",
+      "file": "Frames/DafeiyuHomeTouch_0175.jpg",
+      "sha256": "9f100e6f948b0c0ec06da50eb03c28c7758d315a99273d908c5cf2c1366354dd"
+    },
+    {
+      "index": 176,
+      "pts": 45312,
+      "startMs": 2950.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d5c7f2169ed44007598b3af33d1ce505",
+      "file": "Frames/DafeiyuHomeTouch_0176.jpg",
+      "sha256": "42a431814284cc7101942774a3ded3e1c98fec7f686f91cc1b259dab488c5cd0"
+    },
+    {
+      "index": 177,
+      "pts": 45568,
+      "startMs": 2966.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9db39380d5de603d10d012990fa9489f",
+      "file": "Frames/DafeiyuHomeTouch_0177.jpg",
+      "sha256": "6e1d823b06407f337f5293a9f44776e933f85ec851a954f972b177f0c5a773c7"
+    },
+    {
+      "index": 178,
+      "pts": 45824,
+      "startMs": 2983.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f6ab88301930ac9276b93b76e89e9a15",
+      "file": "Frames/DafeiyuHomeTouch_0178.jpg",
+      "sha256": "7a24df55b4ba5034b8e5262d69090dd6fa87f419eff1b8bb9276bcf3b0a6ccb1"
+    },
+    {
+      "index": 179,
+      "pts": 46080,
+      "startMs": 3000.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "bba8857e00868b51173f4feadab7529e",
+      "file": "Frames/DafeiyuHomeTouch_0179.jpg",
+      "sha256": "1880e484f9c212e324f983493742ee4e2cc84e36f53c6798e3c00a8d974145d8"
+    },
+    {
+      "index": 180,
+      "pts": 46336,
+      "startMs": 3016.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "59b0ba92e34abb2f7917635cd3120913",
+      "file": "Frames/DafeiyuHomeTouch_0180.jpg",
+      "sha256": "34fcde9c13ae392c729184847ee679384bca2eb3353ffe51324aca0fdc143ab3"
+    },
+    {
+      "index": 181,
+      "pts": 46592,
+      "startMs": 3033.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "98c3f45489a5ba91fda8864a9b1164ca",
+      "file": "Frames/DafeiyuHomeTouch_0181.jpg",
+      "sha256": "74b04589b3eacbd95493a42d5dc3b0a3f384c7cc95ce64faa8a128d19e002650"
+    },
+    {
+      "index": 182,
+      "pts": 46848,
+      "startMs": 3050.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "487f3a6c3e04ff6b9223957cea8fffc7",
+      "file": "Frames/DafeiyuHomeTouch_0182.jpg",
+      "sha256": "035ade2106d0bf7304d9fe4f916301c292b9adcb2ca80f57ef2a26efb331b264"
+    },
+    {
+      "index": 183,
+      "pts": 47104,
+      "startMs": 3066.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "786235cbd5e7af014b812a69cf4a1f85",
+      "file": "Frames/DafeiyuHomeTouch_0183.jpg",
+      "sha256": "92c77b0872e99c1fd445dcb5732954d9fe0b9439dd34173faafc217731d8ef3b"
+    },
+    {
+      "index": 184,
+      "pts": 47360,
+      "startMs": 3083.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e89310c71e5017675d0c2df43b3b19c6",
+      "file": "Frames/DafeiyuHomeTouch_0184.jpg",
+      "sha256": "e5cf05f291330abf4caab78824d2e419edc506537cd69e3902eb0a7fee2021de"
+    },
+    {
+      "index": 185,
+      "pts": 47616,
+      "startMs": 3100.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "8d7caade60a3a9427b512bdec78fdc74",
+      "file": "Frames/DafeiyuHomeTouch_0185.jpg",
+      "sha256": "7b116eb2a880f3194058aa65c965a91cd7af7be832d8cf20f0d7508bb3b0e6a9"
+    },
+    {
+      "index": 186,
+      "pts": 47872,
+      "startMs": 3116.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "68ac2b5685528454ec941c8e6829e139",
+      "file": "Frames/DafeiyuHomeTouch_0186.jpg",
+      "sha256": "346cc63050827de2ee83f2427064fe7a7ddd126ac5e85f2886c85f6837abe7dc"
+    },
+    {
+      "index": 187,
+      "pts": 48128,
+      "startMs": 3133.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "425e5f584921fdbb748ede235a519984",
+      "file": "Frames/DafeiyuHomeTouch_0187.jpg",
+      "sha256": "a2871f6c0dd811b342b4b43c76d843a616363e1976904d4d76271e62bfb19914"
+    },
+    {
+      "index": 188,
+      "pts": 48384,
+      "startMs": 3150.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "59c03b8d33a2c05af63386892af91066",
+      "file": "Frames/DafeiyuHomeTouch_0188.jpg",
+      "sha256": "7c00efd8c03ad5f7c7a252147b1bd2b02160262c372ae52df9d11353ef485c22"
+    },
+    {
+      "index": 189,
+      "pts": 48640,
+      "startMs": 3166.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "679832a86926d054198c2fc34eff93a0",
+      "file": "Frames/DafeiyuHomeTouch_0189.jpg",
+      "sha256": "fd105a2c7a80f0ed4eb91cdd9d36c55414a50050f124e0e8d6e198f443d55bf8"
+    },
+    {
+      "index": 190,
+      "pts": 48896,
+      "startMs": 3183.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "5778199246e36feaf02e35a130ac19f9",
+      "file": "Frames/DafeiyuHomeTouch_0190.jpg",
+      "sha256": "767a42bba58c014dd38fbf9f163dae3522a3335766b0207232098c385faeb495"
+    },
+    {
+      "index": 191,
+      "pts": 49152,
+      "startMs": 3200.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "680a8e7097beb155c9735796c247ef61",
+      "file": "Frames/DafeiyuHomeTouch_0191.jpg",
+      "sha256": "fe3afb3b763d97f0b5c3e032ea83ba95365eaaf88537e26b7c8b7dddf8198a47"
+    },
+    {
+      "index": 192,
+      "pts": 49408,
+      "startMs": 3216.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1cc28d5d5544aa8dd348f79066bb860d",
+      "file": "Frames/DafeiyuHomeTouch_0192.jpg",
+      "sha256": "318ba62c650675b58d0b59f673d0134ced15689c227a40f0ff5517c7994477d0"
+    },
+    {
+      "index": 193,
+      "pts": 49664,
+      "startMs": 3233.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3905bb1912e186c8382f7fab7458984f",
+      "file": "Frames/DafeiyuHomeTouch_0193.jpg",
+      "sha256": "408cf9be00c0de744f8d0d07606c0e361cfcebff40e25ba47ceb17f5707dccae"
+    },
+    {
+      "index": 194,
+      "pts": 49920,
+      "startMs": 3250.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "005ca592b92680799b79dfcb40583ea1",
+      "file": "Frames/DafeiyuHomeTouch_0194.jpg",
+      "sha256": "848457e6de16a29faefddb7631f42eacc461dd25ea64eab979939f80c7330fba"
+    },
+    {
+      "index": 195,
+      "pts": 50176,
+      "startMs": 3266.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e3a75142d858a50b5d3aad721ba963dc",
+      "file": "Frames/DafeiyuHomeTouch_0195.jpg",
+      "sha256": "cea162727db64774cce9b248a748dcbedb9dc181bba869917325d0ccfefb72c4"
+    },
+    {
+      "index": 196,
+      "pts": 50432,
+      "startMs": 3283.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "def62485953e32b248aadf7532dfe0b3",
+      "file": "Frames/DafeiyuHomeTouch_0196.jpg",
+      "sha256": "4f1cc64d809c5a6a621fef612732b4049688407da6c3dc57616e61c5d8d7756e"
+    },
+    {
+      "index": 197,
+      "pts": 50688,
+      "startMs": 3300.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "71f98040e2a7c9325b349fdc89ab4087",
+      "file": "Frames/DafeiyuHomeTouch_0197.jpg",
+      "sha256": "cd8413fe4e7fb789c1e6d6ec8e386e8cea10c442dc0876b8c3acf9f707db5357"
+    },
+    {
+      "index": 198,
+      "pts": 50944,
+      "startMs": 3316.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "51354ecc1b4a4b9bf1dc7ad43956cadd",
+      "file": "Frames/DafeiyuHomeTouch_0198.jpg",
+      "sha256": "9729731c628305e34803b31a6563a7464990c9c65337c43dd63cbb86a7317798"
+    },
+    {
+      "index": 199,
+      "pts": 51200,
+      "startMs": 3333.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7af82d845023c4e31de6ec6de00ee0df",
+      "file": "Frames/DafeiyuHomeTouch_0199.jpg",
+      "sha256": "9283c50068f9347224f46fdd00341dab199ac7de33f188df6b30d0c51c92373e"
+    },
+    {
+      "index": 200,
+      "pts": 51456,
+      "startMs": 3350.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c67f1215eea66d09311d7719faa4dd84",
+      "file": "Frames/DafeiyuHomeTouch_0200.jpg",
+      "sha256": "738b2bc16e03a405651cd5cc4dc4c238aba472a0c8ddce800855887a9aa38676"
+    },
+    {
+      "index": 201,
+      "pts": 51712,
+      "startMs": 3366.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "06b30285d2dbf0c2e68639abba08722c",
+      "file": "Frames/DafeiyuHomeTouch_0201.jpg",
+      "sha256": "7f80a48f089d559ac889b53f16d9b4a4fb5579d57bbbbf599f01334aceab5460"
+    },
+    {
+      "index": 202,
+      "pts": 51968,
+      "startMs": 3383.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "9776c0fba964530a9bd257cfd19f2934",
+      "file": "Frames/DafeiyuHomeTouch_0202.jpg",
+      "sha256": "0e1eef36a27b2bb5ff2ae2260c086187a222f26a7f1ce213ad07db273ae048c7"
+    },
+    {
+      "index": 203,
+      "pts": 52224,
+      "startMs": 3400.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fffd088984365e21c59b3f84185a97c0",
+      "file": "Frames/DafeiyuHomeTouch_0203.jpg",
+      "sha256": "0f09ba34c889f5c5caaa9649709429bf34525e7f2fa12e3c3f0754ce1ba33914"
+    },
+    {
+      "index": 204,
+      "pts": 52480,
+      "startMs": 3416.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "21316a9c464fc427f8155c4d8809b5d0",
+      "file": "Frames/DafeiyuHomeTouch_0204.jpg",
+      "sha256": "9184908a421476f4eb9dea5a3ca6b5f08b61ab6fe0229cff950ac323e5449ec7"
+    },
+    {
+      "index": 205,
+      "pts": 52736,
+      "startMs": 3433.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "d766c5c85b6aa4286a7095a014415ba5",
+      "file": "Frames/DafeiyuHomeTouch_0205.jpg",
+      "sha256": "267f762d7f775c37aca9056c1dbf55f1d2a1e94681fdf16db1bf9c881565b102"
+    },
+    {
+      "index": 206,
+      "pts": 52992,
+      "startMs": 3450.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "584c6e34c8d9e723127b51049f4198c2",
+      "file": "Frames/DafeiyuHomeTouch_0206.jpg",
+      "sha256": "12bfad6697350ee907efb84117f3014ed1b3c2377d747c4da58b7ca0d237f55f"
+    },
+    {
+      "index": 207,
+      "pts": 53248,
+      "startMs": 3466.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e981145aa5fc2778062045adf31490df",
+      "file": "Frames/DafeiyuHomeTouch_0207.jpg",
+      "sha256": "a12912bbb1c8825aa7c1c2743d49bb655893b5860f7dd5d3fd377cb6099a3d6a"
+    },
+    {
+      "index": 208,
+      "pts": 53504,
+      "startMs": 3483.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "33980cbfa68e91e8463d26605d94d173",
+      "file": "Frames/DafeiyuHomeTouch_0208.jpg",
+      "sha256": "f8e02b4ac928062e58b75300ebec4a5fc2de506b6ce6913d751db4561146ded4"
+    },
+    {
+      "index": 209,
+      "pts": 53760,
+      "startMs": 3500.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "f95e28dbc28817e5ea6ecf7c7f937350",
+      "file": "Frames/DafeiyuHomeTouch_0209.jpg",
+      "sha256": "a8ab764e1fb9bc91a705cdd0c43870d8b5662f48f8a9ec6401115e260f83707d"
+    },
+    {
+      "index": 210,
+      "pts": 54016,
+      "startMs": 3516.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3cc8d457231cc7c8310845aae6ecda9a",
+      "file": "Frames/DafeiyuHomeTouch_0210.jpg",
+      "sha256": "bc57d4e79f1c48f87235ea7906831a719f769a011f9b5c93ecfa41ef547d05b9"
+    },
+    {
+      "index": 211,
+      "pts": 54272,
+      "startMs": 3533.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e5b66ec9ac4cf43eefb51578d1d59eae",
+      "file": "Frames/DafeiyuHomeTouch_0211.jpg",
+      "sha256": "e18fd1bcb0a5af68dedb94bebf8eed159b618927c4198f48b4cdfcb6aad93073"
+    },
+    {
+      "index": 212,
+      "pts": 54528,
+      "startMs": 3550.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "4e9b8f24f40c2353423a175f7d2ab407",
+      "file": "Frames/DafeiyuHomeTouch_0212.jpg",
+      "sha256": "856e5bcc82dda92f5e61bd68a7b48affb100085e734ce120e8d8115881e3f933"
+    },
+    {
+      "index": 213,
+      "pts": 54784,
+      "startMs": 3566.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c3d6fabe9dfee7b04253a0677a4dfdc3",
+      "file": "Frames/DafeiyuHomeTouch_0213.jpg",
+      "sha256": "38cbc8b81d239423385dc4e1f02e7382ee5b26db04e6a349c6195f5a959895b2"
+    },
+    {
+      "index": 214,
+      "pts": 55040,
+      "startMs": 3583.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "171c1a9056563d024132bdc847093726",
+      "file": "Frames/DafeiyuHomeTouch_0214.jpg",
+      "sha256": "3242a3045014efa15404d68d96c4e6ac7824bf6126e5a81856dc6bb16d5563ad"
+    },
+    {
+      "index": 215,
+      "pts": 55296,
+      "startMs": 3600.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "6f5a6967ff3e1c7d7313f2f3f84c6a40",
+      "file": "Frames/DafeiyuHomeTouch_0215.jpg",
+      "sha256": "50dcb5543ef0c323144976f7f3637e081880b6fd7cef216b3b68df8b79ecc86e"
+    },
+    {
+      "index": 216,
+      "pts": 55552,
+      "startMs": 3616.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "137c1d85b6fcc02c9bfcbfc4de8e5f1e",
+      "file": "Frames/DafeiyuHomeTouch_0216.jpg",
+      "sha256": "5391fa4e4341aba8db7f3913db8496123465f4335ba8d41334867e9f2070fb09"
+    },
+    {
+      "index": 217,
+      "pts": 55808,
+      "startMs": 3633.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "e43181f6d1625a008f64a1a16c985b94",
+      "file": "Frames/DafeiyuHomeTouch_0217.jpg",
+      "sha256": "61bd51f5670040669651d4cf9cf277aca9a9a5f254fec13d15c24b9dfd02e10a"
+    },
+    {
+      "index": 218,
+      "pts": 56064,
+      "startMs": 3650.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1052f4429675fe6129ff35abf910b156",
+      "file": "Frames/DafeiyuHomeTouch_0218.jpg",
+      "sha256": "35450e9204622095d4b006d6d52d2bd905fb5023f76b284eb31e5793525c8a5b"
+    },
+    {
+      "index": 219,
+      "pts": 56320,
+      "startMs": 3666.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "60e8d092bbad6f621d8c368a69ce8d37",
+      "file": "Frames/DafeiyuHomeTouch_0219.jpg",
+      "sha256": "002dff42d4fb00d103153fcf62b5475a670a524e54f0b348c7871ab2bdb810b3"
+    },
+    {
+      "index": 220,
+      "pts": 56576,
+      "startMs": 3683.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1009ba2a4c802ed4e4b19bcd6ce3061f",
+      "file": "Frames/DafeiyuHomeTouch_0220.jpg",
+      "sha256": "4e6d238f7744dd1ac49702af133b09accd0d43df6267e0bc1f5d978be60f5bcd"
+    },
+    {
+      "index": 221,
+      "pts": 56832,
+      "startMs": 3700.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c045dc452ccb3508e8eb05f366b5e691",
+      "file": "Frames/DafeiyuHomeTouch_0221.jpg",
+      "sha256": "4a5c2ed2f59f6870bd683a0527b2838eeb1ed6a8c808bc726e0fd2cff218fdc4"
+    },
+    {
+      "index": 222,
+      "pts": 57088,
+      "startMs": 3716.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "0b6b12e99134787e39f76598780cd705",
+      "file": "Frames/DafeiyuHomeTouch_0222.jpg",
+      "sha256": "a170aba0e9fdd213834e25447637b5d0a03b5c0a01b43b99110a610251cd22fd"
+    },
+    {
+      "index": 223,
+      "pts": 57344,
+      "startMs": 3733.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1c636fc8fe1e8e5958a4f8a17d4a6b54",
+      "file": "Frames/DafeiyuHomeTouch_0223.jpg",
+      "sha256": "b30cd09d7f084e5261445c4fe0c8f240a82bb8c267a6aa7a5a544420ceab52dc"
+    },
+    {
+      "index": 224,
+      "pts": 57600,
+      "startMs": 3750.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "1dcfaca195ca00fa073a2d5083a475f7",
+      "file": "Frames/DafeiyuHomeTouch_0224.jpg",
+      "sha256": "922cfe5ad441d51e1a73b927e6dceda918651156f5a17e5d87433d84f1413351"
+    },
+    {
+      "index": 225,
+      "pts": 57856,
+      "startMs": 3766.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "81b255ef1c50d86b108975349f545541",
+      "file": "Frames/DafeiyuHomeTouch_0225.jpg",
+      "sha256": "aeac7000c55b6f9df56a29ea745708c28d93c5d9ca23676f6eafa537c0d3c51a"
+    },
+    {
+      "index": 226,
+      "pts": 58112,
+      "startMs": 3783.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3025fc261c8b72685b23d38e503e1dc5",
+      "file": "Frames/DafeiyuHomeTouch_0226.jpg",
+      "sha256": "64e30da3c05ef6657dd81cf2f87cf150c9dcfbd8c81bb32aeae17371abd65b2b"
+    },
+    {
+      "index": 227,
+      "pts": 58368,
+      "startMs": 3800.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "fa8198fb4e03a461b65821a3c4f5028a",
+      "file": "Frames/DafeiyuHomeTouch_0227.jpg",
+      "sha256": "2b4b4241c3284b115f577a1a4e044fa6630941a5920aa4ba4b28d0e6d7f5ee5d"
+    },
+    {
+      "index": 228,
+      "pts": 58624,
+      "startMs": 3816.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3d606e7de89f76f1a44727d602c73498",
+      "file": "Frames/DafeiyuHomeTouch_0228.jpg",
+      "sha256": "176cdd06715e9c46726a385941a295feeb6e2ea47533069d62b728e5ea427f2f"
+    },
+    {
+      "index": 229,
+      "pts": 58880,
+      "startMs": 3833.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "158a48fa2bdd373703c5fe14c769ebde",
+      "file": "Frames/DafeiyuHomeTouch_0229.jpg",
+      "sha256": "d5eccba338e5f7dd1f5b4ce3fc1fa997faab2204c73058859b57ab5539763003"
+    },
+    {
+      "index": 230,
+      "pts": 59136,
+      "startMs": 3850.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "cf7e33b1549ee04c121b41e1fe5990de",
+      "file": "Frames/DafeiyuHomeTouch_0230.jpg",
+      "sha256": "c3c5c7542dfade843b9452669fb24535f1e2431ac8c71a04ca4c19dfd613f1c2"
+    },
+    {
+      "index": 231,
+      "pts": 59392,
+      "startMs": 3866.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7e3adfed528f82ec9ee251ca86e78828",
+      "file": "Frames/DafeiyuHomeTouch_0231.jpg",
+      "sha256": "6a84c0f7abf77378c5217ee6bf4ea29162809dca64e1fbab693b7812825ed4f8"
+    },
+    {
+      "index": 232,
+      "pts": 59648,
+      "startMs": 3883.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "7c01154547fa499a787c461404ba2196",
+      "file": "Frames/DafeiyuHomeTouch_0232.jpg",
+      "sha256": "ff1b9335e857f6efeedddefc4631efd84feff7ba7417cc3c6cc9bd16d72d9b70"
+    },
+    {
+      "index": 233,
+      "pts": 59904,
+      "startMs": 3900.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "874056349e58591a6911872f5ca8b608",
+      "file": "Frames/DafeiyuHomeTouch_0233.jpg",
+      "sha256": "4f4ca07f373dd42dba24d3c4a6fde18c67a680ae6ddaeda953fe8585d5770308"
+    },
+    {
+      "index": 234,
+      "pts": 60160,
+      "startMs": 3916.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "3a67987654af323f8facb180479af8af",
+      "file": "Frames/DafeiyuHomeTouch_0234.jpg",
+      "sha256": "2ff02f6e82af20416821217cbff49a6e297f219e36585d07aea49871161ff2e6"
+    },
+    {
+      "index": 235,
+      "pts": 60416,
+      "startMs": 3933.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "c20307bdef7683ba2f4f49610f6ff5d9",
+      "file": "Frames/DafeiyuHomeTouch_0235.jpg",
+      "sha256": "c2f9ba278acbc20dc8b34c73b03aa3406983ca76672eb60916fcd6d55649b56c"
+    },
+    {
+      "index": 236,
+      "pts": 60672,
+      "startMs": 3950.0,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "ea4ba8559806a50eabc25a1f7ce098ed",
+      "file": "Frames/DafeiyuHomeTouch_0236.jpg",
+      "sha256": "3fb42aa04bef59f6677f5d4bf1c1f7da1625b74114e27c5d66ecaf09879c918e"
+    },
+    {
+      "index": 237,
+      "pts": 60928,
+      "startMs": 3966.6666666666665,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "20e8e4c64de2acb3f226ccd953a37108",
+      "file": "Frames/DafeiyuHomeTouch_0237.jpg",
+      "sha256": "fe6de3f64fb6c9dca2f43a96b2a3511d34099c1cf00c433c24bd30b38e583829"
+    },
+    {
+      "index": 238,
+      "pts": 61184,
+      "startMs": 3983.3333333333335,
+      "durationMs": 16.666666666666668,
+      "nativeRGBMD5": "4260536b9a8e8fe56c9fab10a7a94eac",
+      "file": "Frames/DafeiyuHomeTouch_0238.jpg",
+      "sha256": "ac45692daf384be1bb8d8a20defaaaca8d560415b8063710d6d76b2b68821610"
+    },
+    {
+      "index": 239,
+      "pts": 61440,
+      "startMs": 4000.0,
+      "durationMs": 64.0,
+      "nativeRGBMD5": "e01c37c03e9289c61359cfecea57cd63",
+      "file": "Frames/DafeiyuHomeTouch_0239.jpg",
+      "sha256": "a087730af132312503a9622e9319645075a1f0e4e79fc525a55b50e0bfa5d94e"
+    }
+  ],
+  "playback": "once-on-entry-and-tap; hold final frame; no forced loop",
+  "audio": "Source audio preserved in source.mp4; image-sequence home scene is silent",
+  "framing": "Approved v3: legs, right foot and headphones visible; left fingertips leave frame at maximum reach",
+  "sourceParts": [
+    {
+      "file": "SourceParts/source-000.bin",
+      "sha256": "f4060044a0c64357687c20eac273e3300c360309d6ec828b2ffc9ff8d500448a",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-001.bin",
+      "sha256": "1b8eb90d70405f5b8d20794ca9ec961032d2d1d73443e273aee4e9bcf47e9099",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-002.bin",
+      "sha256": "fb5000bce669e941b9c45344b684af015cdc0f8ca2134151c2a2ea3f62d0e445",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-003.bin",
+      "sha256": "f88a4ea68a3f7211153a1e383447b79864a0942d653ef270ef4a164ceaf410b5",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-004.bin",
+      "sha256": "e1d3c29b2ace832951eeaf2cf8cc616b80b307f8db2aacf5a4cb682768437096",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-005.bin",
+      "sha256": "f962ccadcf2c8065a7f34984931187599aad71db6108acc6b4e3da62cb2c38df",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-006.bin",
+      "sha256": "f579577a4999c4f4e673b9899d62e1c552505013696915841d5c0a3ff3f74f12",
+      "bytes": 4194304
+    },
+    {
+      "file": "SourceParts/source-007.bin",
+      "sha256": "8cddc409ef84ba4dab2f01db9cf68bc50351e38da7f4b1bf1282812b7df4ffb0",
+      "bytes": 215154
+    }
+  ]
+}

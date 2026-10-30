@@ -92,6 +92,8 @@ def main():
     print(f"Assets ready: {len(characters)} characters, separate chibi / standing / hero art, opaque app icon.")
     from prepare_video_actions import main as prepare_video_actions
     prepare_video_actions()
+    from prepare_home_scene import prepare as prepare_home_scene
+    prepare_home_scene()
 
 
 if __name__ == "__main__":

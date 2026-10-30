@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var minutes = 25
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
+    private let homeScenes = HomeSceneAnimation.load()
     @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
     @State private var browsedCharacterID = "xiaobai"
     @Environment(\.openURL) private var openURL
@@ -113,7 +114,16 @@ struct ContentView: View {
         } message: { Text(store.notice ?? "") }
     }
 
-    private var worldPage: some View {
+    @ViewBuilder private var worldPage: some View {
+        if let scene = homeScenes.first(where: { $0.characterID == store.displayCharacter.id }) {
+            DafeiyuHomePage(store: store, chat: chatStore, clip: scene, visible: tab == .world, controls: {
+                if let session = store.session { activeSession(session) }
+                else { setupSession }
+            }, openCharacters: { tab = .characters }, openDetails: { detailCharacter = store.displayCharacter })
+        } else { legacyWorldPage }
+    }
+
+    private var legacyWorldPage: some View {
         WorldPage {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 3) {

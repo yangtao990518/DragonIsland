@@ -48,6 +48,7 @@ jobs:
           .asset-venv/bin/python -m unittest discover -s Tests -p test_daily_motion_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_video_comparison.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_full_video_actions.py
+          .asset-venv/bin/python -m unittest discover -s Tests -p test_home_scene_resources.py
           .asset-venv/bin/python Scripts/verify_motion_resources.py
           swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
           python3 - <<'PY'
@@ -79,6 +80,7 @@ jobs:
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
             -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests \
+            -only-testing:DragonInterfaceTests/HomeSceneInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO build-for-testing 2>&1 | tee build/chat-build.log
       - name: Run chat interface tests
@@ -92,6 +94,7 @@ jobs:
             -only-testing:DragonInterfaceTests/ChatInterfaceTests \
             -only-testing:DragonInterfaceTests/AIChatInterfaceTests \
             -only-testing:DragonInterfaceTests/ChatMediaInterfaceTests \
+            -only-testing:DragonInterfaceTests/HomeSceneInterfaceTests \
             -only-testing:DragonInterfaceTests/CharacterMotionInterfaceTests \
             -parallel-testing-enabled NO \
             -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \

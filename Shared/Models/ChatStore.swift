@@ -38,6 +38,15 @@ final class ChatStore: ObservableObject {
     func character(_ id: String?) -> CompanionCharacter? { characters.first { $0.id == id } }
     var configuration: AIChatPreferences { history.configuration ?? AIChatPreferences() }
 
+    /// A home-screen tap is an ephemeral line, not a new saved chat conversation.
+    func homeGreeting(for character: CompanionCharacter) async throws -> String {
+        guard ready else { throw ChatError.invalidHistory }
+        let request = HomeGreeting.request(character: character, configuration: configuration)
+        let answer = try await provider.reply(to: request)
+        try Task.checkCancellation()
+        return try HomeGreeting.text(answer)
+    }
+
     @discardableResult
     func saveConfiguration(_ configuration: AIChatPreferences) -> Bool {
         change { $0.configuration = configuration }
