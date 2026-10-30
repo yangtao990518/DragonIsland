@@ -55,6 +55,17 @@ final class ChatMediaToolTests: XCTestCase {
         XCTAssertEqual(compatible.frameCount, 1)
         XCTAssertThrowsError(try ChatMediaFiles.compatiblePhoto(Data([0, 1, 2])))
     }
+    func testPhonePhotoOrientationUsesDisplayedAspectRatio() throws {
+        let bytes = NSMutableData()
+        let destination = try XCTUnwrap(CGImageDestinationCreateWithData(bytes, UTType.jpeg.identifier as CFString, 1, nil))
+        let context = try XCTUnwrap(CGContext(data: nil, width: 16, height: 8, bitsPerComponent: 8, bytesPerRow: 64,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        CGImageDestinationAddImage(destination, try XCTUnwrap(context.makeImage()), [kCGImagePropertyOrientation: 6] as CFDictionary)
+        XCTAssertTrue(CGImageDestinationFinalize(destination))
+        let asset = try ChatMediaAsset.inspect(bytes as Data)
+        XCTAssertEqual(asset.width, 8)
+        XCTAssertEqual(asset.height, 16)
+    }
     func testImageOnlyMessageAndLegacyJSONRoundTrip() throws {
         let item = ChatAttachment(id: UUID(), kind: .image, asset: try .inspect(Self.image()))
         let value = try history(attachment: item)

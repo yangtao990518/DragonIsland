@@ -57,8 +57,11 @@ struct ChatMediaAsset: Codable, Equatable, Hashable, Sendable {
                     ?? (gif[kCGImagePropertyGIFDelayTime] as? Double) ?? 0.1)
             }
         }
+        let orientation = (properties[kCGImagePropertyOrientation] as? Int) ?? 1
+        let swapsAxes = [5, 6, 7, 8].contains(orientation)
         let asset = Self(sha256: SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined(),
-                         fileExtension: ext, width: width, height: height, frameCount: count, duration: duration, byteCount: data.count)
+                         fileExtension: ext, width: swapsAxes ? height : width, height: swapsAxes ? width : height,
+                         frameCount: count, duration: duration, byteCount: data.count)
         try asset.validate()
         return asset
     }
