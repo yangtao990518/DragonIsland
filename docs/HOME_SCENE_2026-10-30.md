@@ -4,13 +4,13 @@
 
 ## 素材和时序
 
-- 原视频由用户在即梦生成，3840×2160，原文件 SHA256 `2c51f62fe4b7b55e9eeff2c900c61e6223dcb8f5565d560aef9c543a78484d26`。便携源文件保存于 `Art/HomeScenes/dafeiyu-touch/source.mp4`，包含原音轨，未覆盖仓库外原文件。
+- 原视频由用户在即梦生成，3840×2160，原文件 SHA256 `2c51f62fe4b7b55e9eeff2c900c61e6223dcb8f5565d560aef9c543a78484d26`。完整原片按原字节拆成 `Art/HomeScenes/dafeiyu-touch/SourceParts/` 下的 8 个二进制块，单块不超过 4 MiB，包含完整原音轨；每块及重组后的整片均校验 SHA256，未覆盖仓库外原文件。
 - 固定裁剪 `[x=1176,y=0,width=1854,height=2160]`，所有帧采用同一范围。不再对手机屏幕做 aspect-fill 裁剪。取景包含双腿、右脚和耳机；伸手最大时左侧部分指尖会出画面，用户看过这一版并确认使用。
 - **完整 240 帧、4.064 秒**，时间基准 `1/15360`。按原 PTS 保留前段较长帧间隔及末尾画面停留，不以平均帧率重新编号、加速、删尾或补帧。
 - 逐张验证原解码裁剪 RGB 的 MD5 与原分辨率 PNG 一致。完整原分辨率 PNG 在本机 `output/home-touch-portrait/frames-native/0000.png`～`0239.png`，无需将约 GB 级的中间图片重复提交。
 - 可跨机器恢复的正式源是原 MP4 的完整二进制分块、固定裁剪与每帧像素哈希/PTS 清单 `Art/HomeScenes/dafeiyu-touch/manifest.json`。App 的 240 张显示副本位于同目录 `Frames/`，1030×1200，JPEG quality=90、无色度降采样；只是缩小显示尺寸，**不是少取帧或替代原视频**。
 - `Scripts/prepare_home_scene.py` 导入并校验原片，生成本机无损 PNG、正式清单与 App 显示副本。普通构建无需 FFmpeg，仅复制已提交的帧和 JSON 到忽略的 `App/Resources/HomeScenes/`；不复制到 Widget，原 MP4 不打入 App。
-- 复现：`python Scripts/prepare_home_scene.py --source <原MP4或仓库source.mp4> --ffmpeg <FFmpeg可执行路径> --native-dir <本机中间帧目录>`。传入另一原视频时脚本拒绝覆盖，当前裁剪仅适用于本确认稿。
+- 复现：先运行 `python Scripts/prepare_home_scene.py --restore-source output/home-source.mp4` 校验并合并完整原片，再运行 `python Scripts/prepare_home_scene.py --source output/home-source.mp4 --ffmpeg <FFmpeg可执行路径> --native-dir <本机中间帧目录>`。传入另一原视频时脚本拒绝覆盖，当前裁剪仅适用于本确认稿。
 
 ## 主界面
 
@@ -25,4 +25,7 @@
 
 - 本机素材测试验证全部 240 个文件摘要、源视频摘要、原 PTS 和末帧停留、画面比例、构建副本一致性。原生 PNG 像素 MD5 在导入时全部通过。
 - 新增 Swift 测试检查 PTS 选帧、不强制循环、清单验证、20 字显示限制和主页请求不携带历史/工具权限；新增模拟器测试检查播放完成/点击重播、短气泡和动作入口。
-- 实际云端编译/界面测试结果在完成后补充。此前聊天或舞蹈通过记录不能冒充本次新主页验收。
+- 云端完整验收：[Actions 41046163525](https://github.com/yangtao990518/DragonIsland/actions/runs/41046163525)，验证源码 `aaf483c83bcf410cfacfb05a303a255b9b56cae5`。86 项 Swift 测试、App/Widget/界面测试编译、资源与字体检查、17 项实际 iOS 26.2 模拟器界面测试全部通过。新增主页用例在真实原生界面完成了播完、点击重播、短气泡与动作入口检查，耗时约 23 秒；整套界面回归约 646 秒。
+- 独立域测试：[Actions 41046014230](https://github.com/yangtao990518/DragonIsland/actions/runs/41046014230)，同一源码 86 项 Swift 测试通过。
+- 主页 AI 验收使用 DEBUG 测试提供者，未使用用户真实密钥调用服务；不能据此声称真实接口已连通或角色语音已可播放。
+- 测试后的补充仅涉及本记录和原片二进制分块的 Git 属性声明，不改变已验收的 Swift 代码、帧文件或播放时序。最终同步分支仍为 `codex/chat-media-tools`；未生成 IPA，未启动安装助手。
