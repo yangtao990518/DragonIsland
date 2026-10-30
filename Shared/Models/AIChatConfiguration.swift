@@ -146,7 +146,10 @@ enum AIChatContext {
         }
         var result = [AIChatMessage(role: "system", content: system)]
         func content(_ message: ChatMessage) -> String {
-            ([message.text] + (message.attachments ?? []).map(\.description)).filter { !$0.isEmpty }.joined(separator: "\n")
+            let descriptions = (message.attachments ?? []).map(\.description)
+            let imageCount = (message.attachments ?? []).filter { $0.kind == .image }.count
+            let omitted = imageCount > (request.imageURLs[message.id]?.count ?? 0) ? ["[部分较早图片未附原图，不要猜测其内容]"] : []
+            return ([message.text] + descriptions + omitted).filter { !$0.isEmpty }.joined(separator: "\n")
         }
         func appendReplies(to parent: UUID) {
             for reply in request.history where reply.replyToID == parent && reply.interrupted != true {

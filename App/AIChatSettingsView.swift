@@ -66,7 +66,7 @@ struct AIChatSettingsView: View {
                 Toggle("允许角色了解和操作 App", isOn: Binding(get: { profile.appControl == true }, set: { profile.appControl = $0 }))
                     .accessibilityIdentifier("characterAppControl")
             } header: { Text("\(character.name)的能力") } footer: {
-                Text("表情仅从本角色库选择，每次回复最多一个。App 操作限本 App 的陪伴、展示图、场景、动作与闹钟；修改前会让你确认。关闭权限立即生效。发送图片时会将静态预览随消息提交给接口，需选择支持图片的模型。")
+                Text("表情仅从本角色库选择，每次回复最多一个。App 操作限本 App 的陪伴、展示图、场景、动作与闹钟；修改前会让你确认。保存关闭权限后立即生效。发送图片时会将静态预览随消息提交给接口，需选择支持图片的模型。")
             }
             Section("\(character.name)的人格") {
                 field("身份背景", text: $profile.background, id: "aiBackground")

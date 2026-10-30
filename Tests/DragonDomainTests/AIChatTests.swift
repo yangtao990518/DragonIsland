@@ -150,6 +150,36 @@ final class AIChatTests: XCTestCase {
         let answer = try await client().reply(key: "sk-unit-test-only", request: request(), onPartial: { _ in })
         XCTAssertEqual(answer, "真实格式")
     }
+    func testToolTransportReturnsResultsWithIDsAndTransientThinking() async throws {
+        var profile = AICharacterProfile(); profile.appControl = true; profile.thinking = true
+        let spy = ToolTransportSpy()
+        ChatURLProtocol.respond = { request in
+            let body = try XCTUnwrap(JSONSerialization.jsonObject(with: request.httpBody!) as? [String: Any])
+            let messages = try XCTUnwrap(body["messages"] as? [[String: Any]])
+            let payload: [String: Any]
+            if messages.last?["role"] as? String == "tool" {
+                XCTAssertEqual(messages.last?["tool_call_id"] as? String, "wire-tool-1")
+                XCTAssertEqual(messages.last?["content"] as? String, "saved")
+                XCTAssertEqual(messages.dropLast().last?["reasoning_content"] as? String, "transient-thought-only")
+                payload = ["choices": [["delta": ["content": "已保存。"], "finish_reason": "stop"]]]
+            } else {
+                XCTAssertNotNil(body["tools"])
+                payload = ["choices": [["delta": ["reasoning_content": "transient-thought-only", "tool_calls": [
+                    ["index": 0, "id": "wire-tool-1", "type": "function", "function": ["name": "set_artwork", "arguments": "{\"artwork_id\":\"default\"}"]]
+                ]], "finish_reason": "tool_calls"]]]
+            }
+            let event = String(decoding: try JSONSerialization.data(withJSONObject: payload), as: UTF8.self)
+            return (200, ["Content-Type": "text/event-stream"], Data(("data: " + event + "\n\ndata: [DONE]\n\n").utf8))
+        }
+        let answer = try await client().reply(key: "sk-unit-test-only", request: request(profile: profile), onPartial: { _ in }, onTool: { call in
+            await spy.record(call); return "saved"
+        })
+        XCTAssertEqual(answer, "已保存。")
+        let calls = await spy.calls
+        XCTAssertEqual(calls.count, 1)
+        XCTAssertEqual(calls.first?.function.name, "set_artwork")
+        XCTAssertFalse(answer.contains("transient-thought"))
+    }
     func testBackupRoundtripIncludesPublicPreferencesAndRejectsCorruption() throws {
         var history = ChatHistory(); history.configuration = AIChatPreferences()
         history.configuration?.characters["xiaobai"] = .standard(for: .xiaobai)
@@ -252,3 +282,8 @@ private actor PartialChatProvider: ChatReplyProvider {
     }
 }
 #endif
+
+private actor ToolTransportSpy {
+    var calls: [ChatToolCall] = []
+    func record(_ call: ChatToolCall) { calls.append(call) }
+}

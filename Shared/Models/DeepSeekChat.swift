@@ -49,6 +49,7 @@ struct DeepSeekStream {
     private(set) var done = false
     private(set) var finishReason: String?
     var collectTools = false
+    var allowEmpty = false
     private(set) var reasoning = ""
     private var toolFragments: [Int: ChatToolCall] = [:]
     var toolCalls: [ChatToolCall] { toolFragments.keys.sorted().compactMap { toolFragments[$0] } }
@@ -121,7 +122,7 @@ struct DeepSeekStream {
         guard toolCalls.isEmpty else { throw AIChatError.invalidResponse }
         if finishReason == "length" { throw AIChatError.truncated }
         guard done, finishReason == "stop" else { throw AIChatError.interrupted }
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw ChatError.emptyReply }
+        guard allowEmpty || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw ChatError.emptyReply }
         return text
     }
 }
@@ -222,7 +223,7 @@ struct DeepSeekChatClient: @unchecked Sendable {
                 let (bytes, response) = try await session.bytes(for: Self.request(key: key, chat: request, messages: messages, includeTools: !tools.isEmpty))
                 try check(response)
                 guard (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "Content-Type")?.lowercased().contains("text/event-stream") == true else { throw AIChatError.invalidResponse }
-                var stream = DeepSeekStream(); stream.collectTools = !tools.isEmpty
+                var stream = DeepSeekStream(); stream.collectTools = !tools.isEmpty; stream.allowEmpty = callCount > 0
                 var lines = SSELines()
                 var lastPublished = ""; var lastTime = Date.distantPast
                 do {

@@ -105,6 +105,7 @@ struct CharacterStickerLibraryView: View {
     @State private var photo: PhotosPickerItem?
     @State private var importing = false
     @State private var candidate: Data?
+    @State private var candidateAsset: ChatMediaAsset?
     @State private var name = ""
     @State private var meaning = ""
     @State private var editing: CharacterSticker?
@@ -119,12 +120,15 @@ struct CharacterStickerLibraryView: View {
             } footer: { Text("表情只属于\(character.name)。静态和 GIF 均可；名称、含义帮助 AI 选择合适表情。聊天图片与表情库分别管理。最多 100 个，单个 10 MB、GIF 最长 20 秒。") }
             if candidate != nil || editing != nil {
                 Section(editing == nil ? "新表情" : "编辑表情") {
+                    if let asset = candidateAsset {
+                        ChatAttachmentView(attachment: .init(id: UUID(), kind: .image, asset: asset), media: store.media, maximum: 140)
+                    }
                     TextField("名称（最多 40 字）", text: $name).accessibilityIdentifier("stickerName")
                     TextField("表达什么情绪 / 适合什么情境（最多 300 字）", text: $meaning, axis: .vertical)
                         .accessibilityIdentifier("stickerMeaning")
                     Button("保存表情") { save() }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || name.count > 40 || meaning.count > 300)
                         .accessibilityIdentifier("saveCharacterSticker")
-                    Button("取消编辑", role: .cancel) { candidate = nil; editing = nil }
+                    Button("取消编辑", role: .cancel) { candidate = nil; candidateAsset = nil; editing = nil }
                 }
             }
             Section("\(character.name)的表情 · \(store.stickers(for: character.id).count)") {
@@ -138,7 +142,7 @@ struct CharacterStickerLibraryView: View {
                             if sticker.asset.animated { Text("GIF · \(sticker.asset.frameCount) 帧").font(.caption2) }
                         }
                         Spacer()
-                        Button("编辑") { candidate = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
+                        Button("编辑") { candidate = nil; candidateAsset = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
                             .buttonStyle(.borderless)
                     }.swipeActions { Button("移除", role: .destructive) { store.removeSticker(sticker.id) } }
                 }
@@ -163,13 +167,13 @@ struct CharacterStickerLibraryView: View {
                 Button("知道了", role: .cancel) { store.error = nil }
             } message: { Text(store.error ?? "") }
     }
-    private func prepare(_ data: Data) throws { _ = try ChatMediaAsset.inspect(data); candidate = data; editing = nil; name = ""; meaning = "" }
+    private func prepare(_ data: Data) throws { candidateAsset = try store.media.store(data); candidate = data; editing = nil; name = ""; meaning = "" }
     private func save() {
         let saved: Bool
         if let editing { saved = store.editSticker(editing.id, name: name, meaning: meaning) }
         else if let candidate { saved = store.addSticker(data: candidate, characterID: character.id, name: name, meaning: meaning) }
         else { return }
-        if saved { candidate = nil; editing = nil; name = ""; meaning = "" }
+        if saved { candidate = nil; candidateAsset = nil; editing = nil; name = ""; meaning = "" }
     }
 }
 
