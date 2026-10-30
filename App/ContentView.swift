@@ -33,13 +33,18 @@ struct ContentView: View {
         self.alarms = store.alarms
         let provider: any ChatReplyProvider
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--maiverse-capture") {
+        if ProcessInfo.processInfo.arguments.contains("--chat-media-tools-tests") {
+            provider = ChatMediaTestProvider()
+        } else if ProcessInfo.processInfo.arguments.contains("--maiverse-capture") {
             provider = TestChatReplyProvider()
         } else { provider = DeepSeekChatReplyProvider(secrets: AIChatCredentials()) }
         #else
         provider = DeepSeekChatReplyProvider(secrets: AIChatCredentials())
         #endif
         let chat = ChatStore(characters: store.characters, provider: provider)
+        #if DEBUG
+        ChatMediaTestSupport.seed(chat)
+        #endif
         let tools = ChatAppTools(companion: store)
         tools.permission = { [weak chat] id in
             guard let chat, let character = chat.character(id) else { return false }
