@@ -19,6 +19,7 @@ struct ContentView: View {
     @ObservedObject var store: CompanionStore
     @ObservedObject private var alarms: CharacterAlarmStore
     @StateObject private var chatStore: ChatStore
+    @StateObject private var chatTools: ChatAppTools
     @State private var tab = WorldTab.initial
     @State private var minutes = 25
     @State private var expandedPreview = false
@@ -38,7 +39,18 @@ struct ContentView: View {
         #else
         provider = DeepSeekChatReplyProvider(secrets: AIChatCredentials())
         #endif
-        _chatStore = StateObject(wrappedValue: ChatStore(characters: store.characters, provider: provider))
+        let chat = ChatStore(characters: store.characters, provider: provider)
+        let tools = ChatAppTools(companion: store)
+        tools.permission = { [weak chat] id in
+            guard let chat, let character = chat.character(id) else { return false }
+            return chat.configuration.profile(for: character).appControl == true
+        }
+        chat.appToolHandler = { [weak tools] id, call, args in
+            guard let tools else { throw CancellationError() }
+            return try await tools.execute(characterID: id, call: call, args: args)
+        }
+        _chatStore = StateObject(wrappedValue: chat)
+        _chatTools = StateObject(wrappedValue: tools)
     }
 
     var body: some View {
@@ -47,7 +59,7 @@ struct ContentView: View {
                 .tabItem { Label("我的世界", systemImage: "sparkles") }.tag(WorldTab.world)
             charactersPage
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
-            ChatPage(store: chatStore)
+            ChatPage(store: chatStore, tools: chatTools)
                 .tabItem { Label("聊天", systemImage: "bubble.left.and.bubble.right") }.tag(WorldTab.chat)
             CharacterAlarmsPage(alarms: store.alarms, characters: store.characters)
                 .tabItem { Label("闹钟", systemImage: "alarm") }.tag(WorldTab.alarms)

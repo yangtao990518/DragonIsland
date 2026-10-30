@@ -17,6 +17,7 @@ struct CharacterDetailView: View {
     @State private var showingAlarm = false
     @State private var showingMotion = false
     @State private var showingAI = false
+    @State private var showingStickers = false
 
     private func showChibi() {
         artwork = ArtworkSelection(asset: character.chibiAsset + "Detail", title: "\(character.name) · 岛上小人物")
@@ -46,6 +47,14 @@ struct CharacterDetailView: View {
                     Image(systemName: "chevron.right").font(.caption)
                 }.foregroundStyle(AppPalette.accent)
             }.worldCard().accessibilityIdentifier("characterAISettings")
+            Button { showingStickers = true } label: {
+                HStack {
+                    Label("专属表情包", systemImage: "face.smiling")
+                    Spacer()
+                    Text("静态 / GIF").font(.caption)
+                    Image(systemName: "chevron.right").font(.caption)
+                }.foregroundStyle(AppPalette.accent)
+            }.worldCard().accessibilityIdentifier("characterStickerLibrary")
             HStack(alignment: .top, spacing: 12) {
                 artworkTile(title: "展开立绘", subtitle: "展开 / 锁屏", asset: character.heroAsset, action: showStanding)
                     .accessibilityIdentifier("artwork-standing")
@@ -99,6 +108,7 @@ struct CharacterDetailView: View {
         .sheet(isPresented: $showingAlarm) {
             NavigationStack { CharacterAlarmEditor(alarms: store.alarms, character: character) }
         }
+        .sheet(isPresented: $showingStickers) { NavigationStack { CharacterStickerLibraryView(store: chatStore, character: character) } }
         .sheet(isPresented: $showingAI) {
             NavigationStack { AIChatSettingsView(store: chatStore, character: character) }
         }

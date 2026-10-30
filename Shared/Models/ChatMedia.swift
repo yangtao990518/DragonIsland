@@ -1,0 +1,145 @@
+import Foundation
+import CryptoKit
+import ImageIO
+import UniformTypeIdentifiers
+
+enum ChatMediaError: LocalizedError {
+    case invalid, tooLarge, missing, limit
+    var errorDescription: String? {
+        switch self {
+        case .invalid: return "请选择有效的 PNG、JPEG 或 GIF 图片（最大 4096×4096，GIF 最长 20 秒）。"
+        case .tooLarge: return "单个文件不能超过 10 MB。"
+        case .missing: return "图片文件缺失或校验失败，请重新导入。"
+        case .limit: return "每条消息最多 4 个附件，每位角色最多 100 个表情。"
+        }
+    }
+}
+
+/// Immutable content-addressed originals. A sticker is a semantic message, not an image alias.
+struct ChatMediaAsset: Codable, Equatable, Hashable, Sendable {
+    let sha256: String
+    let fileExtension: String
+    let width: Int
+    let height: Int
+    let frameCount: Int
+    let duration: Double
+    let byteCount: Int
+    var filename: String { "\(sha256).\(fileExtension)" }
+    var animated: Bool { frameCount > 1 }
+
+    func validate() throws {
+        guard sha256.count == 64, sha256.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }),
+              ["png", "jpg", "gif"].contains(fileExtension), (1...4096).contains(width), (1...4096).contains(height),
+              (1...600).contains(frameCount), duration.isFinite, (0...20).contains(duration),
+              (1...10 * 1024 * 1024).contains(byteCount), frameCount == 1 || fileExtension == "gif" else { throw ChatMediaError.invalid }
+    }
+
+    static func inspect(_ data: Data) throws -> Self {
+        guard !data.isEmpty, data.count <= 10 * 1024 * 1024 else { throw ChatMediaError.tooLarge }
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let type = CGImageSourceGetType(source) as String?,
+              let ext = [UTType.png.identifier: "png", UTType.jpeg.identifier: "jpg", UTType.gif.identifier: "gif"][type],
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = properties[kCGImagePropertyPixelWidth] as? Int,
+              let height = properties[kCGImagePropertyPixelHeight] as? Int else { throw ChatMediaError.invalid }
+        let count = CGImageSourceGetCount(source)
+        guard (1...600).contains(count), (1...4096).contains(width), (1...4096).contains(height) else { throw ChatMediaError.invalid }
+        var duration = 0.0
+        for index in 0..<count {
+            guard CGImageSourceGetStatusAtIndex(source, index) == .statusComplete,
+                  let p = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
+                  (p[kCGImagePropertyPixelWidth] as? Int) == width,
+                  (p[kCGImagePropertyPixelHeight] as? Int) == height else { throw ChatMediaError.invalid }
+            if count > 1 {
+                let gif = p[kCGImagePropertyGIFDictionary] as? [CFString: Any] ?? [:]
+                duration += max(0.02, (gif[kCGImagePropertyGIFUnclampedDelayTime] as? Double)
+                    ?? (gif[kCGImagePropertyGIFDelayTime] as? Double) ?? 0.1)
+            }
+        }
+        let asset = Self(sha256: SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined(),
+                         fileExtension: ext, width: width, height: height, frameCount: count, duration: duration, byteCount: data.count)
+        try asset.validate()
+        return asset
+    }
+}
+
+struct CharacterSticker: Codable, Equatable, Identifiable, Sendable {
+    let id: UUID
+    let characterID: String
+    var name: String
+    var meaning: String
+    let asset: ChatMediaAsset
+    func validate() throws {
+        try asset.validate()
+        guard !characterID.isEmpty, characterID.count <= 120,
+              !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, name.count <= 40,
+              meaning.count <= 300 else { throw ChatMediaError.invalid }
+    }
+}
+
+struct ChatAttachment: Codable, Equatable, Identifiable, Sendable {
+    enum Kind: String, Codable, Sendable { case image, sticker }
+    let id: UUID
+    let kind: Kind
+    let asset: ChatMediaAsset
+    var sticker: CharacterSticker? = nil
+    var description: String { kind == .image ? "[图片]" : "[表情：\(sticker?.name ?? "表情")] \(sticker?.meaning ?? "")" }
+    func validate() throws {
+        try asset.validate()
+        if kind == .sticker {
+            guard let sticker, sticker.asset == asset else { throw ChatMediaError.invalid }
+            try sticker.validate()
+        } else if sticker != nil { throw ChatMediaError.invalid }
+    }
+}
+
+struct ChatMediaFiles: Sendable {
+    let directory: URL
+    init(historyURL: URL) { directory = historyURL.deletingLastPathComponent().appendingPathComponent("Media", isDirectory: true) }
+    func url(for asset: ChatMediaAsset) -> URL { directory.appendingPathComponent(asset.filename) }
+    func data(for asset: ChatMediaAsset) throws -> Data {
+        try asset.validate()
+        let url = url(for: asset)
+        guard let size = try? url.resourceValues(forKeys: [.fileSizeKey, .isSymbolicLinkKey]),
+              size.isSymbolicLink != true, size.fileSize == asset.byteCount else { throw ChatMediaError.missing }
+        let data = try Data(contentsOf: url)
+        guard try ChatMediaAsset.inspect(data) == asset else { throw ChatMediaError.missing }
+        return data
+    }
+    @discardableResult func store(_ data: Data) throws -> ChatMediaAsset {
+        let asset = try ChatMediaAsset.inspect(data)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try data.write(to: url(for: asset), options: .atomic)
+        for item in [directory, url(for: asset)] {
+            var url = item; var values = URLResourceValues(); values.isExcludedFromBackup = true
+            try url.setResourceValues(values)
+            #if os(iOS)
+            try FileManager.default.setAttributes([.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication], ofItemAtPath: url.path)
+            #endif
+        }
+        return asset
+    }
+    /// Send a bounded still preview to vision. Original GIF remains unchanged on disk.
+    func visionURL(for asset: ChatMediaAsset) throws -> String {
+        let bytes = try data(for: asset)
+        guard let source = CGImageSourceCreateWithData(bytes as CFData, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: 1280] as CFDictionary) else { throw ChatMediaError.invalid }
+        let output = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(output, UTType.jpeg.identifier as CFString, 1, nil) else { throw ChatMediaError.invalid }
+        CGImageDestinationAddImage(destination, image, [kCGImageDestinationLossyCompressionQuality: 0.8] as CFDictionary)
+        guard CGImageDestinationFinalize(destination) else { throw ChatMediaError.invalid }
+        return "data:image/jpeg;base64," + (output as Data).base64EncodedString()
+    }
+}
+
+extension ChatHistory {
+    var mediaAssets: [ChatMediaAsset] {
+        let all = (stickers ?? []).map(\.asset) + conversations.flatMap { chat in
+            (chat.draftAttachments ?? []).map(\.asset) + chat.messages.flatMap { ($0.attachments ?? []).map(\.asset) + ($0.toolReceipts ?? []).compactMap { $0.sticker?.asset } }
+        }
+        return Array(Set(all)).sorted { $0.filename < $1.filename }
+    }
+}

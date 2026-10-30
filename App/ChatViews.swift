@@ -1,5 +1,7 @@
 import SwiftUI
 import UIKit
+import PhotosUI
+import UniformTypeIdentifiers
 
 private enum NewChatSheet: String, Identifiable {
     case direct, group
@@ -8,6 +10,7 @@ private enum NewChatSheet: String, Identifiable {
 
 struct ChatPage: View {
     @ObservedObject var store: ChatStore
+    @ObservedObject var tools: ChatAppTools
     @State private var path: [UUID] = []
     @State private var sheet: NewChatSheet?
     @State private var pendingID: UUID?
@@ -102,6 +105,9 @@ struct ChatPage: View {
                 pendingID = id
             }
         }
+        .sheet(item: $tools.approval, onDismiss: { tools.resolve(false) }) { approval in
+            ChatAppApprovalView(tools: tools, approval: approval)
+        }
         .sheet(isPresented: $showingBackup) { NavigationStack { ChatBackupView(store: store) } }
         .sheet(item: $configuring) { character in NavigationStack { AIChatSettingsView(store: store, character: character) } }
         .confirmationDialog("删除这段聊天及全部记录？", isPresented: Binding(
@@ -147,7 +153,7 @@ private struct ChatConversationRow: View {
         if store.replyingIDs.contains(conversation.id) { return "正在回复…" }
         if !conversation.draft.isEmpty { return "[草稿] \(conversation.draft)" }
         guard let message = conversation.messages.last else { return "还没有消息，打个招呼吧" }
-        return "\(message.senderName)：\(message.text)"
+        return "\(message.senderName)：\(message.text.isEmpty ? (message.attachments ?? []).map(\.description).joined(separator: " ") : message.text)"
     }
 }
 
@@ -250,6 +256,10 @@ private struct ChatRoom: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @State private var draft = ""
+    @State private var photo: PhotosPickerItem?
+    @State private var importingImage = false
+    @State private var choosingSticker = false
+    @State private var importing = false
     @State private var editingGroup = false
     @State private var confirmingClear = false
     @State private var confirmingDelete = false
@@ -296,6 +306,21 @@ private struct ChatRoom: View {
         .onChange(of: scenePhase) { _, phase in
             if phase != .active, chat != nil { store.setDraft(draft, in: id) }
         }
+        .fileImporter(isPresented: $importingImage, allowedContentTypes: [.png, .jpeg, .gif]) { result in
+            do { store.attach(data: try ChatMediaImport.read(result.get()), in: id) } catch { store.error = error.localizedDescription }
+        }
+        .sheet(isPresented: $choosingSticker) { ChatStickerPicker(store: store, characterIDs: chat?.characterIDs ?? [], conversationID: id) }
+        .onChange(of: photo) { _, selection in
+            guard let selection else { return }
+            importing = true
+            Task { @MainActor in
+                defer { importing = false; photo = nil }
+                do {
+                    guard let data = try await selection.loadTransferable(type: Data.self) else { throw ChatMediaError.invalid }
+                    store.attach(data: data, in: id)
+                } catch { store.error = error.localizedDescription }
+            }
+        }
         .sheet(isPresented: $editingGroup) {
             if let chat { ChatEditor(store: store, kind: .group, existing: chat) { _ in } }
         }
@@ -336,7 +361,7 @@ private struct ChatRoom: View {
                     }
                     ForEach(chat.messages) { message in
                         VStack(alignment: message.isUser ? .trailing : .leading, spacing: 7) {
-                            ChatMessageRow(message: message, character: store.character(message.characterID))
+                            ChatMessageRow(message: message, character: store.character(message.characterID), media: store.media)
                             if message.isUser && message.delivery == .failed {
                                 Button { store.retry(in: id, messageID: message.id) } label: {
                                     Label("回复未完成，点击重试", systemImage: "arrow.clockwise")
@@ -381,6 +406,26 @@ private struct ChatRoom: View {
 
     private var composer: some View {
         VStack(spacing: 6) {
+            if !(chat?.draftAttachments ?? []).isEmpty {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(chat?.draftAttachments ?? []) { item in
+                            VStack {
+                                ChatAttachmentView(attachment: item, media: store.media, maximum: 70)
+                                Button("移除") { store.detach(item.id, in: id) }.font(.caption).disabled(replying)
+                            }
+                        }
+                    }
+                }
+            }
+            HStack {
+                PhotosPicker(selection: $photo, matching: .images) { Label("图片", systemImage: "photo") }
+                    .accessibilityIdentifier("chatAddImage")
+                Button("文件", systemImage: "folder") { importingImage = true }.accessibilityIdentifier("chatImageFromFiles")
+                Button("表情", systemImage: "face.smiling") { choosingSticker = true }.accessibilityIdentifier("chatOpenStickers")
+                Spacer()
+                if importing { ProgressView() }
+            }.font(.caption).disabled(replying || importing || !store.ready)
             HStack(alignment: .bottom, spacing: 10) {
                 TextField("说点什么…", text: $draft, axis: .vertical)
                     .lineLimit(1...5).focused($composing)
@@ -394,7 +439,7 @@ private struct ChatRoom: View {
                 }
                 .buttonStyle(.borderedProminent).buttonBorderShape(.circle).tint(AppPalette.accent)
                 .foregroundStyle(AppPalette.onAccent)
-                .disabled(trimmed.isEmpty || trimmed.count > 4000 || replying || !store.ready)
+                .disabled((trimmed.isEmpty && (chat?.draftAttachments ?? []).isEmpty) || trimmed.count > 4000 || replying || importing || !store.ready)
                 .accessibilityLabel("发送").accessibilityIdentifier("sendChat")
             }
             if draft.count > 3600 {
@@ -430,6 +475,7 @@ private struct ChatAvatar: View {
 private struct ChatMessageRow: View {
     let message: ChatMessage
     let character: CompanionCharacter?
+    let media: ChatMediaFiles
 
     var body: some View {
         HStack(alignment: .top, spacing: 9) {
@@ -438,13 +484,16 @@ private struct ChatMessageRow: View {
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 5) {
                 Text(message.isUser ? "我" : character?.name ?? message.senderName)
                     .font(.caption2).foregroundStyle(.secondary)
-                Text(message.text)
+                ForEach(message.attachments ?? []) { item in
+                    ChatAttachmentView(attachment: item, media: media, maximum: item.kind == .sticker ? 150 : 220)
+                }
+                if !message.text.isEmpty { Text(message.text)
                     .font(.system(size: 16)).textSelection(.enabled)
                     .padding(.horizontal, 14).padding(.vertical, 11)
                     .foregroundStyle(message.isUser ? AppPalette.onAccent : Color.primary)
                     .background(message.isUser ? AppPalette.accent : AppPalette.surface,
                                 in: RoundedRectangle(cornerRadius: 18))
-                    .contextMenu { Button("复制", systemImage: "doc.on.doc") { UIPasteboard.general.string = message.text } }
+                    .contextMenu { Button("复制", systemImage: "doc.on.doc") { UIPasteboard.general.string = message.text } } }
                 Text(message.createdAt, style: .time).font(.system(size: 10)).foregroundStyle(.secondary)
                 if message.interrupted == true { Text("回复未完成").font(.caption2).foregroundStyle(.secondary) }
             }

@@ -1,0 +1,16 @@
+name: Chat media and tool domain
+"on":
+  push:
+    branches: [codex/chat-media-tools]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  domain:
+    runs-on: macos-15
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - run: swift test

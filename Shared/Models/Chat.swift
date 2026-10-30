@@ -13,6 +13,8 @@ struct ChatMessage: Codable, Equatable, Identifiable, Sendable {
     let replyCharacterIDs: [String]
     var delivery: ChatDelivery
     var interrupted: Bool? = nil
+    var attachments: [ChatAttachment]? = nil
+    var toolReceipts: [ChatToolReceipt]? = nil
 
     var isUser: Bool { characterID == nil }
 
@@ -37,6 +39,7 @@ struct ChatConversation: Codable, Equatable, Identifiable, Sendable {
     var updatedAt: Date
     var messages: [ChatMessage] = []
     var draft = ""
+    var draftAttachments: [ChatAttachment]? = nil
 
     func title(in characters: [CompanionCharacter]) -> String {
         if kind == .group { return name }
@@ -75,6 +78,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
     var version = 1
     var conversations: [ChatConversation] = []
     var configuration: AIChatPreferences? = nil
+    var stickers: [CharacterSticker]? = nil
 
     mutating func create(kind: ChatKind, name: String, characterIDs: [String],
                          availableIDs: Set<String>, now: Date = .now) throws -> UUID {
@@ -108,17 +112,21 @@ struct ChatHistory: Codable, Equatable, Sendable {
     }
 
     mutating func enqueue(_ text: String, in id: UUID, availableIDs: Set<String>,
-                          now: Date = .now) throws -> ChatMessage {
+                          now: Date = .now, attachments: [ChatAttachment] = []) throws -> ChatMessage {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { throw ChatError.emptyMessage }
+        guard !trimmed.isEmpty || !attachments.isEmpty else { throw ChatError.emptyMessage }
+        guard attachments.count <= 4 else { throw ChatMediaError.limit }
+        for item in attachments { try item.validate() }
         guard trimmed.count <= 4000 else { throw ChatError.longMessage }
         guard let index = conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.missingConversation }
         guard !conversations[index].messages.contains(where: { $0.delivery == .waiting }) else { throw ChatError.busy }
         let ids = conversations[index].characterIDs
         try Self.validateMembers(ids, availableIDs: availableIDs)
-        let message = ChatMessage.user(trimmed, recipients: ids, now: now)
+        var message = ChatMessage.user(trimmed, recipients: ids, now: now)
+        message.attachments = attachments.isEmpty ? nil : attachments
         conversations[index].messages.append(message)
         conversations[index].draft = ""
+        conversations[index].draftAttachments = nil
         conversations[index].updatedAt = now
         return message
     }
@@ -134,6 +142,12 @@ struct ChatHistory: Codable, Equatable, Sendable {
 
     func validate() throws {
         try configuration?.validate()
+        let library = stickers ?? []
+        guard library.count <= 10000, Set(library.map(\.id)).count == library.count else { throw ChatMediaError.invalid }
+        for sticker in library { try sticker.validate() }
+        for group in Dictionary(grouping: library, by: \.characterID).values {
+            guard group.count <= 100 else { throw ChatMediaError.limit }
+        }
         guard version == 1, Set(conversations.map(\.id)).count == conversations.count else { throw ChatError.invalidHistory }
         for conversation in conversations {
             let ids = conversation.characterIDs
@@ -141,8 +155,18 @@ struct ChatHistory: Codable, Equatable, Sendable {
                   conversation.kind != .direct || ids.count == 1,
                   Set(conversation.messages.map(\.id)).count == conversation.messages.count else { throw ChatError.invalidHistory }
             let users = Dictionary(uniqueKeysWithValues: conversation.messages.filter(\.isUser).map { ($0.id, $0) })
+            guard (conversation.draftAttachments ?? []).count <= 4 else { throw ChatMediaError.limit }
+            for item in conversation.draftAttachments ?? [] { try item.validate() }
             for message in conversation.messages {
-                guard !message.text.isEmpty,
+                guard (message.attachments ?? []).count <= 4 else { throw ChatMediaError.limit }
+                for item in message.attachments ?? [] {
+                    try item.validate()
+                    if !message.isUser {
+                        guard item.kind == .sticker, item.sticker?.characterID == message.characterID else { throw ChatMediaError.invalid }
+                    }
+                }
+                for receipt in message.toolReceipts ?? [] { try receipt.validate() }
+                guard (!message.text.isEmpty || !(message.attachments ?? []).isEmpty),
                       (message.isUser ? message.replyToID == nil : message.replyToID != nil),
                       message.isUser || message.delivery == .sent else { throw ChatError.invalidHistory }
                 if message.isUser {
@@ -182,14 +206,22 @@ struct ChatReplyRequest: Sendable {
     let history: [ChatMessage]
     var profile: AICharacterProfile? = nil
     var userProfile: AIUserProfile? = nil
+    var imageURLs: [UUID: [String]] = [:]
+    var stickers: [CharacterSticker] = []
 }
 
+typealias ChatToolHandler = @Sendable (ChatToolCall) async throws -> String
+
 protocol ChatReplyProvider: Sendable {
+    func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void, onTool: @escaping ChatToolHandler) async throws -> String
     func reply(to request: ChatReplyRequest) async throws -> String
     func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String
 }
 
 extension ChatReplyProvider {
+    func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void, onTool: @escaping ChatToolHandler) async throws -> String {
+        try await reply(to: request, onPartial: onPartial)
+    }
     func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String {
         try await reply(to: request)
     }

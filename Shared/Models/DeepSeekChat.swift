@@ -48,6 +48,10 @@ struct DeepSeekStream {
     private(set) var text = ""
     private(set) var done = false
     private(set) var finishReason: String?
+    var collectTools = false
+    private(set) var reasoning = ""
+    private var toolFragments: [Int: ChatToolCall] = [:]
+    var toolCalls: [ChatToolCall] { toolFragments.keys.sorted().compactMap { toolFragments[$0] } }
 
     mutating func line(_ line: String) throws {
         guard !done else { return }
@@ -69,7 +73,13 @@ struct DeepSeekStream {
         guard !payload.isEmpty else { return }
         struct Chunk: Decodable {
             struct Choice: Decodable {
-                struct Delta: Decodable { var content: String? }
+                struct Delta: Decodable {
+                    struct Tool: Decodable {
+                        struct Function: Decodable { var name: String?; var arguments: String? }
+                        let index: Int; var id: String?; var type: String?; var function: Function?
+                    }
+                    var content: String?; var reasoning_content: String?; var tool_calls: [Tool]?
+                }
                 var delta: Delta?
                 var finish_reason: String?
             }
@@ -83,6 +93,19 @@ struct DeepSeekStream {
         guard chunk.error == nil else { throw AIChatError.interrupted }
         if let choice = chunk.choices?.first {
             if let content = choice.delta?.content { text += content }
+            if collectTools {
+                reasoning += choice.delta?.reasoning_content ?? ""
+                for fragment in choice.delta?.tool_calls ?? [] {
+                    guard (0..<8).contains(fragment.index), fragment.type == nil || fragment.type == "function" else { throw AIChatError.invalidResponse }
+                    var call = toolFragments[fragment.index] ?? ChatToolCall(id: "", function: .init(name: "", arguments: ""))
+                    call.id += fragment.id ?? ""
+                    call.function.name += fragment.function?.name ?? ""
+                    call.function.arguments += fragment.function?.arguments ?? ""
+                    guard call.id.count <= 200, call.function.name.count <= 100, call.function.arguments.utf8.count <= 8192 else { throw AIChatError.invalidResponse }
+                    toolFragments[fragment.index] = call
+                }
+                guard reasoning.utf8.count <= 1_048_576 else { throw AIChatError.invalidResponse }
+            }
             if let reason = choice.finish_reason { finishReason = reason }
         }
         guard text.utf8.count <= 1_048_576 else { throw AIChatError.invalidResponse }
@@ -90,6 +113,12 @@ struct DeepSeekStream {
 
     mutating func finish() throws -> String {
         try flush()
+        if collectTools, finishReason == "tool_calls" {
+            guard done, !toolCalls.isEmpty, Set(toolCalls.map(\.id)).count == toolCalls.count else { throw AIChatError.interrupted }
+            for call in toolCalls { _ = try call.arguments() }
+            return text
+        }
+        guard toolCalls.isEmpty else { throw AIChatError.invalidResponse }
         if finishReason == "length" { throw AIChatError.truncated }
         guard done, finishReason == "stop" else { throw AIChatError.interrupted }
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw ChatError.emptyReply }
@@ -125,7 +154,7 @@ struct DeepSeekChatClient: @unchecked Sendable {
         guard key.count <= 512, key.hasPrefix("sk-"), key.utf8.allSatisfy({ (33...126).contains($0) }) else { throw AIChatError.invalidKey }
     }
 
-    static func request(key: String, chat: ChatReplyRequest? = nil) throws -> URLRequest {
+    static func request(key: String, chat: ChatReplyRequest? = nil, messages: [AIChatMessage]? = nil, includeTools: Bool = false) throws -> URLRequest {
         try validateKey(key)
         var request = URLRequest(url: baseURL.appendingPathComponent(chat == nil ? "models" : "chat/completions"))
         request.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
@@ -143,8 +172,13 @@ struct DeepSeekChatClient: @unchecked Sendable {
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
-            request.httpBody = try JSONEncoder().encode(Body(model: profile.model, messages: AIChatContext.messages(for: chat),
+            request.httpBody = try JSONEncoder().encode(Body(model: profile.model, messages: try messages ?? AIChatContext.messages(for: chat),
                 max_tokens: profile.maxOutputTokens, thinking: .init(type: profile.thinking ? "enabled" : "disabled")))
+            if includeTools, !ChatTools.allowed(for: chat).isEmpty {
+                var object = try JSONSerialization.jsonObject(with: request.httpBody!) as! [String: Any]
+                object["tools"] = ChatTools.allowed(for: chat).map(\.schema)
+                request.httpBody = try JSONSerialization.data(withJSONObject: object)
+            }
         }
         return request
     }
@@ -176,35 +210,58 @@ struct DeepSeekChatClient: @unchecked Sendable {
         } catch { throw Self.safeError(error) }
     }
 
-    func reply(key: String, request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String {
+    func reply(key: String, request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void,
+               onTool: ChatToolHandler? = nil) async throws -> String {
         do {
-            let (bytes, response) = try await session.bytes(for: Self.request(key: key, chat: request))
-            try check(response)
-            guard (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "Content-Type")?.lowercased().contains("text/event-stream") == true else { throw AIChatError.invalidResponse }
-            var stream = DeepSeekStream()
-            var lines = SSELines()
-            var lastPublished = ""
-            var lastTime = Date.distantPast
-            do {
-                for try await byte in bytes {
-                    try Task.checkCancellation()
-                    guard let line = try lines.byte(byte) else { continue }
-                    try stream.line(line)
-                    if stream.text != lastPublished, Date().timeIntervalSince(lastTime) >= 0.06 {
-                        await onPartial(stream.text); lastPublished = stream.text; lastTime = .now
+            var messages = try AIChatContext.messages(for: request)
+            let tools = onTool == nil ? [] : ChatTools.allowed(for: request)
+            var prefix = ""
+            var callCount = 0
+            for _ in 0..<6 {
+                try Task.checkCancellation()
+                let (bytes, response) = try await session.bytes(for: Self.request(key: key, chat: request, messages: messages, includeTools: !tools.isEmpty))
+                try check(response)
+                guard (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "Content-Type")?.lowercased().contains("text/event-stream") == true else { throw AIChatError.invalidResponse }
+                var stream = DeepSeekStream(); stream.collectTools = !tools.isEmpty
+                var lines = SSELines()
+                var lastPublished = ""; var lastTime = Date.distantPast
+                do {
+                    for try await byte in bytes {
+                        try Task.checkCancellation()
+                        guard let line = try lines.byte(byte) else { continue }
+                        try stream.line(line)
+                        if stream.text != lastPublished, Date().timeIntervalSince(lastTime) >= 0.06 {
+                            await onPartial(prefix + stream.text); lastPublished = stream.text; lastTime = .now
+                        }
+                        if stream.done { break }
                     }
-                    if stream.done { break }
+                    if let tail = try lines.finish() { try stream.line(tail) }
+                    let answer = try stream.finish()
+                    if stream.toolCalls.isEmpty {
+                        await onPartial(prefix + answer)
+                        return prefix + answer
+                    }
+                    callCount += stream.toolCalls.count
+                    guard callCount <= 8, let onTool else { throw AIChatError.invalidResponse }
+                    guard stream.toolCalls.allSatisfy({ call in tools.contains { $0.name == call.function.name } }) else { throw AIChatError.invalidResponse }
+                    messages.append(.init(role: "assistant", content: answer, tool_calls: stream.toolCalls,
+                        reasoning_content: request.profile?.thinking == true ? stream.reasoning : nil))
+                    for call in stream.toolCalls {
+                        try Task.checkCancellation()
+                        let result = try await onTool(call)
+                        guard result.count <= 6000 else { throw AIChatError.invalidResponse }
+                        messages.append(.init(role: "tool", content: result, tool_call_id: call.id))
+                    }
+                    prefix += answer.isEmpty ? "" : answer + "\n"
+                } catch {
+                    if stream.text != lastPublished { await onPartial(prefix + stream.text) }
+                    throw error
                 }
-                if let tail = try lines.finish() { try stream.line(tail) }
-                let answer = try stream.finish()
-                await onPartial(answer)
-                return answer
-            } catch {
-                if stream.text != lastPublished { await onPartial(stream.text) }
-                throw error
             }
+            throw AIChatError.interrupted
         } catch { throw Self.safeError(error) }
     }
+
 }
 
 struct DeepSeekChatReplyProvider: ChatReplyProvider {
@@ -212,6 +269,10 @@ struct DeepSeekChatReplyProvider: ChatReplyProvider {
     var client = DeepSeekChatClient()
     func reply(to request: ChatReplyRequest) async throws -> String {
         try await reply(to: request, onPartial: { _ in })
+    }
+    func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void, onTool: @escaping ChatToolHandler) async throws -> String {
+        guard let key = try secrets.readKey() else { throw AIChatError.missingKey }
+        return try await client.reply(key: key, request: request, onPartial: onPartial, onTool: onTool)
     }
     func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void) async throws -> String {
         guard let key = try secrets.readKey() else { throw AIChatError.missingKey }
