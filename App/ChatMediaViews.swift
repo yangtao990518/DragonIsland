@@ -78,13 +78,15 @@ struct ChatAttachmentView: View {
     let media: ChatMediaFiles
     var maximum: CGFloat = 200
     @State private var enlarged = false
+    private var available: Bool { FileManager.default.fileExists(atPath: media.url(for: attachment.asset).path) }
     var body: some View {
         Button { enlarged = true } label: {
-            ChatAnimatedImage(url: media.url(for: attachment.asset))
+            if available { ChatAnimatedImage(url: media.url(for: attachment.asset))
                 .aspectRatio(CGFloat(attachment.asset.width) / CGFloat(attachment.asset.height), contentMode: .fit)
                 .frame(maxWidth: maximum, maxHeight: maximum)
                 .clipShape(RoundedRectangle(cornerRadius: attachment.kind == .sticker ? 0 : 12))
-        }.buttonStyle(.plain)
+            } else { Label("素材文件缺失", systemImage: "photo.badge.exclamationmark").font(.caption) }
+        }.buttonStyle(.plain).disabled(!available)
             .accessibilityLabel(attachment.description + (attachment.asset.animated ? "，动态 GIF" : ""))
             .accessibilityIdentifier(attachment.kind == .sticker ? "chatStickerAttachment" : "chatImageAttachment")
             .fullScreenCover(isPresented: $enlarged) {
@@ -112,43 +114,10 @@ struct CharacterStickerLibraryView: View {
     @State private var loading = false
     var body: some View {
         Form {
-            Section {
-                PhotosPicker("从照片添加", selection: $photo, matching: .images).disabled(loading)
-                    .accessibilityIdentifier("addStickerFromPhotos")
-                Button("从文件添加 PNG / JPEG / GIF") { importing = true }.disabled(loading)
-                if loading { ProgressView() }
-            } footer: { Text("表情只属于\(character.name)。静态和 GIF 均可；名称、含义帮助 AI 选择合适表情。聊天图片与表情库分别管理。最多 100 个，单个 10 MB、GIF 最长 20 秒。") }
-            if candidate != nil || editing != nil {
-                Section(editing == nil ? "新表情" : "编辑表情") {
-                    if let asset = candidateAsset {
-                        ChatAttachmentView(attachment: .init(id: UUID(), kind: .image, asset: asset), media: store.media, maximum: 140)
-                    }
-                    TextField("名称（最多 40 字）", text: $name).accessibilityIdentifier("stickerName")
-                    TextField("表达什么情绪 / 适合什么情境（最多 300 字）", text: $meaning, axis: .vertical)
-                        .accessibilityIdentifier("stickerMeaning")
-                    Button("保存表情") { save() }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || name.count > 40 || meaning.count > 300)
-                        .accessibilityIdentifier("saveCharacterSticker")
-                    Button("取消编辑", role: .cancel) { candidate = nil; candidateAsset = nil; editing = nil }
-                }
-            }
-            Section("\(character.name)的表情 · \(store.stickers(for: character.id).count)") {
-                if store.stickers(for: character.id).isEmpty { Text("还没有表情，先添加一张吧。").foregroundStyle(.secondary) }
-                ForEach(store.stickers(for: character.id)) { sticker in
-                    HStack {
-                        ChatAttachmentView(attachment: .init(id: sticker.id, kind: .sticker, asset: sticker.asset, sticker: sticker), media: store.media, maximum: 72)
-                        VStack(alignment: .leading) {
-                            Text(sticker.name)
-                            Text(sticker.meaning).font(.caption).foregroundStyle(.secondary)
-                            if sticker.asset.animated { Text("GIF · \(sticker.asset.frameCount) 帧").font(.caption2) }
-                        }
-                        Spacer()
-                        Button("编辑") { candidate = nil; candidateAsset = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
-                            .buttonStyle(.borderless)
-                    }.swipeActions { Button("移除", role: .destructive) { store.removeSticker(sticker.id) } }
-                }
-            }
-            Section { Text("移除表情后，已经发送的消息仍保留。AI 自动发送需在该角色「AI 与人格」里开启。普通图片发送至接口时使用静态预览，GIF 的动画只在聊天中播放。")
-                    .font(.caption).foregroundStyle(.secondary) }
+            importSection
+            editorSection
+            librarySection
+            helpSection
         }.navigationTitle("\(character.name)的表情包").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("完成") { dismiss() } } }
             .fileImporter(isPresented: $importing, allowedContentTypes: [.png, .jpeg, .gif]) { result in
@@ -159,7 +128,7 @@ struct CharacterStickerLibraryView: View {
                 loading = true
                 Task { @MainActor in
                     defer { loading = false; photo = nil }
-                    do { guard let data = try await selection.loadTransferable(type: Data.self) else { throw ChatMediaError.invalid }; try prepare(data) }
+                    do { guard let data = try await selection.loadTransferable(type: Data.self) else { throw ChatMediaError.invalid }; try prepare(ChatMediaFiles.compatiblePhoto(data)) }
                     catch { store.error = error.localizedDescription }
                 }
             }
@@ -167,10 +136,59 @@ struct CharacterStickerLibraryView: View {
                 Button("知道了", role: .cancel) { store.error = nil }
             } message: { Text(store.error ?? "") }
     }
-    private func prepare(_ data: Data) throws { candidateAsset = try store.media.store(data); candidate = data; editing = nil; name = ""; meaning = "" }
+    @ViewBuilder private var importSection: some View {
+    Section {
+        PhotosPicker("从照片添加", selection: $photo, matching: .images).disabled(loading)
+            .accessibilityIdentifier("addStickerFromPhotos")
+        Button("从文件添加 PNG / JPEG / GIF") { importing = true }.disabled(loading)
+        if loading { ProgressView() }
+    } footer: { Text("表情只属于\(character.name)。静态和 GIF 均可；名称、含义帮助 AI 选择合适表情。聊天图片与表情库分别管理。最多 100 个，单个 10 MB、GIF 最长 20 秒。") }
+    }
+    @ViewBuilder private var editorSection: some View {
+    if candidate != nil || editing != nil {
+        Section(editing == nil ? "新表情" : "编辑表情") {
+            if let asset = candidateAsset {
+                ChatAttachmentView(attachment: .init(id: UUID(), kind: .image, asset: asset), media: store.media, maximum: 140)
+            }
+            TextField("名称（最多 40 字）", text: $name).accessibilityIdentifier("stickerName")
+            TextField("表达什么情绪 / 适合什么情境（最多 300 字）", text: $meaning, axis: .vertical)
+                .accessibilityIdentifier("stickerMeaning")
+            if editing != nil { Button("替换表情文件") { importing = true } }
+            Button("保存表情") { save() }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || name.count > 40 || meaning.count > 300)
+                .accessibilityIdentifier("saveCharacterSticker")
+            Button("取消编辑", role: .cancel) { candidate = nil; candidateAsset = nil; editing = nil }
+        }
+    }
+    }
+    @ViewBuilder private var librarySection: some View {
+    Section("\(character.name)的表情 · \(store.stickers(for: character.id).count)") {
+        if store.stickers(for: character.id).isEmpty { Text("还没有表情，先添加一张吧。").foregroundStyle(.secondary) }
+        ForEach(store.stickers(for: character.id)) { sticker in
+            HStack {
+                ChatAttachmentView(attachment: .init(id: sticker.id, kind: .sticker, asset: sticker.asset, sticker: sticker), media: store.media, maximum: 72)
+                VStack(alignment: .leading) {
+                    Text(sticker.name)
+                    Text(sticker.meaning).font(.caption).foregroundStyle(.secondary)
+                    if sticker.asset.animated { Text("GIF · \(sticker.asset.frameCount) 帧").font(.caption2) }
+                }
+                Spacer()
+                Button("编辑") { candidate = nil; candidateAsset = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
+                    .buttonStyle(.borderless)
+            }.swipeActions { Button("移除", role: .destructive) { store.removeSticker(sticker.id) } }
+        }
+    }
+    }
+    @ViewBuilder private var helpSection: some View {
+    Section { Text("移除表情后，已经发送的消息仍保留。AI 自动发送需在该角色「AI 与人格」里开启。普通图片发送至接口时使用静态预览，GIF 的动画只在聊天中播放。")
+            .font(.caption).foregroundStyle(.secondary) }
+    }
+    private func prepare(_ data: Data) throws {
+        candidateAsset = try store.media.store(data); candidate = data
+        if editing == nil { name = ""; meaning = "" }
+    }
     private func save() {
         let saved: Bool
-        if let editing { saved = store.editSticker(editing.id, name: name, meaning: meaning) }
+        if let editing { saved = store.editSticker(editing.id, name: name, meaning: meaning, data: candidate) }
         else if let candidate { saved = store.addSticker(data: candidate, characterID: character.id, name: name, meaning: meaning) }
         else { return }
         if saved { candidate = nil; candidateAsset = nil; editing = nil; name = ""; meaning = "" }

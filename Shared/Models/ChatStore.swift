@@ -254,11 +254,15 @@ final class ChatStore: ObservableObject {
         } catch { self.error = error.localizedDescription; return false }
     }
     func removeSticker(_ id: UUID) { change { $0.stickers?.removeAll { $0.id == id } } }
-    func editSticker(_ id: UUID, name: String, meaning: String) -> Bool {
-        change { value in
-            guard let i = value.stickers?.firstIndex(where: { $0.id == id }) else { throw ChatMediaError.missing }
-            value.stickers?[i].name = name; value.stickers?[i].meaning = meaning
-        }
+    func editSticker(_ id: UUID, name: String, meaning: String, data: Data? = nil) -> Bool {
+        do {
+            let replacement = try data.map { try media.store($0) }
+            return change { value in
+                guard let i = value.stickers?.firstIndex(where: { $0.id == id }), let old = value.stickers?[i] else { throw ChatMediaError.missing }
+                value.stickers?[i] = CharacterSticker(id: old.id, characterID: old.characterID,
+                    name: name, meaning: meaning, asset: replacement ?? old.asset)
+            }
+        } catch { self.error = error.localizedDescription; return false }
     }
     @discardableResult
     func attach(data: Data, in id: UUID) -> Bool {

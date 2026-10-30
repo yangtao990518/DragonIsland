@@ -6,17 +6,26 @@ final class ChatAppTools: ObservableObject {
     @Published var approval: Approval?
     private var continuation: CheckedContinuation<Bool, Never>?
     private var timeout: Task<Void, Never>?
+    private var awaitingDismissal = false
     private let companion: CompanionStore
     var permission: (String) -> Bool = { _ in false }
     init(companion: CompanionStore) { self.companion = companion }
 
     func resolve(_ approved: Bool) {
+        guard continuation != nil || approval != nil else { return }
         timeout?.cancel(); timeout = nil
+        awaitingDismissal = approval != nil
         let waiting = continuation; continuation = nil; approval = nil
         waiting?.resume(returning: approved)
     }
+    func presentationDismissed() { resolve(false); awaitingDismissal = false }
     private func confirm(title: String, detail: String) async -> Bool {
-        guard continuation == nil, !Task.isCancelled else { return false }
+        // Serial tool calls may arrive before SwiftUI finishes dismissing the previous sheet.
+        for _ in 0..<40 {
+            if !awaitingDismissal { break }
+            do { try await Task.sleep(nanoseconds: 50_000_000) } catch { return false }
+        }
+        guard continuation == nil, !awaitingDismissal, !Task.isCancelled else { return false }
         let id = UUID()
         return await withTaskCancellationHandler {
             await withCheckedContinuation { waiting in
@@ -37,23 +46,22 @@ final class ChatAppTools: ObservableObject {
         let name = call.function.name
         if name == "app_state" {
             let formatter = ISO8601DateFormatter()
-            let value: [String: Any] = [
-                "character": ["id": character.id, "name": character.name],
-                "selectedCharacterID": companion.selectedCharacterID,
-                "activeCharacterID": companion.activeCharacterID ?? "",
-                "busy": companion.busy,
-                "sessionEndsAt": companion.session.map { formatter.string(from: $0.endsAt) } ?? "",
-                "currentScene": companion.islandScene.rawValue,
-                "scenes": IslandScene.allCases.map { ["id": $0.rawValue, "title": $0.title] },
-                "artworks": character.availableArtworks.map { ["id": $0.id, "title": $0.title] },
-                "selectedArtworkID": companion.worldArtwork(for: character).id,
-                "availableActions": ["walk", "roll"] + (character.motionProfile?.dailyActions ?? []).map(\.id),
-                "enabledActions": enabledActions(for: character),
-                "actionPlayback": "自动活动按既有时间表轮换；配置动作不会立即播放。",
-                "alarmCount": companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }.count,
-                "alarms": companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }.prefix(20)
-                    .map { ["id": $0.id.uuidString, "title": $0.title, "date": formatter.string(from: $0.date)] }
-            ]
+            var value: [String: Any] = [:]
+            value["character"] = ["id": character.id, "name": character.name]
+            value["selectedCharacterID"] = companion.selectedCharacterID
+            value["activeCharacterID"] = companion.activeCharacterID ?? ""
+            value["busy"] = companion.busy
+            value["sessionEndsAt"] = companion.session.map { formatter.string(from: $0.endsAt) } ?? ""
+            value["currentScene"] = companion.islandScene.rawValue
+            value["scenes"] = IslandScene.allCases.map { ["id": $0.rawValue, "title": $0.title] }
+            value["artworks"] = character.availableArtworks.map { ["id": $0.id, "title": $0.title] }
+            value["selectedArtworkID"] = companion.worldArtwork(for: character).id
+            value["availableActions"] = ["walk", "roll"] + (character.motionProfile?.dailyActions ?? []).map(\.id)
+            value["enabledActions"] = enabledActions(for: character)
+            value["actionPlayback"] = "自动活动按既有时间表轮换；配置动作不会立即播放。"
+            let alarms = companion.alarms.snapshot.alarms.filter { $0.characterID == characterID && $0.sessionID == nil }
+            value["alarmCount"] = alarms.count
+            value["alarms"] = alarms.prefix(20).map { ["id": $0.id.uuidString, "title": $0.title, "date": formatter.string(from: $0.date)] }
             return String(decoding: try JSONSerialization.data(withJSONObject: value, options: .sortedKeys), as: UTF8.self)
         }
         guard !companion.busy else { return "未执行：App 正在处理另一项操作，请稍后再试。" }

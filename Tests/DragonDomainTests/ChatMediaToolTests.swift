@@ -39,6 +39,22 @@ final class ChatMediaToolTests: XCTestCase {
         }
         XCTAssertThrowsError(try ChatMediaAsset.inspect(Data("not an image".utf8)))
     }
+    func testPhotoCompatibilityPreservesGIFAndResizesOversizedStills() throws {
+        let gif = try Self.image(gif: true)
+        XCTAssertEqual(try ChatMediaFiles.compatiblePhoto(gif), gif)
+        let bytes = NSMutableData()
+        let destination = try XCTUnwrap(CGImageDestinationCreateWithData(bytes, UTType.png.identifier as CFString, 1, nil))
+        let context = try XCTUnwrap(CGContext(data: nil, width: 5000, height: 2, bitsPerComponent: 8, bytesPerRow: 20000,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.setFillColor(CGColor(red: 0.3, green: 0.5, blue: 0.9, alpha: 1)); context.fill(CGRect(x: 0, y: 0, width: 5000, height: 2))
+        CGImageDestinationAddImage(destination, try XCTUnwrap(context.makeImage()), nil)
+        XCTAssertTrue(CGImageDestinationFinalize(destination))
+        XCTAssertThrowsError(try ChatMediaAsset.inspect(bytes as Data))
+        let compatible = try ChatMediaAsset.inspect(ChatMediaFiles.compatiblePhoto(bytes as Data))
+        XCTAssertLessThanOrEqual(compatible.width, 2048)
+        XCTAssertEqual(compatible.frameCount, 1)
+        XCTAssertThrowsError(try ChatMediaFiles.compatiblePhoto(Data([0, 1, 2])))
+    }
     func testImageOnlyMessageAndLegacyJSONRoundTrip() throws {
         let item = ChatAttachment(id: UUID(), kind: .image, asset: try .inspect(Self.image()))
         let value = try history(attachment: item)

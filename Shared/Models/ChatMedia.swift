@@ -134,6 +134,30 @@ struct ChatMediaFiles: Sendable {
         guard CGImageDestinationFinalize(destination) else { throw ChatMediaError.invalid }
         return "data:image/jpeg;base64," + (output as Data).base64EncodedString()
     }
+    /// Photos may supply HEIC or a 48 MP still. Convert only incompatible stills;
+    /// GIF is always validated and preserved, never flattened as a fallback.
+    static func compatiblePhoto(_ data: Data) throws -> Data {
+        guard data.count <= 50 * 1024 * 1024,
+              let source = CGImageSourceCreateWithData(data as CFData, nil),
+              CGImageSourceGetStatus(source) == .statusComplete else { throw ChatMediaError.invalid }
+        if CGImageSourceGetType(source) as String? == UTType.gif.identifier {
+            _ = try ChatMediaAsset.inspect(data); return data
+        }
+        if (try? ChatMediaAsset.inspect(data)) != nil { return data }
+        guard CGImageSourceGetCount(source) == 1,
+              let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: 2048] as CFDictionary) else { throw ChatMediaError.invalid }
+        let output = NSMutableData()
+        let hasAlpha = [CGImageAlphaInfo.first, .last, .premultipliedFirst, .premultipliedLast].contains(image.alphaInfo)
+        let type = hasAlpha ? UTType.png : .jpeg
+        guard let destination = CGImageDestinationCreateWithData(output, type.identifier as CFString, 1, nil) else { throw ChatMediaError.invalid }
+        CGImageDestinationAddImage(destination, image, hasAlpha ? nil : [kCGImageDestinationLossyCompressionQuality: 0.9] as CFDictionary)
+        guard CGImageDestinationFinalize(destination) else { throw ChatMediaError.invalid }
+        _ = try ChatMediaAsset.inspect(output as Data)
+        return output as Data
+    }
 }
 
 extension ChatHistory {

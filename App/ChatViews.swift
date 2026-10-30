@@ -105,7 +105,7 @@ struct ChatPage: View {
                 pendingID = id
             }
         }
-        .sheet(item: $tools.approval, onDismiss: { tools.resolve(false) }) { approval in
+        .sheet(item: $tools.approval, onDismiss: { tools.presentationDismissed() }) { approval in
             ChatAppApprovalView(tools: tools, approval: approval)
         }
         .sheet(isPresented: $showingBackup) { NavigationStack { ChatBackupView(store: store) } }
@@ -270,6 +270,44 @@ private struct ChatRoom: View {
     private var trimmed: String { draft.trimmingCharacters(in: .whitespacesAndNewlines) }
 
     var body: some View {
+        roomContent
+        .background(AppPalette.background)
+        .toolbar(.hidden, for: .tabBar)
+        .onAppear { draft = chat?.draft ?? "" }
+        .onDisappear { if chat != nil { store.setDraft(draft, in: id) } }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active, chat != nil { store.setDraft(draft, in: id) }
+        }
+        .fileImporter(isPresented: $importingImage, allowedContentTypes: [.png, .jpeg, .gif]) { result in
+            do { store.attach(data: try ChatMediaImport.read(result.get()), in: id) } catch { store.error = error.localizedDescription }
+        }
+        .sheet(isPresented: $choosingSticker) { ChatStickerPicker(store: store, characterIDs: chat?.characterIDs ?? [], conversationID: id) }
+        .onChange(of: photo) { _, selection in
+            guard let selection else { return }
+            importing = true
+            Task { @MainActor in
+                defer { importing = false; photo = nil }
+                do {
+                    guard let data = try await selection.loadTransferable(type: Data.self) else { throw ChatMediaError.invalid }
+                    store.attach(data: try ChatMediaFiles.compatiblePhoto(data), in: id)
+                } catch { store.error = error.localizedDescription }
+            }
+        }
+        .sheet(isPresented: $editingGroup) {
+            if let chat { ChatEditor(store: store, kind: .group, existing: chat) { _ in } }
+        }
+        .confirmationDialog("清空聊天记录？此操作无法撤销。", isPresented: $confirmingClear, titleVisibility: .visible) {
+            Button("清空记录", role: .destructive) { if store.clear(id) { draft = "" } }
+        }
+        .confirmationDialog("删除这段聊天及全部记录？", isPresented: $confirmingDelete, titleVisibility: .visible) {
+            Button("删除聊天", role: .destructive) {
+                store.delete(id)
+                if chat == nil { dismiss() }
+            }
+        }
+    }
+
+    private var roomContent: some View {
         Group {
             if let chat {
                 VStack(spacing: 0) {
@@ -297,40 +335,6 @@ private struct ChatRoom: View {
                 }
             } else {
                 ContentUnavailableView("聊天已删除", systemImage: "bubble.left")
-            }
-        }
-        .background(AppPalette.background)
-        .toolbar(.hidden, for: .tabBar)
-        .onAppear { draft = chat?.draft ?? "" }
-        .onDisappear { if chat != nil { store.setDraft(draft, in: id) } }
-        .onChange(of: scenePhase) { _, phase in
-            if phase != .active, chat != nil { store.setDraft(draft, in: id) }
-        }
-        .fileImporter(isPresented: $importingImage, allowedContentTypes: [.png, .jpeg, .gif]) { result in
-            do { store.attach(data: try ChatMediaImport.read(result.get()), in: id) } catch { store.error = error.localizedDescription }
-        }
-        .sheet(isPresented: $choosingSticker) { ChatStickerPicker(store: store, characterIDs: chat?.characterIDs ?? [], conversationID: id) }
-        .onChange(of: photo) { _, selection in
-            guard let selection else { return }
-            importing = true
-            Task { @MainActor in
-                defer { importing = false; photo = nil }
-                do {
-                    guard let data = try await selection.loadTransferable(type: Data.self) else { throw ChatMediaError.invalid }
-                    store.attach(data: data, in: id)
-                } catch { store.error = error.localizedDescription }
-            }
-        }
-        .sheet(isPresented: $editingGroup) {
-            if let chat { ChatEditor(store: store, kind: .group, existing: chat) { _ in } }
-        }
-        .confirmationDialog("清空聊天记录？此操作无法撤销。", isPresented: $confirmingClear, titleVisibility: .visible) {
-            Button("清空记录", role: .destructive) { if store.clear(id) { draft = "" } }
-        }
-        .confirmationDialog("删除这段聊天及全部记录？", isPresented: $confirmingDelete, titleVisibility: .visible) {
-            Button("删除聊天", role: .destructive) {
-                store.delete(id)
-                if chat == nil { dismiss() }
             }
         }
     }

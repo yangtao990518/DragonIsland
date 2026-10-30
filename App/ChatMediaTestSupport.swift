@@ -43,12 +43,12 @@ enum ChatMediaTestSupport {
 struct ChatMediaTestProvider: ChatReplyProvider {
     func reply(to request: ChatReplyRequest) async throws -> String { "收到消息。" }
     func reply(to request: ChatReplyRequest, onPartial: @escaping @Sendable (String) async -> Void, onTool: @escaping ChatToolHandler) async throws -> String {
-        if request.userMessage.text.contains("测试操作") {
+        if request.userMessage.text.contains("测试操作") || request.userMessage.text.contains("test-action") {
             let id = request.character.availableArtworks.last?.id ?? "default"
             let args = String(decoding: try JSONEncoder().encode(["artwork_id": id]), as: UTF8.self)
             return try await onTool(.init(id: "fixture-action", function: .init(name: "set_artwork", arguments: args)))
         }
-        if request.userMessage.text.contains("测试表情"), let sticker = request.stickers.first(where: { $0.asset.animated }) {
+        if request.userMessage.text.contains("测试表情") || request.userMessage.text.contains("test-sticker"), let sticker = request.stickers.first(where: { $0.asset.animated }) {
             let args = String(decoding: try JSONEncoder().encode(["sticker_id": sticker.id.uuidString]), as: UTF8.self)
             return try await onTool(.init(id: "fixture-sticker", function: .init(name: "send_sticker", arguments: args)))
         }
