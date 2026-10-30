@@ -67,8 +67,10 @@ final class ProactiveChatCoordinator: ObservableObject {
                 catch { failures += 1; status = error.localizedDescription }
             }
             preparing = false; preparation = nil
-            if failures == 0, !Task.isCancelled { status = "已准备好消息，将在允许时段随机提醒。" }
             await refresh(prepare: false)
+            if failures == 0, !Task.isCancelled, status == "正在准备下一允许时段的消息…" {
+                status = "消息已准备好，可在下方查看已保存的安排。"
+            }
         }
     }
 
@@ -94,6 +96,9 @@ final class ProactiveChatCoordinator: ObservableObject {
         let existing = Set(pending.map(\.identifier))
         // Leave room for companion alarms; iOS has a finite local notification queue.
         let capacity = max(0, 60 - pending.filter { !$0.identifier.hasPrefix(prefix) }.count)
+        if settings.notifications, notificationsAllowed, future.count > capacity {
+            status = "系统提醒队列已满，部分消息暂时只保存在 App 中。"
+        }
         if settings.notifications, notificationsAllowed {
             for slot in future.sorted(by: { $0.scheduledAt < $1.scheduledAt }).prefix(capacity) {
                 if existing.contains(slot.notificationID) { continue }

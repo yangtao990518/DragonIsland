@@ -39,6 +39,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.dragonisle.prototype.app
+        # Chat media uses content hashes; copying PNGs must preserve their bytes.
+        COMPRESS_PNG_FILES: "NO"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIconClaude AppIconDeepSeek AppIconGemini AppIconGrok"
         ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: "YES"

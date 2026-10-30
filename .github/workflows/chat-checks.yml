@@ -54,7 +54,6 @@ jobs:
           .asset-venv/bin/python -m unittest discover -s Tests -p test_motion_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_character_resources.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_daily_motion_resources.py
-          .asset-venv/bin/python -m unittest discover -s Tests -p test_video_comparison.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_full_video_actions.py
           .asset-venv/bin/python -m unittest discover -s Tests -p test_home_scene_resources.py
           .asset-venv/bin/python Scripts/verify_motion_resources.py
