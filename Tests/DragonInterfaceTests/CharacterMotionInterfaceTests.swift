@@ -83,7 +83,7 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         XCTAssertTrue(app.segmentedControls["characterBrowsingMode"].buttons["纵向列表"].isSelected)
     }
 
-    func testSeparateDailyActionSwitchesAndRealVideoPlayback() {
+    func testSeparateDailyActionSwitchesAndConfirmedDogPreview() {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--preview-tasks", "--appearance-light"]
@@ -91,12 +91,7 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         XCTAssertTrue(app.buttons["dailyMotion_pet_walk"].waitForExistence(timeout: 10))
         app.buttons["dailyMotion_pet_walk"].tap()
         capture(app, "dafeiyu-dog-image-sequence")
-        app.buttons["dailyMotion_pet_walk_video"].tap()
-        let video = app.descendants(matching: .any).matching(identifier: "dogWalkVideoStage").firstMatch
-        XCTAssertTrue(video.waitForExistence(timeout: 8))
-        expectation(for: NSPredicate(format: "value == %@", "正在播放"), evaluatedWith: video)
-        waitForExpectations(timeout: 12)
-        capture(app, "dafeiyu-dog-real-video")
+        XCTAssertFalse(app.buttons["dailyMotion_pet_walk_video"].exists)
         let dog = app.switches["dailyMotionToggle_pet_walk"]
         reveal(dog, in: app)
         XCTAssertTrue(dog.exists)

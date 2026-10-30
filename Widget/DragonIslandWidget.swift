@@ -6,6 +6,7 @@ import WidgetKit
 struct DragonIslandWidgetBundle: WidgetBundle {
     var body: some Widget {
         DragonLiveActivity()
+        ChatReminderWidget()
         #if canImport(AlarmKit)
         if #available(iOS 26.0, *) { CharacterAlarmWidget() }
         #endif

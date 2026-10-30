@@ -15,6 +15,8 @@ struct ChatMessage: Codable, Equatable, Identifiable, Sendable {
     var interrupted: Bool? = nil
     var attachments: [ChatAttachment]? = nil
     var toolReceipts: [ChatToolReceipt]? = nil
+    var isProactive: Bool? = nil
+    var mentionsUser: Bool? = nil
 
     var isUser: Bool { characterID == nil }
 
@@ -40,6 +42,11 @@ struct ChatConversation: Codable, Equatable, Identifiable, Sendable {
     var messages: [ChatMessage] = []
     var draft = ""
     var draftAttachments: [ChatAttachment]? = nil
+    var lastReadAt: Date? = nil
+
+    var unreadProactiveCount: Int {
+        messages.filter { $0.isProactive == true && $0.createdAt > (lastReadAt ?? .distantPast) }.count
+    }
 
     func title(in characters: [CompanionCharacter]) -> String {
         if kind == .group { return name }
@@ -79,6 +86,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
     var conversations: [ChatConversation] = []
     var configuration: AIChatPreferences? = nil
     var stickers: [CharacterSticker]? = nil
+    var proactive: ProactiveChatState? = nil
 
     mutating func create(kind: ChatKind, name: String, characterIDs: [String],
                          availableIDs: Set<String>, now: Date = .now) throws -> UUID {
@@ -142,6 +150,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
 
     func validate() throws {
         try configuration?.validate()
+        try proactive?.validate()
         let library = stickers ?? []
         guard library.count <= 10000, Set(library.map(\.id)).count == library.count else { throw ChatMediaError.invalid }
         for sticker in library { try sticker.validate() }
@@ -173,12 +182,19 @@ struct ChatHistory: Codable, Equatable, Sendable {
                     guard message.replyCharacterIDs.contains(receipt.characterID) else { throw ChatError.invalidHistory }
                 }
                 guard (!message.text.isEmpty || !(message.attachments ?? []).isEmpty),
-                      (message.isUser ? message.replyToID == nil : message.replyToID != nil),
+                      (message.isUser ? message.replyToID == nil && message.isProactive != true
+                        : message.isProactive == true ? message.replyToID == nil : message.replyToID != nil),
                       message.isUser || message.delivery == .sent else { throw ChatError.invalidHistory }
+                if message.mentionsUser == true {
+                    guard message.isProactive == true, !message.isUser, conversation.kind == .group else { throw ChatError.invalidHistory }
+                }
                 if message.isUser {
                     guard !message.replyCharacterIDs.isEmpty,
                           Set(message.replyCharacterIDs).count == message.replyCharacterIDs.count,
                           message.replyCharacterIDs.allSatisfy({ !$0.isEmpty }) else { throw ChatError.invalidHistory }
+                } else if message.isProactive == true {
+                    guard let characterID = message.characterID, ids.contains(characterID),
+                          message.replyCharacterIDs.isEmpty, receipts.isEmpty, message.interrupted != true else { throw ChatError.invalidHistory }
                 } else {
                     guard let parentID = message.replyToID, let parent = users[parentID],
                           let characterID = message.characterID,
@@ -214,6 +230,7 @@ struct ChatReplyRequest: Sendable {
     var userProfile: AIUserProfile? = nil
     var imageURLs: [UUID: [String]] = [:]
     var stickers: [CharacterSticker] = []
+    var proactiveDeliveryDate: Date? = nil
 }
 
 typealias ChatToolHandler = @Sendable (ChatToolCall) async throws -> String

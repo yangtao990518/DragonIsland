@@ -256,6 +256,16 @@ final class CharacterAlarmStore: NSObject, ObservableObject, UNUserNotificationC
         [.banner, .list, .sound]
     }
 
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse) async {
+        guard let raw = response.notification.request.content.userInfo["chatConversationID"] as? String,
+              let id = UUID(uuidString: raw) else { return }
+        await MainActor.run {
+            UserDefaults.standard.set(id.uuidString, forKey: ChatDeepLink.pendingKey)
+            NotificationCenter.default.post(name: Notification.Name(ChatDeepLink.notificationName), object: id)
+        }
+    }
+
     private func reload() { snapshot = CharacterAlarmSnapshot.load() }
 }
 

@@ -142,7 +142,7 @@ struct CharacterStickerLibraryView: View {
             .accessibilityIdentifier("addStickerFromPhotos")
         Button("从文件添加 PNG / JPEG / GIF") { importing = true }.disabled(loading)
         if loading { ProgressView() }
-    } footer: { Text("表情只属于\(character.name)。静态和 GIF 均可；名称、含义帮助 AI 选择合适表情。聊天图片与表情库分别管理。最多 100 个，单个 10 MB、GIF 最长 20 秒。") }
+    } footer: { Text("表情只属于\(character.name)。静态和 GIF 均可；名称、含义帮助 AI 选择合适表情。聊天图片与表情库分别管理。最多 100 个自定义表情，单个 10 MB、GIF 最长 20 秒；内置表情不占自定义名额。") }
     }
     @ViewBuilder private var editorSection: some View {
     if candidate != nil || editing != nil {
@@ -172,9 +172,14 @@ struct CharacterStickerLibraryView: View {
                     if sticker.asset.animated { Text("GIF · \(sticker.asset.frameCount) 帧").font(.caption2) }
                 }
                 Spacer()
-                Button("编辑") { candidate = nil; candidateAsset = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
-                    .buttonStyle(.borderless)
-            }.swipeActions { Button("移除", role: .destructive) { store.removeSticker(sticker.id) } }
+                if store.isBuiltinSticker(sticker.id) { Text("内置").font(.caption).foregroundStyle(.secondary) }
+                else {
+                    Button("编辑") { candidate = nil; candidateAsset = nil; editing = sticker; name = sticker.name; meaning = sticker.meaning }
+                        .buttonStyle(.borderless)
+                }
+            }.swipeActions {
+                if !store.isBuiltinSticker(sticker.id) { Button("移除", role: .destructive) { store.removeSticker(sticker.id) } }
+            }
         }
     }
     }

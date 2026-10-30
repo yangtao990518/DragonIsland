@@ -100,7 +100,15 @@ struct ChatAttachment: Codable, Equatable, Identifiable, Sendable {
 struct ChatMediaFiles: Sendable {
     let directory: URL
     init(historyURL: URL) { directory = historyURL.deletingLastPathComponent().appendingPathComponent("Media", isDirectory: true) }
-    func url(for asset: ChatMediaAsset) -> URL { directory.appendingPathComponent(asset.filename) }
+    func url(for asset: ChatMediaAsset) -> URL {
+        let local = directory.appendingPathComponent(asset.filename)
+        if FileManager.default.fileExists(atPath: local.path) { return local }
+        // Built-in files stay in the read-only App bundle. Only actually used
+        // sticker snapshots enter media backups; importing the pack uses no disk copies.
+        return Bundle.main.url(forResource: asset.sha256, withExtension: asset.fileExtension)
+            ?? Bundle.main.url(forResource: asset.sha256, withExtension: asset.fileExtension, subdirectory: "BuiltinStickers")
+            ?? local
+    }
     func data(for asset: ChatMediaAsset) throws -> Data {
         try asset.validate()
         let url = url(for: asset)

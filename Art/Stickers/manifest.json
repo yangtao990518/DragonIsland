@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "stickers": [
+    {
+      "id": "0b7b672d-3e9b-56f9-9663-84fbd99c60ce",
+      "characterID": "dafeiyu",
+      "name": "来啦",
+      "meaning": "挥手打招呼，亲切、欢迎",
+      "source": "Art/Stickers/dafeiyu/01-hello.png",
+      "sourceSHA256": "0ace28fa4d951d1352d0a83879e05fee90fb1ca2c6247a391a17f40f3abe0429"
+    },
+    {
+      "id": "87d33d2e-3bb6-5b92-82e9-c1a21f2fc4fc",
+      "characterID": "dafeiyu",
+      "name": "哈哈哈",
+      "meaning": "大笑、觉得好笑、笑到流泪",
+      "source": "Art/Stickers/dafeiyu/02-laugh.png",
+      "sourceSHA256": "2da7e67de12a8320615aa48d534e9c6b24de3f02ce4ac9946c920d320fadf9f9"
+    },
+    {
+      "id": "fb1ac324-6540-54e9-9c45-14e96fb8331f",
+      "characterID": "dafeiyu",
+      "name": "无语",
+      "meaning": "无语、沉默、吐槽",
+      "source": "Art/Stickers/dafeiyu/03-deadpan.png",
+      "sourceSHA256": "1c11b6a3672ff87a5c1d3b28efaac22d9670e8dea6212ab97f7efae1ccbf576e"
+    },
+    {
+      "id": "a65f3959-2ff4-5dd6-8eed-d5695810cb1f",
+      "characterID": "dafeiyu",
+      "name": "啊？",
+      "meaning": "疑惑、没听懂、反问",
+      "source": "Art/Stickers/dafeiyu/04-question.png",
+      "sourceSHA256": "8db8c5a6908c4e026379ac0ec645c30fe74072d4dd047268ebf5cf7d855f23a9"
+    },
+    {
+      "id": "5740c0ff-bd0e-5c0e-a8cb-d4e97ee2320c",
+      "characterID": "dafeiyu",
+      "name": "什么？！",
+      "meaning": "震惊、不可思议",
+      "source": "Art/Stickers/dafeiyu/05-shock.png",
+      "sourceSHA256": "639a71a51019458de75f60d404925217768acc2fbcfb72868b2d8b11ad01311a"
+    },
+    {
+      "id": "c19d2ae5-bb59-5deb-b0eb-c2b69991608c",
+      "characterID": "dafeiyu",
+      "name": "呜呜",
+      "meaning": "委屈、难过、求安慰",
+      "source": "Art/Stickers/dafeiyu/06-cry.png",
+      "sourceSHA256": "c30203de37040a63a8980fb120ab3e954b6271313426f43043357ae0a5a3bcd6"
+    },
+    {
+      "id": "abbc13fe-4c75-542d-ba38-3f1463489547",
+      "characterID": "dafeiyu",
+      "name": "哼",
+      "meaning": "轻微生气、傲娇、不满",
+      "source": "Art/Stickers/dafeiyu/07-angry.png",
+      "sourceSHA256": "5101b1693907d400b58c98b1ae55693cb6879518cbf9c5c6e037ccf80dd1d0b6"
+    },
+    {
+      "id": "4b087c60-6061-557f-8c5f-8ad510e976e6",
+      "characterID": "dafeiyu",
+      "name": "认真听",
+      "meaning": "认真、倾听、严肃讨论",
+      "source": "Art/Stickers/dafeiyu/08-serious.png",
+      "sourceSHA256": "30440300b0b3a530d95a15ab50bdbeb11b731aceaee56faf2154aff83de23f8b"
+    },
+    {
+      "id": "c339ea67-54a7-505c-b078-732fdfc22ad9",
+      "characterID": "dafeiyu",
+      "name": "让我想想",
+      "meaning": "思考、分析、暂时犹豫",
+      "source": "Art/Stickers/dafeiyu/09-think.png",
+      "sourceSHA256": "444d87d3456e365162a0a809258e398e98d0b534bbcdca4a929fca66223b9084"
+    },
+    {
+      "id": "f9acf5f1-a0fb-593d-9a65-d79dc74b93b4",
+      "characterID": "dafeiyu",
+      "name": "冲鸭",
+      "meaning": "鼓励、加油、准备行动",
+      "source": "Art/Stickers/dafeiyu/10-cheer.png",
+      "sourceSHA256": "ba94229bc7c55f501dbca063ffbd31446689aaf623ac308293f5691efbb64f61"
+    },
+    {
+      "id": "8511be67-dd03-5ad8-945c-716f507d3d38",
+      "characterID": "dafeiyu",
+      "name": "稳",
+      "meaning": "认可、赞同、做得好",
+      "source": "Art/Stickers/dafeiyu/11-thumbs-up.png",
+      "sourceSHA256": "e5c9dc040f323d772d60c442e13d23043dd85f4e1d050d843ddc323aa45428b6"
+    },
+    {
+      "id": "05ed6138-9403-5f91-8532-099059108547",
+      "characterID": "dafeiyu",
+      "name": "贴贴",
+      "meaning": "亲近、拥抱、陪伴",
+      "source": "Art/Stickers/dafeiyu/12-hug.png",
+      "sourceSHA256": "653a9c7ae9d41c32e45633b5cea28ac53fdcc20bb4ae25c93273ca0ee3cc6e50"
+    },
+    {
+      "id": "497041fb-141a-557c-9b55-3f97dc310431",
+      "characterID": "dafeiyu",
+      "name": "困了",
+      "meaning": "困倦、晚安、想休息",
+      "source": "Art/Stickers/dafeiyu/13-sleepy.png",
+      "sourceSHA256": "834424e6fbec058e164ef7ed0f72b4e2c73e832c628ff385793b44e56fac3b99"
+    },
+    {
+      "id": "37600431-a13f-5631-b7ab-1c459f5814f2",
+      "characterID": "dafeiyu",
+      "name": "收到",
+      "meaning": "确认收到、明白、答应",
+      "source": "Art/Stickers/dafeiyu/14-salute.png",
+      "sourceSHA256": "2c668f4431550f704045135b111c301c139bbee285383cdab8abbb751569f11b"
+    },
+    {
+      "id": "8d2a9dd4-224a-5e8d-b251-797943d08d6c",
+      "characterID": "dafeiyu",
+      "name": "不行",
+      "meaning": "拒绝、不同意、提醒停止",
+      "source": "Art/Stickers/dafeiyu/15-no.png",
+      "sourceSHA256": "5fb657c71489e95359af4fa69ad6da4b7fa81a55ffc42c4a13f17bc5acf5027e"
+    },
+    {
+      "id": "d74f3dd3-c895-5a23-a677-6e8220d4bad3",
+      "characterID": "dafeiyu",
+      "name": "诶嘿",
+      "meaning": "害羞、被夸、傻笑",
+      "source": "Art/Stickers/dafeiyu/16-shy.png",
+      "sourceSHA256": "068b62b1762ee11cacdcdf10aa28f972541925094ecb3baf1633ca42fa753208"
+    },
+    {
+      "id": "3ceb32a0-2906-5af7-b705-9f65ccb93f05",
+      "characterID": "dafeiyu",
+      "name": "CPU烧了",
+      "meaning": "抽象、脑子过载、没想明白",
+      "source": "Art/Stickers/dafeiyu/17-brain-fried.png",
+      "sourceSHA256": "5dbd5a37b70127b67d329b098789480ce1b594250b68e1312d88f88bd47e1edc"
+    },
+    {
+      "id": "c070abe7-4b7e-5093-a219-e930d196aa8a",
+      "characterID": "dafeiyu",
+      "name": "寄",
+      "meaning": "抽象、心累、搞笑的灵魂出窍",
+      "source": "Art/Stickers/dafeiyu/18-soul.png",
+      "sourceSHA256": "214cb9a495fbfa6d4db0dd0845e37f1eb2824408c3b640225ebfa0180ce671ed"
+    },
+    {
+      "id": "66d640df-e96f-5112-a8cc-3078e336aa65",
+      "characterID": "dafeiyu",
+      "name": "躺平",
+      "meaning": "摆烂、放松、不想努力",
+      "source": "Art/Stickers/dafeiyu/19-flop.png",
+      "sourceSHA256": "1b1f1e79164c8437b00899dc44e82892945c8dd3763b1cb0fe1a7dfff2c57fca"
+    },
+    {
+      "id": "205b19a2-6c03-57f4-8a13-f40507c8aefd",
+      "characterID": "dafeiyu",
+      "name": "盯——",
+      "meaning": "观察、等待、认真盯着",
+      "source": "Art/Stickers/dafeiyu/20-stare.png",
+      "sourceSHA256": "296553069eb42119cc48c07d8a3b094bbae13842ecca8d99be24157e5ba1ab12"
+    },
+    {
+      "id": "7ab4c2fd-0a09-595b-bbef-912d6801d83d",
+      "characterID": "xiaobai",
+      "name": "来啦",
+      "meaning": "挥手打招呼，亲切、欢迎",
+      "source": "Art/Stickers/xiaobai/01-hello.png",
+      "sourceSHA256": "25fd1935f0e2ab046c7f8abf93610a467d29bb974c46f0583276541e2d126a25"
+    },
+    {
+      "id": "df9cb9d0-4061-54eb-9c39-533878f6edf8",
+      "characterID": "xiaobai",
+      "name": "哈哈哈",
+      "meaning": "大笑、觉得好笑、笑到流泪",
+      "source": "Art/Stickers/xiaobai/02-laugh.png",
+      "sourceSHA256": "0fc473ff70cfc55b0b4ffef977a93ad3384f061cc7c4569af73580b5d8c4ac20"
+    },
+    {
+      "id": "5dfebbd6-fb13-5143-ba03-6c8a115c6abc",
+      "characterID": "xiaobai",
+      "name": "无语",
+      "meaning": "无语、沉默、吐槽",
+      "source": "Art/Stickers/xiaobai/03-deadpan.png",
+      "sourceSHA256": "4a4617f0c920e255b874398f3d796e1bdf17fa5a29a59fe8d6a8f8097f54933e"
+    },
+    {
+      "id": "de97724a-d4e0-5ed1-a3e2-4b3504df0a7a",
+      "characterID": "xiaobai",
+      "name": "啊？",
+      "meaning": "疑惑、没听懂、反问",
+      "source": "Art/Stickers/xiaobai/04-question.png",
+      "sourceSHA256": "bfa0407ce5169257170bc2582eeaf908c6df256a58794700808e3e2dd817f370"
+    },
+    {
+      "id": "873bf71c-8e06-5715-ab89-5517ea9394a5",
+      "characterID": "xiaobai",
+      "name": "什么？！",
+      "meaning": "震惊、不可思议",
+      "source": "Art/Stickers/xiaobai/05-shock.png",
+      "sourceSHA256": "b8d558e0264a538716e9352b0d99dffd414c305678a378569969b515a76f7702"
+    },
+    {
+      "id": "5ea678dd-b676-5335-9795-0c73c34e73d4",
+      "characterID": "xiaobai",
+      "name": "呜呜",
+      "meaning": "委屈、难过、求安慰",
+      "source": "Art/Stickers/xiaobai/06-cry.png",
+      "sourceSHA256": "04eb712b717bbe07a43cc28b2c3c573c084a50e5d00b6451cdf9b39122aa39d6"
+    },
+    {
+      "id": "1c5750d2-f18b-5598-94c6-91541a60c7ae",
+      "characterID": "xiaobai",
+      "name": "哼",
+      "meaning": "轻微生气、傲娇、不满",
+      "source": "Art/Stickers/xiaobai/07-angry.png",
+      "sourceSHA256": "e19652be5ceefd74edf046d483935a6c7d9e5c4499f12b1c47f28341c2da6f9e"
+    },
+    {
+      "id": "9a6bf2c0-b983-5d98-b7e7-cd88a6b02e44",
+      "characterID": "xiaobai",
+      "name": "认真听",
+      "meaning": "认真、倾听、严肃讨论",
+      "source": "Art/Stickers/xiaobai/08-serious.png",
+      "sourceSHA256": "9a3809459a8c61d0be9e5af0e4890f3981df5de514cdd7f6267f54ef2d055c17"
+    },
+    {
+      "id": "0213dc32-4037-53eb-aa3f-2e56a7c6825b",
+      "characterID": "xiaobai",
+      "name": "让我想想",
+      "meaning": "思考、分析、暂时犹豫",
+      "source": "Art/Stickers/xiaobai/09-think.png",
+      "sourceSHA256": "be9f2137a1ace71ea37df15bbef0acd4ae7184217d6ba2a5eddc8c31dd6e8ad9"
+    },
+    {
+      "id": "1d9f9746-1046-5335-a60d-4419eb0627a1",
+      "characterID": "xiaobai",
+      "name": "冲鸭",
+      "meaning": "鼓励、加油、准备行动",
+      "source": "Art/Stickers/xiaobai/10-cheer.png",
+      "sourceSHA256": "b9d887aff1a127d96dd5e4027b3e8c76de53a9a79edc9f08f95c5d0f021bf64c"
+    },
+    {
+      "id": "ffb30781-999f-5b6a-b317-49c04968514b",
+      "characterID": "xiaobai",
+      "name": "稳",
+      "meaning": "认可、赞同、做得好",
+      "source": "Art/Stickers/xiaobai/11-thumbs-up.png",
+      "sourceSHA256": "851c5e6bb6703fc65a8f6ea16ca8f0772aa916e698530bbd0f2e60850223fec6"
+    },
+    {
+      "id": "fb1a5fbe-4b4d-59a6-af9b-1c8878d4316e",
+      "characterID": "xiaobai",
+      "name": "贴贴",
+      "meaning": "亲近、拥抱、陪伴",
+      "source": "Art/Stickers/xiaobai/12-hug.png",
+      "sourceSHA256": "fabe1df5a6b5bc9d5835e1e75feaf45945c80c3d978a14ea8dd43215b50fb0a2"
+    },
+    {
+      "id": "414deb6d-423a-55b6-8601-1ee00a509e3f",
+      "characterID": "xiaobai",
+      "name": "困了",
+      "meaning": "困倦、晚安、想休息",
+      "source": "Art/Stickers/xiaobai/13-sleepy.png",
+      "sourceSHA256": "2068ce9cb56a6591b5c1d2298107335bf240c981cb32f65846add76bb7a79d8e"
+    },
+    {
+      "id": "ea2e039e-9f62-5764-9c26-643c440d38dc",
+      "characterID": "xiaobai",
+      "name": "收到",
+      "meaning": "确认收到、明白、答应",
+      "source": "Art/Stickers/xiaobai/14-salute.png",
+      "sourceSHA256": "65a44d3a17fa8ad684d4be1fb66b4297e947d50c4e363432b9c01d281df4e752"
+    },
+    {
+      "id": "c9f2177c-b851-583e-b596-de3d275956a0",
+      "characterID": "xiaobai",
+      "name": "不行",
+      "meaning": "拒绝、不同意、提醒停止",
+      "source": "Art/Stickers/xiaobai/15-no.png",
+      "sourceSHA256": "7d48e92861a015065ebf7fb91f5d790a4c1e35866110e45c212f7e20ce946c22"
+    },
+    {
+      "id": "982494f9-f125-5747-9300-79dadca1f9c3",
+      "characterID": "xiaobai",
+      "name": "诶嘿",
+      "meaning": "害羞、被夸、傻笑",
+      "source": "Art/Stickers/xiaobai/16-shy.png",
+      "sourceSHA256": "c374e7904e34e287f6197ca8d03edf9b404cb8d242b16e6fd906cc58e1b7db4c"
+    },
+    {
+      "id": "882a28f6-8fe9-5c36-badb-61b242ea2945",
+      "characterID": "xiaobai",
+      "name": "CPU烧了",
+      "meaning": "抽象、脑子过载、没想明白",
+      "source": "Art/Stickers/xiaobai/17-brain-fried.png",
+      "sourceSHA256": "1584f639b99818e817285d0429864810717ad5c679044b0d59c6dde94e0158ad"
+    },
+    {
+      "id": "42e6fd17-7627-56f1-a54a-4898b09d878f",
+      "characterID": "xiaobai",
+      "name": "寄",
+      "meaning": "抽象、心累、搞笑的灵魂出窍",
+      "source": "Art/Stickers/xiaobai/18-soul.png",
+      "sourceSHA256": "f1f27927d51c42f8981d9486ca784af5a1b1296efdb7b07bf44ae6966ac66988"
+    },
+    {
+      "id": "c1ae0974-5b45-533c-a588-11649ee75289",
+      "characterID": "xiaobai",
+      "name": "躺平",
+      "meaning": "摆烂、放松、不想努力",
+      "source": "Art/Stickers/xiaobai/19-flop.png",
+      "sourceSHA256": "aec9d2c6c9916a65687109f62ef0e18a27ec8ebde400525ba9774bf92d11db92"
+    },
+    {
+      "id": "4c8d7bcc-7125-5800-b9eb-d3398b69e718",
+      "characterID": "xiaobai",
+      "name": "盯——",
+      "meaning": "观察、等待、认真盯着",
+      "source": "Art/Stickers/xiaobai/20-stare.png",
+      "sourceSHA256": "6ebe8c1809c7e28a927b1ca761c356b85fb3410345def369b4ec061288010707"
+    }
+  ]
+}

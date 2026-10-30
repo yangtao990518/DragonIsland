@@ -1,10 +1,10 @@
 import XCTest
 
 final class ChatInterfaceTests: XCTestCase {
-    private func launch() -> XCUIApplication {
+    private func launch(extraArguments: [String] = []) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["--maiverse-capture", "--preview-chat", "--appearance-light", "--chat-test-store", UUID().uuidString]
+        app.launchArguments = ["--maiverse-capture", "--preview-chat", "--appearance-light", "--chat-test-store", UUID().uuidString] + extraArguments
         app.launch()
         return app
     }
@@ -42,6 +42,41 @@ final class ChatInterfaceTests: XCTestCase {
         field.typeText(text)
         app.buttons["sendChat"].tap()
         XCTAssertTrue(app.staticTexts["聊天功能测试中"].firstMatch.waitForExistence(timeout: 5))
+    }
+
+    func testLongDirectChatOpensAtLatestMessageAfterReentryAndRelaunch() {
+        verifyInitialLatestMessage(group: false)
+    }
+
+    func testLongGroupChatOpensAtLatestMessageAfterReentryAndRelaunch() {
+        verifyInitialLatestMessage(group: true)
+    }
+
+    private func verifyInitialLatestMessage(group: Bool) {
+        let app = launch(extraArguments: ["--chat-scroll-tests"])
+        let kind = group ? "group" : "direct"
+        let latest = app.staticTexts["SCROLL_LATEST_\(kind)"]
+        let first = app.staticTexts["SCROLL_FIRST_\(kind)"]
+        let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@",
+                                                  "chat-", "SCROLL_LATEST_\(kind)")).firstMatch
+        for attempt in 0..<3 {
+            XCTAssertTrue(row.waitForExistence(timeout: 8))
+            row.tap()
+            expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: latest)
+            waitForExpectations(timeout: 8)
+            XCTAssertFalse(first.isHittable, "A long conversation should open at its latest message")
+            if attempt == 0 {
+                let messages = app.scrollViews["chatMessages"]
+                for _ in 0..<30 {
+                    if first.isHittable { break }
+                    messages.swipeDown()
+                }
+                XCTAssertTrue(first.isHittable, "The user can still scroll up to the oldest message")
+                app.navigationBars.buttons.element(boundBy: 0).tap()
+            } else if attempt == 1 {
+                app.terminate(); app.launch()
+            }
+        }
     }
 
     func testDirectChatRepliesAndRestoresHistoryWithoutDuplicateConversation() {

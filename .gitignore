@@ -23,6 +23,8 @@ App/Resources/Assets.xcassets/*/
 App/Resources/VideoActionAtlases/
 App/Resources/VideoActions.json
 App/Resources/HomeScenes/
+App/Resources/BuiltinStickers/
+App/Resources/BuiltinStickers.json
 Art/HomeScenes/**/source.mp4
 Shared/Resources/Companion.xcassets/*/
 

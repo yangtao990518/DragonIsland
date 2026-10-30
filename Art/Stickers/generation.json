@@ -1,0 +1,406 @@
+{
+  "generator": "built-in image_gen",
+  "date": "2026-10-31",
+  "stickers": [
+    {
+      "characterID": "dafeiyu",
+      "index": 1,
+      "slug": "hello",
+      "name": "来啦",
+      "meaning": "挥手打招呼，亲切、欢迎",
+      "source": "Art/Stickers/dafeiyu/01-hello.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: chibi character chat sticker asset. Generate ONE standalone high quality 512x512-like square transparent PNG sticker of Dafeiyu 大肥鱼, vivid blue hair fading to pale blue at tips, blue eyes, white maid headdress, navy-and-white maid dress with small whale emblem, distinctive navy whale tail, navy Mary Jane shoes. Reference image is exact character identity and original chibi style. Preserve the exact recognizable face, hair ornaments, clothing colors and accessories from reference; not a generic anime girl. Emotion/action: cheerful wave with one hand, bright friendly eyes. Short simplified Chinese caption exactly '来啦', bold very readable dark indigo text with white outline integrated below character. A single sticker, NOT a grid or sticker sheet, no duplicate character except the tiny ghost when specified. Cute 2-to-3-head-tall Q版, expressive polished 2D anime linework, soft cel shading, funny meme energy, fully visible head/horns/tail/hands/feet without cropping, anatomically intentional chibi limbs rather than skinny malformed legs. Thin clean WHITE CUTOUT OUTLINE around figure and caption, truly TRANSPARENT ALPHA OUTSIDE, no square white backdrop, no checkerboard drawn in artwork, no scenery or UI, no watermark. Plenty of transparent padding. This is a built-in chat emoji for a Chinese character companion app; harmless playful comedy. No new outfits."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 2,
+      "slug": "laugh",
+      "name": "哈哈哈",
+      "meaning": "大笑、觉得好笑、笑到流泪",
+      "source": "Art/Stickers/dafeiyu/02-laugh.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: laughing uncontrollably with joyful tears, tiny comic motion lines. Bold legible short simplified Chinese caption exactly '哈哈哈', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 3,
+      "slug": "deadpan",
+      "name": "无语",
+      "meaning": "无语、沉默、吐槽",
+      "source": "Art/Stickers/dafeiyu/03-deadpan.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: completely deadpan unimpressed face, small floating ellipsis. Bold legible short simplified Chinese caption exactly '无语', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 4,
+      "slug": "question",
+      "name": "啊？",
+      "meaning": "疑惑、没听懂、反问",
+      "source": "Art/Stickers/dafeiyu/04-question.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: tilted head with a giant comic question mark, confused wide eyes. Bold legible short simplified Chinese caption exactly '啊？', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 5,
+      "slug": "shock",
+      "name": "什么？！",
+      "meaning": "震惊、不可思议",
+      "source": "Art/Stickers/dafeiyu/05-shock.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: shocked round eyes, little comic burst above head. Bold legible short simplified Chinese caption exactly '什么？！', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 6,
+      "slug": "cry",
+      "name": "呜呜",
+      "meaning": "委屈、难过、求安慰",
+      "source": "Art/Stickers/dafeiyu/06-cry.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: pouting with two big tear streams, cute not distressed. Bold legible short simplified Chinese caption exactly '呜呜', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 7,
+      "slug": "angry",
+      "name": "哼",
+      "meaning": "轻微生气、傲娇、不满",
+      "source": "Art/Stickers/dafeiyu/07-angry.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: puffed cheeks and crossed arms, tiny harmless cartoon steam puff. Bold legible short simplified Chinese caption exactly '哼', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 8,
+      "slug": "serious",
+      "name": "认真听",
+      "meaning": "认真、倾听、严肃讨论",
+      "source": "Art/Stickers/dafeiyu/08-serious.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: chibi character chat sticker asset. Generate ONE standalone high quality 512x512-like square transparent PNG sticker of Dafeiyu 大肥鱼, vivid blue hair fading to pale blue at tips, blue eyes, white maid headdress, navy-and-white maid dress with small whale emblem, distinctive navy whale tail, navy Mary Jane shoes. Reference image is exact character identity and original chibi style. Preserve the exact recognizable face, hair ornaments, clothing colors and accessories from reference; not a generic anime girl. Emotion/action: serious attentive face, sitting neatly with a little notebook. Short simplified Chinese caption exactly '认真听', bold very readable dark indigo text with white outline integrated below character. A single sticker, NOT a grid or sticker sheet, no duplicate character except the tiny ghost when specified. Cute 2-to-3-head-tall Q版, expressive polished 2D anime linework, soft cel shading, funny meme energy, fully visible head/horns/tail/hands/feet without cropping, anatomically intentional chibi limbs rather than skinny malformed legs. Thin clean WHITE CUTOUT OUTLINE around figure and caption, truly TRANSPARENT ALPHA OUTSIDE, no square white backdrop, no checkerboard drawn in artwork, no scenery or UI, no watermark. Plenty of transparent padding. This is a built-in chat emoji for a Chinese character companion app; harmless playful comedy. No new outfits."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 9,
+      "slug": "think",
+      "name": "让我想想",
+      "meaning": "思考、分析、暂时犹豫",
+      "source": "Art/Stickers/dafeiyu/09-think.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hand at chin, concentrated eyes, small thought cloud. Bold legible short simplified Chinese caption exactly '让我想想', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 10,
+      "slug": "cheer",
+      "name": "冲鸭",
+      "meaning": "鼓励、加油、准备行动",
+      "source": "Art/Stickers/dafeiyu/10-cheer.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: determined cheering with tiny raised fists and energetic motion lines. Bold legible short simplified Chinese caption exactly '冲鸭', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 11,
+      "slug": "thumbs-up",
+      "name": "稳",
+      "meaning": "认可、赞同、做得好",
+      "source": "Art/Stickers/dafeiyu/11-thumbs-up.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: confident thumbs up and playful wink. Bold legible short simplified Chinese caption exactly '稳', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 12,
+      "slug": "hug",
+      "name": "贴贴",
+      "meaning": "亲近、拥抱、陪伴",
+      "source": "Art/Stickers/dafeiyu/12-hug.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hugging a plush heart, soft affectionate smile. Bold legible short simplified Chinese caption exactly '贴贴', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 13,
+      "slug": "sleepy",
+      "name": "困了",
+      "meaning": "困倦、晚安、想休息",
+      "source": "Art/Stickers/dafeiyu/13-sleepy.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hugging a pillow, sleepy half-closed eyes, little Zzz. Bold legible short simplified Chinese caption exactly '困了', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 14,
+      "slug": "salute",
+      "name": "收到",
+      "meaning": "确认收到、明白、答应",
+      "source": "Art/Stickers/dafeiyu/14-salute.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: cute crisp salute, confident attentive expression. Bold legible short simplified Chinese caption exactly '收到', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 15,
+      "slug": "no",
+      "name": "不行",
+      "meaning": "拒绝、不同意、提醒停止",
+      "source": "Art/Stickers/dafeiyu/15-no.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: both arms forming a clear X, serious cute expression. Bold legible short simplified Chinese caption exactly '不行', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 16,
+      "slug": "shy",
+      "name": "诶嘿",
+      "meaning": "害羞、被夸、傻笑",
+      "source": "Art/Stickers/dafeiyu/16-shy.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: blushing shy smile with hands near cheeks. Bold legible short simplified Chinese caption exactly '诶嘿', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 17,
+      "slug": "brain-fried",
+      "name": "CPU烧了",
+      "meaning": "抽象、脑子过载、没想明白",
+      "source": "Art/Stickers/dafeiyu/17-brain-fried.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: spiral eyes and a tiny cartoon steam cloud with a little toy computer icon, absurd comedy. Bold legible short simplified Chinese caption exactly 'CPU烧了', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 18,
+      "slug": "soul",
+      "name": "寄",
+      "meaning": "抽象、心累、搞笑的灵魂出窍",
+      "source": "Art/Stickers/dafeiyu/18-soul.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: slumped seated chibi with a miniature translucent cartoon ghost of herself floating above, goofy not scary. Bold legible short simplified Chinese caption exactly '寄', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 19,
+      "slug": "flop",
+      "name": "躺平",
+      "meaning": "摆烂、放松、不想努力",
+      "source": "Art/Stickers/dafeiyu/19-flop.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: flopped like a tiny chibi pancake on a simple little cushion, absurd silly proportions but recognizable character. Bold legible short simplified Chinese caption exactly '躺平', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "dafeiyu",
+      "index": 20,
+      "slug": "stare",
+      "name": "盯——",
+      "meaning": "观察、等待、认真盯着",
+      "source": "Art/Stickers/dafeiyu/20-stare.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Dafeiyu 大肥鱼: vivid blue hair fading to light blue tips, blue eyes, white maid headdress, navy-and-white maid outfit with tiny whale emblem, navy whale tail, navy shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: peeking over a small blank horizontal ledge, huge intent eyes staring forward. Bold legible short simplified Chinese caption exactly '盯——', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 1,
+      "slug": "hello",
+      "name": "来啦",
+      "meaning": "挥手打招呼，亲切、欢迎",
+      "source": "Art/Stickers/xiaobai/01-hello.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: chibi character chat sticker asset. Generate ONE standalone high quality 512x512-like square transparent PNG sticker of Xiaobai 小白, long white-lavender hair, white curved dragon horns, purple eyes, white/lavender elegant dress, delicate dragon wings and white scaled dragon tail, white shoes. Reference image is exact character identity and original chibi style. Preserve the exact recognizable face, hair ornaments, clothing colors and accessories from reference; not a generic anime girl. Emotion/action: cheerful wave with one hand, bright friendly eyes. Short simplified Chinese caption exactly '来啦', bold very readable dark indigo text with white outline integrated below character. A single sticker, NOT a grid or sticker sheet, no duplicate character except the tiny ghost when specified. Cute 2-to-3-head-tall Q版, expressive polished 2D anime linework, soft cel shading, funny meme energy, fully visible head/horns/tail/hands/feet without cropping, anatomically intentional chibi limbs rather than skinny malformed legs. Thin clean WHITE CUTOUT OUTLINE around figure and caption, truly TRANSPARENT ALPHA OUTSIDE, no square white backdrop, no checkerboard drawn in artwork, no scenery or UI, no watermark. Plenty of transparent padding. This is a built-in chat emoji for a Chinese character companion app; harmless playful comedy. No new outfits."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 2,
+      "slug": "laugh",
+      "name": "哈哈哈",
+      "meaning": "大笑、觉得好笑、笑到流泪",
+      "source": "Art/Stickers/xiaobai/02-laugh.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: laughing uncontrollably with joyful tears, tiny comic motion lines. Bold legible short simplified Chinese caption exactly '哈哈哈', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 3,
+      "slug": "deadpan",
+      "name": "无语",
+      "meaning": "无语、沉默、吐槽",
+      "source": "Art/Stickers/xiaobai/03-deadpan.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: completely deadpan unimpressed face, small floating ellipsis. Bold legible short simplified Chinese caption exactly '无语', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 4,
+      "slug": "question",
+      "name": "啊？",
+      "meaning": "疑惑、没听懂、反问",
+      "source": "Art/Stickers/xiaobai/04-question.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: tilted head with a giant comic question mark, confused wide eyes. Bold legible short simplified Chinese caption exactly '啊？', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 5,
+      "slug": "shock",
+      "name": "什么？！",
+      "meaning": "震惊、不可思议",
+      "source": "Art/Stickers/xiaobai/05-shock.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: shocked round eyes, little comic burst above head. Bold legible short simplified Chinese caption exactly '什么？！', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 6,
+      "slug": "cry",
+      "name": "呜呜",
+      "meaning": "委屈、难过、求安慰",
+      "source": "Art/Stickers/xiaobai/06-cry.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: pouting with two big tear streams, cute not distressed. Bold legible short simplified Chinese caption exactly '呜呜', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 7,
+      "slug": "angry",
+      "name": "哼",
+      "meaning": "轻微生气、傲娇、不满",
+      "source": "Art/Stickers/xiaobai/07-angry.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: puffed cheeks and crossed arms, tiny harmless cartoon steam puff. Bold legible short simplified Chinese caption exactly '哼', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 8,
+      "slug": "serious",
+      "name": "认真听",
+      "meaning": "认真、倾听、严肃讨论",
+      "source": "Art/Stickers/xiaobai/08-serious.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: chibi character chat sticker asset. Generate ONE standalone high quality 512x512-like square transparent PNG sticker of Xiaobai 小白, long white-lavender hair, white curved dragon horns, purple eyes, white/lavender elegant dress, delicate dragon wings and white scaled dragon tail, white shoes. Reference image is exact character identity and original chibi style. Preserve the exact recognizable face, hair ornaments, clothing colors and accessories from reference; not a generic anime girl. Emotion/action: serious attentive face, sitting neatly with a little notebook. Short simplified Chinese caption exactly '认真听', bold very readable dark indigo text with white outline integrated below character. A single sticker, NOT a grid or sticker sheet, no duplicate character except the tiny ghost when specified. Cute 2-to-3-head-tall Q版, expressive polished 2D anime linework, soft cel shading, funny meme energy, fully visible head/horns/tail/hands/feet without cropping, anatomically intentional chibi limbs rather than skinny malformed legs. Thin clean WHITE CUTOUT OUTLINE around figure and caption, truly TRANSPARENT ALPHA OUTSIDE, no square white backdrop, no checkerboard drawn in artwork, no scenery or UI, no watermark. Plenty of transparent padding. This is a built-in chat emoji for a Chinese character companion app; harmless playful comedy. No new outfits."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 9,
+      "slug": "think",
+      "name": "让我想想",
+      "meaning": "思考、分析、暂时犹豫",
+      "source": "Art/Stickers/xiaobai/09-think.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hand at chin, concentrated eyes, small thought cloud. Bold legible short simplified Chinese caption exactly '让我想想', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 10,
+      "slug": "cheer",
+      "name": "冲鸭",
+      "meaning": "鼓励、加油、准备行动",
+      "source": "Art/Stickers/xiaobai/10-cheer.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: determined cheering with tiny raised fists and energetic motion lines. Bold legible short simplified Chinese caption exactly '冲鸭', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 11,
+      "slug": "thumbs-up",
+      "name": "稳",
+      "meaning": "认可、赞同、做得好",
+      "source": "Art/Stickers/xiaobai/11-thumbs-up.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: confident thumbs up and playful wink. Bold legible short simplified Chinese caption exactly '稳', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 12,
+      "slug": "hug",
+      "name": "贴贴",
+      "meaning": "亲近、拥抱、陪伴",
+      "source": "Art/Stickers/xiaobai/12-hug.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hugging a plush heart, soft affectionate smile. Bold legible short simplified Chinese caption exactly '贴贴', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 13,
+      "slug": "sleepy",
+      "name": "困了",
+      "meaning": "困倦、晚安、想休息",
+      "source": "Art/Stickers/xiaobai/13-sleepy.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: hugging a pillow, sleepy half-closed eyes, little Zzz. Bold legible short simplified Chinese caption exactly '困了', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 14,
+      "slug": "salute",
+      "name": "收到",
+      "meaning": "确认收到、明白、答应",
+      "source": "Art/Stickers/xiaobai/14-salute.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: cute crisp salute, confident attentive expression. Bold legible short simplified Chinese caption exactly '收到', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 15,
+      "slug": "no",
+      "name": "不行",
+      "meaning": "拒绝、不同意、提醒停止",
+      "source": "Art/Stickers/xiaobai/15-no.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: both arms forming a clear X, serious cute expression. Bold legible short simplified Chinese caption exactly '不行', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 16,
+      "slug": "shy",
+      "name": "诶嘿",
+      "meaning": "害羞、被夸、傻笑",
+      "source": "Art/Stickers/xiaobai/16-shy.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: blushing shy smile with hands near cheeks. Bold legible short simplified Chinese caption exactly '诶嘿', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 17,
+      "slug": "brain-fried",
+      "name": "CPU烧了",
+      "meaning": "抽象、脑子过载、没想明白",
+      "source": "Art/Stickers/xiaobai/17-brain-fried.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: spiral eyes and a tiny cartoon steam cloud with a little toy computer icon, absurd comedy. Bold legible short simplified Chinese caption exactly 'CPU烧了', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 18,
+      "slug": "soul",
+      "name": "寄",
+      "meaning": "抽象、心累、搞笑的灵魂出窍",
+      "source": "Art/Stickers/xiaobai/18-soul.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: slumped seated chibi with a miniature translucent cartoon ghost of herself floating above, goofy not scary. Bold legible short simplified Chinese caption exactly '寄', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 19,
+      "slug": "flop",
+      "name": "躺平",
+      "meaning": "摆烂、放松、不想努力",
+      "source": "Art/Stickers/xiaobai/19-flop.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: flopped like a tiny chibi pancake on a simple little cushion, absurd silly proportions but recognizable character. Bold legible short simplified Chinese caption exactly '躺平', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    },
+    {
+      "characterID": "xiaobai",
+      "index": 20,
+      "slug": "stare",
+      "name": "盯——",
+      "meaning": "观察、等待、认真盯着",
+      "source": "Art/Stickers/xiaobai/20-stare.png",
+      "generator": "built-in image_gen",
+      "prompt": "Use case: standalone chibi chat sticker asset. Create ONE square transparent PNG sticker of Xiaobai 小白: long white-lavender hair, white curved dragon horns, purple eyes, elegant white-lavender dress, delicate small wings, white scaled dragon tail and white shoes, faithful to the supplied ORIGINAL chibi. Emotion and pose: peeking over a small blank horizontal ledge, huge intent eyes staring forward. Bold legible short simplified Chinese caption exactly '盯——', dark indigo with a white outlined edge at bottom, not covering face. Extremely expressive 2D anime Q版, approximately 2-to-3 head lengths, polished consistent linework, soft cel shading, funny Chinese meme sticker energy, original clothes unchanged. Preserve recognizable face, horns/headdress, hair color, eyes and tail. All limbs intentionally shaped and substantial chibi proportions, not skinny broken legs. Entire figure, tail, hands, horns and caption INSIDE the canvas with transparent safety padding, no clipping of outlines. Fine white die-cut outline around figure/text. REAL TRANSPARENT ALPHA outside, not white canvas or drawn checkerboard. No UI, no photo background, no watermark. SINGLE STICKER, NOT a collage or sheet. Small thought/comic accent props allowed only as needed for the expression; never invent another character except small self-ghost when requested. Intended 512x512 display, preserve clean readability at small size. Harmless playful expression."
+    }
+  ]
+}

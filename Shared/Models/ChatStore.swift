@@ -9,6 +9,10 @@ final class ChatStore: ObservableObject {
     @Published private(set) var replyingIDs = Set<UUID>()
     @Published private(set) var ready = false
     @Published var error: String?
+    @Published var visibleConversationID: UUID?
+    @Published var requestedConversationID: UUID?
+    @Published private(set) var preparingProactiveIDs = Set<UUID>()
+    private let builtinStickers: [CharacterSticker]
     struct StreamingReply: Equatable {
         let characterID: String
         var text: String
@@ -22,11 +26,13 @@ final class ChatStore: ObservableObject {
     private var generations: [UUID: UUID] = [:]
 
     init(characters: [CompanionCharacter], file: ChatHistoryFile = .standard,
-         provider: any ChatReplyProvider = DeepSeekChatReplyProvider(secrets: MissingAISecret())) {
+         provider: any ChatReplyProvider = DeepSeekChatReplyProvider(secrets: MissingAISecret()),
+         builtinStickers: [CharacterSticker] = BuiltinStickerCatalog.load()) {
         self.characters = characters
         self.file = file
         self.media = ChatMediaFiles(historyURL: file.url)
         self.provider = provider
+        self.builtinStickers = builtinStickers
         reload()
     }
 
@@ -84,10 +90,16 @@ final class ChatStore: ObservableObject {
     func stop(_ id: UUID) { tasks[id]?.cancel() }
 
     func reload() {
-        guard tasks.isEmpty else { return }
+        guard tasks.isEmpty, preparingProactiveIDs.isEmpty else { return }
         do {
             var loaded = try file.load()
             loaded.recoverInterruptedReplies()
+            if let slots = loaded.proactive?.slots {
+                for index in slots.indices where slots[index].status == .planned {
+                    loaded.proactive?.slots[index].status = .failed
+                    loaded.proactive?.slots[index].failure = "上次准备被中断，未发送消息。"
+                }
+            }
             history = loaded
             ready = true
         } catch { ready = false; self.error = error.localizedDescription }
@@ -99,6 +111,7 @@ final class ChatStore: ObservableObject {
         do {
             var next = history
             try update(&next)
+            if next == history { return true }
             try file.save(next)
             history = next
             return true
@@ -112,7 +125,11 @@ final class ChatStore: ObservableObject {
 
     func editGroup(_ id: UUID, name: String, characterIDs: [String]) -> Bool {
         guard !replyingIDs.contains(id) else { error = ChatError.busy.localizedDescription; return false }
-        return change { try $0.editGroup(id, name: name, characterIDs: characterIDs, availableIDs: availableIDs) }
+        return change { value in
+            let previous = value.conversations.first { $0.id == id }?.characterIDs
+            try value.editGroup(id, name: name, characterIDs: characterIDs, availableIDs: availableIDs)
+            if previous != value.conversations.first(where: { $0.id == id })?.characterIDs { value.cancelProactiveChats(in: id) }
+        }
     }
 
     func setDraft(_ text: String, in id: UUID) {
@@ -143,7 +160,10 @@ final class ChatStore: ObservableObject {
 
     func delete(_ id: UUID) {
         // Commit removal first, then cancel; a failed disk write leaves the conversation usable.
-        if change({ $0.conversations.removeAll { $0.id == id } }) {
+        if change({ value in
+            value.cancelProactiveChats(in: id)
+            value.conversations.removeAll { $0.id == id }
+        }) {
             tasks[id]?.cancel()
             tasks[id] = nil
             generations[id] = nil
@@ -156,6 +176,7 @@ final class ChatStore: ObservableObject {
         guard !replyingIDs.contains(id) else { error = ChatError.busy.localizedDescription; return false }
         return change { value in
             guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.missingConversation }
+            value.cancelProactiveChats(in: id)
             value.conversations[i].messages = []
             value.conversations[i].draft = ""
             value.conversations[i].draftAttachments = nil
@@ -205,7 +226,7 @@ final class ChatStore: ObservableObject {
                     var request = ChatReplyRequest(conversationID: id, kind: chat.kind, groupName: chat.name,
                         members: members, character: character, userMessage: message, history: turnHistory,
                         profile: preferences.profile(for: character), userProfile: preferences.user)
-                    request.stickers = (history.stickers ?? []).filter { $0.characterID == recipient }
+                    request.stickers = stickers(for: recipient)
                     // Only the selected context and four most recent images are sent to vision.
                     let prior = Array(turnHistory.filter { $0.isUser && $0.id != messageID && $0.delivery == .sent }
                         .suffix(request.profile?.contextRounds ?? 10)) + [message]
@@ -250,20 +271,26 @@ final class ChatStore: ObservableObject {
         }
     }
 
-    func stickers(for characterID: String) -> [CharacterSticker] { (history.stickers ?? []).filter { $0.characterID == characterID } }
+    func stickers(for characterID: String) -> [CharacterSticker] {
+        let custom = (history.stickers ?? []).filter { $0.characterID == characterID }
+        let ids = Set(custom.map(\.id))
+        return custom + builtinStickers.filter { $0.characterID == characterID && !ids.contains($0.id) }
+    }
+    func isBuiltinSticker(_ id: UUID) -> Bool { builtinStickers.contains { $0.id == id } }
 
     @discardableResult
     func addSticker(data: Data, characterID: String, name: String, meaning: String) -> Bool {
         do {
-            guard availableIDs.contains(characterID), stickers(for: characterID).count < 100 else { throw ChatMediaError.limit }
+            guard availableIDs.contains(characterID), (history.stickers ?? []).filter({ $0.characterID == characterID }).count < 100 else { throw ChatMediaError.limit }
             let asset = try media.store(data)
             let sticker = CharacterSticker(id: UUID(), characterID: characterID, name: name.trimmingCharacters(in: .whitespacesAndNewlines), meaning: meaning, asset: asset)
             try sticker.validate()
             return change { $0.stickers = ($0.stickers ?? []) + [sticker] }
         } catch { self.error = error.localizedDescription; return false }
     }
-    func removeSticker(_ id: UUID) { change { $0.stickers?.removeAll { $0.id == id } } }
+    func removeSticker(_ id: UUID) { guard !isBuiltinSticker(id) else { return }; change { $0.stickers?.removeAll { $0.id == id } } }
     func editSticker(_ id: UUID, name: String, meaning: String, data: Data? = nil) -> Bool {
+        guard !isBuiltinSticker(id) else { return false }
         do {
             let replacement = try data.map { try media.store($0) }
             return change { value in
@@ -283,7 +310,13 @@ final class ChatStore: ObservableObject {
     }
     @discardableResult
     func attach(_ item: ChatAttachment, in id: UUID) -> Bool {
-        change { value in
+        do {
+            try item.validate()
+            // Cache only a used built-in. Existing message snapshots must remain
+            // readable if a later App version changes the bundled display copy.
+            if item.kind == .sticker { _ = try media.store(try media.data(for: item.asset)) }
+        } catch { self.error = error.localizedDescription; return false }
+        return change { value in
             guard !replyingIDs.contains(id), let i = value.conversations.firstIndex(where: { $0.id == id }) else { throw ChatError.busy }
             let items = value.conversations[i].draftAttachments ?? []
             guard items.count < 4 else { throw ChatMediaError.limit }
@@ -294,6 +327,113 @@ final class ChatStore: ObservableObject {
         change { value in
             guard let i = value.conversations.firstIndex(where: { $0.id == id }) else { return }
             value.conversations[i].draftAttachments?.removeAll { $0.id == attachmentID }
+        }
+    }
+
+    var proactiveState: ProactiveChatState { history.proactive ?? ProactiveChatState() }
+
+    @discardableResult
+    func saveProactiveSettings(_ settings: ProactiveChatSettings) -> Bool {
+        change { value in
+            try settings.validate()
+            for (characterID, preference) in settings.characters where settings.enabled && preference.enabled {
+                guard self.availableIDs.contains(characterID) else { throw ProactiveChatError.invalidSettings }
+                if preference.destination == .group {
+                    guard value.conversations.contains(where: { $0.id == preference.groupID && $0.kind == .group && $0.characterIDs.contains(characterID) }) else {
+                        throw ProactiveChatError.invalidSettings
+                    }
+                }
+            }
+            var state = value.proactive ?? ProactiveChatState()
+            if state.settings != settings {
+                for index in state.slots.indices where [.planned, .ready].contains(state.slots[index].status) {
+                    state.slots[index].status = .cancelled
+                }
+                state.policyID = UUID()
+            }
+            state.settings = settings
+            value.proactive = state
+        }
+    }
+
+    func planProactiveChats(now: Date = .now) -> [UUID] {
+        var ids: [UUID] = []
+        return change { ids = try $0.planProactiveChats(characters: characters, now: now) } ? ids : []
+    }
+
+    func prepareProactiveChat(_ slotID: UUID) async throws {
+        guard !preparingProactiveIDs.contains(slotID),
+              let slot = history.proactive?.slots.first(where: { $0.id == slotID }), slot.status == .planned else { return }
+        preparingProactiveIDs.insert(slotID)
+        defer { preparingProactiveIDs.remove(slotID) }
+        do {
+            guard proactiveState.settings.enabled, slot.policyID == proactiveState.policyID,
+                  proactiveState.settings.characters[slot.characterID]?.enabled == true,
+                  let chat = conversation(slot.conversationID), chat.characterIDs.contains(slot.characterID),
+                  let character = character(slot.characterID) else { throw ProactiveChatError.unavailable }
+            guard slot.scheduledAt > .now else { throw ProactiveChatError.expired }
+            var profile = configuration.profile(for: character)
+            // Preparing a future greeting must never execute App writes or sticker tools.
+            profile.appControl = false; profile.automaticStickers = false
+            profile.maxOutputTokens = min(profile.maxOutputTokens, 4096)
+            let instruction = ChatMessage.user("请准备一句自然的主动聊天开场，不超过 120 字；不要声称用户刚说了什么。", recipients: [character.id])
+            var request = ChatReplyRequest(conversationID: chat.id, kind: chat.kind, groupName: chat.name,
+                members: chat.characterIDs.compactMap { self.character($0) }, character: character,
+                userMessage: instruction, history: chat.messages, profile: profile, userProfile: configuration.user)
+            request.proactiveDeliveryDate = slot.scheduledAt
+            let answer = try await provider.reply(to: request).trimmingCharacters(in: .whitespacesAndNewlines)
+            try Task.checkCancellation()
+            guard !answer.isEmpty, answer.count <= 1800 else { throw ChatError.emptyReply }
+            guard slot.scheduledAt > .now else { throw ProactiveChatError.expired }
+            guard change({ value in
+                guard var state = value.proactive, state.settings.enabled, state.policyID == slot.policyID,
+                      state.settings.characters[slot.characterID]?.enabled == true,
+                      let index = state.slots.firstIndex(where: { $0.id == slotID && $0.status == .planned }),
+                      value.conversations.contains(where: { $0.id == chat.id && $0.characterIDs.contains(character.id) }) else { throw ProactiveChatError.unavailable }
+                let nickname = value.configuration?.user.nickname.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                state.slots[index].text = (chat.kind == .group ? "@\(nickname.isEmpty ? "我" : nickname) " : "") + answer
+                state.slots[index].status = .ready
+                value.proactive = state
+            }) else { throw ProactiveChatError.unavailable }
+        } catch {
+            _ = change { value in
+                guard let index = value.proactive?.slots.firstIndex(where: { $0.id == slotID && $0.status == .planned }) else { return }
+                value.proactive?.slots[index].status = .failed
+                value.proactive?.slots[index].failure = String(error.localizedDescription.prefix(300))
+            }
+            throw error
+        }
+    }
+
+    func deliverProactiveChats(now: Date = .now) -> [UUID] {
+        guard history.proactive?.slots.contains(where: { $0.status == .ready && $0.scheduledAt <= now }) == true else { return [] }
+        var ids: [UUID] = []
+        return change { ids = try $0.deliverProactiveChats(now: now) } ? ids : []
+    }
+
+    func setProactiveNotificationScheduled(_ id: UUID, scheduled: Bool) {
+        _ = change { value in
+            guard let index = value.proactive?.slots.firstIndex(where: { $0.id == id }) else { return }
+            value.proactive?.slots[index].notificationScheduled = scheduled
+        }
+    }
+
+    func retryProactivePreparations(now: Date = .now) {
+        _ = change { value in
+            guard let state = value.proactive, state.settings.enabled else { return }
+            for index in state.slots.indices where state.slots[index].status == .failed
+                && state.slots[index].policyID == state.policyID && state.slots[index].scheduledAt > now.addingTimeInterval(60) {
+                value.proactive?.slots[index].status = .planned
+                value.proactive?.slots[index].failure = nil
+            }
+        }
+    }
+
+    func markRead(_ id: UUID, now: Date = .now) {
+        guard (conversation(id)?.unreadProactiveCount ?? 0) > 0 else { return }
+        _ = change { value in
+            guard let index = value.conversations.firstIndex(where: { $0.id == id }) else { return }
+            value.conversations[index].lastReadAt = now
         }
     }
     private func toolStickers(in id: UUID, messageID: UUID, characterID: String) -> [ChatAttachment] {
@@ -322,7 +462,7 @@ final class ChatStore: ObservableObject {
             guard toolStickers(in: id, messageID: messageID, characterID: characterID).isEmpty else { return "本轮已经发送过一个表情。" }
             guard let stickerID = UUID(uuidString: args["sticker_id"] ?? ""),
                   let sticker = stickers(for: characterID).first(where: { $0.id == stickerID }) else { return "表情不存在或不属于你。" }
-            _ = try media.data(for: sticker.asset)
+            _ = try media.store(try media.data(for: sticker.asset))
             receipt.sticker = sticker; receipt.result = "已发送表情：" + sticker.name
         }
         func save(_ receipt: ChatToolReceipt) -> Bool {

@@ -1,12 +1,45 @@
 #!/usr/bin/env python3
 """Fail if an IPA is missing the Live Activity extension or its resources."""
 import argparse
+import hashlib
 from io import BytesIO
 import json
 import plistlib
 import zipfile
 import wave
 from pathlib import PurePosixPath
+import struct
+
+
+def verify_builtin_stickers(archive, app_root, widget_root):
+    names = set(archive.namelist())
+    catalog = json.loads(archive.read(f'{app_root}/BuiltinStickers.json'))
+    stickers = catalog['stickers']
+    if catalog['version'] != 1 or len(stickers) != 40 or len({s['id'] for s in stickers}) != 40:
+        raise ValueError('Missing built-in sticker catalog')
+    if any(sum(s['characterID'] == character for s in stickers) != 20 for character in ('xiaobai', 'dafeiyu')):
+        raise ValueError('Expected 20 built-in stickers for each character')
+    for sticker in stickers:
+        asset = sticker['asset']
+        digest = asset['sha256']
+        if len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest) or asset['fileExtension'] != 'png':
+            raise ValueError('Invalid bundled sticker path')
+        locations = (f'{app_root}/{digest}.png', f'{app_root}/BuiltinStickers/{digest}.png')
+        path = next((path for path in locations if path in names), None)
+        if path is None:
+            raise ValueError('Sticker image is missing from App bundle')
+        data = archive.read(path)
+        if hashlib.sha256(data).hexdigest() != digest or len(data) != asset['byteCount']:
+            raise ValueError('Bundled sticker differs from catalog')
+        if (len(data) < 33 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[25] != 6
+                or struct.unpack('>II', data[16:24]) != (asset['width'], asset['height'])
+                or not 0 < max(asset['width'], asset['height']) <= 450):
+            raise ValueError('Invalid bundled transparent sticker format or dimensions')
+        if f'{widget_root}/{digest}.png' in names or f'{widget_root}/BuiltinStickers/{digest}.png' in names:
+            raise ValueError('Chat stickers must not bloat the Widget extension')
+    if any(name.startswith(app_root + '/') and PurePosixPath(name).name in {'DafeiyuDogWalkTest.mp4', 'DafeiyuDogWalkTest.json'} for name in names):
+        raise ValueError('Retired video comparison must not be included')
+    print('Built-in stickers verified: 20 Xiaobai + 20 Dafeiyu, transparent bytes, App only.')
 
 
 def verify_current_timelines(archive, root, characters):
@@ -144,6 +177,8 @@ def verify(path):
             verify_voices(archive, app_root, app)
             if int(app['CFBundleVersion']) >= 16:
                 verify_current_video_atlases(archive, app_root)
+            if int(app['CFBundleVersion']) >= 18:
+                verify_builtin_stickers(archive, app_root, widget_root)
         print("IPA structure verified: main app, embedded WidgetKit extension, binaries, assets, versions.")
         print("Signing and physical-device behavior are NOT verified by this check.")
 

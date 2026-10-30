@@ -11,12 +11,14 @@ private enum NewChatSheet: String, Identifiable {
 struct ChatPage: View {
     @ObservedObject var store: ChatStore
     @ObservedObject var tools: ChatAppTools
+    @ObservedObject var proactive: ProactiveChatCoordinator
     @State private var path: [UUID] = []
     @State private var sheet: NewChatSheet?
     @State private var pendingID: UUID?
     @State private var search = ""
     @State private var deleting: ChatConversation?
     @State private var showingBackup = false
+    @State private var showingProactive = false
     @State private var configuring: CompanionCharacter?
 
     private var filtered: [ChatConversation] {
@@ -65,6 +67,7 @@ struct ChatPage: View {
                                 ChatConversationRow(conversation: conversation, store: store)
                             }
                             .accessibilityIdentifier("chat-\(conversation.id)")
+                            .badge(conversation.unreadProactiveCount)
                             .swipeActions {
                                 Button("删除", role: .destructive) { deleting = conversation }
                             }
@@ -84,6 +87,8 @@ struct ChatPage: View {
                             Button("\(character.name) · AI 与人格") { configuring = character }
                         }
                         Button("本地备份", systemImage: "externaldrive") { showingBackup = true }
+                        Button("主动聊天", systemImage: "bubble.left.and.exclamationmark.bubble.right") { showingProactive = true }
+                            .accessibilityIdentifier("proactiveChatSettings")
                     } label: { Image(systemName: "slider.horizontal.3") }
                     .accessibilityLabel("聊天设置").accessibilityIdentifier("chatPreferences")
                 }
@@ -109,6 +114,9 @@ struct ChatPage: View {
             ChatAppApprovalView(tools: tools, approval: approval)
         }
         .sheet(isPresented: $showingBackup) { NavigationStack { ChatBackupView(store: store) } }
+        .sheet(isPresented: $showingProactive) { NavigationStack { ProactiveChatSettingsView(store: store, coordinator: proactive) } }
+        .onAppear { openRequestedConversation() }
+        .onChange(of: store.requestedConversationID) { _, _ in openRequestedConversation() }
         .sheet(item: $configuring) { character in NavigationStack { AIChatSettingsView(store: store, character: character) } }
         .confirmationDialog("删除这段聊天及全部记录？", isPresented: Binding(
             get: { deleting != nil }, set: { if !$0 { deleting = nil } }
@@ -123,6 +131,16 @@ struct ChatPage: View {
         )) {
             Button("知道了", role: .cancel) { store.error = nil }
         } message: { Text(store.error ?? "") }
+    }
+
+    private func openRequestedConversation() {
+        guard let id = store.requestedConversationID else { return }
+        store.requestedConversationID = nil
+        guard store.conversation(id) != nil else { return }
+        if path == [id] {
+            path = []
+            DispatchQueue.main.async { path = [id] }
+        } else { path = [id] }
     }
 }
 
@@ -273,8 +291,12 @@ private struct ChatRoom: View {
         roomContent
         .background(AppPalette.background)
         .toolbar(.hidden, for: .tabBar)
-        .onAppear { draft = chat?.draft ?? "" }
-        .onDisappear { if chat != nil { store.setDraft(draft, in: id) } }
+        .onAppear { draft = chat?.draft ?? ""; store.visibleConversationID = id; store.markRead(id) }
+        .onDisappear {
+            if chat != nil { store.setDraft(draft, in: id) }
+            if store.visibleConversationID == id { store.visibleConversationID = nil }
+        }
+        .onChange(of: chat?.messages.last?.id) { _, _ in store.markRead(id) }
         .onChange(of: scenePhase) { _, phase in
             if phase != .active, chat != nil { store.setDraft(draft, in: id) }
         }
@@ -394,8 +416,9 @@ private struct ChatRoom: View {
                     Color.clear.frame(height: 1).id("chat-bottom")
                 }.padding(.horizontal, 16).padding(.bottom, 12)
             }
+            .modifier(ChatInitialScrollAnchor())
+            .accessibilityIdentifier("chatMessages")
             .scrollDismissesKeyboard(.interactively)
-            .onAppear { scroll.scrollTo("chat-bottom", anchor: .bottom) }
             .onChange(of: chat.messages.count) { _, _ in
                 withAnimation(.easeOut(duration: 0.2)) { scroll.scrollTo("chat-bottom", anchor: .bottom) }
             }
@@ -406,6 +429,7 @@ private struct ChatRoom: View {
                 if !composing { scroll.scrollTo("chat-bottom", anchor: .bottom) }
             }
         }
+        .id(id)
     }
 
     private var composer: some View {
@@ -457,6 +481,19 @@ private struct ChatRoom: View {
     }
 }
 
+/// Let the scroll view resolve its first offset after lazy message layout.
+/// A one-shot scrollTo in onAppear can run before the bottom target exists.
+private struct ChatInitialScrollAnchor: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 18.0, *) {
+            content.defaultScrollAnchor(.bottom, for: .initialOffset)
+        } else {
+            content.defaultScrollAnchor(.bottom)
+        }
+    }
+}
+
 private struct ChatAvatar: View {
     var character: CompanionCharacter?
     var group = false
@@ -488,6 +525,10 @@ private struct ChatMessageRow: View {
             VStack(alignment: message.isUser ? .trailing : .leading, spacing: 5) {
                 Text(message.isUser ? "我" : character?.name ?? message.senderName)
                     .font(.caption2).foregroundStyle(.secondary)
+                if message.isProactive == true {
+                    Label(message.mentionsUser == true ? "主动 @你" : "主动消息", systemImage: "bubble.left.fill")
+                        .font(.caption2).foregroundStyle(AppPalette.accent)
+                }
                 ForEach(message.attachments ?? []) { item in
                     ChatAttachmentView(attachment: item, media: media, maximum: item.kind == .sticker ? 150 : 220)
                 }

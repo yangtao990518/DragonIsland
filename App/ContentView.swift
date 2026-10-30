@@ -20,6 +20,7 @@ struct ContentView: View {
     @ObservedObject private var alarms: CharacterAlarmStore
     @StateObject private var chatStore: ChatStore
     @StateObject private var chatTools: ChatAppTools
+    @StateObject private var proactive: ProactiveChatCoordinator
     @State private var tab = WorldTab.initial
     @State private var minutes = 25
     @State private var expandedPreview = false
@@ -29,6 +30,7 @@ struct ContentView: View {
     @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
     @State private var browsedCharacterID = "xiaobai"
     @Environment(\.openURL) private var openURL
+    @Environment(\.scenePhase) private var scenePhase
 
     init(store: CompanionStore) {
         self.store = store
@@ -46,6 +48,7 @@ struct ContentView: View {
         let chat = ChatStore(characters: store.characters, provider: provider)
         #if DEBUG
         ChatMediaTestSupport.seed(chat)
+        ChatScrollTestSupport.seed(chat)
         #endif
         let tools = ChatAppTools(companion: store)
         tools.permission = { [weak chat] id in
@@ -58,6 +61,7 @@ struct ContentView: View {
         }
         _chatStore = StateObject(wrappedValue: chat)
         _chatTools = StateObject(wrappedValue: tools)
+        _proactive = StateObject(wrappedValue: ProactiveChatCoordinator(store: chat))
     }
 
     var body: some View {
@@ -66,15 +70,47 @@ struct ContentView: View {
                 .tabItem { Label("我的世界", systemImage: "sparkles") }.tag(WorldTab.world)
             charactersPage
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
-            ChatPage(store: chatStore, tools: chatTools)
+            ChatPage(store: chatStore, tools: chatTools, proactive: proactive)
                 .tabItem { Label("聊天", systemImage: "bubble.left.and.bubble.right") }.tag(WorldTab.chat)
+                .badge(chatStore.conversations.reduce(0) { $0 + $1.unreadProactiveCount })
             CharacterAlarmsPage(alarms: store.alarms, characters: store.characters)
                 .tabItem { Label("闹钟", systemImage: "alarm") }.tag(WorldTab.alarms)
             aboutPage
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
         .tint(AppPalette.accent)
-        .onAppear { browsedCharacterID = store.selectedCharacterID }
+        .onChange(of: chatStore.requestedConversationID) { _, id in if id != nil { tab = .chat } }
+        .onChange(of: chatStore.conversations.reduce(0) { $0 + $1.unreadProactiveCount }) { _, _ in
+            Task { await proactive.refresh(prepare: false) }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name(ChatDeepLink.notificationName))) { _ in
+            tab = .chat
+            Task { await proactive.refresh(prepare: false) }
+        }
+        .onChange(of: chatStore.history.proactive) { _, _ in
+            Task { await proactive.refresh(prepare: false) }
+        }
+        .onOpenURL { url in
+            if let id = ChatDeepLink.conversationID(url) {
+                tab = .chat
+                UserDefaults.standard.set(id.uuidString, forKey: ChatDeepLink.pendingKey)
+                Task { await proactive.refresh(prepare: false) }
+            }
+        }
+        .task(id: (scenePhase == .active ? 1 : 0) + (chatStore.history.proactive?.settings.enabled == true ? 2 : 0)) {
+            guard scenePhase == .active else { return }
+            await proactive.refresh()
+            guard chatStore.proactiveState.settings.enabled else { return }
+            while !Task.isCancelled {
+                do { try await Task.sleep(nanoseconds: 30_000_000_000) } catch { return }
+                guard chatStore.proactiveState.settings.enabled else { return }
+                await proactive.refresh()
+            }
+        }
+        .onAppear {
+            browsedCharacterID = store.selectedCharacterID
+            if UserDefaults.standard.string(forKey: ChatDeepLink.pendingKey) != nil { tab = .chat }
+        }
         .toolbarBackground(AppPalette.background, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .sheet(item: $detailCharacter) { character in

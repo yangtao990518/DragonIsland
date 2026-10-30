@@ -96,6 +96,8 @@ def main():
     prepare_home_scene()
     from prepare_home_buttons import prepare as prepare_home_buttons
     prepare_home_buttons()
+    from prepare_builtin_stickers import prepare as prepare_builtin_stickers
+    prepare_builtin_stickers()
 
 
 if __name__ == "__main__":
