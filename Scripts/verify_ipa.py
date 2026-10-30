@@ -30,7 +30,7 @@ def verify_builtin_stickers(archive, app_root, widget_root):
             raise ValueError('Sticker image is missing from App bundle')
         data = archive.read(path)
         if hashlib.sha256(data).hexdigest() != digest or len(data) != asset['byteCount']:
-            raise ValueError('Bundled sticker differs from catalog')
+            raise ValueError(f'Bundled sticker differs from catalog: {path}, expected {asset["byteCount"]} bytes, got {len(data)}')
         if (len(data) < 33 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[25] != 6
                 or struct.unpack('>II', data[16:24]) != (asset['width'], asset['height'])
                 or not 0 < max(asset['width'], asset['height']) <= 450):

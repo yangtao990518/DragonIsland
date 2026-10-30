@@ -20,8 +20,14 @@ targets:
     type: application
     platform: iOS
     sources:
-      - App
+      - path: App
+        excludes:
+          - Resources/BuiltinStickers
+          - Resources/BuiltinStickers/**
       - Shared
+      - path: App/Resources/BuiltinStickers
+        type: folder
+        buildPhase: resources
     info:
       path: Config/App-Info.plist
       properties:

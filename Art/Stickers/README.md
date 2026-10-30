@@ -4,6 +4,6 @@
 
 `Scripts/prepare_builtin_stickers.py` 校验原图并生成 App 专用、最长边 448px 的等比显示副本与 `BuiltinStickers.json`。副本原生透明 PNG，不改变人物姿势或轮廓。原图不改写；内置表情不复制到 Widget，也不在启动时全部复制到用户聊天文件夹。
 
-App 的 `COMPRESS_PNG_FILES` 必须为 `NO`，避免 Xcode 在复制资源时重写 PNG，破坏以原字节计算的摘要、文件大小与表情校验。`verify_ipa.py` 会逐张核对实际 IPA 内的表情数据，不只检查源目录。
+`BuiltinStickers/` 必须作为 **folder reference** 整体复制到 App，并从普通 App 源目录递归扫描中排除；只设置 `COMPRESS_PNG_FILES=NO` 仍会经过 `copypng -strip-PNG-text`，不能保证原字节不变。App 同时保留关闭 PNG 重压的设置。`verify_ipa.py` 会逐张核对实际 IPA 内的表情数据，不只检查源目录；加载器支持资源子目录。
 
 库里的内置表情只读，自定义表情仍可添加、编辑、移除。AI 只有在角色的自动表情权限开启时才能选择自己的真实表情 ID。实际选用／发送时才缓存这一张表情，确保 App 更新后历史快照仍能读取；备份仍按现有 20 MB 上限保存实际引用的原文件，未使用的整套内置素材不进入备份。
