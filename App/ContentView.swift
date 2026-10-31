@@ -79,12 +79,12 @@ struct ContentView: View {
                 .tabItem { Label("关于", systemImage: "circle.grid.2x2") }.tag(WorldTab.about)
         }
         .tint(AppPalette.accent)
-        .onChange(of: chatStore.requestedConversationID) { _, id in if id != nil { tab = .chat } }
+        .onChange(of: chatStore.requestedConversationID) { _, id in if id != nil { openChatTab() } }
         .onChange(of: chatStore.conversations.reduce(0) { $0 + $1.unreadProactiveCount }) { _, _ in
             Task { await proactive.refresh(prepare: false) }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name(ChatDeepLink.notificationName))) { _ in
-            tab = .chat
+            openChatTab()
             Task { await proactive.refresh(prepare: false) }
         }
         .onChange(of: chatStore.history.proactive) { _, _ in
@@ -92,7 +92,7 @@ struct ContentView: View {
         }
         .onOpenURL { url in
             if let id = ChatDeepLink.conversationID(url) {
-                tab = .chat
+                openChatTab()
                 UserDefaults.standard.set(id.uuidString, forKey: ChatDeepLink.pendingKey)
                 Task { await proactive.refresh(prepare: false) }
             }
@@ -152,6 +152,12 @@ struct ContentView: View {
         )) {
             Button("知道了", role: .cancel) { store.notice = nil }
         } message: { Text(store.notice ?? "") }
+    }
+
+    private func openChatTab() {
+        detailCharacter = nil
+        legacyHomePanel = nil
+        tab = .chat
     }
 
     @ViewBuilder private var worldPage: some View {

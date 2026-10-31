@@ -1,4 +1,5 @@
 import XCTest
+import CoreGraphics
 
 final class CharacterMotionInterfaceTests: XCTestCase {
     private func capture(_ app: XCUIApplication, _ name: String) {
@@ -10,6 +11,20 @@ final class CharacterMotionInterfaceTests: XCTestCase {
             if element.isHittable { return }
             app.swipeUp()
         }
+    }
+    // The native preview choices now form a horizontal rail.
+    private func selectPreview(_ action: String, in app: XCUIApplication) {
+        let target = app.buttons["dailyMotion_\(action)"]
+        let anchor = app.buttons["dailyMotion_random"]
+        XCTAssertTrue(anchor.waitForExistence(timeout: 10))
+        for _ in 0..<6 {
+            if target.isHittable { target.tap(); return }
+            let y = anchor.frame.midY - app.frame.minY
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.88, dy: 0)).withOffset(CGVector(dx: 0, dy: y))
+            let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.12, dy: 0)).withOffset(CGVector(dx: 0, dy: y))
+            start.press(forDuration: 0.1, thenDragTo: end)
+        }
+        XCTFail("Preview action is not reachable: \(action)")
     }
     func testWorldPhotoSelectionPersistsWithoutChangingOtherCharacter() {
         continueAfterFailure = false
@@ -39,8 +54,7 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--preview-tasks", "--appearance-light"]
         app.launch()
         for id in ["dance1", "dance2"] {
-            let button = app.buttons["dailyMotion_\(id)"]
-            XCTAssertTrue(button.waitForExistence(timeout: 10)); reveal(button, in: app); button.tap()
+            selectPreview(id, in: app)
             let stage = app.descendants(matching: .any).matching(identifier: "fullVideoActionStage").firstMatch
             XCTAssertTrue(stage.waitForExistence(timeout: 8))
             XCTAssertTrue(app.staticTexts["完整片段 · 12.10 秒"].exists)
@@ -88,8 +102,7 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--preview-tasks", "--appearance-light"]
         app.launch()
-        XCTAssertTrue(app.buttons["dailyMotion_pet_walk"].waitForExistence(timeout: 10))
-        app.buttons["dailyMotion_pet_walk"].tap()
+        selectPreview("pet_walk", in: app)
         capture(app, "dafeiyu-dog-image-sequence")
         XCTAssertFalse(app.buttons["dailyMotion_pet_walk_video"].exists)
         let dog = app.switches["dailyMotionToggle_pet_walk"]
@@ -114,6 +127,7 @@ final class CharacterMotionInterfaceTests: XCTestCase {
         reveal(xiao, in: app); xiao.tap()
         app.swipeDown()
         app.buttons["characterCard-xiaobai"].tap()
+        reveal(app.buttons["characterMotionSettings"], in: app)
         app.buttons["characterMotionSettings"].tap()
         XCTAssertTrue(app.buttons["dailyMotion_ride"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.buttons["dailyMotion_ride"].label, "御剑")

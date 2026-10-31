@@ -342,7 +342,8 @@ final class ChatStore: ObservableObject {
             }
             var state = value.proactive ?? ProactiveChatState()
             let ids = Set(state.settings.characters.keys).union(settings.characters.keys)
-            for id in ids where state.settings.preference(for: id) != settings.preference(for: id) {
+            for id in ids where !state.settings.preference(for: id).hasSameSchedule(as: settings.preference(for: id))
+                || (state.settings.dailyCount != settings.dailyCount && settings.preference(for: id).intervalMinutes == nil) {
                 for index in state.slots.indices where state.slots[index].characterID == id && [.planned, .ready].contains(state.slots[index].status) {
                     state.slots[index].status = .cancelled
                 }

@@ -116,4 +116,20 @@ final class ProactiveRoleStoreTests: XCTestCase {
         XCTAssertTrue(store.proactiveState.settings.preference(for: "xiaobai").enabled)
         XCTAssertFalse(store.proactiveState.settings.preference(for: fish.id).enabled)
     }
+    func testChangingReminderFlagsPreservesPreparedScheduleAndDoesNotSpendAgain() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = ChatStore(characters: [.xiaobai], file: .init(url: root.appendingPathComponent("history.json")))
+        var preference = ProactiveCharacterSettings(enabled: true, window: .init(), intervalMinutes: 60)
+        XCTAssertTrue(store.saveProactivePreference(preference, for: "xiaobai"))
+        let morning = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: .now)!
+        XCTAssertFalse(store.planProactiveChats(now: morning).isEmpty)
+        let previous = store.proactiveState.slots
+        let policy = store.proactiveState.policy(for: "xiaobai")
+        preference.notifications = false; preference.islandReminder = false
+        XCTAssertTrue(store.saveProactivePreference(preference, for: "xiaobai"))
+        XCTAssertEqual(store.proactiveState.slots, previous)
+        XCTAssertEqual(store.proactiveState.policy(for: "xiaobai"), policy)
+        XCTAssertTrue(store.planProactiveChats(now: morning).isEmpty)
+    }
 }

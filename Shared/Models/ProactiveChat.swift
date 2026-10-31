@@ -41,6 +41,10 @@ struct ProactiveCharacterSettings: Codable, Equatable, Sendable {
     var intervalMinutes: Int? = nil
     var notifications: Bool? = nil
     var islandReminder: Bool? = nil
+    func hasSameSchedule(as other: Self) -> Bool {
+        enabled == other.enabled && destination == other.destination && groupID == other.groupID
+            && window == other.window && intervalMinutes == other.intervalMinutes
+    }
 }
 
 struct ProactiveChatSettings: Codable, Equatable, Sendable {
