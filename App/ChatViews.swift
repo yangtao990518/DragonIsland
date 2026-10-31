@@ -65,7 +65,6 @@ struct ChatPage: View {
                                 ChatConversationRow(conversation: conversation, store: store)
                             }
                             .accessibilityIdentifier("chat-\(conversation.id)")
-                            .badge(conversation.unreadProactiveCount)
                             .swipeActions {
                                 Button("删除", role: .destructive) { deleting = conversation }
                             }
@@ -146,6 +145,9 @@ private struct ChatConversationRow: View {
     var body: some View {
         HStack(spacing: 12) {
             ChatAvatar(character: store.character(conversation.characterIDs.first), group: conversation.kind == .group)
+                .overlay(alignment: .topTrailing) {
+                    UnreadBadge(count: conversation.unreadProactiveCount).offset(x: 5, y: -5)
+                }
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(conversation.title(in: store.characters)).font(.headline).lineLimit(1)
@@ -412,6 +414,8 @@ private struct ChatRoom: View {
                     Color.clear.frame(height: 1).id("chat-bottom")
                 }.padding(.horizontal, 16).padding(.bottom, 12)
             }
+            .contentShape(Rectangle())
+            .simultaneousGesture(TapGesture().onEnded { composing = false })
             .modifier(ChatInitialScrollAnchor())
             .accessibilityIdentifier("chatMessages")
             .scrollDismissesKeyboard(.interactively)
@@ -448,7 +452,7 @@ private struct ChatRoom: View {
                 }.buttonStyle(.plain).foregroundStyle(AppPalette.accent)
                     .accessibilityLabel(showingAttachments ? "收起附件" : "添加图片或文件")
                     .accessibilityIdentifier("chatAttachmentTools").disabled(replying || importing || !store.ready)
-                TextField("想和她们说些什么？", text: $draft, axis: .vertical)
+                TextField(chat?.kind == .group ? "和大家说点什么…" : "说点什么…", text: $draft, axis: .vertical)
                     .font(.system(size: 16)).lineLimit(1...5).focused($composing)
                     .padding(.horizontal, 13).padding(.vertical, 12)
                     .frame(minHeight: 44).background(AppPalette.accent.opacity(0.045), in: RoundedRectangle(cornerRadius: 16))

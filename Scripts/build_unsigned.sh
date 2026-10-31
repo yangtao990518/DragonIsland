@@ -11,9 +11,12 @@ command -v xcodegen >/dev/null || { echo "Missing XcodeGen; run brew install xco
 command -v xcodebuild >/dev/null || { echo "Missing Xcode" >&2; exit 1; }
 
 python3 Scripts/prepare_assets.py
+python3 -c "import sys; sys.path.insert(0, 'Scripts'); from prepare_unread_avatar import prepare; prepare(register=False)"
+xcrun swift Scripts/verify_unread_font.swift Shared/Resources/UnreadAvatarFonts
 python3 Scripts/prepare_motion.py
 python3 Scripts/verify_motion_resources.py
 xcrun swift Scripts/verify_motion_font.swift Shared/Resources/MotionFonts
+python3 Scripts/prepare_unread_avatar.py
 xcodegen generate --spec project.yml
 mkdir -p build output
 xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \

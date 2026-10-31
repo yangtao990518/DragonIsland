@@ -87,6 +87,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
     var configuration: AIChatPreferences? = nil
     var stickers: [CharacterSticker]? = nil
     var proactive: ProactiveChatState? = nil
+    var memoryAutomation: MemoryAutomation? = nil
 
     mutating func create(kind: ChatKind, name: String, characterIDs: [String],
                          availableIDs: Set<String>, now: Date = .now) throws -> UUID {
@@ -151,6 +152,7 @@ struct ChatHistory: Codable, Equatable, Sendable {
     func validate() throws {
         try configuration?.validate()
         try proactive?.validate()
+        try memoryAutomation?.validate()
         let library = stickers ?? []
         guard library.count <= 10000, Set(library.map(\.id)).count == library.count else { throw ChatMediaError.invalid }
         for sticker in library { try sticker.validate() }
@@ -231,6 +233,8 @@ struct ChatReplyRequest: Sendable {
     var imageURLs: [UUID: [String]] = [:]
     var stickers: [CharacterSticker] = []
     var proactiveDeliveryDate: Date? = nil
+    var memories: [CharacterMemoryDocument] = []
+    var memoryExtraction: MemoryExtractionInput? = nil
 }
 
 typealias ChatToolHandler = @Sendable (ChatToolCall) async throws -> String

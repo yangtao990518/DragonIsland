@@ -21,6 +21,9 @@ final class ChatStore: ObservableObject {
     private let file: ChatHistoryFile
     private let provider: any ChatReplyProvider
     let media: ChatMediaFiles
+    let memoryFiles: CharacterMemoryFiles
+    @Published private(set) var memoryRevision = 0
+    @Published private(set) var preparingMemoryRoles = Set<String>()
     var appToolHandler: ChatAppToolHandler?
     private var tasks: [UUID: Task<Void, Never>] = [:]
     private var generations: [UUID: UUID] = [:]
@@ -31,6 +34,7 @@ final class ChatStore: ObservableObject {
         self.characters = characters
         self.file = file
         self.media = mediaFiles ?? ChatMediaFiles(historyURL: file.url)
+        self.memoryFiles = CharacterMemoryFiles(historyURL: file.url)
         self.provider = provider
         self.builtinStickers = builtinStickers
         reload()
@@ -43,6 +47,187 @@ final class ChatStore: ObservableObject {
     func conversation(_ id: UUID) -> ChatConversation? { history.conversations.first { $0.id == id } }
     func character(_ id: String?) -> CompanionCharacter? { characters.first { $0.id == id } }
     var configuration: AIChatPreferences { history.configuration ?? AIChatPreferences() }
+    var historyFileURL: URL { file.url }
+    func memoryAutomation(for role: String) -> MemoryAutomationRole { history.memoryAutomation?.roles[role] ?? .init() }
+    @discardableResult
+    func setAutomaticMemory(_ enabled: Bool, for role: String) -> Bool {
+        guard availableIDs.contains(role), !preparingMemoryRoles.contains(role) else { error = AIChatError.busy.localizedDescription; return false }
+        return change { value in
+            var automation = value.memoryAutomation ?? MemoryAutomation()
+            var settings = automation.roles[role] ?? MemoryAutomationRole()
+            if enabled && !settings.enabled {
+                // Enabling automation never silently sends an entire old archive.
+                for chat in value.conversations where chat.characterIDs.contains(role) {
+                    if let last = chat.messages.last(where: { $0.isUser && $0.delivery == .sent && $0.replyCharacterIDs.contains(role) }) {
+                        settings.processedThrough[chat.id.uuidString] = last.id
+                    }
+                }
+            }
+            settings.enabled = enabled; automation.roles[role] = settings; value.memoryAutomation = automation
+        }
+    }
+    func prepareAutomaticMemories(in conversationID: UUID? = nil) async {
+        for character in characters where memoryAutomation(for: character.id).enabled {
+            if Task.isCancelled { return }
+            guard !preparingMemoryRoles.contains(character.id), !conversations.contains(where: {
+                $0.characterIDs.contains(character.id) && replyingIDs.contains($0.id)
+            }) else { continue }
+            for chat in conversations where (conversationID == nil || chat.id == conversationID) && chat.characterIDs.contains(character.id) {
+                let eligible = memorySources(in: chat.id, role: character.id)
+                let checkpoint = memoryAutomation(for: character.id).processedThrough[chat.id.uuidString]
+                let new: [ChatMessage]
+                if let checkpoint { new = eligible.firstIndex(where: { $0.id == checkpoint }).map { Array(eligible.dropFirst($0 + 1)) } ?? [] }
+                else { new = eligible }
+                if new.count >= 5 {
+                    do { try await prepareMemory(role: character.id, conversationID: chat.id, sourceIDs: new.map(\.id)) } catch { }
+                    break
+                }
+            }
+        }
+    }
+    private func memorySources(in id: UUID, role: String) -> [ChatMessage] {
+        (conversation(id)?.messages ?? []).filter { $0.isUser && $0.delivery == .sent && $0.replyCharacterIDs.contains(role) && !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    }
+    func prepareMemory(role: String, conversationID: UUID, sourceIDs: [UUID]? = nil) async throws {
+        guard ready, let character = character(role), conversation(conversationID)?.characterIDs.contains(role) == true,
+              !preparingMemoryRoles.contains(role), !replyingIDs.contains(conversationID) else { throw AIChatError.busy }
+        guard memoryAutomation(for: role).suggestions.count <= 15 else { throw CharacterMemoryError.tooLarge }
+        let eligible = memorySources(in: conversationID, role: role)
+        let selected = sourceIDs.map { Set($0) }
+        var sources = Array(eligible.filter { selected?.contains($0.id) ?? true }.suffix(12))
+        while sources.reduce(0, { $0 + $1.text.count }) > 24000 { sources.removeFirst() }
+        guard let last = sources.last else { throw CharacterMemoryError.noSources }
+        let input = MemoryExtractionInput(conversationID: conversationID, sources: sources, existing: try memoryFiles.documents(for: role))
+        let attempt = MemoryExtractionAttempt(id: UUID(), conversationID: conversationID, messageIDs: sources.map(\.id))
+        guard change({ value in
+            var automation = value.memoryAutomation ?? MemoryAutomation(); var settings = automation.roles[role] ?? .init()
+            settings.processedThrough[conversationID.uuidString] = last.id; settings.attempt = attempt
+            automation.roles[role] = settings; value.memoryAutomation = automation
+        }) else { throw ChatError.invalidHistory }
+        preparingMemoryRoles.insert(role); defer { preparingMemoryRoles.remove(role) }
+        do {
+            var profile = configuration.profile(for: character); profile.appControl = false; profile.automaticStickers = false
+            profile.maxOutputTokens = 2048
+            var request = ChatReplyRequest(conversationID: conversationID, kind: .direct, groupName: "", members: [character], character: character,
+                userMessage: .user("整理记忆候选", recipients: [role]), history: [], profile: profile)
+            request.memoryExtraction = input
+            let answer = try await provider.reply(to: request); try Task.checkCancellation()
+            let suggestions = try input.suggestions(from: answer, characterID: role)
+            let existingNow = try memoryFiles.documents(for: role)
+            guard change({ value in
+                guard var settings = value.memoryAutomation?.roles[role], settings.attempt?.id == attempt.id else { throw CharacterMemoryError.invalid }
+                let additions = suggestions.filter { candidate in
+                    !existingNow.contains(where: { $0.text == candidate.text }) && !settings.suggestions.contains(where: { $0.text == candidate.text }) && value.conversations.contains(where: {
+                        $0.id == candidate.conversationID && $0.messages.contains(where: { $0.isUser && $0.id == candidate.sourceMessageID && $0.text.contains(candidate.sourceQuote) })
+                    })
+                }
+                settings.suggestions.append(contentsOf: additions)
+                settings.attempt?.status = .completed; settings.attempt?.generatedCount = additions.count
+                value.memoryAutomation?.roles[role] = settings
+            }) else { throw ChatError.invalidHistory }
+        } catch {
+            let saved = change { value in
+                guard value.memoryAutomation?.roles[role]?.attempt?.id == attempt.id else { return }
+                value.memoryAutomation?.roles[role]?.attempt?.status = .failed
+                value.memoryAutomation?.roles[role]?.attempt?.failure = String(error.localizedDescription.prefix(300))
+            }
+            if !saved, history.memoryAutomation?.roles[role]?.attempt?.id == attempt.id {
+                history.memoryAutomation?.roles[role]?.attempt?.status = .failed
+                history.memoryAutomation?.roles[role]?.attempt?.failure = "保存失败，已停止自动重试。"
+            }
+            throw error
+        }
+    }
+    @discardableResult
+    func confirmMemorySuggestion(_ suggestion: MemorySuggestion, title: String, text: String) -> Bool {
+        guard memoryAutomation(for: suggestion.characterID).suggestions.contains(where: { $0.id == suggestion.id }),
+              conversation(suggestion.conversationID)?.messages.contains(where: {
+                  $0.isUser && $0.delivery == .sent && $0.id == suggestion.sourceMessageID
+                      && $0.replyCharacterIDs.contains(suggestion.characterID) && $0.text.contains(suggestion.sourceQuote)
+              }) == true else { error = "来源消息已更改或删除，这条候选不再有效。"; return false }
+        let note = CharacterMemoryDocument(id: suggestion.id, characterID: suggestion.characterID, title: title, text: text, modifiedAt: .now)
+        guard saveMemory(note) else { return false }
+        if discardMemorySuggestion(suggestion) { return true }
+        error = "记忆文件已保存，待确认列表更新失败，请稍后重试。"; return false
+    }
+    @discardableResult
+    func discardMemorySuggestion(_ suggestion: MemorySuggestion) -> Bool {
+        change { value in value.memoryAutomation?.roles[suggestion.characterID]?.suggestions.removeAll { $0.id == suggestion.id } }
+    }
+
+    private func canChangeMemory(for role: String) -> Bool {
+        guard ready, availableIDs.contains(role) else { error = CharacterMemoryError.invalid.localizedDescription; return false }
+        guard !conversations.contains(where: { $0.characterIDs.contains(role) && replyingIDs.contains($0.id) }),
+              !proactiveState.slots.contains(where: { $0.characterID == role && preparingProactiveIDs.contains($0.id) }) else {
+            error = "请等这位角色当前的回复或消息准备结束，再编辑记忆。"; return false
+        }
+        return true
+    }
+    private func invalidateMemoryQueue(for role: String) -> Bool {
+        change { value in
+            guard var state = value.proactive else { return }
+            for index in state.slots.indices where state.slots[index].characterID == role && [.planned, .ready].contains(state.slots[index].status) {
+                state.slots[index].status = .cancelled
+            }
+            var policies = state.characterPolicies ?? [:]; policies[role] = UUID()
+            state.characterPolicies = policies; state.completedWindows?.removeValue(forKey: role)
+            value.proactive = state
+        }
+    }
+    @discardableResult
+    func saveMemory(_ document: CharacterMemoryDocument) -> Bool {
+        guard canChangeMemory(for: document.characterID) else { return false }
+        do {
+            try document.validate()
+            let current = try memoryFiles.documents(for: document.characterID)
+            if current.contains(where: { $0.id == document.id && $0.data == document.data }) { error = nil; return true }
+            var next = current.filter { $0.id != document.id }
+            next.append(document); try CharacterMemoryDocument.validate(next)
+            guard invalidateMemoryQueue(for: document.characterID) else { return false }
+            try memoryFiles.save(document); memoryRevision += 1; error = nil; return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+    @discardableResult
+    func deleteMemory(_ document: CharacterMemoryDocument) -> Bool {
+        guard canChangeMemory(for: document.characterID), invalidateMemoryQueue(for: document.characterID) else { return false }
+        do { try memoryFiles.delete(document); memoryRevision += 1; error = nil; return true }
+        catch { self.error = error.localizedDescription; return false }
+    }
+    @discardableResult
+    func clearMemories(for role: String) -> Bool {
+        guard canChangeMemory(for: role) else { return false }
+        do {
+            let folder = try memoryFiles.folder(role)
+            if FileManager.default.fileExists(atPath: folder.path) {
+                let containsFiles = !(try FileManager.default.contentsOfDirectory(atPath: folder.path)).isEmpty
+                if containsFiles { guard invalidateMemoryQueue(for: role) else { return false } }
+                try FileManager.default.removeItem(at: folder)
+            }
+            memoryRevision += 1; error = nil; return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+    @discardableResult
+    func editStoredMessage(_ messageID: UUID, in conversationID: UUID, text: String) -> Bool {
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
+        return change { value in
+            guard let c = value.conversations.firstIndex(where: { $0.id == conversationID }),
+                  let m = value.conversations[c].messages.firstIndex(where: { $0.id == messageID }) else { throw ChatError.missingConversation }
+            value.conversations[c].messages[m].text = text
+            value.cancelProactiveChats(in: conversationID)
+        }
+    }
+    @discardableResult
+    func deleteStoredMessage(_ messageID: UUID, in conversationID: UUID) -> Bool {
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
+        return change { value in
+            guard let c = value.conversations.firstIndex(where: { $0.id == conversationID }) else { throw ChatError.missingConversation }
+            value.conversations[c].messages.removeAll { $0.id == messageID || $0.replyToID == messageID }
+            value.cancelProactiveChats(in: conversationID)
+            if let indices = value.proactive?.slots.indices {
+                for i in indices where value.proactive?.slots[i].id == messageID { value.proactive?.slots[i].status = .cancelled }
+            }
+        }
+    }
 
     /// A home-screen tap is an ephemeral line, not a new saved chat conversation.
     func homeGreeting(for character: CompanionCharacter) async throws -> String {
@@ -60,7 +245,7 @@ final class ChatStore: ObservableObject {
 
     func exportBackup() throws -> Data {
         guard ready else { throw ChatError.invalidHistory }
-        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { throw AIChatError.busy }
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty, preparingMemoryRoles.isEmpty else { throw AIChatError.busy }
         var files: [String: Data] = [:]
         var total = 0
         for asset in history.mediaAssets {
@@ -68,22 +253,37 @@ final class ChatStore: ObservableObject {
             guard total <= ChatBackup.maximumSize * 3 / 4 else { throw AIChatError.backupTooLarge }
             files[asset.filename] = bytes
         }
-        let data = try JSONEncoder().encode(ChatBackup(history: history, media: files))
+        let data = try JSONEncoder().encode(ChatBackup(history: history, media: files, memories: memoryFiles.snapshot()))
         guard data.count <= ChatBackup.maximumSize else { throw AIChatError.backupTooLarge }
         return data
     }
 
     @discardableResult
     func importBackup(_ data: Data) -> Bool {
-        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
+        guard replyingIDs.isEmpty, preparingProactiveIDs.isEmpty, preparingMemoryRoles.isEmpty else { error = AIChatError.busy.localizedDescription; return false }
         do {
             let backup = try ChatBackup.decode(data)
             for bytes in backup.media?.values ?? Dictionary<String, Data>().values { try media.store(bytes) }
             var restored = backup.history
             restored.recoverInterruptedReplies()
             restored.recoverInterruptedProactivePlans()
-            try file.save(restored)
+            restored.recoverInterruptedMemoryPreparations()
+            restored.pruneMemorySuggestions()
+            if let memories = backup.memories {
+                let staging = try memoryFiles.stage(memories)
+                var previous: URL?
+                do { previous = try memoryFiles.install(staging: staging) }
+                catch { try? FileManager.default.removeItem(at: staging); throw error }
+                do { try file.save(restored) }
+                catch {
+                    do { try memoryFiles.rollback(previous: previous) }
+                    catch { ready = false; throw CharacterMemoryError.unreadable }
+                    throw error
+                }
+                if let previous { try? FileManager.default.removeItem(at: previous) }
+            } else { try file.save(restored) }
             history = restored; ready = true; error = nil
+            memoryRevision += 1
             return true
         } catch { self.error = error.localizedDescription; return false }
     }
@@ -91,11 +291,12 @@ final class ChatStore: ObservableObject {
     func stop(_ id: UUID) { tasks[id]?.cancel() }
 
     func reload() {
-        guard tasks.isEmpty, preparingProactiveIDs.isEmpty else { return }
+        guard tasks.isEmpty, preparingProactiveIDs.isEmpty, preparingMemoryRoles.isEmpty else { return }
         do {
             var loaded = try file.load()
             loaded.recoverInterruptedReplies()
             loaded.recoverInterruptedProactivePlans()
+            loaded.recoverInterruptedMemoryPreparations()
             history = loaded
             ready = true
         } catch { ready = false; self.error = error.localizedDescription }
@@ -107,6 +308,7 @@ final class ChatStore: ObservableObject {
         do {
             var next = history
             try update(&next)
+            next.pruneMemorySuggestions()
             if next == history { return true }
             try file.save(next)
             history = next
@@ -206,6 +408,9 @@ final class ChatStore: ObservableObject {
             defer {
                 if generations[id] == generation {
                     tasks[id] = nil; generations[id] = nil; replyingIDs.remove(id); streaming[id] = nil
+                    if !Task.isCancelled {
+                        Task { [weak self] in await self?.prepareAutomaticMemories(in: id) }
+                    }
                 }
             }
             do {
@@ -217,12 +422,13 @@ final class ChatStore: ObservableObject {
                     try Task.checkCancellation()
                     guard let character = character(recipient) else { throw ChatError.unavailableCharacter }
                     let turnHistory = (conversation(id)?.messages ?? []).filter {
-                        $0.isUser ? allowedTurns.contains($0.id) : $0.replyToID.map(allowedTurns.contains) == true
+                        $0.isUser ? allowedTurns.contains($0.id) : ($0.isProactive == true && $0.createdAt <= message.createdAt) || $0.replyToID.map(allowedTurns.contains) == true
                     }
                     var request = ChatReplyRequest(conversationID: id, kind: chat.kind, groupName: chat.name,
                         members: members, character: character, userMessage: message, history: turnHistory,
                         profile: preferences.profile(for: character), userProfile: preferences.user)
                     request.stickers = stickers(for: recipient)
+                    request.memories = try memoryFiles.documents(for: recipient)
                     // Only the selected context and four most recent images are sent to vision.
                     let prior = Array(turnHistory.filter { $0.isUser && $0.id != messageID && $0.delivery == .sent }
                         .suffix(request.profile?.contextRounds ?? 10)) + [message]
@@ -396,6 +602,7 @@ final class ChatStore: ObservableObject {
                 members: chat.characterIDs.compactMap { self.character($0) }, character: character,
                 userMessage: instruction, history: chat.messages, profile: profile, userProfile: configuration.user)
             request.proactiveDeliveryDate = slot.scheduledAt
+            request.memories = try memoryFiles.documents(for: character.id)
             let answer = try await provider.reply(to: request).trimmingCharacters(in: .whitespacesAndNewlines)
             try Task.checkCancellation()
             guard !answer.isEmpty, answer.count <= 1800 else { throw ChatError.emptyReply }

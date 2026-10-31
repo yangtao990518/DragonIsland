@@ -161,6 +161,15 @@ def verify(path):
                 scenes_version=tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,6)
                 characters=json.loads(archive.read(f'{root}/Characters.json'))
                 expected_fonts=1+180*sum(c['id']=='xiaobai' or bool(c.get('motion')) for c in characters) if scenes_version else 61 if required_fps==30 else 129
+                if tuple(map(int, app['CFBundleShortVersionString'].split('.'))) >= (1,8) and int(app['CFBundleVersion']) >= 20:
+                    unread = json.loads(archive.read(f'{root}/UnreadAvatarFonts.json'))
+                    expected_names = {f'mAIverseUnread{role}F{i}.ttf' for role in ('Xiaobai', 'Dafeiyu') for i in range(16)}
+                    if unread.get('fps') != 8 or unread.get('phases') != 16 or unread.get('stagePixels') != [180, 96] or {f['font'] for f in unread['fonts']} != expected_names or len(unread['fonts']) != 32:
+                        raise ValueError('Invalid unread avatar font manifest')
+                    for item in unread['fonts']:
+                        if item['font'] not in fonts or hashlib.sha256(archive.read(f'{root}/{item["font"]}')).hexdigest() != item['sha256']:
+                            raise ValueError('Missing or changed registered unread avatar font')
+                    expected_fonts += len(expected_names)
                 if len(fonts)!=expected_fonts or any(f'{root}/{font}' not in names for font in fonts):
                     raise ValueError(f'Missing registered system-timer motion fonts in {root}')
                 current = tuple(map(int,app['CFBundleShortVersionString'].split('.'))) >= (1,8) and int(app['CFBundleVersion']) >= 16

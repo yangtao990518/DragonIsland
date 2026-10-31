@@ -10,4 +10,5 @@ struct ChatReminderAttributes: ActivityAttributes {
     let conversationID: UUID
     let characterID: String
     let characterName: String
+    var animationStartedAt: Date? = nil
 }

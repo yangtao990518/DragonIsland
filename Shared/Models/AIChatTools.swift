@@ -58,7 +58,7 @@ enum ChatTools {
         .init(name: "cancel_alarm", description: "取消自己的普通闹钟；不能取消陪伴关联提醒。需用户确认。", fields: ["alarm_id": "闹钟 UUID"])
     ]
     static func allowed(for request: ChatReplyRequest) -> [Definition] {
-        guard request.proactiveDeliveryDate == nil else { return [] }
+        guard request.proactiveDeliveryDate == nil, request.memoryExtraction == nil else { return [] }
         return all.filter { $0.name == "send_sticker" ? request.profile?.automaticStickers == true && !request.stickers.isEmpty : request.profile?.appControl == true }
     }
 }

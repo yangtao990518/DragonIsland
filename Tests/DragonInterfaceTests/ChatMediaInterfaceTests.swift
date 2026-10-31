@@ -44,6 +44,16 @@ final class ChatMediaInterfaceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["已发送表情：小白动态测试"].waitForExistence(timeout: 6))
         XCTAssertGreaterThanOrEqual(app.buttons.matching(identifier: "chatStickerAttachment").count, 2)
     }
+    func testTappingConversationDismissesKeyboardAndKeepsUnsentDraft() {
+        let app = launch()
+        let input = app.descendants(matching: .any).matching(identifier: "chatInput").firstMatch
+        input.tap(); input.typeText("先留着不发送")
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 4))
+        app.staticTexts["记录保存在本机 · AI 回复可能存在错误"].tap()
+        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.keyboards.firstMatch)
+        waitForExpectations(timeout: 4)
+        XCTAssertEqual(input.value as? String, "先留着不发送")
+    }
     func testAppWriteRequiresConfirmationAndDeclineDoesNotClaimSuccess() {
         let app = launch()
         send("test-action", in: app)

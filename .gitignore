@@ -13,6 +13,8 @@ Config/
 __pycache__/
 *.pyc
 Shared/Resources/MotionFonts/
+Shared/Resources/UnreadAvatarFonts/
+Shared/Resources/UnreadAvatarFonts.json
 Shared/Resources/MotionTimeline*.json
 Shared/Resources/Companion.xcassets/Motion*.imageset/
 Shared/Resources/Companion.xcassets/IslandScene_*.imageset/

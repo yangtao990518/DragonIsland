@@ -161,7 +161,7 @@ final class ProactiveChatCoordinator: ObservableObject {
         }
         let state = ChatReminderAttributes.ContentState(preview: String(message.text.prefix(100)), unreadCount: total, sentAt: message.createdAt)
         let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(3600), relevanceScore: 100)
-        let current = activities.first { $0.attributes.conversationID == chat.id && [.active, .stale].contains($0.activityState) }
+        let current = activities.first { $0.attributes.conversationID == chat.id && $0.attributes.animationStartedAt != nil && [.active, .stale].contains($0.activityState) }
         for activity in activities where activity.id != current?.id { await activity.end(activity.content, dismissalPolicy: .immediate) }
         if let current {
             guard current.content.state != state else { return }
@@ -170,7 +170,7 @@ final class ProactiveChatCoordinator: ObservableObject {
                 ? AlertConfiguration(title: "\(character.name)发来消息", body: "\(String(message.text.prefix(80)))", sound: .default) : nil)
         } else if UIApplication.shared.applicationState == .active {
             do { _ = try Activity.request(attributes: ChatReminderAttributes(conversationID: chat.id, characterID: character.id,
-                characterName: character.name), content: content, pushType: nil) }
+                characterName: character.name, animationStartedAt: .now), content: content, pushType: nil) }
             catch { status = "消息已保存，灵动岛提醒未能启动，请检查实时活动权限。" }
         }
     }

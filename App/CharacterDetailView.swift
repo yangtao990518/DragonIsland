@@ -15,7 +15,6 @@ struct CharacterDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var artwork: ArtworkSelection?
-    @State private var detailTab = 0
     @State private var preview = 0
     @State private var showingAlarm = false
     @State private var showingMotion = false
@@ -33,9 +32,6 @@ struct CharacterDetailView: View {
                 VStack(spacing: 16) {
                     hero
                     artworkPicker
-                    tabs
-                    if detailTab == 1 { dailySummary }
-                    if detailTab == 2 { settingsSummary }
                     featureGrid
                     feature("主动聊天", subtitle: "设置她的联系时段、最短间隔与私聊／群聊", symbol: "bubble.left.and.exclamationmark.bubble.right", identifier: "characterProactiveChatSettings") { showingProactive = true }
                     islandAndAlarm
@@ -96,6 +92,7 @@ struct CharacterDetailView: View {
             Spacer(minLength: 4)
             Menu {
                 Button("查看岛上小人物大图") { showChibi() }.accessibilityIdentifier("artwork-chibi")
+                AppearanceToggle()
             } label: {
                 Image(systemName: "ellipsis").font(.system(size: 19)).frame(width: 36, height: 44)
             }.accessibilityLabel("更多角色操作").accessibilityIdentifier("characterDossierMore")
@@ -151,10 +148,10 @@ struct CharacterDetailView: View {
                         VStack(spacing: 7) {
                             ZStack(alignment: .topTrailing) {
                                 MoonPalette.lavender.opacity(0.23)
-                                Image(item.asset).resizable().scaledToFill()
-                                    .frame(width: 148, height: 78, alignment: .top).clipped()
+                                Image(item.asset).resizable().scaledToFit()
+                                    .frame(width: 148, height: 156).padding(.vertical, 6)
                                 if active { Image(systemName: "checkmark.circle.fill").symbolRenderingMode(.palette).foregroundStyle(.white, MoonPalette.violet).padding(5) }
-                            }.frame(width: 148, height: 78).clipShape(RoundedRectangle(cornerRadius: 12))
+                            }.frame(width: 148, height: 168).clipShape(RoundedRectangle(cornerRadius: 12))
                                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(active ? MoonPalette.violet : MoonPalette.gold.opacity(0.25), lineWidth: active ? 2 : 1))
                             Text(item.title).font(.system(size: 12, weight: active ? .semibold : .regular, design: .serif)).lineLimit(1).frame(width: 148)
                         }
@@ -163,20 +160,6 @@ struct CharacterDetailView: View {
                 }
             }.padding(2)
         }.accessibilityIdentifier("worldArtworkPicker")
-    }
-
-    private var tabs: some View {
-        HStack(spacing: 4) {
-            ForEach(Array(["展示", "日常", "设定"].enumerated()), id: \.offset) { index, title in
-                Button { detailTab = index } label: {
-                    Text(title).font(.system(size: 16, weight: .medium, design: .serif))
-                        .frame(maxWidth: .infinity, minHeight: 42).foregroundStyle(detailTab == index ? .white : MoonPalette.ink)
-                        .background(detailTab == index ? MoonPalette.violet : .clear, in: Capsule())
-                        .overlay(Capsule().stroke(detailTab == index ? MoonPalette.gold : .clear, lineWidth: 1))
-                }.buttonStyle(.plain).accessibilityAddTraits(detailTab == index ? .isSelected : [])
-            }
-        }.padding(4).background(.white.opacity(0.6), in: Capsule())
-            .overlay(Capsule().stroke(MoonPalette.gold.opacity(0.4), lineWidth: 1))
     }
 
     private var featureGrid: some View {
@@ -216,24 +199,6 @@ struct CharacterDetailView: View {
                     .overlay(RoundedRectangle(cornerRadius: 19).stroke(MoonPalette.gold.opacity(0.25), lineWidth: 1))
             }.buttonStyle(.plain).accessibilityIdentifier("characterIslandPreview")
             feature("角色闹钟", subtitle: "设置时间约定与到点提醒", symbol: "alarm", identifier: "characterAlarmSettings") { showingAlarm = true }
-        }
-    }
-    private var dailySummary: some View {
-        MoonCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("属于\(character.name)的日常").font(.system(size: 18, weight: .semibold, design: .serif))
-                Text("自动活动、走路、打滚与专属动作，均为角色独立保存。").font(.subheadline).foregroundStyle(MoonPalette.ink.opacity(0.6))
-                Button("选择她的日常动作 →") { showingMotion = true }.font(.subheadline.weight(.medium))
-            }
-        }
-    }
-    private var settingsSummary: some View {
-        MoonCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("\(character.name)的设定").font(.system(size: 18, weight: .semibold, design: .serif))
-                Text("主页按钮：\(store.homeButtonStyle(for: character).title)").font(.subheadline)
-                HStack { Text("外观").font(.subheadline); Spacer(); AppearanceToggle() }
-            }
         }
     }
     private var buttonStyleSheet: some View {

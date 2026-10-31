@@ -26,6 +26,7 @@ struct ContentView: View {
     @State private var expandedPreview = false
     @State private var detailCharacter: CompanionCharacter?
     @State private var legacyHomePanel: HomeShortcutKind?
+    @State private var showingMemoryBrowser = false
     private let homeScenes = HomeSceneAnimation.load()
     @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
     @State private var browsedCharacterID = "xiaobai"
@@ -100,6 +101,7 @@ struct ContentView: View {
         .task(id: (scenePhase == .active ? 1 : 0) + (chatStore.history.proactive?.settings.enabled == true ? 2 : 0)) {
             guard scenePhase == .active else { return }
             await proactive.refresh()
+            await chatStore.prepareAutomaticMemories()
             guard chatStore.proactiveState.settings.enabled else { return }
             while !Task.isCancelled {
                 do { try await Task.sleep(nanoseconds: 30_000_000_000) } catch { return }
@@ -126,6 +128,7 @@ struct ContentView: View {
         .sheet(item: $legacyHomePanel) { kind in
             HomeShortcutPanel(store: store, character: store.displayCharacter, kind: kind)
         }
+        .sheet(isPresented: $showingMemoryBrowser) { NavigationStack { MemoryBrowser(store: chatStore) } }
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
@@ -157,6 +160,7 @@ struct ContentView: View {
     private func openChatTab() {
         detailCharacter = nil
         legacyHomePanel = nil
+        showingMemoryBrowser = false
         tab = .chat
     }
 
@@ -440,6 +444,13 @@ struct ContentView: View {
             }
             IslandScenePicker(store: store)
             AppIconPicker()
+            Button { showingMemoryBrowser = true } label: {
+                HStack {
+                    Label("AI 记忆与本机文件", systemImage: "folder.badge.person.crop")
+                    Spacer()
+                    Image(systemName: "chevron.right").font(.caption)
+                }.font(.system(size: 15, weight: .medium)).foregroundStyle(AppPalette.accent)
+            }.worldCard().accessibilityIdentifier("aboutMemoryBrowser")
             VStack(alignment: .leading, spacing: 17) {
                 Text("你的世界，他们也在。")
                     .font(.system(size: 21, weight: .semibold))
