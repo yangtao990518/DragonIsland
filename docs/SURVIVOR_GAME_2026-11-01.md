@@ -69,3 +69,16 @@ python Scripts/process_survivor_videos.py pack output/game-rematte --output Art/
 本机5项素材回归通过：原片哈希、完整帧序及停留、图集透明度/尺寸/哈希、WebP→PNG 像素无损，以及旧小水泡的原图/透明图/安装资源一致性。初次云端158项 Swift 测试通过，App / Widget 最终编译结果将在下方补充。
 
 尚未运行新的模拟器或真机游戏试玩。数值、地图及 UI 为首轮实现；不宣称已完成20分钟真机流畅度、耗电、内存或平衡性验收。源码本身不会更新手机上已有 IPA。
+
+## 最终云端验证
+
+功能源码 `8f810166e47db3af244614bc74f9fabe2c66e5fa` 的 [Actions 41222674142](https://github.com/yangtao990518/DragonIsland/actions/runs/41222674142) 全部成功：
+
+- 158 项 Swift 测试，0 失败，覆盖原有聊天/记忆规则及新增战斗、暂停、自动攻击、升级、存档确定性、20分钟规则与原始帧时序。
+- 5 项素材回归通过，包括原片/图集/小水泡哈希、原始完整时间轴及运行时 PNG 的无损转换。
+- Xcode 26.2、Release、generic iphoneos 编译 App 和 Widget 成功；编译后确认 Widget 嵌入及游戏 manifest 随 App 复制。
+- 只上传编译日志，没有生成或上传 IPA，没有启动模拟器。真机游戏、界面观感和20分钟性能仍未验收。
+
+编译有项目既有竖屏方向警告，不阻断构建。初次运行因新增错误处理变量重名失败，修正后以上最终源码成功；中途取消的运行不计通过。后续若只补交接记录，不混用为新功能代码已重新验收。
+
+重启前家中已有的两份未提交文档修改仍保留在工作区，本轮没有覆盖或代为提交：`docs/GAME_VIDEO_ASSET_GUIDE_2026-10-31.md`、`docs/SURVIVOR_GAME_CONCEPT_2026-10-31.md`。游戏新增代码、正式素材和本记录已推送 `codex/chat-media-tools`。
