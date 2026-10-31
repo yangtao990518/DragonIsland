@@ -113,8 +113,8 @@ struct CharacterDetailView: View {
                     .frame(width: width * 0.88, height: width * 0.88).offset(x: width * 0.21, y: 30)
                 Button { showStanding() } label: {
                     Image(selected.asset).resizable().scaledToFit()
-                        .frame(width: width * 0.86, height: geometry.size.height - 14)
-                }.buttonStyle(.plain).position(x: width * 0.61, y: geometry.size.height * 0.53)
+                        .frame(width: width * 0.82, height: geometry.size.height - 14)
+                }.buttonStyle(.plain).position(x: width * 0.59, y: geometry.size.height * 0.5)
                     .accessibilityLabel("查看\(selected.title)大图").accessibilityIdentifier("artwork-standing")
                 VStack(alignment: .leading, spacing: 11) {
                     Text(character.name).font(.system(size: typeSize.isAccessibilitySize ? 27 : 32, weight: .semibold, design: .serif))
