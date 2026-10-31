@@ -13,6 +13,7 @@ import SpriteKit
     private var suspended: SurvivorBattle?
     private let saveURL: URL?
     var canContinue: Bool { suspended != nil }
+    var portrait: UIImage? { textures?.idleImage }
 
     init() {
         battle = try! SurvivorBattle() // The built-in validated configuration.
@@ -45,7 +46,7 @@ import SpriteKit
             battle.awardExperience(battle.experienceNeeded)
         }
         #endif
-        movement = .zero; scene?.resetRun(); playing = true; revision += 1
+        movement = .zero; scene?.resetRun(); playing = true; syncRenderer(); revision += 1
         save()
     }
     func tick(_ delta: Double) {
@@ -60,14 +61,22 @@ import SpriteKit
         if oldChoices != battle.choices || oldOutcome != battle.outcome { movement = .zero; save() }
     }
     func choose(_ upgrade: SurvivorUpgrade) {
-        if battle.choose(upgrade) { scene?.resetTimestamp(); revision += 1; save() }
+        if battle.choose(upgrade) { syncRenderer(); revision += 1; save() }
     }
     func pause(_ reason: SurvivorRunClock.PauseReason) {
-        movement = .zero; battle.pause(reason); scene?.resetTimestamp(); revision += 1
+        movement = .zero; battle.pause(reason); syncRenderer(); revision += 1
         if playing { save() }
     }
     func resume(_ reason: SurvivorRunClock.PauseReason) {
-        movement = .zero; battle.resume(reason); scene?.resetTimestamp(); revision += 1
+        movement = .zero; battle.resume(reason); syncRenderer(); revision += 1
+    }
+    private func syncRenderer() {
+        scene?.resetTimestamp()
+        let paused = !battle.clock.running || battle.outcome != nil
+        // A scene first attached while an upgrade is open must also resume its
+        // existing SKView; do not rely only on SpriteView's initial parameter.
+        scene?.isPaused = paused
+        scene?.view?.isPaused = paused
     }
     func lobby() {
         if battle.outcome == nil { pause(.menu) }
@@ -153,7 +162,7 @@ struct SurvivorGameView: View {
                     ZStack(alignment: .bottomLeading) {
                         RoundedRectangle(cornerRadius: 28).fill(LinearGradient(colors: [.indigo.opacity(0.5), .cyan.opacity(0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))
                         Circle().stroke(.cyan.opacity(0.25), lineWidth: 1).frame(width: 220, height: 220).offset(x: 100, y: -40)
-                        Image("DafeiyuChibiDetail").resizable().scaledToFit().frame(height: 260).frame(maxWidth: .infinity).padding(.bottom, 58)
+                        Image(uiImage: game.portrait ?? UIImage()).resizable().scaledToFit().frame(height: 260).frame(maxWidth: .infinity).padding(.bottom, 58)
                         HStack {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text("大肥鱼").font(.title2.bold())
@@ -217,7 +226,7 @@ struct SurvivorGameView: View {
     private var hud: some View {
         VStack(spacing: 10) {
             HStack {
-                Image("DafeiyuChibiDetail").resizable().scaledToFit().frame(width: 34, height: 40)
+                Image(uiImage: game.portrait ?? UIImage()).resizable().scaledToFit().frame(width: 34, height: 40)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("大肥鱼 · Lv.\(game.battle.level)").font(.caption.bold())
                     ProgressView(value: game.battle.health, total: game.battle.maximumHealth).tint(.mint).frame(width: 98)
@@ -227,6 +236,7 @@ struct SurvivorGameView: View {
                 VStack(spacing: 3) {
                     Text(timer(game.battle.clock.remaining)).font(.system(size: 25, weight: .bold, design: .rounded)).monospacedDigit()
                         .accessibilityIdentifier("survivorTimer")
+                        .accessibilityValue(game.battle.clock.running ? "运行中" : "暂停中")
                     Text("击败 \(game.battle.kills)").font(.caption2).foregroundStyle(.white.opacity(0.65))
                 }
                 Spacer(minLength: 6)

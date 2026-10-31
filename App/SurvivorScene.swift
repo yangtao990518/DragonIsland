@@ -10,6 +10,8 @@ final class SurvivorTextures {
     let bubbleTexture: SKTexture
     let bubblePivot: CGPoint
     let bubbleSize: CGSize
+    let idleImage: UIImage
+    let idleTexture: SKTexture
     private let pages = NSCache<NSString, SKTexture>()
     private var current: [String: (Int, SKTexture)] = [:]
     init() throws {
@@ -28,6 +30,9 @@ final class SurvivorTextures {
         bubbleTexture = SKTexture(image: image)
         bubblePivot = CGPoint(x: bubble.pivot[0], y: bubble.pivot[1])
         bubbleSize = CGSize(width: CGFloat(bubble.size[0]), height: CGFloat(bubble.size[1]))
+        guard let idle = UIImage(contentsOfFile: root.appendingPathComponent("dafeiyu-idle.png").path) else { throw CocoaError(.fileReadCorruptFile) }
+        idleImage = idle
+        idleTexture = SKTexture(image: idle)
         pages.totalCostLimit = 64 * 1024 * 1024
         pages.countLimit = 12
     }
@@ -64,7 +69,7 @@ final class SurvivorScene: SKScene {
     private let viewpoint = SKCameraNode()
     private let hero = SKSpriteNode()
     private let shadow = SKShapeNode(ellipseOf: CGSize(width: 36, height: 12))
-    private let idle = SKTexture(imageNamed: "DafeiyuChibiDetail")
+    private var idle: SKTexture { textures.idleTexture }
     private var enemyNodes: [UInt64: SKSpriteNode] = [:]
     private var bubbleNodes: [UInt64: SKSpriteNode] = [:]
     private var dropNodes: [UInt64: SKSpriteNode] = [:]

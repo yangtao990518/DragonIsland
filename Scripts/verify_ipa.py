@@ -126,6 +126,9 @@ def verify_survivor(archive, app_root, widget_root):
     bubble = json.loads(archive.read(base + 'water-bubble.json'))
     if hashlib.sha256(archive.read(base+'water-bubble.png')).hexdigest() != bubble['sha256']:
         raise ValueError('Basic attack bubble differs')
+    idle = json.loads(archive.read(base + 'dafeiyu-idle.json'))
+    if hashlib.sha256(archive.read(base+'dafeiyu-idle.png')).hexdigest() != idle['sha256']:
+        raise ValueError('Approved idle artwork differs')
     if any(name.startswith(widget_root+'/SurvivorGame/') for name in archive.namelist()):
         raise ValueError('Game atlases must be App-only')
     print('Survivor verified: eight full 240-frame clips, original holds, PNG hashes and water bubble, App only.')

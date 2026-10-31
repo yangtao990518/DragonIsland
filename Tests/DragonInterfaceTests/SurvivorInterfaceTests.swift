@@ -42,6 +42,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         capture(app, "survivor-character-selection")
         start(app)
         let timer = app.staticTexts["survivorTimer"]
+        XCTAssertEqual(timer.value as? String, "运行中")
         expectation(for: NSPredicate(format: "label != %@", "20:00"), evaluatedWith: timer)
         waitForExpectations(timeout: 10)
         let joystick = app.descendants(matching: .any).matching(identifier: "survivorJoystick").firstMatch
@@ -82,7 +83,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         app.buttons["survivorPause"].tap()
         let saved = seconds(timer.label)
         app.buttons["survivorReturnLobby"].tap()
-        app.buttons["survivorSaveExit"].tap()
+        app.buttons.matching(identifier: "survivorSaveExit").firstMatch.tap()
         XCTAssertTrue(app.buttons["survivorContinue"].waitForExistence(timeout: 5))
         app.terminate(); app.launch(); openGame(app)
         let resume = app.buttons["survivorContinue"]

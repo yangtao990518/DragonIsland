@@ -56,6 +56,14 @@ def prepare(root=ROOT):
         assert image.mode == 'RGBA' and list(image.size) == bubble['size']
     shutil.copyfile(source / 'Static' / bubble['file'], target / 'water-bubble.png')
     (target / 'water-bubble.json').write_text(json.dumps(bubble), encoding='utf-8')
+    idle_source = root / 'Art/dafeiyu-chibi.png'
+    with Image.open(idle_source) as image:
+        image = image.convert('RGBA')
+        image = image.crop(image.getchannel('A').getbbox())
+        image.save(target / 'dafeiyu-idle.png')
+    idle = {'file': 'dafeiyu-idle.png', 'sha256': hashlib.sha256((target / 'dafeiyu-idle.png').read_bytes()).hexdigest(),
+            'source_sha256': hashlib.sha256(idle_source.read_bytes()).hexdigest(), 'size': list(image.size)}
+    (target / 'dafeiyu-idle.json').write_text(json.dumps(idle), encoding='utf-8')
     print('Survivor: 8 full-source clips and the earlier small water bubble')
 
 
