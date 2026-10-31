@@ -7,7 +7,7 @@ struct ChatMessage: Codable, Equatable, Identifiable, Sendable {
     let id: UUID
     let characterID: String?
     let senderName: String
-    let text: String
+    var text: String
     let createdAt: Date
     let replyToID: UUID?
     let replyCharacterIDs: [String]
