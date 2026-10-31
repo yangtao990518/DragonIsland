@@ -210,8 +210,9 @@ struct SurvivorBattle: Codable, Sendable {
             if abs(toPlayer.x) > 0.5 { enemies[i].facingLeft = toPlayer.x < 0 }
             enemies[i].position = enemies[i].position + toPlayer.normalized * (enemies[i].speed * delta)
         }
+        separateEnemies(SurvivorEnemyGrid(enemies))
+        // Separation changes positions; damage queries need the updated cells.
         let grid = SurvivorEnemyGrid(enemies)
-        separateEnemies(grid)
 
         bubbleIn -= delta
         if bubbleIn <= 0, let target = nearestEnemy() {

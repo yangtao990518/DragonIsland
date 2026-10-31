@@ -45,6 +45,8 @@ def prepare(root=ROOT):
             # Deterministic conversion, no quantization or resizing.
             image.save(dest, compress_level=6)
             page['file'] = path.with_suffix('.png').as_posix()
+            page['source_sha256'] = page['sha256']
+            page['sha256'] = hashlib.sha256(dest.read_bytes()).hexdigest()
     (target / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False), encoding='utf-8')
     print('Survivor: 8 full-source clips, App-only lossless PNG atlases')
 

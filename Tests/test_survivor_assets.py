@@ -55,6 +55,8 @@ class SurvivorAssetsTests(unittest.TestCase):
         for source, dest in zip(self.manifest['clips'], built['clips']):
             self.assertEqual(source['frames'], dest['frames'])
             for master, page in zip(source['pages'], dest['pages']):
+                self.assertEqual(page['source_sha256'], master['sha256'])
+                self.assertEqual(hashlib.sha256((runtime / page['file']).read_bytes()).hexdigest(), page['sha256'])
                 with Image.open(self.source / master['file']) as a, Image.open(runtime / page['file']) as b:
                     self.assertEqual(a.tobytes(), b.tobytes())
 
