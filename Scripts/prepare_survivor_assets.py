@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,7 +49,14 @@ def prepare(root=ROOT):
             page['source_sha256'] = page['sha256']
             page['sha256'] = hashlib.sha256(dest.read_bytes()).hexdigest()
     (target / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False), encoding='utf-8')
-    print('Survivor: 8 full-source clips, App-only lossless PNG atlases')
+    bubble = json.loads((source / 'Static/manifest.json').read_text(encoding='utf-8'))
+    for name, digest in ((bubble['source'], bubble['source_sha256']), (bubble['file'], bubble['sha256'])):
+        assert hashlib.sha256((source / 'Static' / name).read_bytes()).hexdigest() == digest
+    with Image.open(source / 'Static' / bubble['file']) as image:
+        assert image.mode == 'RGBA' and list(image.size) == bubble['size']
+    shutil.copyfile(source / 'Static' / bubble['file'], target / 'water-bubble.png')
+    (target / 'water-bubble.json').write_text(json.dumps(bubble), encoding='utf-8')
+    print('Survivor: 8 full-source clips and the earlier small water bubble')
 
 
 if __name__ == '__main__':

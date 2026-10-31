@@ -60,6 +60,15 @@ class SurvivorAssetsTests(unittest.TestCase):
                 with Image.open(self.source / master['file']) as a, Image.open(runtime / page['file']) as b:
                     self.assertEqual(a.tobytes(), b.tobytes())
 
+    def test_basic_attack_reuses_the_earlier_water_bubble(self):
+        directory = self.source / 'Static'
+        bubble = json.loads((directory / 'manifest.json').read_text(encoding='utf-8'))
+        self.assertEqual(hashlib.sha256((directory / bubble['source']).read_bytes()).hexdigest(), bubble['source_sha256'])
+        raw = (directory / bubble['file']).read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), bubble['sha256'])
+        self.assertEqual(raw, (ROOT / 'App/Resources/SurvivorGame/water-bubble.png').read_bytes())
+        self.assertTrue(all(0 <= p <= 1 for p in bubble['pivot']))
+
 
 if __name__ == '__main__':
     unittest.main()

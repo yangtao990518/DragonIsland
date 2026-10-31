@@ -4,8 +4,12 @@ import UIKit
 /// Atlas pages are shared; all instances of an enemy use the same clip time.
 /// Never materialize 240 individual UIImages for each monster.
 final class SurvivorTextures {
+    private struct BubbleInfo: Decodable { let size: [Int]; let pivot: [Double] }
     let media: SurvivorMedia
     let root: URL
+    let bubbleTexture: SKTexture
+    let bubblePivot: CGPoint
+    let bubbleSize: CGSize
     private let pages = NSCache<NSString, SKTexture>()
     private var current: [String: (Int, SKTexture)] = [:]
     init() throws {
@@ -14,8 +18,16 @@ final class SurvivorTextures {
             throw CocoaError(.fileNoSuchFile)
         }
         self.root = root
-        media = try JSONDecoder().decode(SurvivorMedia.self, from: Data(contentsOf: root.appendingPathComponent("manifest.json")))
-        try media.validate()
+        let decoded = try JSONDecoder().decode(SurvivorMedia.self, from: Data(contentsOf: root.appendingPathComponent("manifest.json")))
+        try decoded.validate()
+        media = decoded
+        let bubble = try JSONDecoder().decode(BubbleInfo.self, from: Data(contentsOf: root.appendingPathComponent("water-bubble.json")))
+        guard bubble.size.count == 2, bubble.size.allSatisfy({ $0 > 0 }),
+              bubble.pivot.count == 2, bubble.pivot.allSatisfy({ (0...1).contains($0) }),
+              let image = UIImage(contentsOfFile: root.appendingPathComponent("water-bubble.png").path) else { throw CocoaError(.fileReadCorruptFile) }
+        bubbleTexture = SKTexture(image: image)
+        bubblePivot = CGPoint(x: bubble.pivot[0], y: bubble.pivot[1])
+        bubbleSize = CGSize(width: CGFloat(bubble.size[0]), height: CGFloat(bubble.size[1]))
         pages.totalCostLimit = 64 * 1024 * 1024
         pages.countLimit = 12
     }
@@ -63,7 +75,6 @@ final class SurvivorScene: SKScene {
     private var tiles: [SKSpriteNode] = []
     private let tileSize: CGFloat = 240
     private lazy var floorTexture = makeFloor()
-    private lazy var bubbleTexture = makeBubble()
     private lazy var experienceTexture = makeExperience()
 
     init(textures: SurvivorTextures) {
@@ -144,9 +155,13 @@ final class SurvivorScene: SKScene {
         prune(&bubbleNodes, keeping: Set(battle.bubbles.map(\.id)))
         for bubble in battle.bubbles {
             let node = node(for: bubble.id, in: &bubbleNodes)
-            node.texture = bubbleTexture; node.position = point(bubble.position)
+            node.texture = textures.bubbleTexture; node.position = point(bubble.position)
             node.position.y += 22 // Project ground-plane collision into waist-height art.
-            node.size = CGSize(width: bubble.radius * 2.6, height: bubble.radius * 2.6); node.zPosition = 240
+            let width = CGFloat(bubble.radius * 4.2)
+            node.size = CGSize(width: width, height: width * textures.bubbleSize.height / textures.bubbleSize.width)
+            node.anchorPoint = textures.bubblePivot
+            node.zRotation = CGFloat(atan2(bubble.velocity.y, bubble.velocity.x) - .pi)
+            node.zPosition = 240
         }
         prune(&dropNodes, keeping: Set(battle.drops.map(\.id)))
         for drop in battle.drops {
@@ -183,17 +198,6 @@ final class SurvivorScene: SKScene {
                 UIColor(red: 0.26, green: 0.4, blue: 0.35, alpha: 0.35).setFill()
                 c.fillEllipse(in: CGRect(x: x + 9, y: y + 39, width: 12, height: 3))
             } }
-        }
-        return SKTexture(image: image)
-    }
-    private func makeBubble() -> SKTexture {
-        let image = UIGraphicsImageRenderer(size: CGSize(width: 40, height: 40)).image { context in
-            let c = context.cgContext
-            UIColor.cyan.withAlphaComponent(0.18).setFill(); c.fillEllipse(in: CGRect(x: 2, y: 2, width: 36, height: 36))
-            UIColor(red: 0.45, green: 0.91, blue: 1, alpha: 0.95).setStroke(); c.setLineWidth(2)
-            c.strokeEllipse(in: CGRect(x: 5, y: 5, width: 30, height: 30))
-            UIColor.white.withAlphaComponent(0.95).setFill(); c.fillEllipse(in: CGRect(x: 11, y: 8, width: 9, height: 5))
-            UIColor.cyan.withAlphaComponent(0.75).setFill(); c.fillEllipse(in: CGRect(x: 24, y: 27, width: 5, height: 3))
         }
         return SKTexture(image: image)
     }

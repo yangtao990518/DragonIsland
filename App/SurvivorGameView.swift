@@ -158,7 +158,7 @@ struct SurvivorGameView: View {
                     }.frame(height: 340).overlay(RoundedRectangle(cornerRadius: 28).stroke(.cyan.opacity(0.5)))
                     HStack(spacing: 10) {
                         lobbyTag("20分钟", icon: "timer")
-                        lobbyTag("自动攻击", icon: "bubbles.and.sparkles.fill")
+                        lobbyTag("自动攻击", icon: "drop.fill")
                         lobbyTag("升级三选一", icon: "sparkles")
                     }
                     VStack(alignment: .leading, spacing: 12) {
@@ -191,7 +191,7 @@ struct SurvivorGameView: View {
                     SurvivorJoystick(enabled: game.battle.clock.running && game.battle.outcome == nil) { game.movement = $0 }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 8) {
-                        Label("水泡 \(game.battle.rank(.bubble))", systemImage: "bubbles.and.sparkles.fill")
+                        Label("水泡 \(game.battle.rank(.bubble))", systemImage: "drop.fill")
                         if game.battle.rank(.thunder) > 0 { Label("紫霄雷 \(game.battle.rank(.thunder))", systemImage: "bolt.fill") }
                         Text("自动释放").font(.caption2).foregroundStyle(.white.opacity(0.5))
                     }.font(.caption.bold()).padding(14).background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 18))

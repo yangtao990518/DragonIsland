@@ -44,6 +44,8 @@
 
 普通构建只调用 `Scripts/prepare_survivor_assets.py`（已接入 prepare_assets），将正式图集无损转为 App 专用 PNG 文件夹。Widget 不打入这套游戏图集，不需要 PyMatting、原片解码工具或剪映。没有把游戏动作自动加入陪伴日常活动。
 
+普攻按本轮“之前的小水泡”要求，复用 `output/survivor-skills-2026-10-31/dafeiyu-water-bubble-levels-v2.png` 中最左边的初级水泡，固定 [95,330,285,455] 抠图，没有重新生成。原整图、透明水泡及哈希/球心锚点已经归档到 `Art/Survivor/Static/`。旧 README 对整套升级技能的否决不覆盖本轮重新指定小水泡作为普攻的要求。弹体在游戏内按速度方向旋转、位移和增加数量，原图不是视频，不制造额外动画帧。
+
 ## 重做抠像 / 素材审查
 
 普通开发不用重新抠像。确需重算时，准备 PyAV、Pillow、NumPy、OpenCV、SciPy、PyMatting；在 D 盘设置 TEMP/TMP，并从仓库目录运行：
@@ -64,6 +66,6 @@ python Scripts/process_survivor_videos.py pack output/game-rematte --output Art/
 
 ## 当前验证边界
 
-本机4项素材回归通过：原片哈希、完整帧序及停留、图集透明度/尺寸/哈希，以及 WebP→PNG 像素无损。初次云端新战斗/时序规则测试通过，App / Widget 编译结果将在下方补充。
+本机5项素材回归通过：原片哈希、完整帧序及停留、图集透明度/尺寸/哈希、WebP→PNG 像素无损，以及旧小水泡的原图/透明图/安装资源一致性。初次云端158项 Swift 测试通过，App / Widget 最终编译结果将在下方补充。
 
 尚未运行新的模拟器或真机游戏试玩。数值、地图及 UI 为首轮实现；不宣称已完成20分钟真机流畅度、耗电、内存或平衡性验收。源码本身不会更新手机上已有 IPA。

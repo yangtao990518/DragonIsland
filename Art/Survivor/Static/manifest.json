@@ -1,0 +1,30 @@
+{
+  "method": "survivor-fixed-cells-cf-screen-foreground-v2",
+  "source": "water-bubble-source.png",
+  "source_sha256": "05fb74e47d323d8f2fc20bb4cf2c16300e2114575b962ad437aa38ce07da5360",
+  "crop_xyxy": [
+    95,
+    330,
+    285,
+    455
+  ],
+  "trim_xyxy": [
+    14,
+    12,
+    181,
+    108
+  ],
+  "file": "water-bubble.png",
+  "sha256": "763cb6b9b899beea894050e6375e06fd96715d61ccabbe7ea4343004abaf6e48",
+  "size": [
+    167,
+    96
+  ],
+  "pivot": [
+    0.2754491017964072,
+    0.5
+  ],
+  "native_direction": "left",
+  "generated_poses": false,
+  "description": "Earlier first-level water bubble, explicitly requested again for the basic attack"
+}

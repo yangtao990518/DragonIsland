@@ -30,7 +30,7 @@ enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
     var symbol: String {
         switch self {
         case .thunder: return "bolt.fill"
-        case .bubble: return "bubbles.and.sparkles.fill"
+        case .bubble: return "drop.fill"
         case .power: return "sparkles"
         case .haste: return "timer"
         case .stride: return "wind"
