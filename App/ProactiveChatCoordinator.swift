@@ -161,7 +161,8 @@ final class ProactiveChatCoordinator: ObservableObject {
         }
         let state = ChatReminderAttributes.ContentState(preview: String(message.text.prefix(100)), unreadCount: total, sentAt: message.createdAt)
         let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(3600), relevanceScore: 100)
-        let current = activities.first { $0.attributes.conversationID == chat.id && $0.attributes.animationStartedAt != nil && [.active, .stale].contains($0.activityState) }
+        let current = activities.first { $0.attributes.conversationID == chat.id && $0.attributes.characterID == character.id
+            && $0.attributes.animationStartedAt != nil && [.active, .stale].contains($0.activityState) }
         for activity in activities where activity.id != current?.id { await activity.end(activity.content, dismissalPolicy: .immediate) }
         if let current {
             guard current.content.state != state else { return }
