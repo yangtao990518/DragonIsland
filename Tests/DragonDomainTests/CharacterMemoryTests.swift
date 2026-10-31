@@ -14,7 +14,7 @@ final class CharacterMemoryFileTests: XCTestCase {
         try files.save(xiao); try files.save(fish)
         XCTAssertEqual(try files.actualByteCount(of: xiao), xiao.data.count)
         XCTAssertGreaterThan(xiao.byteCount, xiao.text.count)
-        XCTAssertNotEqual(try files.url(for: xiao).deletingLastPathComponent(), files.url(for: fish).deletingLastPathComponent())
+        XCTAssertNotEqual(try files.url(for: xiao).deletingLastPathComponent(), try files.url(for: fish).deletingLastPathComponent())
         xiao.text = "现在喜欢清茶。"; try files.save(xiao)
         XCTAssertEqual(try files.documents(for: "xiaobai").count, 1)
         XCTAssertEqual(try files.documents(for: "xiaobai").first?.text, xiao.text)
