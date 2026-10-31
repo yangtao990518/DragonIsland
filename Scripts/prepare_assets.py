@@ -98,6 +98,8 @@ def main():
     prepare_home_buttons()
     from prepare_builtin_stickers import prepare as prepare_builtin_stickers
     prepare_builtin_stickers()
+    from prepare_survivor_assets import prepare as prepare_survivor_assets
+    prepare_survivor_assets()
 
 
 if __name__ == "__main__":

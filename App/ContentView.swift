@@ -27,6 +27,7 @@ struct ContentView: View {
     @State private var detailCharacter: CompanionCharacter?
     @State private var legacyHomePanel: HomeShortcutKind?
     @State private var showingMemoryBrowser = false
+    @State private var showingSurvivorGame = false
     private let homeScenes = HomeSceneAnimation.load()
     @AppStorage("characterBrowsingMode") private var characterBrowsingMode = "cards"
     @State private var browsedCharacterID = "xiaobai"
@@ -129,6 +130,7 @@ struct ContentView: View {
             HomeShortcutPanel(store: store, character: store.displayCharacter, kind: kind)
         }
         .sheet(isPresented: $showingMemoryBrowser) { NavigationStack { MemoryBrowser(store: chatStore) } }
+        .fullScreenCover(isPresented: $showingSurvivorGame) { SurvivorGameView() }
         .task {
             #if DEBUG
             let args = ProcessInfo.processInfo.arguments
@@ -166,9 +168,10 @@ struct ContentView: View {
 
     @ViewBuilder private var worldPage: some View {
         if let scene = homeScenes.first(where: { $0.characterID == store.displayCharacter.id }) {
-            DafeiyuHomePage(store: store, chat: chatStore, clip: scene, visible: tab == .world, controls: {
+            DafeiyuHomePage(store: store, chat: chatStore, clip: scene, visible: tab == .world && !showingSurvivorGame, controls: {
                 if let session = store.session { activeSession(session) }
                 else { setupSession }
+                SurvivorGameEntry { showingSurvivorGame = true }
             }, openCharacters: { tab = .characters }, openDetails: { detailCharacter = store.displayCharacter })
         } else { legacyWorldPage }
     }
@@ -208,6 +211,7 @@ struct ContentView: View {
                 setupSession
             }
             islandPreview
+            SurvivorGameEntry { showingSurvivorGame = true }
             HStack(spacing: 6) {
                 Image(systemName: "heart")
                 Text("把一小段日常，留给喜欢的角色。")

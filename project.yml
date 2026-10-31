@@ -24,8 +24,13 @@ targets:
         excludes:
           - Resources/BuiltinStickers
           - Resources/BuiltinStickers/**
+          - Resources/SurvivorGame
+          - Resources/SurvivorGame/**
       - Shared
       - path: App/Resources/BuiltinStickers
+        type: folder
+        buildPhase: resources
+      - path: App/Resources/SurvivorGame
         type: folder
         buildPhase: resources
     info:

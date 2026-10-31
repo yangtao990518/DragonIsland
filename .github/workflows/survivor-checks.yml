@@ -1,0 +1,59 @@
+name: Survivor game compile and rules
+"on":
+  push:
+    branches: [codex/chat-media-tools]
+    paths:
+      - 'App/**'
+      - 'Shared/Models/Survivor*'
+      - 'Art/Survivor/**'
+      - 'Scripts/*survivor*'
+      - 'Tests/**/Survivor*'
+      - 'Tests/test_survivor*'
+      - '.github/workflows/survivor-checks.yml'
+      - 'project.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile:
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install build tools
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
+      - name: Domain regression tests
+        run: swift test
+      - name: Prepare and verify full-frame assets
+        run: |
+          python3 Scripts/prepare_assets.py
+          python3 -m unittest discover -s Tests -p 'test_survivor*.py' -v
+          python3 -c "import sys; sys.path.insert(0, 'Scripts'); from prepare_unread_avatar import prepare; prepare(register=False)"
+          python3 Scripts/prepare_motion.py
+          python3 Scripts/prepare_unread_avatar.py
+      - name: Compile App and Widget only
+        run: |
+          set -o pipefail
+          xcodegen generate --spec project.yml
+          mkdir -p build
+          xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build/SurvivorDerivedData \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build 2>&1 | tee build/survivor-build.log
+          test -d build/SurvivorDerivedData/Build/Products/Release-iphoneos/DragonIsland.app/PlugIns/DragonIslandWidget.appex
+          test -f build/SurvivorDerivedData/Build/Products/Release-iphoneos/DragonIsland.app/SurvivorGame/manifest.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: survivor-compile-log
+          path: build/survivor-build.log
+          if-no-files-found: ignore
+          retention-days: 7

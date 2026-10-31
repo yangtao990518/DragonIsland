@@ -2,7 +2,7 @@ import Foundation
 
 enum SurvivorRuleError: Error { case invalidConfiguration, invalidDelta }
 
-/// Pure rules for the proposed survivor game. No rendering or App entry yet.
+/// Pure configuration shared by the native survivor game and its tests.
 struct SurvivorRunConfiguration: Codable, Equatable, Sendable {
     struct Stage: Codable, Equatable, Sendable {
         let id: String

@@ -27,6 +27,7 @@ App/Resources/VideoActions.json
 App/Resources/HomeScenes/
 App/Resources/BuiltinStickers/
 App/Resources/BuiltinStickers.json
+App/Resources/SurvivorGame/
 Art/HomeScenes/**/source.mp4
 Shared/Resources/Companion.xcassets/*/
 
