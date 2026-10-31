@@ -100,5 +100,9 @@ SpriteKit图集与纹理共享、对象复用、空间分区碰撞、批量掉�
 
 新代码目前只有独立的20分钟阶段配置与计时／多原因暂停规则，尚无可玩SpriteKit场景、正式战斗素材或新IPA。新增测试会验证完整72,000个60Hz时步、20分钟边界、阶段连续性、升级／后台／菜单暂停，以及恢复后不计离线时间。实际测试结果另行记录。
 
+### 规则底座验证结果
+
+源码f438cf30dd0a4d6bcab90e82f632d66226505b24的[云端任务41206327371](https://github.com/yangtao990518/DragonIsland/actions/runs/41206327371)成功：147项Swift测试零失败，包括新增8项幸存者规则测试。72,000个60Hz时步完整到达1200秒，多个暂停原因独立恢复及存档计时检查通过。该结果只验证规则模块，不代表已完成游戏画面、20分钟真机性能／耗电测试或App／Widget重新编译；未启动模拟器、未生成IPA。
+
 - [SpriteKit纹理图集](https://developer.apple.com/documentation/spritekit/sktextureatlas)
 - [SpriteKit绘制性能](https://developer.apple.com/documentation/spritekit/maximizing-node-drawing-performance)
