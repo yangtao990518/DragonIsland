@@ -99,15 +99,24 @@ struct ChatAttachment: Codable, Equatable, Identifiable, Sendable {
 
 struct ChatMediaFiles: Sendable {
     let directory: URL
-    init(historyURL: URL) { directory = historyURL.deletingLastPathComponent().appendingPathComponent("Media", isDirectory: true) }
+    private let resourcesURL: URL?
+    init(historyURL: URL, resourcesURL: URL? = Bundle.main.resourceURL) {
+        directory = historyURL.deletingLastPathComponent().appendingPathComponent("Media", isDirectory: true)
+        self.resourcesURL = resourcesURL
+    }
+    func localURL(for asset: ChatMediaAsset) -> URL { directory.appendingPathComponent(asset.filename) }
     func url(for asset: ChatMediaAsset) -> URL {
-        let local = directory.appendingPathComponent(asset.filename)
+        let local = localURL(for: asset)
         if FileManager.default.fileExists(atPath: local.path) { return local }
         // Built-in files stay in the read-only App bundle. Only actually used
         // sticker snapshots enter media backups; importing the pack uses no disk copies.
-        return Bundle.main.url(forResource: asset.sha256, withExtension: asset.fileExtension)
-            ?? Bundle.main.url(forResource: asset.sha256, withExtension: asset.fileExtension, subdirectory: "BuiltinStickers")
-            ?? local
+        if let resourcesURL {
+            for folder in [resourcesURL, resourcesURL.appendingPathComponent("BuiltinStickers", isDirectory: true)] {
+                let bundled = folder.appendingPathComponent(asset.filename)
+                if FileManager.default.fileExists(atPath: bundled.path) { return bundled }
+            }
+        }
+        return local
     }
     func data(for asset: ChatMediaAsset) throws -> Data {
         try asset.validate()
@@ -121,8 +130,11 @@ struct ChatMediaFiles: Sendable {
     @discardableResult func store(_ data: Data) throws -> ChatMediaAsset {
         let asset = try ChatMediaAsset.inspect(data)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try data.write(to: url(for: asset), options: .atomic)
-        for item in [directory, url(for: asset)] {
+        // Read lookup may resolve into the signed, read-only bundle. Writes and
+        // metadata updates must ALWAYS target the writable user media directory.
+        let destination = localURL(for: asset)
+        try data.write(to: destination, options: .atomic)
+        for item in [directory, destination] {
             var url = item; var values = URLResourceValues(); values.isExcludedFromBackup = true
             try url.setResourceValues(values)
             #if os(iOS)

@@ -11,14 +11,12 @@ private enum NewChatSheet: String, Identifiable {
 struct ChatPage: View {
     @ObservedObject var store: ChatStore
     @ObservedObject var tools: ChatAppTools
-    @ObservedObject var proactive: ProactiveChatCoordinator
     @State private var path: [UUID] = []
     @State private var sheet: NewChatSheet?
     @State private var pendingID: UUID?
     @State private var search = ""
     @State private var deleting: ChatConversation?
     @State private var showingBackup = false
-    @State private var showingProactive = false
     @State private var configuring: CompanionCharacter?
 
     private var filtered: [ChatConversation] {
@@ -87,8 +85,6 @@ struct ChatPage: View {
                             Button("\(character.name) · AI 与人格") { configuring = character }
                         }
                         Button("本地备份", systemImage: "externaldrive") { showingBackup = true }
-                        Button("主动聊天", systemImage: "bubble.left.and.exclamationmark.bubble.right") { showingProactive = true }
-                            .accessibilityIdentifier("proactiveChatSettings")
                     } label: { Image(systemName: "slider.horizontal.3") }
                     .accessibilityLabel("聊天设置").accessibilityIdentifier("chatPreferences")
                 }
@@ -114,7 +110,6 @@ struct ChatPage: View {
             ChatAppApprovalView(tools: tools, approval: approval)
         }
         .sheet(isPresented: $showingBackup) { NavigationStack { ChatBackupView(store: store) } }
-        .sheet(isPresented: $showingProactive) { NavigationStack { ProactiveChatSettingsView(store: store, coordinator: proactive) } }
         .onAppear { openRequestedConversation() }
         .onChange(of: store.requestedConversationID) { _, _ in openRequestedConversation() }
         .sheet(item: $configuring) { character in NavigationStack { AIChatSettingsView(store: store, character: character) } }
@@ -277,6 +272,7 @@ private struct ChatRoom: View {
     @State private var photo: PhotosPickerItem?
     @State private var importingImage = false
     @State private var choosingSticker = false
+    @State private var showingAttachments = false
     @State private var importing = false
     @State private var editingGroup = false
     @State private var confirmingClear = false
@@ -432,52 +428,98 @@ private struct ChatRoom: View {
         .id(id)
     }
 
+    private var canSend: Bool {
+        (!trimmed.isEmpty || !(chat?.draftAttachments ?? []).isEmpty)
+            && trimmed.count <= 4000 && !replying && !importing && store.ready
+    }
+
     private var composer: some View {
-        VStack(spacing: 6) {
-            if !(chat?.draftAttachments ?? []).isEmpty {
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(chat?.draftAttachments ?? []) { item in
-                            VStack {
-                                ChatAttachmentView(attachment: item, media: store.media, maximum: 70)
-                                Button("移除") { store.detach(item.id, in: id) }.font(.caption).disabled(replying)
-                            }
-                        }
-                    }
-                }
-            }
-            HStack {
-                PhotosPicker(selection: $photo, matching: .images) { Label("图片", systemImage: "photo") }
-                    .accessibilityIdentifier("chatAddImage")
-                Button("文件", systemImage: "folder") { importingImage = true }.accessibilityIdentifier("chatImageFromFiles")
-                Button("表情", systemImage: "face.smiling") { choosingSticker = true }.accessibilityIdentifier("chatOpenStickers")
-                Spacer()
-                if importing { ProgressView() }
-            }.font(.caption).disabled(replying || importing || !store.ready)
-            HStack(alignment: .bottom, spacing: 10) {
-                TextField("说点什么…", text: $draft, axis: .vertical)
-                    .lineLimit(1...5).focused($composing)
-                    .padding(12).background(AppPalette.background, in: RoundedRectangle(cornerRadius: 18))
-                    .accessibilityIdentifier("chatInput")
+        VStack(spacing: 10) {
+            if !(chat?.draftAttachments ?? []).isEmpty { pendingMedia }
+            if showingAttachments { attachmentTools }
+            HStack(alignment: .bottom, spacing: 9) {
                 Button {
-                    if store.send(draft, in: id) { draft = "" }
+                    composing = false
+                    withAnimation(.easeOut(duration: 0.18)) { showingAttachments.toggle() }
+                } label: {
+                    Image(systemName: showingAttachments ? "xmark" : "plus")
+                        .font(.system(size: 19, weight: .medium)).frame(width: 40, height: 44)
+                        .background(AppPalette.accent.opacity(0.07), in: RoundedRectangle(cornerRadius: 14))
+                }.buttonStyle(.plain).foregroundStyle(AppPalette.accent)
+                    .accessibilityLabel(showingAttachments ? "收起附件" : "添加图片或文件")
+                    .accessibilityIdentifier("chatAttachmentTools").disabled(replying || importing || !store.ready)
+                TextField("想和她们说些什么？", text: $draft, axis: .vertical)
+                    .font(.system(size: 16)).lineLimit(1...5).focused($composing)
+                    .padding(.horizontal, 13).padding(.vertical, 12)
+                    .frame(minHeight: 44).background(AppPalette.accent.opacity(0.045), in: RoundedRectangle(cornerRadius: 16))
+                    .accessibilityIdentifier("chatInput")
+                Button { composing = false; showingAttachments = false; choosingSticker = true } label: {
+                    Image(systemName: "face.smiling").font(.system(size: 23)).frame(width: 32, height: 44)
+                }.buttonStyle(.plain).foregroundStyle(AppPalette.accent)
+                    .disabled(replying || importing || !store.ready)
+                    .accessibilityLabel("表情包").accessibilityIdentifier("chatOpenStickers")
+                Button {
+                    if store.send(draft, in: id) { draft = ""; showingAttachments = false }
                 } label: {
                     Image(systemName: "arrow.up").font(.system(size: 18, weight: .semibold))
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.borderedProminent).buttonBorderShape(.circle).tint(AppPalette.accent)
-                .foregroundStyle(AppPalette.onAccent)
-                .disabled((trimmed.isEmpty && (chat?.draftAttachments ?? []).isEmpty) || trimmed.count > 4000 || replying || importing || !store.ready)
-                .accessibilityLabel("发送").accessibilityIdentifier("sendChat")
+                        .frame(width: 42, height: 44)
+                        .foregroundStyle(canSend ? AppPalette.onAccent : AppPalette.accent.opacity(0.4))
+                        .background(canSend ? AppPalette.accent : AppPalette.accent.opacity(0.09), in: RoundedRectangle(cornerRadius: 14))
+                }.buttonStyle(.plain).disabled(!canSend)
+                    .accessibilityLabel("发送").accessibilityIdentifier("sendChat")
             }
+            if importing { HStack { ProgressView(); Text("正在添加图片…").font(.caption).foregroundStyle(.secondary); Spacer() } }
             if draft.count > 3600 {
-                Text("\(draft.count)/4000").font(.caption2)
-                    .foregroundStyle(draft.count > 4000 ? .red : .secondary)
+                Text("\(draft.count)/4000").font(.caption2).foregroundStyle(draft.count > 4000 ? .red : .secondary)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
-        .padding(.horizontal, 14).padding(.vertical, 10)
-        .background(AppPalette.surface)
+        .padding(11).background(AppPalette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(AppPalette.accent.opacity(0.08), lineWidth: 1))
+        .shadow(color: AppPalette.accent.opacity(0.055), radius: 16, y: -3)
+        .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 6)
+        .background(AppPalette.background.opacity(0.95))
+    }
+
+    private var attachmentTools: some View {
+        HStack(spacing: 12) {
+            PhotosPicker(selection: $photo, matching: .images) {
+                attachmentLabel("相册", symbol: "photo.on.rectangle.angled")
+            }.accessibilityIdentifier("chatAddImage")
+            Button { importingImage = true } label: { attachmentLabel("文件图片", symbol: "folder") }
+                .accessibilityIdentifier("chatImageFromFiles")
+            Spacer()
+        }.buttonStyle(.plain).foregroundStyle(AppPalette.accent)
+            .disabled(replying || importing || !store.ready)
+    }
+    private func attachmentLabel(_ title: String, symbol: String) -> some View {
+        VStack(spacing: 7) {
+            Image(systemName: symbol).font(.system(size: 22)).frame(width: 56, height: 48)
+                .background(AppPalette.accent.opacity(0.065), in: RoundedRectangle(cornerRadius: 16))
+            Text(title).font(.caption2)
+        }.padding(.horizontal, 3).padding(.vertical, 5)
+    }
+    private var pendingMedia: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("待发送 · \(chat?.draftAttachments?.count ?? 0)/4")
+                .font(.caption2).foregroundStyle(.secondary)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(chat?.draftAttachments ?? []) { item in
+                        ChatAttachmentView(attachment: item, media: store.media, maximum: 68)
+                            .frame(width: 76, height: 76)
+                            .background(AppPalette.accent.opacity(0.045), in: RoundedRectangle(cornerRadius: 13))
+                            .overlay(alignment: .topTrailing) {
+                                Button { store.detach(item.id, in: id) } label: {
+                                    Image(systemName: "xmark.circle.fill").symbolRenderingMode(.palette)
+                                        .foregroundStyle(.white, AppPalette.accent).font(.system(size: 21))
+                                        .frame(width: 32, height: 32)
+                                }.buttonStyle(.plain).disabled(replying).accessibilityLabel("移除待发附件")
+                            }
+                    }
+                }
+            }
+        }
     }
 }
 

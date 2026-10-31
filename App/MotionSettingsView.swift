@@ -3,53 +3,119 @@ import SwiftUI
 struct MotionSettingsView: View {
     @ObservedObject var store: CompanionStore
     let character: CompanionCharacter
-    @State private var previewAction = "random"
+    @State private var previewAction = "idle"
     private var settings: MotionSettings { store.settings(for: character) }
+    private var previewTitle: String {
+        switch previewAction {
+        case "random": return "随机"
+        case "idle": return "待机"
+        case "walk_left": return "左走"
+        case "walk_right": return "右走"
+        case "roll": return "打滚"
+        default: return character.motionProfile?.dailyActions?.first { $0.id == previewAction }?.title ?? "待机"
+        }
+    }
     var body: some View {
-        WorldPage {
-            PageHeading(eyebrow: "DAILY LIFE", title: "\(character.name)的日常", subtitle: "分别挑选她喜欢的动作，设置会单独保存。")
-            VStack(spacing: 12) {
+        ScrollView {
+            VStack(spacing: 18) {
+                HStack(spacing: 8) {
+                    Image(systemName: "sparkle").foregroundStyle(MoonPalette.gold)
+                    Text(character.name).font(.system(size: 16, weight: .medium, design: .serif))
+                    Image(systemName: "sparkle").foregroundStyle(MoonPalette.gold)
+                }.padding(.top, 8)
+                previewStage
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        previewButton("随机", id: "random")
+                        previewButton("待机", id: "idle")
+                        previewButton("左走", id: "walk_left")
+                        previewButton("右走", id: "walk_right")
+                        previewButton("打滚", id: "roll")
+                        ForEach(character.motionProfile?.dailyActions ?? []) { item in previewButton(item.title, id: item.id) }
+                    }.padding(2)
+                }
+                MoonCard {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Toggle(isOn: binding(\.automatic)) {
+                            Label("岛上自动活动", systemImage: "sparkles")
+                                .font(.system(size: 18, weight: .semibold, design: .serif))
+                        }.accessibilityIdentifier("automaticMotionToggle")
+                        Text("下方开关决定灵动岛自动活动。上方只在 App 内预览，不会改变开关。")
+                            .font(.caption).foregroundStyle(MoonPalette.ink.opacity(0.6)).lineSpacing(4)
+                    }
+                }.disabled(store.busy)
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                    actionCard("走路", subtitle: "走到边边，再回来", symbol: "figure.walk", enabled: binding(\.walk), id: "walkMotionToggle", action: "walk_right")
+                    actionCard("打滚", subtitle: "向两边打滚", symbol: "arrow.2.circlepath", enabled: binding(\.roll), id: "rollMotionToggle", action: "roll")
+                    ForEach(character.motionProfile?.dailyActions ?? []) { item in
+                        actionCard(item.title, subtitle: item.id.hasPrefix("dance") ? "原时长完整播放" : "她的专属日常",
+                                   symbol: item.id.hasPrefix("dance") ? "music.note" : item.id == "pet_walk" ? "pawprint.fill" : "sparkles",
+                                   enabled: actionBinding(item.id), id: "dailyMotionToggle_\(item.id)", action: item.id)
+                    }
+                }.disabled(store.busy)
+                Text("每个角色独立保存。关闭全部动作时保留待机；舞蹈完整播放，已确认的两分钟排程保持不变。")
+                    .font(.caption).foregroundStyle(MoonPalette.ink.opacity(0.6)).lineSpacing(4).frame(maxWidth: .infinity, alignment: .leading)
+                Text("她正在陪伴时设置立即生效。减弱动态效果或息屏低亮度时，岛上显示静态人物。")
+                    .font(.caption2).foregroundStyle(MoonPalette.ink.opacity(0.5)).frame(maxWidth: .infinity, alignment: .leading)
+            }.padding(18).padding(.bottom, 18)
+        }
+        .background { MoonBackdrop().ignoresSafeArea() }
+        .foregroundStyle(MoonPalette.ink).tint(MoonPalette.violet)
+        .toolbarBackground(MoonPalette.paper, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
+    }
+    private var previewStage: some View {
+        ZStack(alignment: .bottom) {
+            MoonBackdrop(night: true)
+            Group {
                 if previewAction == "dance1" || previewAction == "dance2" {
                     FullVideoActionPreview(characterID: character.id, action: previewAction)
-                        .id("\(character.id)-\(previewAction)")
-                        .frame(height: 250)
+                        .id("\(character.id)-\(previewAction)").padding(.horizontal, 12).padding(.bottom, 30)
                 } else {
                     MotionArtworkPreview(settings: settings, action: previewAction, scene: store.islandScene, character: character)
-                        .frame(height: 220).frame(maxWidth: .infinity)
+                        .padding(.horizontal, 8).padding(.bottom, 25)
                 }
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 88))], spacing: 10) {
-                    previewButton("随机", id: "random")
-                    previewButton("待机", id: "idle")
-                    previewButton("右走", id: "walk_right")
-                    previewButton("左走", id: "walk_left")
-                    previewButton("打滚", id: "roll")
-                    ForEach(character.motionProfile?.dailyActions ?? []) { item in
-                        previewButton(item.title, id: item.id)
-                    }
+            }.frame(height: 236)
+            Text("✦  当前：\(previewTitle)  ✦")
+                .font(.system(size: 11, weight: .medium, design: .serif)).foregroundStyle(.white)
+                .padding(.horizontal, 18).padding(.vertical, 6)
+                .background(MoonPalette.violet.opacity(0.9), in: Capsule())
+                .overlay(Capsule().stroke(MoonPalette.gold.opacity(0.8), lineWidth: 1))
+                .padding(.bottom, 9).accessibilityIdentifier("motionCurrentAction")
+        }.frame(height: 236).clipShape(RoundedRectangle(cornerRadius: 26))
+            .overlay(alignment: .topTrailing) {
+                Label("App 内预览", systemImage: "play.fill").font(.system(size: 9))
+                    .foregroundStyle(.white).padding(.horizontal, 9).padding(.vertical, 6)
+                    .background(.black.opacity(0.4), in: Capsule()).padding(12)
+            }
+            .overlay(RoundedRectangle(cornerRadius: 26).inset(by: 3).stroke(MoonPalette.gold.opacity(0.8), lineWidth: 1))
+    }
+    private func actionCard(_ title: String, subtitle: String, symbol: String, enabled: Binding<Bool>, id: String, action: String) -> some View {
+        MoonCard {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: symbol).font(.system(size: 22)).foregroundStyle(MoonPalette.violet)
+                    Spacer(minLength: 3)
+                    Toggle(title, isOn: enabled).labelsHidden().accessibilityLabel(title + "岛上自动活动").accessibilityIdentifier(id)
                 }
-                Text(previewAction.hasPrefix("dance") ? "完整片段预览 · 播放结束后可重播" : "动作预览 · 轻点小人物和她打招呼")
-                    .font(.caption).foregroundStyle(.secondary)
-            }.worldCard()
-            VStack(alignment: .leading, spacing: 17) {
-                Toggle("自动活动", isOn: binding(\.automatic))
-                    .accessibilityIdentifier("automaticMotionToggle")
-                Text("开始陪伴后按下方勾选的动作自动活动。关闭自动活动时显示静态人物。")
-                    .font(.caption).foregroundStyle(.secondary)
-                Divider()
-                Toggle("走路 · 走到边边再回来", isOn: binding(\.walk))
-                    .accessibilityIdentifier("walkMotionToggle")
-                Toggle("打滚 · 向两边滚，再回来", isOn: binding(\.roll))
-                    .accessibilityIdentifier("rollMotionToggle")
-                ForEach(character.motionProfile?.dailyActions ?? []) { item in
-                    Toggle(item.title + (item.id.hasPrefix("dance") ? " · 完整播放" : " · 来回活动"), isOn: actionBinding(item.id))
-                        .accessibilityIdentifier("dailyMotionToggle_\(item.id)")
-                }
-                Text("每个动作独立开关，全部关闭时只待机。舞蹈按完整片段播放，不截短或加速；勾选舞蹈后以两分钟安排所有已选动作。")
-                    .font(.caption).foregroundStyle(.secondary).lineSpacing(4)
-            }.disabled(store.busy).worldCard()
-            Text("设置仅应用于\(character.name)；她正在陪伴时立即生效。减弱动态效果或息屏低亮度时，岛上显示静态人物。")
-                .font(.caption).foregroundStyle(.secondary)
+                Text(title).font(.system(size: 18, weight: .semibold, design: .serif))
+                Text(subtitle).font(.caption2).foregroundStyle(MoonPalette.ink.opacity(0.55))
+                Button { previewAction = action } label: {
+                    Label("预览动作", systemImage: "play.fill").font(.caption)
+                        .frame(maxWidth: .infinity).padding(.vertical, 8)
+                        .background(MoonPalette.lavender.opacity(0.18), in: Capsule())
+                }.buttonStyle(.plain).foregroundStyle(MoonPalette.violet)
+            }
         }
+    }
+    private func previewButton(_ title: String, id: String) -> some View {
+        Button { previewAction = id } label: {
+            Text(title).font(.system(size: 12, weight: .medium))
+                .padding(.horizontal, 16).padding(.vertical, 9)
+                .foregroundStyle(previewAction == id ? .white : MoonPalette.violet)
+                .background(previewAction == id ? MoonPalette.violet : .white.opacity(0.8), in: Capsule())
+                .overlay(Capsule().stroke(MoonPalette.gold.opacity(0.3), lineWidth: 1))
+        }.buttonStyle(.plain).accessibilityIdentifier("dailyMotion_\(id)")
+            .accessibilityAddTraits(previewAction == id ? .isSelected : [])
     }
     private func actionBinding(_ id: String) -> Binding<Bool> {
         switch id {
@@ -60,17 +126,9 @@ struct MotionSettingsView: View {
         default: return .constant(false)
         }
     }
-    private func previewButton(_ title: String, id: String) -> some View {
-        Button(title) { previewAction = id }
-            .buttonStyle(.bordered)
-            .tint(previewAction == id ? AppPalette.accent : .secondary)
-            .accessibilityIdentifier("dailyMotion_\(id)")
-            .accessibilityAddTraits(previewAction == id ? .isSelected : [])
-    }
     private func binding(_ key: WritableKeyPath<MotionSettings, Bool>) -> Binding<Bool> {
         Binding(get: { settings[keyPath: key] }, set: { value in
-            var updated = settings
-            updated[keyPath: key] = value
+            var updated = settings; updated[keyPath: key] = value
             Task { await store.setMotionSettings(updated, for: character) }
         })
     }

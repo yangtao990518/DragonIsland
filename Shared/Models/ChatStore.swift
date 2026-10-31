@@ -27,10 +27,10 @@ final class ChatStore: ObservableObject {
 
     init(characters: [CompanionCharacter], file: ChatHistoryFile = .standard,
          provider: any ChatReplyProvider = DeepSeekChatReplyProvider(secrets: MissingAISecret()),
-         builtinStickers: [CharacterSticker] = BuiltinStickerCatalog.load()) {
+         builtinStickers: [CharacterSticker] = BuiltinStickerCatalog.load(), mediaFiles: ChatMediaFiles? = nil) {
         self.characters = characters
         self.file = file
-        self.media = ChatMediaFiles(historyURL: file.url)
+        self.media = mediaFiles ?? ChatMediaFiles(historyURL: file.url)
         self.provider = provider
         self.builtinStickers = builtinStickers
         reload()
@@ -341,15 +341,33 @@ final class ChatStore: ObservableObject {
                 }
             }
             var state = value.proactive ?? ProactiveChatState()
-            if state.settings != settings {
-                for index in state.slots.indices where [.planned, .ready].contains(state.slots[index].status) {
+            let ids = Set(state.settings.characters.keys).union(settings.characters.keys)
+            for id in ids where state.settings.preference(for: id) != settings.preference(for: id) {
+                for index in state.slots.indices where state.slots[index].characterID == id && [.planned, .ready].contains(state.slots[index].status) {
                     state.slots[index].status = .cancelled
                 }
-                state.policyID = UUID()
+                var policies = state.characterPolicies ?? [:]
+                policies[id] = UUID()
+                state.characterPolicies = policies
+                state.completedWindows?.removeValue(forKey: id)
             }
             state.settings = settings
             value.proactive = state
         }
+    }
+
+    @discardableResult
+    func saveProactivePreference(_ preference: ProactiveCharacterSettings, for characterID: String) -> Bool {
+        guard availableIDs.contains(characterID) else { error = ProactiveChatError.invalidSettings.localizedDescription; return false }
+        var settings = proactiveState.settings
+        // The former master switch may be off with role switches still on.
+        // Enabling one role must not accidentally enable the others.
+        if !settings.enabled {
+            for id in Array(settings.characters.keys) { settings.characters[id]?.enabled = false }
+        }
+        settings.characters[characterID] = preference
+        settings.enabled = settings.characters.values.contains { $0.enabled }
+        return saveProactiveSettings(settings)
     }
 
     func planProactiveChats(now: Date = .now) -> [UUID] {
@@ -363,7 +381,7 @@ final class ChatStore: ObservableObject {
         preparingProactiveIDs.insert(slotID)
         defer { preparingProactiveIDs.remove(slotID) }
         do {
-            guard proactiveState.settings.enabled, slot.policyID == proactiveState.policyID,
+            guard proactiveState.settings.enabled, slot.policyID == proactiveState.policy(for: slot.characterID),
                   proactiveState.settings.characters[slot.characterID]?.enabled == true,
                   let chat = conversation(slot.conversationID), chat.characterIDs.contains(slot.characterID),
                   let character = character(slot.characterID) else { throw ProactiveChatError.unavailable }
@@ -382,7 +400,7 @@ final class ChatStore: ObservableObject {
             guard !answer.isEmpty, answer.count <= 1800 else { throw ChatError.emptyReply }
             guard slot.scheduledAt > .now else { throw ProactiveChatError.expired }
             guard change({ value in
-                guard var state = value.proactive, state.settings.enabled, state.policyID == slot.policyID,
+                guard var state = value.proactive, state.settings.enabled, state.policy(for: slot.characterID) == slot.policyID,
                       state.settings.characters[slot.characterID]?.enabled == true,
                       let index = state.slots.firstIndex(where: { $0.id == slotID && $0.status == .planned }),
                       value.conversations.contains(where: { $0.id == chat.id && $0.characterIDs.contains(character.id) }) else { throw ProactiveChatError.unavailable }
@@ -420,11 +438,12 @@ final class ChatStore: ObservableObject {
         }
     }
 
-    func retryProactivePreparations(now: Date = .now) {
+    func retryProactivePreparations(now: Date = .now, characterID: String? = nil) {
         _ = change { value in
             guard let state = value.proactive, state.settings.enabled else { return }
             for index in state.slots.indices where state.slots[index].status == .failed
-                && state.slots[index].policyID == state.policyID && state.slots[index].scheduledAt > now.addingTimeInterval(60) {
+                && (characterID == nil || state.slots[index].characterID == characterID)
+                && state.slots[index].policyID == state.policy(for: state.slots[index].characterID) && state.slots[index].scheduledAt > now.addingTimeInterval(60) {
                 value.proactive?.slots[index].status = .planned
                 value.proactive?.slots[index].failure = nil
             }

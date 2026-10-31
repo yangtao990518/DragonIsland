@@ -44,6 +44,7 @@ final class CharacterInterfaceTests: XCTestCase {
         let card = app.buttons["characterCard-xiaobai"]
         XCTAssertTrue(card.waitForExistence(timeout: 8))
         card.tap()
+        app.buttons["characterDossierMore"].tap()
         let chibi = app.buttons["artwork-chibi"]
         XCTAssertTrue(chibi.waitForExistence(timeout: 5))
         chibi.tap()
@@ -93,6 +94,7 @@ final class CharacterInterfaceTests: XCTestCase {
         let app = start(["--preview-characters", "--appearance-light"])
         XCTAssertTrue(app.buttons["characterCard-xiaobai"].waitForExistence(timeout: 8))
         app.buttons["characterCard-xiaobai"].tap()
+        app.buttons["characterDossierMore"].tap()
         XCTAssertTrue(app.buttons["artwork-chibi"].waitForExistence(timeout: 5))
         app.buttons["artwork-chibi"].tap()
         let image = app.scrollViews["artworkZoomScroll"]
@@ -109,7 +111,7 @@ final class CharacterInterfaceTests: XCTestCase {
         app.buttons["artwork-standing"].tap()
         XCTAssertTrue(image.waitForExistence(timeout: 5))
         image.swipeDown()
-        XCTAssertTrue(app.buttons["artwork-chibi"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["characterDossierMore"].waitForExistence(timeout: 5))
     }
 
     func testAutomaticIslandMotionContinuesWithoutButtons() throws {

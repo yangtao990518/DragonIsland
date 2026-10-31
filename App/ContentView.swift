@@ -70,7 +70,7 @@ struct ContentView: View {
                 .tabItem { Label("我的世界", systemImage: "sparkles") }.tag(WorldTab.world)
             charactersPage
                 .tabItem { Label("角色", systemImage: "person.2") }.tag(WorldTab.characters)
-            ChatPage(store: chatStore, tools: chatTools, proactive: proactive)
+            ChatPage(store: chatStore, tools: chatTools)
                 .tabItem { Label("聊天", systemImage: "bubble.left.and.bubble.right") }.tag(WorldTab.chat)
                 .badge(chatStore.conversations.reduce(0) { $0 + $1.unreadProactiveCount })
             CharacterAlarmsPage(alarms: store.alarms, characters: store.characters)
@@ -115,13 +115,13 @@ struct ContentView: View {
         .toolbarBackground(.visible, for: .tabBar)
         .sheet(item: $detailCharacter) { character in
             NavigationStack {
-                CharacterDetailView(store: store, chatStore: chatStore, character: character) {
+                CharacterDetailView(store: store, chatStore: chatStore, proactive: proactive, character: character) {
                     store.select(character)
                     detailCharacter = nil
                     tab = .world
                 }
             }
-            .presentationDragIndicator(.visible)
+            .presentationDragIndicator(.hidden)
         }
         .sheet(item: $legacyHomePanel) { kind in
             HomeShortcutPanel(store: store, character: store.displayCharacter, kind: kind)

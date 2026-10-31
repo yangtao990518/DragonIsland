@@ -24,14 +24,20 @@ final class ProactiveChatCoordinator: ObservableObject {
     }
 
     func settingsChanged() async {
-        preparation?.cancel()
-        // Reconcile immediately even when an old model request is still finishing.
+        if !store.proactiveState.settings.enabled { preparation?.cancel() }
         let center = UNUserNotificationCenter.current()
-        let requests = await center.pendingNotificationRequests()
-        center.removePendingNotificationRequests(withIdentifiers: requests.filter { $0.identifier.hasPrefix(prefix) }.map(\.identifier))
-        let delivered = await center.deliveredNotifications()
-        center.removeDeliveredNotifications(withIdentifiers: delivered.filter { $0.request.identifier.hasPrefix(prefix) }.map { $0.request.identifier })
-        await refresh(prepare: false)
+        let pending = await center.pendingNotificationRequests()
+        let current = store.proactiveState
+        center.removePendingNotificationRequests(withIdentifiers: pending.compactMap { request in
+            guard request.identifier.hasPrefix(prefix) else { return nil }
+            guard let slot = current.slots.first(where: { $0.notificationID == request.identifier }) else { return request.identifier }
+            let preference = current.settings.preference(for: slot.characterID)
+            return slot.status != .ready || slot.policyID != current.policy(for: slot.characterID)
+                || !preference.enabled || preference.notifications != true ? request.identifier : nil
+        })
+        // Reconcile only invalid role policies; preserve other roles' scheduled
+        // notifications and any in-flight preparation that still belongs to them.
+        await refresh()
     }
 
     func refresh(prepare shouldPrepare: Bool = true) async {
@@ -48,12 +54,12 @@ final class ProactiveChatCoordinator: ObservableObject {
         }
     }
 
-    func beginPreparation(retry: Bool) {
+    func beginPreparation(retry: Bool, characterID: String? = nil) {
         guard preparation == nil, store.proactiveState.settings.enabled else { return }
-        if retry { store.retryProactivePreparations() }
+        if retry { store.retryProactivePreparations(characterID: characterID) }
         let created = store.planProactiveChats()
         let pendingIDs = Set(created + store.proactiveState.slots.filter { $0.status == .planned }.map(\.id))
-        let ids = store.proactiveState.slots.filter { pendingIDs.contains($0.id) }.sorted { $0.scheduledAt < $1.scheduledAt }.map(\.id)
+        let ids = store.proactiveState.slots.filter { pendingIDs.contains($0.id) && (characterID == nil || $0.characterID == characterID) }.sorted { $0.scheduledAt < $1.scheduledAt }.map(\.id)
         guard !ids.isEmpty else { return }
         preparing = true
         status = "正在准备下一允许时段的消息…"
@@ -83,23 +89,24 @@ final class ProactiveChatCoordinator: ObservableObject {
         let future = slots.filter { slot in
             var calendar = Calendar.current
             calendar.timeZone = TimeZone(identifier: slot.timeZoneID) ?? .current
-            return slot.status == .ready && slot.policyID == store.proactiveState.policyID && slot.scheduledAt > .now
+            return slot.status == .ready && slot.policyID == store.proactiveState.policy(for: slot.characterID) && slot.scheduledAt > .now
                 && settings.enabled && settings.characters[slot.characterID]?.enabled == true
-                && settings.window.allows(slot.scheduledAt, calendar: calendar)
+                && settings.preference(for: slot.characterID).window!.allows(slot.scheduledAt, calendar: calendar)
+                && settings.preference(for: slot.characterID).notifications == true
                 && store.conversation(slot.conversationID)?.characterIDs.contains(slot.characterID) == true
         }
         let validIDs = Set(future.map(\.notificationID))
         let pending = await center.pendingNotificationRequests()
         center.removePendingNotificationRequests(withIdentifiers: pending.filter {
-            $0.identifier.hasPrefix(prefix) && (!validIDs.contains($0.identifier) || !settings.notifications || !notificationsAllowed)
+            $0.identifier.hasPrefix(prefix) && (!validIDs.contains($0.identifier) || !notificationsAllowed)
         }.map(\.identifier))
         let existing = Set(pending.map(\.identifier))
         // Leave room for companion alarms; iOS has a finite local notification queue.
         let capacity = max(0, 60 - pending.filter { !$0.identifier.hasPrefix(prefix) }.count)
-        if settings.notifications, notificationsAllowed, future.count > capacity {
+        if notificationsAllowed, future.count > capacity {
             status = "系统提醒队列已满，部分消息暂时只保存在 App 中。"
         }
-        if settings.notifications, notificationsAllowed {
+        if notificationsAllowed {
             for slot in future.sorted(by: { $0.scheduledAt < $1.scheduledAt }).prefix(capacity) {
                 if existing.contains(slot.notificationID) { continue }
                 let content = UNMutableNotificationContent()
@@ -107,7 +114,7 @@ final class ProactiveChatCoordinator: ObservableObject {
                 content.body = String((slot.text ?? "").prefix(180))
                 content.sound = .default
                 content.threadIdentifier = slot.conversationID.uuidString
-                content.userInfo = ["chatConversationID": slot.conversationID.uuidString]
+                content.userInfo = ["chatConversationID": slot.conversationID.uuidString, "chatCharacterID": slot.characterID]
                 var calendar = Calendar.current
                 calendar.timeZone = TimeZone(identifier: slot.timeZoneID) ?? .current
                 var parts = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: slot.scheduledAt)
@@ -117,7 +124,9 @@ final class ProactiveChatCoordinator: ObservableObject {
                     try await center.add(UNNotificationRequest(identifier: slot.notificationID, content: content,
                         trigger: UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)))
                     let current = store.proactiveState
-                    if current.settings.enabled, current.settings.notifications, current.policyID == slot.policyID,
+                    if current.settings.preference(for: slot.characterID).enabled,
+                       current.settings.preference(for: slot.characterID).notifications == true,
+                       current.policy(for: slot.characterID) == slot.policyID,
                        current.slots.contains(where: { $0.id == slot.id && $0.status == .ready }) {
                         store.setProactiveNotificationScheduled(slot.id, scheduled: true)
                     } else { center.removePendingNotificationRequests(withIdentifiers: [slot.notificationID]) }
@@ -134,13 +143,18 @@ final class ProactiveChatCoordinator: ObservableObject {
     }
 
     private func updateIsland(alert: Bool) async {
-        let unread = store.conversations.filter { $0.unreadProactiveCount > 0 }
-        let total = unread.reduce(0) { $0 + $1.unreadProactiveCount }
-        let latest = unread.flatMap { chat in chat.messages.filter { $0.isProactive == true && $0.createdAt > (chat.lastReadAt ?? .distantPast) }.map { (chat, $0) } }
-            .max { $0.1.createdAt < $1.1.createdAt }
         let settings = store.proactiveState.settings
+        let unread = store.conversations.flatMap { chat in
+            chat.messages.filter { message in
+                let preference = settings.preference(for: message.characterID ?? "")
+                return message.isProactive == true && message.createdAt > (chat.lastReadAt ?? .distantPast)
+                    && preference.enabled && preference.islandReminder == true
+            }.map { (chat, $0) }
+        }
+        let total = unread.count
+        let latest = unread.max { $0.1.createdAt < $1.1.createdAt }
         let activities = Activity<ChatReminderAttributes>.activities
-        guard settings.enabled, settings.islandReminder, let (chat, message) = latest,
+        guard settings.enabled, let (chat, message) = latest,
               let character = store.character(message.characterID), ActivityAuthorizationInfo().areActivitiesEnabled else {
             for activity in activities { await activity.end(activity.content, dismissalPolicy: .immediate) }
             return
@@ -151,7 +165,7 @@ final class ProactiveChatCoordinator: ObservableObject {
         for activity in activities where activity.id != current?.id { await activity.end(activity.content, dismissalPolicy: .immediate) }
         if let current {
             guard current.content.state != state else { return }
-            let mayAlert = alert && settings.window.allows(.now) && store.visibleConversationID != chat.id
+            let mayAlert = alert && settings.preference(for: character.id).window!.allows(.now) && store.visibleConversationID != chat.id
             await current.update(content, alertConfiguration: mayAlert
                 ? AlertConfiguration(title: "\(character.name)发来消息", body: "\(String(message.text.prefix(80)))", sound: .default) : nil)
         } else if UIApplication.shared.applicationState == .active {

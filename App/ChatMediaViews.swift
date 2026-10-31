@@ -205,27 +205,75 @@ struct ChatStickerPicker: View {
     let characterIDs: [String]
     let conversationID: UUID
     @Environment(\.dismiss) private var dismiss
+    @State private var selectedID: String?
+    private var currentID: String? { selectedID ?? characterIDs.first }
+
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(characterIDs, id: \.self) { id in
-                    if let character = store.character(id) {
-                        Section(character.name) {
-                            NavigationLink("管理\(character.name)的表情包") { CharacterStickerLibraryView(store: store, character: character) }
-                            ForEach(store.stickers(for: id)) { sticker in
-                                HStack {
-                                    ChatAttachmentView(attachment: .init(id: sticker.id, kind: .sticker, asset: sticker.asset, sticker: sticker), media: store.media, maximum: 64)
-                                    Text(sticker.name); Spacer()
-                                    Button("选用") {
-                                        if store.attach(.init(id: UUID(), kind: .sticker, asset: sticker.asset, sticker: sticker), in: conversationID) { dismiss() }
-                                    }.buttonStyle(.bordered).accessibilityIdentifier("chooseSticker-\(sticker.name)")
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(characterIDs, id: \.self) { id in
+                                if let character = store.character(id) {
+                                    Button { selectedID = id } label: {
+                                        HStack(spacing: 7) {
+                                            CharacterAvatar(character: character, size: 28)
+                                            Text(character.name).font(.subheadline.weight(.medium))
+                                        }.padding(.horizontal, 13).padding(.vertical, 8)
+                                            .foregroundStyle(currentID == id ? .white : AppPalette.accent)
+                                            .background(currentID == id ? AppPalette.accent : AppPalette.accent.opacity(0.07), in: Capsule())
+                                    }.buttonStyle(.plain).accessibilityAddTraits(currentID == id ? .isSelected : [])
                                 }
                             }
                         }
                     }
-                }
-            }.navigationTitle("表情包").navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .cancellationAction) { Button("完成") { dismiss() } } }
-        }
+                    if let id = currentID, let character = store.character(id) {
+                        Toggle("允许\(character.name)发送表情", isOn: Binding(get: {
+                            store.configuration.profile(for: character).automaticStickers == true
+                        }, set: { enabled in
+                            var preferences = store.configuration
+                            var profile = preferences.profile(for: character)
+                            profile.automaticStickers = enabled
+                            preferences.characters[id] = profile
+                            _ = store.saveConfiguration(preferences)
+                        })).font(.subheadline).tint(AppPalette.accent)
+                            .accessibilityIdentifier("chatAllowAIStickers-\(id)")
+                        HStack {
+                            Text("\(store.stickers(for: id).count) 个表情").font(.caption).foregroundStyle(.secondary)
+                            Spacer()
+                            NavigationLink { CharacterStickerLibraryView(store: store, character: character) } label: {
+                                Label("管理表情", systemImage: "slider.horizontal.3").font(.caption)
+                            }
+                        }
+                        Text("点选加入输入栏，再点发送。").font(.caption).foregroundStyle(.secondary)
+                        if store.stickers(for: id).isEmpty {
+                            ContentUnavailableView("还没有表情", systemImage: "face.smiling", description: Text("在管理表情中添加她的专属表情。"))
+                        }
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 74), spacing: 10)], spacing: 14) {
+                            ForEach(store.stickers(for: id)) { sticker in
+                                Button {
+                                    if store.attach(.init(id: UUID(), kind: .sticker, asset: sticker.asset, sticker: sticker), in: conversationID) { dismiss() }
+                                } label: {
+                                    VStack(spacing: 7) {
+                                        ChatAnimatedImage(url: store.media.url(for: sticker.asset))
+                                            .frame(height: 74).frame(maxWidth: .infinity)
+                                        Text(sticker.name).font(.system(size: 11)).lineLimit(1)
+                                            .foregroundStyle(Color.primary)
+                                    }.padding(7).background(AppPalette.surface, in: RoundedRectangle(cornerRadius: 16))
+                                }.buttonStyle(.plain)
+                                    .accessibilityLabel("选用\(character.name)的\(sticker.name)")
+                                    .accessibilityIdentifier("chooseSticker-\(sticker.name)")
+                            }
+                        }
+                    }
+                }.padding(18)
+            }.background(AppPalette.background)
+                .navigationTitle("专属表情").navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("完成") { dismiss() } } }
+                .alert("表情包", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
+                    Button("知道了", role: .cancel) { store.error = nil }
+                } message: { Text(store.error ?? "") }
+        }.tint(AppPalette.accent).presentationDetents([.medium, .large]).presentationDragIndicator(.visible)
     }
 }
