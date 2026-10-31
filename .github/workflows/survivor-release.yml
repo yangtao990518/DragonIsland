@@ -1,10 +1,14 @@
 name: Test survivor and package IPA
 "on":
   workflow_dispatch:
+  push:
+    branches: [codex/chat-media-tools]
+    paths: ['.github/workflows/survivor-release.yml']
 permissions:
   contents: read
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-15
     timeout-minutes: 45
     env:
