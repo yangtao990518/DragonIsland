@@ -45,7 +45,7 @@ import SpriteKit
         guard playing, battle.clock.running, battle.outcome == nil else { return }
         let oldChoices = battle.choices, oldOutcome = battle.outcome
         do { try battle.advance(by: delta, movement: movement) }
-        catch { error = "战斗状态异常，已暂停。"; battle.pause(.menu) }
+        catch { self.error = "战斗状态异常，已暂停。"; battle.pause(.menu) }
         publishIn -= delta
         if publishIn <= 0 || oldChoices != battle.choices || oldOutcome != battle.outcome {
             publishIn = 0.1; revision += 1

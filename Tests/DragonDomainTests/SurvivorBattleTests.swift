@@ -95,7 +95,7 @@ final class SurvivorBattleTests: XCTestCase {
         let config = SurvivorRunConfiguration(duration: 0.2, stages: [
             .init(id: "test", startsAt: 0, endsAt: 0.2, spawnInterval: 2, enemyLimit: 1)])
         var winner = try SurvivorBattle(configuration: config)
-        try winner.advance(by: 2, movement: .zero)
+        try winner.advance(by: .greatestFiniteMagnitude, movement: .zero)
         XCTAssertEqual(winner.outcome, .victory)
         XCTAssertEqual(winner.clock.elapsed, 0.2)
         var loser = try SurvivorBattle()

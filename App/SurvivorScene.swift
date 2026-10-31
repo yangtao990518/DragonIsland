@@ -58,6 +58,8 @@ final class SurvivorScene: SKScene {
     private var dropNodes: [UInt64: SKSpriteNode] = [:]
     private var thunderNodes: [UInt64: SKSpriteNode] = [:]
     private var lastTime: TimeInterval?
+    private var lastSimulationTime = 0.0
+    private var heroAnimationTime = 0.0
     private var tiles: [SKSpriteNode] = []
     private let tileSize: CGFloat = 240
     private lazy var floorTexture = makeFloor()
@@ -85,6 +87,7 @@ final class SurvivorScene: SKScene {
         for dict in [enemyNodes, bubbleNodes, dropNodes, thunderNodes] { for node in dict.values { node.removeFromParent() } }
         enemyNodes = [:]; bubbleNodes = [:]; dropNodes = [:]; thunderNodes = [:]
         lastTime = nil
+        lastSimulationTime = game?.battle.clock.elapsed ?? 0; heroAnimationTime = 0
         textures.releaseCache()
     }
     override func update(_ currentTime: TimeInterval) {
@@ -105,6 +108,9 @@ final class SurvivorScene: SKScene {
     }
     private func render(_ battle: SurvivorBattle) {
         let time = battle.clock.elapsed
+        let simulatedDelta = max(0, time - lastSimulationTime)
+        lastSimulationTime = time
+        heroAnimationTime = battle.moving ? heroAnimationTime + simulatedDelta : 0
         let player = point(battle.player)
         viewpoint.position = CGPoint(x: player.x, y: player.y + 55)
         let originX = floor(player.x / tileSize), originY = floor(player.y / tileSize)
@@ -114,7 +120,7 @@ final class SurvivorScene: SKScene {
         }
         shadow.position = player
         hero.position = player; hero.zPosition = 100 - player.y * 0.01
-        if battle.moving { animate(hero, clip: "dafeiyu-run", time: time, height: 78, left: battle.facingLeft) }
+        if battle.moving { animate(hero, clip: "dafeiyu-run", time: heroAnimationTime, height: 78, left: battle.facingLeft) }
         else {
             hero.texture = idle; hero.size = CGSize(width: 78 * idle.size().width / max(1, idle.size().height), height: 78)
             hero.anchorPoint = CGPoint(x: 0.5, y: 0.04); hero.xScale = 1

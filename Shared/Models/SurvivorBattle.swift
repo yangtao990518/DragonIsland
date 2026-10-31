@@ -175,7 +175,7 @@ struct SurvivorBattle: Codable, Sendable {
         guard delta.isFinite, delta >= 0, movement.x.isFinite, movement.y.isFinite else {
             throw SurvivorRuleError.invalidDelta
         }
-        var remaining = delta
+        var remaining = min(delta, clock.remaining)
         while remaining > 0.000000001, clock.running, outcome == nil {
             let step = min(1.0 / 60, remaining)
             try tick(step, movement: movement)
