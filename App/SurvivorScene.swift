@@ -100,6 +100,7 @@ final class SurvivorScene: SKScene {
         lastTime = nil
         lastSimulationTime = game?.battle.clock.elapsed ?? 0; heroAnimationTime = 0
         textures.releaseCache()
+        if let battle = game?.battle { render(battle) }
     }
     override func update(_ currentTime: TimeInterval) {
         guard let game else { return }

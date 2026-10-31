@@ -38,6 +38,13 @@ import SpriteKit
             do { battle = try SurvivorBattle(seed: UInt64.random(in: 1...UInt64.max), thunderDuration: duration) }
             catch { self.error = "无法开始试炼。"; return }
         }
+        #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        if !continuing, args.contains("--survivor-upgrade-preview"), args.contains("--maiverse-capture"),
+           let index = args.firstIndex(of: "--chat-test-store"), args.indices.contains(index + 1), UUID(uuidString: args[index + 1]) != nil {
+            battle.awardExperience(battle.experienceNeeded)
+        }
+        #endif
         movement = .zero; scene?.resetRun(); playing = true; revision += 1
         save()
     }
@@ -124,7 +131,7 @@ struct SurvivorGameView: View {
         }
         .onDisappear { if game.playing { game.pause(.background) } }
         .confirmationDialog("离开试炼？当前进度会保存在本机，可以稍后继续。", isPresented: $confirmExit, titleVisibility: .visible) {
-            Button("保存并返回选角") { game.lobby() }
+            Button("保存并返回选角") { game.lobby() }.accessibilityIdentifier("survivorSaveExit")
             Button("继续战斗", role: .cancel) { }
         }
     }
@@ -171,8 +178,10 @@ struct SurvivorGameView: View {
                     if let error = game.error { Text(error).font(.footnote).foregroundStyle(.orange) }
                     if game.canContinue {
                         actionButton("继续上次试炼", icon: "play.fill") { game.start(continuing: true) }
+                            .accessibilityIdentifier("survivorContinue")
                     }
                     actionButton(game.canContinue ? "重新开始" : "开始试炼", icon: "sparkles") { game.start() }
+                        .accessibilityIdentifier("survivorStart")
                         .disabled(game.scene == nil)
                 }.padding(24)
             }
@@ -192,7 +201,7 @@ struct SurvivorGameView: View {
                     Spacer()
                     VStack(alignment: .trailing, spacing: 8) {
                         Label("水泡 \(game.battle.rank(.bubble))", systemImage: "drop.fill")
-                        if game.battle.rank(.thunder) > 0 { Label("紫霄雷 \(game.battle.rank(.thunder))", systemImage: "bolt.fill") }
+                        if game.battle.rank(.thunder) > 0 { Label("紫霄雷 \(game.battle.rank(.thunder))", systemImage: "bolt.fill").accessibilityIdentifier("survivorThunderRank") }
                         Text("自动释放").font(.caption2).foregroundStyle(.white.opacity(0.5))
                     }.font(.caption.bold()).padding(14).background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 18))
                 }.padding(.horizontal, 24).padding(.bottom, 24)
@@ -217,12 +226,13 @@ struct SurvivorGameView: View {
                 Spacer(minLength: 6)
                 VStack(spacing: 3) {
                     Text(timer(game.battle.clock.remaining)).font(.system(size: 25, weight: .bold, design: .rounded)).monospacedDigit()
+                        .accessibilityIdentifier("survivorTimer")
                     Text("击败 \(game.battle.kills)").font(.caption2).foregroundStyle(.white.opacity(0.65))
                 }
                 Spacer(minLength: 6)
                 Button { game.pause(.menu) } label: {
                     Image(systemName: "pause.fill").frame(width: 42, height: 42).background(.white.opacity(0.12), in: Circle())
-                }.accessibilityLabel("暂停试炼")
+                }.accessibilityLabel("暂停试炼").accessibilityIdentifier("survivorPause")
             }
             ProgressView(value: Double(min(game.battle.experience, game.battle.experienceNeeded)), total: Double(game.battle.experienceNeeded)).tint(.cyan)
         }.padding(16).background(.black.opacity(0.4), in: RoundedRectangle(cornerRadius: 22)).padding(.horizontal, 14).padding(.top, 6)
@@ -258,7 +268,8 @@ struct SurvivorGameView: View {
             Text("计时、怪物和技能均已暂停").font(.subheadline).foregroundStyle(.secondary)
             if let error = game.error { Text(error).font(.caption).foregroundStyle(.orange) }
             actionButton("继续试炼", icon: "play.fill") { game.resume(.menu) }
-            Button("保存并返回选角") { confirmExit = true }.font(.subheadline).padding(10)
+                .accessibilityIdentifier("survivorResume")
+            Button("保存并返回选角") { confirmExit = true }.font(.subheadline).padding(10).accessibilityIdentifier("survivorReturnLobby")
         }
     }
     private func result(_ outcome: SurvivorOutcome) -> some View {
@@ -311,6 +322,7 @@ private struct SurvivorJoystick: View {
                 move(.init(x: Double(displacement.width / 44), y: -Double(displacement.height / 44)))
             }.onEnded { _ in displacement = .zero; move(.zero) })
             .onChange(of: enabled) { _, value in if !value { displacement = .zero; move(.zero) } }
-            .accessibilityLabel("移动摇杆")
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("移动摇杆").accessibilityIdentifier("survivorJoystick")
     }
 }

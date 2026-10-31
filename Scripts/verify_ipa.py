@@ -100,6 +100,37 @@ def verify_current_video_atlases(archive, root):
             raise ValueError('Missing full dance atlas resources')
 
 
+def verify_survivor(archive, app_root, widget_root):
+    from PIL import Image
+    base = app_root + '/SurvivorGame/'
+    manifest = json.loads(archive.read(base + 'manifest.json'))
+    required = {'dafeiyu-run', 'demon-run', 'mushroom-run'} | {f'thunder-{i}' for i in range(1, 6)}
+    if {c['id'] for c in manifest['clips']} != required or manifest['dropped_frames'] or manifest['synthesized_frames'] or manifest['playback_speed'] != 1:
+        raise ValueError('Incomplete or retimed survivor clips')
+    for clip in manifest['clips']:
+        if len(clip['frames']) != 240: raise ValueError('Survivor frame count differs')
+        end = 0
+        for index, frame in enumerate(clip['frames']):
+            if frame['source_index'] != index or abs(frame['start_ms']-end) > .01 or frame['duration_ms'] <= 0:
+                raise ValueError('Broken survivor source timeline')
+            end = frame['start_ms'] + frame['duration_ms']
+        if abs(end-clip['duration_ms']) > .01 or abs(end-4096.009) > .01:
+            raise ValueError('Survivor final hold was changed')
+        for page in clip['pages']:
+            if '..' in page['file'] or page['file'].startswith('/'): raise ValueError('Invalid survivor page path')
+            raw = archive.read(base + page['file'])
+            if hashlib.sha256(raw).hexdigest() != page['sha256']: raise ValueError('Survivor atlas bytes differ')
+            with Image.open(BytesIO(raw)) as image:
+                if image.mode != 'RGBA' or image.size != tuple(a*b for a,b in zip(clip['cell_size'],clip['grid'])):
+                    raise ValueError('Invalid survivor atlas format')
+    bubble = json.loads(archive.read(base + 'water-bubble.json'))
+    if hashlib.sha256(archive.read(base+'water-bubble.png')).hexdigest() != bubble['sha256']:
+        raise ValueError('Basic attack bubble differs')
+    if any(name.startswith(widget_root+'/SurvivorGame/') for name in archive.namelist()):
+        raise ValueError('Game atlases must be App-only')
+    print('Survivor verified: eight full 240-frame clips, original holds, PNG hashes and water bubble, App only.')
+
+
 def verify_voices(archive, app_root, app):
     if not app.get('NSAlarmKitUsageDescription'):
         raise ValueError('Missing AlarmKit permission usage description')
@@ -188,6 +219,8 @@ def verify(path):
                 verify_current_video_atlases(archive, app_root)
             if int(app['CFBundleVersion']) >= 18:
                 verify_builtin_stickers(archive, app_root, widget_root)
+            if int(app['CFBundleVersion']) >= 21:
+                verify_survivor(archive, app_root, widget_root)
         print("IPA structure verified: main app, embedded WidgetKit extension, binaries, assets, versions.")
         print("Signing and physical-device behavior are NOT verified by this check.")
 

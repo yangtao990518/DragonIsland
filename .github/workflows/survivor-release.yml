@@ -1,0 +1,100 @@
+name: Test survivor and package IPA
+"on":
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      MAIVERSE_SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-2
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Tools
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
+      - name: Rules and all resource regressions
+        run: |
+          set -o pipefail
+          mkdir -p build output
+          swift test 2>&1 | tee build/domain-tests.log
+          python3 Scripts/prepare_assets.py
+          python3 -c "import sys; sys.path.insert(0, 'Scripts'); from prepare_unread_avatar import prepare; prepare(register=False)"
+          python3 Scripts/prepare_motion.py
+          python3 Scripts/prepare_unread_avatar.py
+          python3 -m unittest discover -s Tests -p 'test_*.py' -v 2>&1 | tee build/python-tests.log
+      - name: Prepare isolated simulator project
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import plistlib
+          with open('build/simulator-keychain.entitlements','wb') as f:
+              plistlib.dump({'application-identifier':'MAITEST001.com.dragonisle.prototype.app'},f)
+          spec=Path('project.yml'); text=spec.read_text()
+          anchor='        PRODUCT_BUNDLE_IDENTIFIER: com.dragonisle.prototype.app\n'
+          assert text.count(anchor)==1
+          spec.write_text(text.replace(anchor,anchor+'        "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": build/simulator-keychain.entitlements\n'))
+          PY
+          xcodegen generate --spec project.yml
+          DEVICE_ID="$(xcrun simctl list devices available --json | python3 -c 'import json,sys,os; d=json.load(sys.stdin); p=[v for v in d["devices"].get(os.environ["MAIVERSE_SIM_RUNTIME"],[]) if v.get("isAvailable") and v["name"].startswith("iPhone")]; p.sort(key=lambda v:("Pro" not in v["name"],v["name"])); print(p[0]["udid"])')"
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+      - name: Real game and home interface tests
+        run: |
+          set -o pipefail
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland \
+            -configuration Debug -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath build/GameTests -resultBundlePath build/GameTests.xcresult \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests \
+            -only-testing:DragonInterfaceTests/HomeSceneInterfaceTests \
+            -parallel-testing-enabled NO -test-timeouts-enabled YES \
+            -default-test-execution-time-allowance 120 -maximum-test-execution-time-allowance 180 \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test 2>&1 | tee build/game-interface.log
+      - name: Build and verify unsigned IPA
+        id: build
+        run: bash Scripts/build_unsigned.sh
+      - name: Delivery status
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          status=('本包已通过Swift逻辑、Python资源回归、游戏及主页模拟器界面测试、App/Widget Release编译和IPA结构/游戏图集检查。\n'
+                  '模拟器不等于真机20分钟性能/耗电验证；未执行Sideloadly签名或手机安装。\n'
+                  f'源码：{os.environ["GITHUB_SHA"]}\n'
+                  f'构建：https://github.com/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n')
+          Path('output/BUILD_STATUS.md').write_text(status)
+          Path('output/CHANGELOG.md').write_text(Path('docs/RELEASE_BUILD21.md').read_text()+ '\n'+status)
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: mAIverse-V1.8-build21-unsigned
+          path: |
+            output/*.ipa
+            output/*.md
+            output/*.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Export screenshots
+        if: always()
+        run: |
+          mkdir -p output/game-screenshots
+          if [[ -d build/GameTests.xcresult ]]; then
+            xcrun xcresulttool export attachments --path build/GameTests.xcresult --output-path output/game-screenshots
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: survivor-tests-and-screenshots
+          path: |
+            build/*.log
+            output/game-screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
