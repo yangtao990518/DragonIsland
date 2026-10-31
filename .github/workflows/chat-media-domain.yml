@@ -14,3 +14,5 @@ jobs:
         with:
           persist-credentials: false
       - run: swift test
+      - name: Parse proactive chat settings UI
+        run: swiftc -parse App/ProactiveChatSettingsView.swift

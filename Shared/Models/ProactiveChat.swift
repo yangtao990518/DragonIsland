@@ -6,7 +6,7 @@ struct ProactiveChatWindow: Codable, Equatable, Sendable {
 
     func validate() throws {
         guard (0..<1440).contains(startMinute), (0..<1440).contains(endMinute), startMinute != endMinute else {
-            throw ProactiveChatError.invalidSettings
+            throw ProactiveChatError.invalidWindow
         }
     }
     func allows(_ date: Date, calendar: Calendar = .current) -> Bool {
@@ -41,6 +41,11 @@ struct ProactiveCharacterSettings: Codable, Equatable, Sendable {
     var intervalMinutes: Int? = nil
     var notifications: Bool? = nil
     var islandReminder: Bool? = nil
+    func validate() throws {
+        try window?.validate()
+        if let minutes = intervalMinutes, !(15...480).contains(minutes) { throw ProactiveChatError.invalidInterval }
+        if enabled && destination == .group && groupID == nil { throw ProactiveChatError.missingGroup }
+    }
     func hasSameSchedule(as other: Self) -> Bool {
         enabled == other.enabled && destination == other.destination && groupID == other.groupID
             && window == other.window && intervalMinutes == other.intervalMinutes
@@ -65,14 +70,10 @@ struct ProactiveChatSettings: Codable, Equatable, Sendable {
     func validate() throws {
         try window.validate()
         for preference in characters.values {
-            try preference.window?.validate()
-            if let minutes = preference.intervalMinutes, !(15...480).contains(minutes) {
-                throw ProactiveChatError.invalidSettings
-            }
+            try preference.validate()
         }
         guard (1...3).contains(dailyCount), characters.count <= 100,
-              characters.keys.allSatisfy({ !$0.isEmpty && $0.count <= 120 }),
-              characters.values.allSatisfy({ !$0.enabled || $0.destination != .group || $0.groupID != nil }) else {
+              characters.keys.allSatisfy({ !$0.isEmpty && $0.count <= 120 }) else {
             throw ProactiveChatError.invalidSettings
         }
     }
@@ -131,10 +132,14 @@ struct ProactiveChatState: Codable, Equatable, Sendable {
 }
 
 enum ProactiveChatError: LocalizedError {
-    case invalidSettings, unavailable, expired
+    case invalidSettings, invalidWindow, invalidInterval, missingGroup, invalidGroup(String), unavailable, expired
     var errorDescription: String? {
         switch self {
-        case .invalidSettings: return "请检查主动聊天时段、次数和群聊选择。开始与结束时间不能相同。"
+        case .invalidSettings: return "主动聊天设置无效，原设置未修改，请重新检查后保存。"
+        case .invalidWindow: return "请检查允许联系的时间，开始与结束时间不能相同。"
+        case .invalidInterval: return "主动聊天的最短间隔应为15至480分钟。"
+        case .missingGroup: return "已选择群聊联系，请先指定一个包含这位角色的群聊，再保存。"
+        case .invalidGroup(let name): return "\(name)的目标群聊已删除或不再包含她，请重新选择群聊，或改为私聊后保存。"
         case .unavailable: return "主动聊天设置或目标会话已改变，这条消息已取消。"
         case .expired: return "已错过这次消息的准备时间，请重新准备下一时段。"
         }

@@ -542,7 +542,7 @@ final class ChatStore: ObservableObject {
                 guard self.availableIDs.contains(characterID) else { throw ProactiveChatError.invalidSettings }
                 if preference.destination == .group {
                     guard value.conversations.contains(where: { $0.id == preference.groupID && $0.kind == .group && $0.characterIDs.contains(characterID) }) else {
-                        throw ProactiveChatError.invalidSettings
+                        throw ProactiveChatError.invalidGroup(self.character(characterID)?.name ?? characterID)
                     }
                 }
             }

@@ -7,6 +7,11 @@ struct ProactiveChatSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var preference: ProactiveCharacterSettings
     @State private var failure: String?
+    @State private var choosingGroup = false
+    private var groups: [ChatConversation] {
+        store.conversations.filter { $0.kind == .group && $0.characterIDs.contains(character.id) }
+    }
+    private var selectedGroup: ChatConversation? { groups.first { $0.id == preference.groupID } }
 
     init(store: ChatStore, coordinator: ProactiveChatCoordinator, character: CompanionCharacter) {
         self.store = store; self.coordinator = coordinator; self.character = character
@@ -57,14 +62,28 @@ struct ProactiveChatSettingsView: View {
                             Text("私聊我").tag(ProactiveCharacterSettings.Destination.direct)
                             Text("群聊里 @我").tag(ProactiveCharacterSettings.Destination.group)
                         }.pickerStyle(.segmented)
-                        if preference.destination == .group {
-                            let groups = store.conversations.filter { $0.kind == .group && $0.characterIDs.contains(character.id) }
-                            Picker("选择群聊", selection: $preference.groupID) {
-                                Text("请选择群聊").tag(Optional<UUID>.none)
-                                ForEach(groups) { group in Text(group.name).tag(Optional(group.id)) }
+                            .onChange(of: preference.destination) { _, destination in
+                                if destination == .group && selectedGroup == nil && !groups.isEmpty { choosingGroup = true }
                             }
+                        if preference.destination == .group {
+                            Button { choosingGroup = true } label: {
+                                HStack {
+                                    Text("目标群聊")
+                                    Spacer()
+                                    Text(selectedGroup?.name ?? "点这里选择群聊").lineLimit(1)
+                                    Image(systemName: "chevron.right").font(.caption)
+                                }.font(.subheadline).padding(14)
+                                    .background(MoonPalette.lavender.opacity(0.15), in: RoundedRectangle(cornerRadius: 12))
+                            }.accessibilityIdentifier("proactiveTargetGroup").disabled(groups.isEmpty)
                             if groups.isEmpty {
-                                Text("先创建一个包含\(character.name)的群聊。").font(.caption).foregroundStyle(MoonPalette.ink.opacity(0.6))
+                                Text("还没有可选群聊，请先到聊天页创建包含\(character.name)的群聊，或改为私聊。")
+                                    .font(.caption).foregroundStyle(MoonPalette.ink.opacity(0.6))
+                            } else if selectedGroup == nil {
+                                Text("尚未指定群聊。点上方选择后才能开启群聊联系。")
+                                    .font(.caption).foregroundStyle(MoonPalette.violet)
+                            } else if let selectedGroup {
+                                Text("主动消息将在「\(selectedGroup.name)」中 @你。")
+                                    .font(.caption).foregroundStyle(MoonPalette.ink.opacity(0.6))
                             }
                         }
                         Toggle("系统消息通知", isOn: optionalFlag(\.notifications, fallback: true))
@@ -90,6 +109,12 @@ struct ProactiveChatSettingsView: View {
         .alert("主动聊天", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
             Button("知道了", role: .cancel) { failure = nil }
         } message: { Text(failure ?? "") }
+        .confirmationDialog("选择\(character.name)联系你的群聊", isPresented: $choosingGroup, titleVisibility: .visible) {
+            ForEach(groups) { group in
+                Button(group.name + (group.id == preference.groupID ? " ✓" : "")) { preference.groupID = group.id }
+            }
+            Button("取消", role: .cancel) { }
+        }
     }
 
     private var plans: some View {
@@ -112,6 +137,12 @@ struct ProactiveChatSettingsView: View {
         }
     }
     private func save() {
+        do {
+            try preference.validate()
+            if preference.enabled && preference.destination == .group && selectedGroup == nil {
+                throw ProactiveChatError.invalidGroup(character.name)
+            }
+        } catch { failure = error.localizedDescription; return }
         guard store.saveProactivePreference(preference, for: character.id) else { failure = store.error; store.error = nil; return }
         Task {
             if preference.enabled, preference.notifications == true { await coordinator.authorizeNotifications() }
