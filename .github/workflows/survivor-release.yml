@@ -75,11 +75,11 @@ jobs:
                   f'源码：{os.environ["GITHUB_SHA"]}\n'
                   f'构建：https://github.com/{os.environ["GITHUB_REPOSITORY"]}/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n')
           Path('output/BUILD_STATUS.md').write_text(status)
-          Path('output/CHANGELOG.md').write_text(Path('docs/RELEASE_BUILD21.md').read_text()+ '\n'+status)
+          Path('output/CHANGELOG.md').write_text(Path('docs/RELEASE_BUILD${{ steps.build.outputs.build }}.md').read_text()+ '\n'+status)
           PY
       - uses: actions/upload-artifact@v7
         with:
-          name: mAIverse-V1.8-build21-unsigned
+          name: mAIverse-V${{ steps.build.outputs.version }}-build${{ steps.build.outputs.build }}-unsigned
           path: |
             output/*.ipa
             output/*.md

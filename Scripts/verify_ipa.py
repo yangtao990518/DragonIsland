@@ -134,6 +134,31 @@ def verify_survivor(archive, app_root, widget_root):
     print('Survivor verified: eight full 240-frame clips, original holds, PNG hashes and water bubble, App only.')
 
 
+def verify_pixelfx(archive, app_root, widget_root):
+    base = app_root+'/SurvivorGameV2/'
+    catalog=json.loads(archive.read(base+'PixelFXCatalog.json'))
+    media=json.loads(archive.read(base+'manifest.json'))
+    ids={s['id'] for s in catalog['skills']}
+    if len(ids)!=244 or len(catalog['skills'])!=244: raise ValueError('Incomplete PixelFX selection catalog')
+    if {c['id'] for c in media['clips']} != ids|{'dafeiyu-run','demon-run','mushroom-run'}:
+        raise ValueError('Unexpected legacy effect or missing PixelFX clip')
+    for clip in media['clips']:
+        end=0
+        for frame in clip['frames']:
+            if abs(frame['start_ms']-end)>.01 or frame['duration_ms']<=0: raise ValueError('Broken PixelFX timeline')
+            end=frame['start_ms']+frame['duration_ms']
+        if abs(end-clip['duration_ms'])>.01: raise ValueError('Incomplete PixelFX hold')
+        for page in clip['pages']:
+            if '..' in page['file'] or page['file'].startswith('/'): raise ValueError('Invalid PixelFX path')
+            if hashlib.sha256(archive.read(base+page['file'])).hexdigest()!=page['sha256']: raise ValueError('Changed PixelFX atlas')
+    names=archive.namelist()
+    if any(n.startswith(app_root+'/SurvivorGame/') or n.startswith(widget_root+'/SurvivorGameV2/') for n in names):
+        raise ValueError('Legacy game effects or Widget game pages must not be bundled')
+    archive.read(base+'PixelFX/LICENSE'); archive.read(base+'PixelFX/NOTICE.md')
+    if any('PatchPixel' in n for n in names): raise ValueError('Excluded upstream gallery font')
+    print('PixelFX verified: 244 selectable effects, complete frame timelines, hashes, MIT notices, no legacy game effects.')
+
+
 def verify_voices(archive, app_root, app):
     if not app.get('NSAlarmKitUsageDescription'):
         raise ValueError('Missing AlarmKit permission usage description')
@@ -222,7 +247,9 @@ def verify(path):
                 verify_current_video_atlases(archive, app_root)
             if int(app['CFBundleVersion']) >= 18:
                 verify_builtin_stickers(archive, app_root, widget_root)
-            if int(app['CFBundleVersion']) >= 21:
+            if int(app['CFBundleVersion']) >= 22:
+                verify_pixelfx(archive, app_root, widget_root)
+            elif int(app['CFBundleVersion']) >= 21:
                 verify_survivor(archive, app_root, widget_root)
         print("IPA structure verified: main app, embedded WidgetKit extension, binaries, assets, versions.")
         print("Signing and physical-device behavior are NOT verified by this check.")

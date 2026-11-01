@@ -4,18 +4,18 @@ import UIKit
 /// Atlas pages are shared; all instances of an enemy use the same clip time.
 /// Never materialize 240 individual UIImages for each monster.
 final class SurvivorTextures {
-    private struct BubbleInfo: Decodable { let size: [Int]; let pivot: [Double] }
+    private struct Catalog: Decodable { let skills: [PixelFXSkill] }
     let media: SurvivorMedia
     let root: URL
-    let bubbleTexture: SKTexture
-    let bubblePivot: CGPoint
-    let bubbleSize: CGSize
+    let skills: [PixelFXSkill]
     let idleImage: UIImage
     let idleTexture: SKTexture
     private let pages = NSCache<NSString, SKTexture>()
     private var current: [String: (Int, SKTexture)] = [:]
+    private let previewPages = NSCache<NSString, UIImage>()
+    private let thumbnails = NSCache<NSString, UIImage>()
     init() throws {
-        guard let root = Bundle.main.resourceURL?.appendingPathComponent("SurvivorGame"),
+        guard let root = Bundle.main.resourceURL?.appendingPathComponent("SurvivorGameV2"),
               FileManager.default.fileExists(atPath: root.appendingPathComponent("manifest.json").path) else {
             throw CocoaError(.fileNoSuchFile)
         }
@@ -23,18 +23,13 @@ final class SurvivorTextures {
         let decoded = try JSONDecoder().decode(SurvivorMedia.self, from: Data(contentsOf: root.appendingPathComponent("manifest.json")))
         try decoded.validate()
         media = decoded
-        let bubble = try JSONDecoder().decode(BubbleInfo.self, from: Data(contentsOf: root.appendingPathComponent("water-bubble.json")))
-        guard bubble.size.count == 2, bubble.size.allSatisfy({ $0 > 0 }),
-              bubble.pivot.count == 2, bubble.pivot.allSatisfy({ (0...1).contains($0) }),
-              let image = UIImage(contentsOfFile: root.appendingPathComponent("water-bubble.png").path) else { throw CocoaError(.fileReadCorruptFile) }
-        bubbleTexture = SKTexture(image: image)
-        bubblePivot = CGPoint(x: bubble.pivot[0], y: bubble.pivot[1])
-        bubbleSize = CGSize(width: CGFloat(bubble.size[0]), height: CGFloat(bubble.size[1]))
+        skills = try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: root.appendingPathComponent("PixelFXCatalog.json"))).skills
         guard let idle = UIImage(contentsOfFile: root.appendingPathComponent("dafeiyu-idle.png").path) else { throw CocoaError(.fileReadCorruptFile) }
         idleImage = idle
         idleTexture = SKTexture(image: idle)
         pages.totalCostLimit = 64 * 1024 * 1024
         pages.countLimit = 12
+        previewPages.countLimit = 3; thumbnails.totalCostLimit = 20*1024*1024
     }
     func clip(_ id: String) -> SurvivorMedia.Clip? { media.clips.first { $0.id == id } }
     func texture(_ id: String, at seconds: Double, looping: Bool = true) -> SKTexture? {
@@ -47,7 +42,7 @@ final class SurvivorTextures {
         if let cached = pages.object(forKey: file as NSString) { page = cached }
         else {
             guard let image = UIImage(contentsOfFile: root.appendingPathComponent(file).path) else { return nil }
-            page = SKTexture(image: image); page.filteringMode = .linear
+            page = SKTexture(image: image); page.filteringMode = file.hasPrefix("PixelFX/") ? .nearest : .linear
             pages.setObject(page, forKey: file as NSString, cost: Int(image.size.width * image.size.height * 4))
         }
         let cell = frame.cell % capacity
@@ -55,11 +50,29 @@ final class SurvivorTextures {
         let rect = CGRect(x: CGFloat(cell % clip.grid[0]) * w,
                           y: 1 - CGFloat(cell / clip.grid[0] + 1) * h, width: w, height: h)
         let result = SKTexture(rect: rect, in: page)
-        result.filteringMode = .linear
+        result.filteringMode = file.hasPrefix("PixelFX/") ? .nearest : .linear
         current[id] = (frame.cell, result)
         return result
     }
     func releaseCache() { current.removeAll(); pages.removeAllObjects() }
+    func thumbnail(_ id: String) -> UIImage? {
+        if let image = thumbnails.object(forKey:id as NSString) { return image }
+        guard let image = UIImage(contentsOfFile:root.appendingPathComponent("PixelFX/Thumbnails/\(id).png").path) else { return nil }
+        thumbnails.setObject(image,forKey:id as NSString,cost:Int(image.size.width*image.size.height*4)); return image
+    }
+    func preview(_ id: String, time: Double) -> UIImage? {
+        guard let clip = clip(id), let frame = clip.frame(at:time,looping:true) else { return nil }
+        let capacity = clip.grid[0]*clip.grid[1], cell = frame.cell%capacity, path = clip.pages[frame.cell/capacity].file
+        let image: UIImage
+        if let cached = previewPages.object(forKey:path as NSString) { image = cached }
+        else {
+            guard let loaded = UIImage(contentsOfFile:root.appendingPathComponent(path).path) else { return nil }
+            image = loaded; previewPages.setObject(loaded,forKey:path as NSString)
+        }
+        let w = clip.cellSize[0], h = clip.cellSize[1]
+        guard let crop = image.cgImage?.cropping(to:CGRect(x:cell%clip.grid[0]*w,y:cell/clip.grid[0]*h,width:w,height:h)) else { return nil }
+        return UIImage(cgImage:crop)
+    }
 }
 
 final class SurvivorScene: SKScene {
@@ -71,9 +84,9 @@ final class SurvivorScene: SKScene {
     private let shadow = SKShapeNode(ellipseOf: CGSize(width: 36, height: 12))
     private var idle: SKTexture { textures.idleTexture }
     private var enemyNodes: [UInt64: SKSpriteNode] = [:]
-    private var bubbleNodes: [UInt64: SKSpriteNode] = [:]
+    private var effectNodes: [UInt64: SKSpriteNode] = [:]
     private var dropNodes: [UInt64: SKSpriteNode] = [:]
-    private var thunderNodes: [UInt64: SKSpriteNode] = [:]
+    private var feedbackNodes: [UInt64: SKSpriteNode] = [:]
     private var lastTime: TimeInterval?
     private var lastSimulationTime = 0.0
     private var heroAnimationTime = 0.0
@@ -100,8 +113,8 @@ final class SurvivorScene: SKScene {
     required init?(coder: NSCoder) { fatalError("Use init(textures:)") }
     func resetTimestamp() { lastTime = nil }
     func resetRun() {
-        for dict in [enemyNodes, bubbleNodes, dropNodes, thunderNodes] { for node in dict.values { node.removeFromParent() } }
-        enemyNodes = [:]; bubbleNodes = [:]; dropNodes = [:]; thunderNodes = [:]
+        for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes] { for node in dict.values { node.removeFromParent() } }
+        enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:]
         lastTime = nil
         lastSimulationTime = game?.battle.clock.elapsed ?? 0; heroAnimationTime = 0
         textures.releaseCache()
@@ -158,29 +171,31 @@ final class SurvivorScene: SKScene {
                 bar.path = CGPath(rect: CGRect(x: -30, y: 128, width: 60 * max(0, enemy.health / enemy.maximumHealth), height: 5), transform: nil)
             }
         }
-        prune(&bubbleNodes, keeping: Set(battle.bubbles.map(\.id)))
-        for bubble in battle.bubbles {
-            let node = node(for: bubble.id, in: &bubbleNodes)
-            node.texture = textures.bubbleTexture; node.position = point(bubble.position)
-            node.position.y += 22 // Project ground-plane collision into waist-height art.
-            let width = CGFloat(bubble.radius * 4.2)
-            node.size = CGSize(width: width, height: width * textures.bubbleSize.height / textures.bubbleSize.width)
-            node.anchorPoint = textures.bubblePivot
-            node.zRotation = CGFloat(atan2(bubble.velocity.y, bubble.velocity.x) - .pi)
-            node.zPosition = 240
-        }
         prune(&dropNodes, keeping: Set(battle.drops.map(\.id)))
         for drop in battle.drops {
             let node = node(for: drop.id, in: &dropNodes)
             node.texture = experienceTexture; node.position = point(drop.position)
             node.size = CGSize(width: 10, height: 13); node.zPosition = -200
         }
-        prune(&thunderNodes, keeping: Set(battle.thunders.map(\.id)))
-        for effect in battle.thunders {
-            let node = node(for: effect.id, in: &thunderNodes)
-            animate(node, clip: "thunder-\(effect.level)", time: effect.age,
-                    height: CGFloat(140 + effect.level * 16), looping: false)
-            node.position = point(effect.position); node.zPosition = 180; node.blendMode = .add
+        let casts = battle.pixelFX?.casts ?? []
+        prune(&effectNodes, keeping: Set(casts.map(\.id)))
+        for effect in casts {
+            let node = node(for: effect.id, in: &effectNodes)
+            guard let clip = textures.clip(effect.skillID) else { continue }
+            let cap = effect.profile == .projectile ? 112.0 : effect.profile == .orbit ? 130 : 320
+            let height = min(cap,Double(clip.cellSize[1])*1.8)*(1+Double(effect.level-1)*0.07)
+            animate(node,clip:effect.skillID,time:effect.age,height:CGFloat(height),looping:textures.skills.first { $0.id == effect.skillID }?.loop ?? false)
+            node.position = point(effect.position)
+            if effect.profile == .projectile { node.position.y += 22; node.zRotation = CGFloat(atan2(effect.velocity.y,effect.velocity.x)) }
+            node.zPosition = effect.profile == .aura ? 70 : 180
+        }
+        let feedback = (battle.pixelFX?.feedback ?? []).filter { event in time-event.born < (textures.clip(event.skillID)?.durationMS ?? 0)/1000 }
+        prune(&feedbackNodes,keeping:Set(feedback.map(\.id)))
+        for event in feedback {
+            let node = node(for:event.id,in:&feedbackNodes)
+            let height = min(220,Double(textures.clip(event.skillID)?.cellSize[1] ?? 100)*1.7)
+            animate(node,clip:event.skillID,time:time-event.born,height:CGFloat(height),looping:false)
+            node.position = point(event.position); node.zPosition = 200
         }
     }
     private func node(for id: UInt64, in nodes: inout [UInt64: SKSpriteNode]) -> SKSpriteNode {

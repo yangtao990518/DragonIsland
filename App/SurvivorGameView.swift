@@ -14,6 +14,19 @@ import SpriteKit
     private let saveURL: URL?
     var canContinue: Bool { suspended != nil }
     var portrait: UIImage? { textures?.idleImage }
+    @Published var starterID = UserDefaults.standard.string(forKey:"survivorPixelStarter") ?? "fire-fireball"
+    var skills: [PixelFXSkill] { textures?.skills ?? [] }
+    var starterName: String { skills.first { $0.id == starterID }?.title ?? "Fireball" }
+    func thumbnail(_ id: String) -> UIImage? { textures?.thumbnail(id) }
+    func preview(_ id: String, time: Double) -> UIImage? { textures?.preview(id,time:time) }
+    func selectStarter(_ id: String) {
+        guard skills.contains(where: { $0.id == id }) else { return }
+        starterID = id; UserDefaults.standard.set(id,forKey:"survivorPixelStarter")
+    }
+    @discardableResult func chooseLibrarySkill(_ id: String) -> Bool {
+        guard battle.choosePixelFXFromLibrary(id) else { return false }
+        syncRenderer(); revision += 1; save(); return true
+    }
 
     init() {
         battle = try! SurvivorBattle() // The built-in validated configuration.
@@ -33,10 +46,17 @@ import SpriteKit
     func start(continuing: Bool = false) {
         guard let textures else { return }
         if continuing, var previous = suspended {
+            if previous.pixelFX == nil {
+                do { try previous.configurePixelFX(textures.skills,starter:validStarter) }
+                catch { self.error = "无法迁移本局技能。"; return }
+            }
             previous.resume(.background); previous.resume(.menu); battle = previous
         } else {
             let duration = (textures.clip("thunder-1")?.durationMS ?? 4096.009) / 1000
-            do { battle = try SurvivorBattle(seed: UInt64.random(in: 1...UInt64.max), thunderDuration: duration) }
+            do {
+                battle = try SurvivorBattle(seed: UInt64.random(in: 1...UInt64.max), thunderDuration: duration)
+                try battle.configurePixelFX(textures.skills,starter:validStarter)
+            }
             catch { self.error = "无法开始试炼。"; return }
         }
         #if DEBUG
@@ -49,6 +69,7 @@ import SpriteKit
         movement = .zero; scene?.resetRun(); playing = true; syncRenderer(); revision += 1
         save()
     }
+    private var validStarter: String { skills.contains { $0.id == starterID } ? starterID : skills.first?.id ?? "fire-fireball" }
     func tick(_ delta: Double) {
         guard playing, battle.clock.running, battle.outcome == nil else { return }
         let oldChoices = battle.choices, oldOutcome = battle.outcome
@@ -118,10 +139,12 @@ struct SurvivorGameEntry: View {
 }
 
 struct SurvivorGameView: View {
+    enum LibraryMode: String, Identifiable { case starter, upgrade; var id: String { rawValue } }
     @StateObject private var game = SurvivorGameController()
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var phase
     @State private var confirmExit = false
+    @State private var libraryMode: LibraryMode?
     private let ink = Color(red: 0.07, green: 0.12, blue: 0.22)
 
     var body: some View {
@@ -134,6 +157,7 @@ struct SurvivorGameView: View {
             } else { lobby }
         }
         .preferredColorScheme(.dark)
+        .sheet(item:$libraryMode) { mode in PixelFXLibraryView(game:game,upgrading:mode == .upgrade) }
         .onChange(of: phase) { _, value in
             if value == .active { game.resume(.background) }
             else { game.pause(.background) }
@@ -166,7 +190,7 @@ struct SurvivorGameView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text("大肥鱼").font(.title2.bold())
-                                Text("鲸潮使者 · 初始武器：小水泡").font(.caption).foregroundStyle(.white.opacity(0.7))
+                                Text("鲸潮使者 · \(game.starterName)").font(.caption).foregroundStyle(.white.opacity(0.7))
                             }
                             Spacer()
                             Image(systemName: "checkmark.circle.fill").font(.title2).foregroundStyle(.cyan)
@@ -177,9 +201,19 @@ struct SurvivorGameView: View {
                         lobbyTag("自动攻击", icon: "drop.fill")
                         lobbyTag("升级三选一", icon: "sparkles")
                     }
+                    Button { libraryMode = .starter } label: {
+                        HStack {
+                            Image(systemName:"square.grid.2x2.fill")
+                            VStack(alignment:.leading,spacing:5) {
+                                Text("PixelFX 技能库").font(.headline)
+                                Text("\(game.skills.count)项可选 · 初始技能：\(game.starterName)").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer(); Image(systemName:"chevron.right")
+                        }.padding(18).background(.white.opacity(0.08),in:RoundedRectangle(cornerRadius:20))
+                    }.buttonStyle(.plain).accessibilityIdentifier("survivorSkillLibrary")
                     VStack(alignment: .leading, spacing: 12) {
                         Label("本次试炼", systemImage: "map").font(.headline)
-                        Text("拖动左下摇杆走位，拾取灵晶升级。小水泡自动追击附近敌人；学习紫霄雷后，雷阵自动释放，最高五级。")
+                        Text("拖动摇杆走位，拾取灵晶升级。技能全部自动释放，升级时可强化或从 PixelFX 全库挑选新技能。每局最多装备6项，每项最高5级。")
                             .font(.subheadline).foregroundStyle(.white.opacity(0.7)).lineSpacing(5)
                         Text("升级、暂停及切到后台时，战斗与计时一起暂停。")
                             .font(.caption).foregroundStyle(.white.opacity(0.5))
@@ -209,8 +243,10 @@ struct SurvivorGameView: View {
                     SurvivorJoystick(enabled: game.battle.clock.running && game.battle.outcome == nil) { game.movement = $0 }
                     Spacer()
                     VStack(alignment: .trailing, spacing: 8) {
-                        Label("水泡 \(game.battle.rank(.bubble))", systemImage: "drop.fill")
-                        if game.battle.rank(.thunder) > 0 { Label("紫霄雷 \(game.battle.rank(.thunder))", systemImage: "bolt.fill").accessibilityIdentifier("survivorThunderRank") }
+                        ForEach(game.battle.equippedPixelSkills) { skill in
+                            Text("\(skill.title) · \(game.battle.rank(skill.upgrade))").lineLimit(1)
+                                .accessibilityIdentifier("survivorSkillRank_\(skill.id)")
+                        }
                         Text("自动释放").font(.caption2).foregroundStyle(.white.opacity(0.5))
                     }.font(.caption.bold()).padding(14).background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 18))
                 }.padding(.horizontal, 24).padding(.bottom, 24)
@@ -254,21 +290,23 @@ struct SurvivorGameView: View {
             ForEach(game.battle.choices) { upgrade in
                 Button { game.choose(upgrade) } label: {
                     HStack(spacing: 16) {
-                        Image(systemName: upgrade.symbol).font(.title2).foregroundStyle(upgrade == .thunder ? .purple : .cyan)
+                        Image(systemName: upgrade.symbol).font(.title2).foregroundStyle(.cyan)
                             .frame(width: 48, height: 56).background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
                         VStack(alignment: .leading, spacing: 7) {
                             HStack {
-                                Text(upgrade.title).font(.headline)
+                                Text(game.battle.title(for:upgrade)).font(.headline)
                                 Spacer()
                                 Text(game.battle.rank(upgrade) == 0 ? "新技能" : "Lv.\(game.battle.rank(upgrade)) → \(game.battle.rank(upgrade) + 1)")
                                     .font(.caption).foregroundStyle(.cyan)
                             }
-                            Text(upgrade.detail(current: game.battle.rank(upgrade))).font(.caption).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.leading)
+                            Text(game.battle.detail(for:upgrade)).font(.caption).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.leading)
                         }
                     }.padding(16).background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 20))
                         .overlay(RoundedRectangle(cornerRadius: 20).stroke(.white.opacity(0.14)))
                 }.buttonStyle(.plain).accessibilityIdentifier("survivorUpgrade_\(upgrade.rawValue)")
             }
+            Button { libraryMode = .upgrade } label: { Label("从 PixelFX 全库选择",systemImage:"square.grid.2x2") }
+                .accessibilityIdentifier("survivorUpgradeLibrary")
         }
     }
     private var pauseMenu: some View {

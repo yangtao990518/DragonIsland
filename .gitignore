@@ -28,6 +28,8 @@ App/Resources/HomeScenes/
 App/Resources/BuiltinStickers/
 App/Resources/BuiltinStickers.json
 App/Resources/SurvivorGame/
+App/Resources/SurvivorGameV2/
+Art/PixelFX/
 Art/HomeScenes/**/source.mp4
 Shared/Resources/Companion.xcassets/*/
 

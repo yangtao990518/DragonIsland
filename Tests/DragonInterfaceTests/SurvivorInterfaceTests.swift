@@ -60,19 +60,33 @@ final class SurvivorInterfaceTests: XCTestCase {
         expectation(for: NSPredicate(format: "label != %@", frozen), evaluatedWith: timer)
         waitForExpectations(timeout: 8)
     }
-    func testUpgradeSelectionLearnsThunderAndResumesBattle() {
+    func testUpgradeSelectionStrengthensPixelSkillAndResumesBattle() {
         let app = launch(upgrade: true)
         start(app)
-        XCTAssertTrue(app.buttons["survivorUpgrade_thunder"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["survivorUpgrade_fx:fire-fireball"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "survivorUpgrade_")).count, 3)
         capture(app, "survivor-three-upgrade-choices")
-        app.buttons["survivorUpgrade_thunder"].tap()
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorThunderRank").firstMatch.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["survivorUpgrade_thunder"].exists)
+        app.buttons["survivorUpgrade_fx:fire-fireball"].tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorSkillRank_fire-fireball").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["survivorUpgrade_fx:fire-fireball"].exists)
         let timer = app.staticTexts["survivorTimer"]
         expectation(for: NSPredicate(format: "label != %@", "20:00"), evaluatedWith: timer)
         waitForExpectations(timeout: 8)
-        capture(app, "survivor-learned-thunder")
+        capture(app, "survivor-pixelfx-upgraded")
+    }
+    func testCatalogSearchLivePreviewAndStarterSelection() {
+        let app = launch()
+        let entry = app.buttons["survivorSkillLibrary"]
+        show(entry,in:app); entry.tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout:8))
+        search.tap(); search.typeText("Fireball\n")
+        let card = app.buttons["pixelFXSkill_fire-fireball"]
+        XCTAssertTrue(card.waitForExistence(timeout:8)); card.tap()
+        XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pixelFXLivePreview").firstMatch.waitForExistence(timeout:5))
+        capture(app,"pixelfx-native-live-preview")
+        app.buttons["pixelFXChooseSkill"].tap()
+        XCTAssertTrue(app.buttons["survivorStart"].waitForExistence(timeout:8))
     }
     func testSaveRelaunchContinueAndBackgroundPause() {
         let app = launch()

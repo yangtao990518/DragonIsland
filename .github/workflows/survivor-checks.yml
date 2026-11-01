@@ -49,7 +49,7 @@ jobs:
             -derivedDataPath build/SurvivorDerivedData \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build 2>&1 | tee build/survivor-build.log
           test -d build/SurvivorDerivedData/Build/Products/Release-iphoneos/DragonIsland.app/PlugIns/DragonIslandWidget.appex
-          test -f build/SurvivorDerivedData/Build/Products/Release-iphoneos/DragonIsland.app/SurvivorGame/manifest.json
+          test -f build/SurvivorDerivedData/Build/Products/Release-iphoneos/DragonIsland.app/SurvivorGameV2/manifest.json
       - uses: actions/upload-artifact@v7
         if: always()
         with:
