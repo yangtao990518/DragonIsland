@@ -22,6 +22,7 @@ struct SurvivorMinimapView:View {
             context.fill(Path(ellipseIn:CGRect(x:p.x-2,y:p.y-2,width:4,height:4)),with:.color(.cyan))
         }.clipShape(RoundedRectangle(cornerRadius:5))
             .overlay(RoundedRectangle(cornerRadius:5).stroke(.white.opacity(0.6),lineWidth:1))
+            .allowsHitTesting(false).accessibilityElement(children:.ignore)
             .accessibilityLabel("正方形草地小地图").accessibilityValue("青点是人物，白框是当前视野")
     }
 }

@@ -9,7 +9,7 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
             case .zone: return "范围法术"
             case .aura: return "护身灵环"
             case .heal: return "治疗祝福"
-            case .orbit: return "环绕灵兽"
+            case .orbit: return "常驻环绕"
             }
         }
     }

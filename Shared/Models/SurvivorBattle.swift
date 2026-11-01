@@ -246,6 +246,7 @@ struct SurvivorBattle: Codable, Sendable {
             if usesLocalSkills { enemies[i].position=SurvivorGrassland.clamp(enemies[i].position) }
         }
         separateEnemies(SurvivorEnemyGrid(enemies))
+        if usesLocalSkills { for i in enemies.indices {enemies[i].position=SurvivorGrassland.clamp(enemies[i].position)} }
         // Separation changes positions; damage queries need the updated cells.
         let grid = SurvivorEnemyGrid(enemies)
 
@@ -338,7 +339,7 @@ struct SurvivorBattle: Codable, Sendable {
         let enemyID = identifier()
         let hp = kind == .boss ? 1600.0 : kind == .elite ? 220 : (kind == .demon ? 30.0 : 45) + clock.elapsed * 0.055
         let speed = kind == .boss ? 47.0 : kind == .demon ? 56.0 : 42.0
-        enemies.append(.init(id: enemyID, kind: kind, position: position, health: hp, maximumHealth: hp,
+        enemies.append(.init(id: enemyID, kind: kind, position: usesLocalSkills ? SurvivorGrassland.clamp(position) : position, health: hp, maximumHealth: hp,
                              speed: speed + min(22, clock.elapsed / 80), radius: kind == .boss ? 35 : 14))
         if usesLocalSkills {
             let group:String
@@ -632,9 +633,11 @@ extension SurvivorBattle {
                 }
             } else if skill.id == "lightning" {
                 let radius=42*(1+Double(level-1)*0.25)
-                let candidates=enemies.filter{$0.health>0 && ($0.position-target.position).length<=radius}.sorted{($0.position-target.position).length<($1.position-target.position).length}
-                for (i,aim) in candidates.prefix(level).enumerated() {
-                    state.casts.append(.init(clipID:"lightning-lv1",events:[],id:identifier(),skillID:skill.id,profile:.zone,level:level,position:aim.position,velocity:.zero,duration:1.817,radius:12,damage:damage,age:-Double(i)*0.025,nextPulse:0.5))
+                let candidates=enemies.filter{enemy in let d=enemy.position-target.position;return enemy.health>0 && pow(d.x/radius,2)+pow(d.y/(radius*0.34),2)<=1}.sorted{($0.position-target.position).length<($1.position-target.position).length}
+                for i in 0..<level {
+                    let angle=Double(i)*2*Double.pi/Double(level)
+                    let at=i<candidates.count ? candidates[i].position : target.position+SurvivorVector(x:cos(angle)*radius*0.65,y:sin(angle)*radius*0.65*0.34)
+                    state.casts.append(.init(clipID:"lightning-lv1",events:[],id:identifier(),skillID:skill.id,profile:.zone,level:level,position:at,velocity:.zero,duration:1.817,radius:12,damage:damage,age:-Double(i)*0.025,nextPulse:0.5))
                 }
                 if level==5 {
                     state.casts.append(.init(clipID:"lightning-explosion",events:[],id:identifier(),skillID:"lightning-explosion",profile:.zone,level:5,position:target.position,velocity:.zero,duration:1.817,radius:84,damage:damage*1.6,age:-0.78,nextPulse:0.42))
@@ -745,7 +748,7 @@ extension SurvivorBattle {
                 if Self.segmentDistance(player,at+dir*18,at+dir*96)<34 {takeDamage(22)}
             } else if variant.contains("group01") && variant.contains("R3C") {
                 let at=enemies[i].position
-                for j in enemies.indices where (enemies[j].position-at).length<150 {enemies[j].health=min(enemies[j].maximumHealth,enemies[j].health+8)}
+                for j in enemies.indices where enemies[j].health>0 && (enemies[j].position-at).length<150 {enemies[j].health=min(enemies[j].maximumHealth,enemies[j].health+8)}
             } else if variant.contains("R4C") || variant.hasSuffix("group02-elites-boss-R2C1") {
                 let at=enemies[i].position
                 if (player-at).length<600 {

@@ -46,6 +46,19 @@ final class SurvivorLocalSkillsTests:XCTestCase {
         try game.advance(by:0.35,movement:.zero)
         XCTAssertLessThan(game.enemies[0].health,initial)
     }
+    func testFiveLightningChannelsRemainFiveWithOnlyOneEnemy() throws {
+        var game=try game("lightning")
+        for _ in 0..<4 {game.awardExperience(game.experienceNeeded);XCTAssertTrue(game.choosePixelFXFromLibrary("lightning"))}
+        game.spawnEnemy(at:.init(x:200,y:0),kind:.boss)
+        try game.advance(by:0.01,movement:.zero)
+        XCTAssertEqual(game.pixelFX?.casts.filter{$0.skillID=="lightning"}.count,5)
+    }
+    func testScriptedEnemyCannotSpawnOutsideFiniteWorld() throws {
+        var game=try game("fireball")
+        game.spawnEnemy(at:.init(x:1e9,y:1e9),kind:.boss)
+        XCTAssertLessThan(game.enemies[0].position.x,SurvivorGrassland.halfSide)
+        XCTAssertLessThan(game.enemies[0].position.y,SurvivorGrassland.halfSide)
+    }
     func testFiniteSquareAndMonotonicCrowdPressure() throws {
         let p=SurvivorGrassland.clamp(.init(x:1e9,y:-1e9))
         XCTAssertEqual(p.x,-p.y)
