@@ -13,6 +13,8 @@ struct SurvivorMedia: Decodable {
         }
     }
     struct Clip: Decodable {
+        let displayScale: Double?
+        let loop: Bool?
         let id: String
         let cellSize: [Int]
         let grid: [Int]
@@ -21,7 +23,8 @@ struct SurvivorMedia: Decodable {
         let pages: [Page]
         let frames: [Frame]
         enum CodingKeys: String, CodingKey {
-            case id, grid, pivot, pages, frames
+            case id, grid, pivot, pages, frames, loop
+            case displayScale = "display_scale"
             case cellSize = "cell_size", durationMS = "duration_ms"
         }
         func frame(at seconds: Double, looping: Bool) -> Frame? {
@@ -41,7 +44,7 @@ struct SurvivorMedia: Decodable {
         for clip in clips {
             guard clip.cellSize.count == 2, clip.cellSize.allSatisfy({ $0 > 0 }),
                   clip.grid.count == 2, clip.grid.allSatisfy({ $0 > 0 }),
-                  clip.pivot.count == 2, clip.pivot.allSatisfy({ $0.isFinite && (0...1).contains($0) }),
+                  clip.pivot.count == 2, clip.pivot.allSatisfy({ $0.isFinite && abs($0) < 10 }),
                   clip.durationMS.isFinite, clip.durationMS > 0, clip.durationMS <= 20_000,
                   !clip.pages.isEmpty, !clip.frames.isEmpty else { throw SurvivorRuleError.invalidConfiguration }
             var end = 0.0

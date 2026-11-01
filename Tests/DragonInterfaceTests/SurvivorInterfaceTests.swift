@@ -41,6 +41,17 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertEqual(pieces.count, 2)
         return pieces.count == 2 ? pieces[0] * 60 + pieces[1] : 0
     }
+    func testConfirmedSkeletonAndFlameNativeSmoke() {
+        continueAfterFailure=false
+        let app=XCUIApplication()
+        app.launchArguments=["--maiverse-capture","--character-dafeiyu","--chat-test-store",UUID().uuidString,"--survivor-asset-smoke"]
+        app.launch()
+        let entry=app.buttons["openSurvivorGame"];show(entry,in:app);entry.tap()
+        XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"nativeAssetProofScene").firstMatch.waitForExistence(timeout:30))
+        Thread.sleep(forTimeInterval:0.7);capture(app,"native-skeleton-flame-alpha-feet-start")
+        Thread.sleep(forTimeInterval:4);capture(app,"native-skeleton-complete-duration-last-frame")
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","4.016667")).firstMatch.exists)
+    }
     func testNativeBattleClockMovementAndMenuPause() {
         let app = launch()
         capture(app, "survivor-character-selection")
@@ -67,12 +78,12 @@ final class SurvivorInterfaceTests: XCTestCase {
     func testUpgradeSelectionStrengthensPixelSkillAndResumesBattle() {
         let app = launch(upgrade: true)
         start(app)
-        XCTAssertTrue(app.buttons["survivorUpgrade_fx:fire-fireball"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["survivorUpgrade_fx:fireball"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "survivorUpgrade_")).count, 3)
         capture(app, "survivor-three-upgrade-choices")
-        app.buttons["survivorUpgrade_fx:fire-fireball"].tap()
-        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorSkillRank_fire-fireball").firstMatch.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["survivorUpgrade_fx:fire-fireball"].exists)
+        app.buttons["survivorUpgrade_fx:fireball"].tap()
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorSkillRank_fireball").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["survivorUpgrade_fx:fireball"].exists)
         let timer = app.staticTexts["survivorTimer"]
         expectation(for: NSPredicate(format: "label != %@", "20:00"), evaluatedWith: timer)
         waitForExpectations(timeout: 8)
@@ -85,7 +96,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout:8))
         search.tap(); search.typeText("fireball\n")
-        let card = app.buttons["pixelFXSkill_fire-fireball"]
+        let card = app.buttons["pixelFXSkill_fireball"]
         XCTAssertTrue(card.waitForExistence(timeout:8)); card.tap()
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pixelFXLivePreview").firstMatch.waitForExistence(timeout:5))
         capture(app,"pixelfx-native-live-preview")

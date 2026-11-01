@@ -4,6 +4,7 @@ struct PixelFXLibraryView: View {
     @ObservedObject var game: SurvivorGameController
     let upgrading: Bool
     @Environment(\.dismiss) private var dismiss
+    @State private var supports=false
     @State private var archive = false
     @State private var query = ""
     @State private var category = "all"
@@ -20,9 +21,24 @@ struct PixelFXLibraryView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment:.leading,spacing:18) {
-                    Text(upgrading ? "选择本次升级技能 · 已装备\(game.battle.equippedPixelSkills.count)/6" : "选择初始技能 · 所有技能均会自动释放")
+                    Text(upgrading ? "选择本次升级技能 · 已装备\(game.battle.equippedPixelSkills.count)/6" : "选择初始技能 · 战斗中自动释放")
                         .font(.subheadline).foregroundStyle(.secondary)
-                    Toggle("查看物品与展示特效（不可装备）",isOn:$archive).font(.caption)
+                    Picker("类别",selection:$supports) { Text("攻击技能").tag(false);Text("辅助特性").tag(true) }.pickerStyle(.segmented)
+                    if supports {
+                        Text("辅助独立成长，不占6个攻击技能栏；每项最高5级。").font(.caption).foregroundStyle(.secondary)
+                        ForEach([SurvivorUpgrade.stride,.haste,.power,.vitality,.defense]) { upgrade in
+                            HStack(spacing:14) {
+                                if let image=game.icon(for:upgrade) {Image(uiImage:image).resizable().scaledToFit().frame(width:54,height:54)}
+                                VStack(alignment:.leading,spacing:7) {
+                                    Text(upgrade.title).font(.headline)
+                                    Text(upgrade.detail(current:game.battle.rank(upgrade))).font(.caption).foregroundStyle(.secondary)
+                                    Text("当前\(game.battle.rank(upgrade))级 / 最高5级").font(.caption2)
+                                }
+                                Spacer()
+                                if upgrading {Button("选择") {if game.chooseSupport(upgrade){dismiss()}}.disabled(game.battle.rank(upgrade)>=5)}
+                            }.padding(14).background(.white.opacity(0.05),in:RoundedRectangle(cornerRadius:16))
+                        }
+                    } else {
                     ScrollView(.horizontal,showsIndicators:false) {
                         HStack {
                             categoryButton("全部 \(game.skills.count)",id:"all")
@@ -48,12 +64,13 @@ struct PixelFXLibraryView: View {
                             }.buttonStyle(.plain).accessibilityIdentifier("pixelFXSkill_\(skill.id)")
                         }
                     }
-                    Text("PixelFX · Patch / Hugo Duprez · MIT").font(.caption2).foregroundStyle(.secondary)
+                    }
+                    Text("已确认技能 · 中文等级与实际战斗效果").font(.caption2).foregroundStyle(.secondary)
                     Link("来源与版权说明",destination:URL(string:"https://github.com/patch-gg/pixelfx")!).font(.caption)
                 }.padding(20)
             }
             .background(Color(red:0.06,green:0.1,blue:0.18))
-            .navigationTitle("PixelFX 技能库")
+            .navigationTitle("技能库")
             .searchable(text:$query,placement:.navigationBarDrawer(displayMode:.always),prompt:"搜索技能名称、类型")
             .toolbar { ToolbarItem(placement:.topBarTrailing) { Button("完成") { dismiss() } } }
             .sheet(item:$selected) { skill in

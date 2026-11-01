@@ -12,7 +12,7 @@ import SpriteKit
         preparing = true; movement = .zero
         scene?.isPaused=true; scene?.view?.isPaused=true
         let request=UUID(); preparationID=request
-        let ids=battle.equippedPixelSkills.map(\.id)+["dafeiyu-run","demon-run","mushroom-run","impacts-hit-spark","spawn-poof","pickups-collect-burst","ui-level-up","holy-heal"]
+        let ids=battle.equippedPixelSkills.compactMap { skill in skill.localLevels?.first(where:{$0.level==battle.rank(skill.upgrade)})?.clipID } + textures.characters.map(\.id) + ["dafeiyu-run","fireball-flight","fireball-impact","lightning-lv1","lightning-explosion","archer-arrow","seeking-flight","seeking-merged"]
         textures.prepare(ids) { [weak self] ready in
             guard let self, self.preparationID == request else { return }
             self.preparing=false
@@ -32,7 +32,8 @@ import SpriteKit
     private let saveURL: URL?
     var canContinue: Bool { suspended != nil }
     var portrait: UIImage? { textures?.idleImage }
-    @Published var starterID = UserDefaults.standard.string(forKey:"survivorPixelStarter") ?? "fire-fireball"
+    @Published var starterID = UserDefaults.standard.string(forKey:"survivorPixelStarter") ?? "fireball"
+    func icon(for upgrade:SurvivorUpgrade)->UIImage? { thumbnail(upgrade.effectID ?? SurvivorLocalSkills.supportIcons[upgrade] ?? "") }
     var skills: [PixelFXSkill] { textures?.skills ?? [] }
     var starterName: String { skills.first { $0.id == starterID }?.title ?? "火球术" }
     func thumbnail(_ id: String) -> UIImage? { textures?.thumbnail(id) }
@@ -40,6 +41,10 @@ import SpriteKit
     func selectStarter(_ id: String) {
         guard skills.contains(where: { $0.id == id && $0.selectable }) else { return }
         starterID = id; UserDefaults.standard.set(id,forKey:"survivorPixelStarter")
+    }
+    @discardableResult func chooseSupport(_ upgrade:SurvivorUpgrade)->Bool {
+        guard battle.chooseLocalSupport(upgrade) else{return false}
+        syncRenderer();revision += 1;save();return true
     }
     @discardableResult func chooseLibrarySkill(_ id: String) -> Bool {
         guard battle.choosePixelFXFromLibrary(id) else { return false }
@@ -98,7 +103,7 @@ import SpriteKit
         movement = .zero; scene?.resetRun(); playing = true; audio.reset(); prepareBattle(); revision += 1
         save()
     }
-    private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first(where: { $0.id == "fire-fireball" && $0.selectable })?.id ?? skills.first(where: \.selectable)?.id ?? "fire-fireball" }
+    private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first(where: { $0.id == "fireball" && $0.selectable })?.id ?? skills.first(where: \.selectable)?.id ?? "fireball" }
     func tick(_ delta: Double) {
         guard playing, !preparing, battle.clock.running, battle.outcome == nil else { return }
         let oldCast=battle.pixelFX?.casts.map(\.id).max() ?? 0
@@ -110,7 +115,7 @@ import SpriteKit
         if oldChoices != battle.choices { audio.play("upgrade",time:battle.clock.elapsed) }
         else if battle.health > oldHealth { audio.play("heal",time:battle.clock.elapsed) }
         else if battle.kills > oldKills { audio.play("hit",time:battle.clock.elapsed) }
-        else if (battle.pixelFX?.casts.map(\.id).max() ?? 0)>oldCast { audio.play("cast",time:battle.clock.elapsed) }
+        else if (battle.pixelFX?.casts.map(\.id).max() ?? 0)>oldCast { audio.play(battle.pixelFX?.casts.last?.skillID ?? "cast",time:battle.clock.elapsed) }
         audio.update(running:battle.clock.running && battle.outcome == nil)
         publishIn -= delta
         if publishIn <= 0 || oldChoices != battle.choices || oldOutcome != battle.outcome {
@@ -190,6 +195,18 @@ struct SurvivorGameView: View {
 
     var body: some View {
         ZStack {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--survivor-asset-smoke") {SurvivorAssetProofView()}
+            else { gameContent }
+            #else
+            gameContent
+            #endif
+        }
+        .onAppear { GameOrientationDelegate.setGame(true) }
+        .onDisappear { if game.playing {game.pause(.background)};GameOrientationDelegate.setGame(false) }
+    }
+    private var gameContent:some View {
+        ZStack {
             if game.playing, let scene = game.scene {
                 SpriteView(scene: scene, isPaused: game.preparing || !game.battle.clock.running || game.battle.outcome != nil,
                            preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
@@ -248,7 +265,7 @@ struct SurvivorGameView: View {
                         HStack {
                             Image(systemName:"square.grid.2x2.fill")
                             VStack(alignment:.leading,spacing:5) {
-                                Text("PixelFX 技能库").font(.headline)
+                                Text("技能与特性").font(.headline)
                                 Text("\(game.skills.filter(\.selectable).count)项战斗技能 · 初始技能：\(game.starterName)").font(.caption).foregroundStyle(.secondary)
                             }
                             Spacer(); Image(systemName:"chevron.right")
@@ -256,7 +273,7 @@ struct SurvivorGameView: View {
                     }.buttonStyle(.plain).accessibilityIdentifier("survivorSkillLibrary")
                     VStack(alignment: .leading, spacing: 12) {
                         Label("本次试炼", systemImage: "map").font(.headline)
-                        Text("拖动摇杆走位，拾取灵晶升级。技能全部自动释放，升级时可强化或从 PixelFX 全库挑选新技能。每局最多装备6项，每项最高5级。")
+                        Text("拖动摇杆走位，拾取灵晶升级。技能全部自动释放，升级时可强化或从 技能库挑选新技能。每局最多装备6项，每项最高5级。")
                             .font(.subheadline).foregroundStyle(.white.opacity(0.7)).lineSpacing(5)
                         Text("升级、暂停及切到后台时，战斗与计时一起暂停。")
                             .font(.caption).foregroundStyle(.white.opacity(0.5))
@@ -280,18 +297,29 @@ struct SurvivorGameView: View {
     private var battleOverlay: some View {
         ZStack {
             VStack {
-                hud
+                hud.padding(.trailing,120)
                 Spacer()
                 HStack(alignment: .bottom) {
                     SurvivorJoystick(enabled: game.battle.clock.running && game.battle.outcome == nil) { game.movement = $0 }
                     Spacer()
-                    VStack(alignment: .trailing, spacing: 8) {
-                        ForEach(game.battle.equippedPixelSkills) { skill in
-                            Text("\(skill.title) · \(game.battle.rank(skill.upgrade))").lineLimit(1)
-                                .accessibilityIdentifier("survivorSkillRank_\(skill.id)")
+                    VStack(alignment:.trailing,spacing:6) {
+                        HStack(spacing:5) {
+                            ForEach(game.battle.equippedPixelSkills) { skill in
+                                VStack(spacing:2) {
+                                    if let image=game.thumbnail(skill.id) {Image(uiImage:image).resizable().scaledToFit().frame(width:36,height:36)}
+                                    Text("\(game.battle.rank(skill.upgrade))级").font(.system(size:9).bold())
+                                }.accessibilityIdentifier("survivorSkillRank_\(skill.id)")
+                            }
                         }
-                        Text("自动释放").font(.caption2).foregroundStyle(.white.opacity(0.5))
-                    }.font(.caption.bold()).padding(14).background(.black.opacity(0.3), in: RoundedRectangle(cornerRadius: 18))
+                        HStack(spacing:5) {
+                            ForEach([SurvivorUpgrade.stride,.haste,.power,.vitality,.defense]) { upgrade in
+                                if game.battle.rank(upgrade)>0,let image=game.icon(for:upgrade) {
+                                    Image(uiImage:image).resizable().scaledToFit().frame(width:24,height:24).overlay(alignment:.bottomTrailing){Text("\(game.battle.rank(upgrade))").font(.system(size:8).bold())}
+                                }
+                            }
+                        }
+                        Text("自动释放").font(.caption2).foregroundStyle(.white.opacity(0.65))
+                    }.padding(10).background(.black.opacity(0.3),in:RoundedRectangle(cornerRadius:14))
                 }.padding(.horizontal, 24).padding(.bottom, 24)
             }
             if let outcome = game.battle.outcome { result(outcome) }
@@ -300,6 +328,9 @@ struct SurvivorGameView: View {
             else if game.battle.clock.pauseReasons.contains(.background) {
                 Text("已暂停").font(.title2.bold()).padding(24).background(.ultraThinMaterial, in: Capsule())
             }
+        }.overlay(alignment:.topTrailing) {
+            SurvivorMinimapView(player:game.battle.player,viewport:game.scene?.size ?? CGSize(width:844,height:390))
+                .frame(width:108,height:108).padding(.trailing,16).padding(.top,10)
         }.foregroundStyle(.white)
     }
     private var hud: some View {
@@ -335,7 +366,7 @@ struct SurvivorGameView: View {
                 Button { game.choose(upgrade) } label: {
                     VStack(alignment:.leading,spacing:12) {
                         Group {
-                            if let id=upgrade.effectID, let image=game.thumbnail(id) { Image(uiImage:image).resizable().interpolation(.none).scaledToFit() }
+                            if let image=game.icon(for:upgrade) { Image(uiImage:image).resizable().interpolation(.none).scaledToFit() }
                             else { Image(systemName:upgrade.symbol).font(.title2).foregroundStyle(.cyan) }
                         }.frame(width:64,height:64).padding(4).background(.white.opacity(0.06),in:RoundedRectangle(cornerRadius:14))
                         VStack(alignment: .leading, spacing: 7) {
@@ -351,7 +382,7 @@ struct SurvivorGameView: View {
                 }.buttonStyle(.plain).accessibilityIdentifier("survivorUpgrade_\(upgrade.rawValue)")
             }
             }
-            Button { libraryMode = .upgrade } label: { Label("从 PixelFX 全库选择",systemImage:"square.grid.2x2") }
+            Button { libraryMode = .upgrade } label: { Label("从技能库选择",systemImage:"square.grid.2x2") }
                 .accessibilityIdentifier("survivorUpgradeLibrary")
         }
     }

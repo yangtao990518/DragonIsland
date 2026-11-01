@@ -36,6 +36,21 @@ def prepare_audio(folder):
             tone=math.sin(2*math.pi*(freq*t+(freq*.7)*t*t))
             values.append(.22*env*(tone if name in ('heal','upgrade') else .5*tone+.5*rng.uniform(-1,1)))
         write(name,values)
+    # Distinct original effects: flame rush, electrical crack, low rock impact,
+    # sand hiss and sword swish. Bounded mono clips, no external audio licenses.
+    for name in ['fireball','lightning','earth-spikes','stone-fist','boulder','quicksand','orbit-swords','seeking-swords','seeking-merged','lightning-explosion']:
+        duration=.42 if name.startswith('lightning') else .32
+        values=[];last=0.0
+        for i in range(round(rate*duration)):
+            t=i/rate;u=t/duration;noise=rng.uniform(-1,1);last=last*.86+noise*.14
+            if name.startswith('lightning'): sample=noise*(1 if i%1100<100 else .27)+math.sin(2*math.pi*74*t)*.25
+            elif name in ('boulder','stone-fist','earth-spikes'): sample=math.sin(2*math.pi*(65*t-24*t*t))*.7+last*.8
+            elif name=='quicksand':sample=last*.9+noise*.12
+            elif 'sword' in name or 'seeking' in name:sample=noise*.36+math.sin(2*math.pi*(1400*t-1400*t*t))*.18
+            else:sample=last*1.5+noise*.13
+            envelope=min(1,t/.007)*pow(1-u,2)
+            values.append(.42*sample*envelope)
+        write(name,values)
 
 
 if __name__ == '__main__':

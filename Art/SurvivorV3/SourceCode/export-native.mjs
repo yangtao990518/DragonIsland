@@ -1,0 +1,2 @@
+import {loadEffect,renderFrames,spriteSheet,save} from './tools/lib/fxlib.mjs';
+for(const name of ['seeking-flight','seeking-merged']){const fx=await loadEffect('maiverse/'+name),r=renderFrames(fx,{actor:false}),s=spriteSheet(fx,r,name);save(new URL('../Modules/'+name+'.png',import.meta.url).pathname.replace(/^\/([A-Z]:)/,'$1'),s.png);save(new URL('../Modules/'+name+'.json',import.meta.url).pathname.replace(/^\/([A-Z]:)/,'$1'),JSON.stringify(s.json));console.log(name,r.n);}

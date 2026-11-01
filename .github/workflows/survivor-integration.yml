@@ -1,0 +1,73 @@
+name: Verify confirmed survivor integration (no IPA)
+"on":
+  workflow_dispatch:
+  push:
+    branches: [codex/chat-media-tools]
+    paths: ['.github/workflows/survivor-integration.yml']
+permissions:
+  contents: read
+jobs:
+  integration:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-15
+    timeout-minutes: 35
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      MAIVERSE_SKIP_ARCHIVED_GAME: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Tools and domain checks
+        run: |
+          set -o pipefail
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
+          mkdir -p build output
+          swift test 2>&1 | tee build/integration-domain.log
+      - name: Build portable resources
+        run: |
+          set -o pipefail
+          python3 Scripts/prepare_assets.py
+          python3 -c "import sys; sys.path.insert(0, 'Scripts'); from prepare_unread_avatar import prepare; prepare(register=False)"
+          python3 Scripts/prepare_motion.py
+          python3 Scripts/prepare_unread_avatar.py
+          python3 -m unittest discover -s Tests -p test_survivor_v3.py -v 2>&1 | tee build/integration-assets.log
+      - name: Native one-character one-skill smoke
+        run: |
+          set -o pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import plistlib
+          with open('build/simulator-keychain.entitlements','wb') as f:
+              plistlib.dump({'application-identifier':'MAITEST001.com.dragonisle.prototype.app'},f)
+          p=Path('project.yml');s=p.read_text();anchor='        PRODUCT_BUNDLE_IDENTIFIER: com.dragonisle.prototype.app\n'
+          assert s.count(anchor)==1
+          p.write_text(s.replace(anchor,anchor+'        "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": build/simulator-keychain.entitlements\n'))
+          PY
+          xcodegen generate --spec project.yml
+          DEVICE_ID="$(xcrun simctl list devices available --json | python3 -c 'import json,sys;d=json.load(sys.stdin);p=[v for v in d["devices"].get("com.apple.CoreSimulator.SimRuntime.iOS-26-2",[]) if v.get("isAvailable") and "iPhone" in v["name"]];p.sort(key=lambda v:("Pro" not in v["name"],v["name"]));print(p[0]["udid"])')"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcodebuild -project DragonIsland.xcodeproj -scheme DragonIsland -configuration Debug \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/Integration \
+            -resultBundlePath build/Integration.xcresult -parallel-testing-enabled NO \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testConfirmedSkeletonAndFlameNativeSmoke \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test 2>&1 | tee build/integration-native.log
+      - name: Export proof images
+        if: always()
+        run: |
+          mkdir -p output/native-proof
+          if [[ -d build/Integration.xcresult ]]; then
+            xcrun xcresulttool export attachments --path build/Integration.xcresult --output-path output/native-proof
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: confirmed-survivor-integration-proof
+          path: |
+            build/*.log
+            output/native-proof/
+          retention-days: 7

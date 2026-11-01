@@ -16,11 +16,11 @@ struct SurvivorRunConfiguration: Codable, Equatable, Sendable {
 
     /// Spawn values are initial tuning candidates, not verified device budgets.
     static let standard = Self(duration: 20 * 60, stages: [
-        .init(id: "opening", startsAt: 0, endsAt: 180, spawnInterval: 2, enemyLimit: 30),
-        .init(id: "growth", startsAt: 180, endsAt: 480, spawnInterval: 1.4, enemyLimit: 60),
-        .init(id: "build", startsAt: 480, endsAt: 840, spawnInterval: 1, enemyLimit: 80),
-        .init(id: "pressure", startsAt: 840, endsAt: 1080, spawnInterval: 0.75, enemyLimit: 100),
-        .init(id: "finale", startsAt: 1080, endsAt: 1200, spawnInterval: 1, enemyLimit: 100)
+        .init(id: "opening", startsAt: 0, endsAt: 180, spawnInterval: 1.1, enemyLimit: 80),
+        .init(id: "growth", startsAt: 180, endsAt: 480, spawnInterval: 0.8, enemyLimit: 140),
+        .init(id: "build", startsAt: 480, endsAt: 840, spawnInterval: 0.65, enemyLimit: 220),
+        .init(id: "pressure", startsAt: 840, endsAt: 1080, spawnInterval: 0.5, enemyLimit: 280),
+        .init(id: "finale", startsAt: 1080, endsAt: 1200, spawnInterval: 0.45, enemyLimit: 320)
     ])
 
     func validate() throws {

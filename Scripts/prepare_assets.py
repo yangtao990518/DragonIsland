@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build per-character Xcode resources; preserve aspect ratio and alpha."""
 import json
+import os
 from pathlib import Path
 
 from PIL import Image
@@ -100,8 +101,11 @@ def main():
     prepare_builtin_stickers()
     from prepare_survivor_assets import prepare as prepare_survivor_assets
     prepare_survivor_assets()
-    from prepare_pixelfx_assets import prepare as prepare_pixelfx_assets
-    prepare_pixelfx_assets()
+    if os.environ.get("MAIVERSE_SKIP_ARCHIVED_GAME") != "1":
+        from prepare_pixelfx_assets import prepare as prepare_pixelfx_assets
+        prepare_pixelfx_assets()
+    from prepare_survivor_v3 import prepare as prepare_survivor_v3
+    prepare_survivor_v3()
 
 
 if __name__ == "__main__":

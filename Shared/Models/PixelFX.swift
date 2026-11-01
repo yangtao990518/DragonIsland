@@ -13,6 +13,7 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
             }
         }
     }
+    var localLevels: [SurvivorLocalLevel]? = nil
     var role: String? = nil
     var hitRadius: Double? = nil
     var hitDelay: Double? = nil
@@ -24,6 +25,7 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
         profile == .projectile ? max(0.3,1.1*pow(0.88,Double(haste))*pow(0.95,Double(level-1))) : max(duration+0.4,(6.5-Double(level)*0.35)*pow(0.92,Double(haste)))
     }
     func stats(at level: Int, haste: Int = 0, power: Double = 1) -> String {
+        if localLevels != nil { return SurvivorLocalSkills.detail(id,level:level,haste:haste,power:power) }
         let level = max(1,min(5,level))
         let amount = profile == .heal ? "治疗 \(6+level*4)" : "伤害 \(Int(damage(at:level)*power)) · 半径 \(Int(radius(at:level)))"
         return amount + String(format:" · 冷却 %.2f秒",cooldown(at:level,haste:haste)) + (profile == .projectile ? " · \(1+(level-1)/2)发 · 穿透\(level>=4 ? 2:1)" : profile == .heal ? "" : " · 每0.65秒判定")
@@ -37,7 +39,7 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
     let duration: Double
     let description: String
     enum CodingKeys: String, CodingKey {
-        case id, title, category, profile, loop, duration, description, role
+        case id, title, category, profile, loop, duration, description, role, localLevels
         case hitRadius = "hit_radius", hitDelay = "hit_delay"
         case categoryTitle = "category_title"
     }
@@ -45,6 +47,10 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
 }
 
 struct PixelFXCast: Codable, Identifiable, Sendable {
+    var clipID: String? = nil
+    var targetID: UInt64? = nil
+    var events: Set<Int>? = nil
+    var angle: Double? = nil
     let id: UInt64
     let skillID: String
     let profile: PixelFXSkill.Profile

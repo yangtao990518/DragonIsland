@@ -19,6 +19,7 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
     static let power = Self(rawValue: "power"), haste = Self(rawValue: "haste")
     static let stride = Self(rawValue: "stride"), magnet = Self(rawValue: "magnet")
     static let vitality = Self(rawValue: "vitality"), mend = Self(rawValue: "mend")
+    static let defense = Self(rawValue:"defense")
     static let allCases: [Self] = [.thunder,.bubble,.power,.haste,.stride,.magnet,.vitality,.mend]
     static func effect(_ id: String) -> Self { .init(rawValue: "fx:" + id) }
     var effectID: String? { rawValue.hasPrefix("fx:") ? String(rawValue.dropFirst(3)) : nil }
@@ -29,11 +30,12 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
         switch self {
         case .thunder: return "紫霄雷"
         case .bubble: return "水泡术"
-        case .power: return "凝神"
-        case .haste: return "灵息"
-        case .stride: return "踏风"
+        case .power: return "强攻"
+        case .haste: return "迅击"
+        case .stride: return "疾行"
         case .magnet: return "聚灵"
-        case .vitality: return "护心"
+        case .vitality: return "生机"
+        case .defense: return "坚守"
         case .mend: return "回春"
         default: return effectID ?? rawValue
         }
@@ -54,7 +56,7 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
     var maximum: Int {
         switch self {
         case .thunder, .bubble, .power, .haste: return 5
-        case .stride, .magnet, .vitality: return 3
+        case .stride, .magnet, .vitality, .defense: return 5
         case .mend: return Int.max
         default: return 5
         }
@@ -64,7 +66,8 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
         case .thunder: return current == 0 ? "自动召唤雷阵，持续打击前方敌人" : "雷阵提升至\(current + 1)级，扩大范围并增强伤害"
         case .bubble: return "增强自动水泡；3级、5级增加一枚弹体"
         case .power: return "全部攻击伤害提高14%"
-        case .haste: return "缩短水泡和雷阵的自动释放间隔"
+        case .haste: return "自动攻击速度增加12%，全部主动技能冷却同步缩短"
+        case .defense: return "每级增加2点护甲，承受伤害最低为1"
         case .stride: return "移动速度提高10%"
         case .magnet: return "扩大经验拾取和吸引范围"
         case .vitality: return "生命上限增加20，并回复20点生命"
@@ -78,6 +81,10 @@ enum SurvivorEnemyKind: String, Codable, Sendable { case demon, mushroom, elite,
 enum SurvivorOutcome: String, Codable, Sendable { case victory, defeat }
 
 struct SurvivorEnemy: Codable, Identifiable, Sendable {
+    var variant: String? = nil
+    var born: Double? = nil
+    var nextAttack: Double? = nil
+    var slowUntil: Double? = nil
     let id: UInt64
     let kind: SurvivorEnemyKind
     var position: SurvivorVector
@@ -151,6 +158,7 @@ struct SurvivorBattle: Codable, Sendable {
     private(set) var thunders: [SurvivorThunder] = []
     private(set) var outcome: SurvivorOutcome?
     private(set) var pixelFX: PixelFXBattleState?
+    private(set) var monsterShots: [SurvivorMonsterShot]? = nil
     let thunderDuration: Double
     private var random: SurvivorRandom
     private var nextID: UInt64 = 1
@@ -160,6 +168,7 @@ struct SurvivorBattle: Codable, Sendable {
     private var invincibleUntil: Double = 0
     private var bossSpawned = false
 
+    var usesLocalSkills: Bool { pixelFX?.catalog.first?.localLevels != nil }
     var maximumHealth: Double { 100 + Double(rank(.vitality)) * 20 }
     var experienceNeeded: Int { 20 + level * 12 }
     var damageMultiplier: Double { 1 + Double(rank(.power)) * 0.14 }
@@ -204,16 +213,21 @@ struct SurvivorBattle: Codable, Sendable {
         let direction = movement.length > 1 ? movement.normalized : movement
         moving = direction.length > 0.01
         player = player + direction * (playerSpeed * delta)
+        if usesLocalSkills { player = SurvivorGrassland.clamp(player) }
         if abs(direction.x) > 0.01 { facingLeft = direction.x < 0 }
 
         spawnIn -= delta
         if let stage = configuration.stage(at: clock.elapsed), spawnIn <= 0 {
             spawnIn += stage.spawnInterval
             if enemies.count < stage.enemyLimit {
-                let angle = random.unit() * .pi * 2
-                let distance = 430 + random.unit() * 120
-                let kind: SurvivorEnemyKind = random.unit() < 0.42 ? .mushroom : .demon
-                _ = spawnEnemy(at: player + .init(x: cos(angle), y: sin(angle)) * distance, kind: kind)
+                let batch = usesLocalSkills ? min(stage.enemyLimit-enemies.count,clock.elapsed < 60 ? 3 : clock.elapsed < 300 ? 5 : clock.elapsed < 840 ? 8 : 12) : 1
+                for _ in 0..<batch {
+                    let angle = random.unit() * .pi * 2
+                    let distance = 520 + random.unit() * 130
+                    let kind: SurvivorEnemyKind = usesLocalSkills && clock.elapsed > 240 && random.unit() < 0.035 ? .elite : random.unit() < 0.42 ? .mushroom : .demon
+                    let position = player + SurvivorVector(x: cos(angle), y: sin(angle)) * distance
+                    _ = spawnEnemy(at: usesLocalSkills ? SurvivorGrassland.clamp(position) : position, kind: kind)
+                }
             }
         }
         if !bossSpawned, clock.elapsed >= configuration.duration * 0.90 {
@@ -223,7 +237,13 @@ struct SurvivorBattle: Codable, Sendable {
         for i in enemies.indices where enemies[i].health > 0 {
             let toPlayer = player - enemies[i].position
             if abs(toPlayer.x) > 0.5 { enemies[i].facingLeft = toPlayer.x < 0 }
-            enemies[i].position = enemies[i].position + toPlayer.normalized * (enemies[i].speed * delta)
+            let ranged = usesLocalSkills && (enemies[i].variant?.contains("R2C") == true || enemies[i].variant?.contains("R4C") == true)
+            let phase=(clock.elapsed-(enemies[i].born ?? 0)).truncatingRemainder(dividingBy:4.016667)
+            let windingUp=usesLocalSkills && enemies[i].kind == .boss && phase>1.4 && phase<2.85
+            let advance = windingUp ? 0 : ranged && toPlayer.length < 220 ? 0.15 : 1.0
+            let slow = clock.elapsed < (enemies[i].slowUntil ?? 0) ? 0.45 : 1.0
+            enemies[i].position = enemies[i].position + toPlayer.normalized * (enemies[i].speed * delta * slow * advance)
+            if usesLocalSkills { enemies[i].position=SurvivorGrassland.clamp(enemies[i].position) }
         }
         separateEnemies(SurvivorEnemyGrid(enemies))
         // Separation changes positions; damage queries need the updated cells.
@@ -275,7 +295,8 @@ struct SurvivorBattle: Codable, Sendable {
             }
         }
         thunders.removeAll { $0.age >= $0.duration }
-        if pixelFX != nil { advancePixelFX(delta, grid: grid) }
+        if usesLocalSkills { advanceLocalSkills(delta,grid:grid); advanceLocalMonsters(delta) }
+        else if pixelFX != nil { advancePixelFX(delta, grid: grid) }
         for enemy in enemies where enemy.health <= 0 {
             kills += 1
             emitPixelFeedback("spawn-poof", at: enemy.position)
@@ -292,7 +313,8 @@ struct SurvivorBattle: Codable, Sendable {
         // whole spawn budget with enemies permanently far behind the camera.
         for i in enemies.indices where (enemies[i].position - player).length > 950 {
             let angle = random.unit() * .pi * 2
-            enemies[i].position = player + SurvivorVector(x: cos(angle), y: sin(angle)) * 490
+            let recycled=player + SurvivorVector(x: cos(angle), y: sin(angle)) * 600
+            enemies[i].position = usesLocalSkills ? SurvivorGrassland.clamp(recycled) : recycled
         }
         for enemy in enemies where (enemy.position - player).length <= enemy.radius + 13 {
             takeDamage(enemy.kind == .boss ? 18 : 8)
@@ -318,12 +340,25 @@ struct SurvivorBattle: Codable, Sendable {
         let speed = kind == .boss ? 47.0 : kind == .demon ? 56.0 : 42.0
         enemies.append(.init(id: enemyID, kind: kind, position: position, health: hp, maximumHealth: hp,
                              speed: speed + min(22, clock.elapsed / 80), radius: kind == .boss ? 35 : 14))
+        if usesLocalSkills {
+            let group:String
+            if kind == .boss { group="group02-elites-boss-R2C2" }
+            else if kind == .elite { group=["group02-elites-boss-R1C1","group02-elites-boss-R1C2","group02-elites-boss-R2C1"][Int(random.unit()*3)%3] }
+            else {
+                let rows=clock.elapsed < 90 ? 1 : clock.elapsed < 210 ? 2 : clock.elapsed < 360 ? 3 : 4
+                let row=1+Int(random.unit()*Double(rows))%rows, column=1+Int(random.unit()*4)%4
+                group="group01-skeleton-roles-R\(row)C\(column)"
+            }
+            enemies[enemies.count-1].variant="skeleton-"+group
+            enemies[enemies.count-1].born=clock.elapsed
+            enemies[enemies.count-1].nextAttack=clock.elapsed+(kind == .boss ? 2.55:group=="group02-elites-boss-R2C1" ? 2.4:2+random.unit()*2)
+        }
         return enemyID
     }
 
     mutating func takeDamage(_ damage: Double) {
         guard clock.running, clock.elapsed >= invincibleUntil, outcome == nil, damage.isFinite, damage > 0 else { return }
-        health = max(0, health - damage)
+        health = max(0, health - max(1,damage-Double(rank(.defense))*2))
         emitPixelFeedback("impacts-hit-spark", at: player)
         invincibleUntil = clock.elapsed + 0.7
     }
@@ -340,7 +375,7 @@ struct SurvivorBattle: Codable, Sendable {
         var candidates = SurvivorUpgrade.allCases
         if let state = pixelFX {
             let equipped = upgrades.keys.filter { $0.effectID != nil && rank($0) > 0 }.count
-            candidates = [.power,.haste,.stride,.magnet,.vitality,.mend]
+            candidates = usesLocalSkills ? [.power,.haste,.stride,.vitality,.defense] : [.power,.haste,.stride,.magnet,.vitality,.mend]
             candidates += state.catalog.filter { state.pool.contains($0.id) && (equipped < 6 || rank($0.upgrade) > 0) }.map(\.upgrade)
         }
         let available = candidates.filter {
@@ -443,6 +478,7 @@ extension SurvivorBattle {
         upgrades = upgrades.filter { $0.key != .bubble && $0.key != .thunder && $0.key.effectID == nil }
         for (key,value) in previous where catalog.contains(where: { $0.upgrade == key && $0.selectable }) { upgrades[key] = value }
         if !upgrades.keys.contains(where: { $0.effectID != nil }) { upgrades[.effect(starter)] = 1 }
+        monsterShots = nil
         pixelFX = PixelFXBattleState(catalog: catalog, pool: catalog.filter(\.selectable).map(\.id))
         bubbles = []; thunders = []; choices = []
         clock.resume(.upgrade); offerUpgradeIfNeeded()
@@ -545,5 +581,176 @@ fileprivate struct SurvivorEnemyGrid {
         var result: [Int] = []
         for x in left...right { for y in bottom...top { result += cells[Cell(x:x,y:y)] ?? [] } }
         return result
+    }
+}
+
+
+extension SurvivorBattle {
+    @discardableResult mutating func chooseLocalSupport(_ upgrade:SurvivorUpgrade)->Bool {
+        guard usesLocalSkills,clock.pauseReasons.contains(.upgrade),SurvivorLocalSkills.supportIcons[upgrade] != nil,rank(upgrade)<upgrade.maximum else{return false}
+        if !choices.contains(upgrade){choices.append(upgrade)}
+        return choose(upgrade)
+    }
+
+    /// Confirmed Nov-2 behavior. Rendering uses the same asset event coordinates.
+    fileprivate mutating func advanceLocalSkills(_ delta:Double,grid:SurvivorEnemyGrid) {
+        guard var state=pixelFX else { return }
+        let now=clock.elapsed
+        state.feedback.removeAll { now-$0.born>1.6 }
+        let learned=state.catalog.filter { rank($0.upgrade)>0 }
+        for skill in learned {
+            let level=rank(skill.upgrade)
+            if skill.id == "orbit-swords" {
+                if !state.casts.contains(where:{$0.skillID==skill.id}) {
+                    state.casts.append(.init(clipID:"orbit-swords-lv\(level)",id:identifier(),skillID:skill.id,profile:.orbit,level:level,position:player,velocity:.zero,duration:1e9,radius:105,damage:SurvivorLocalSkills.baseDamage(skill.id,level:level)*damageMultiplier,age:now))
+                }
+                continue
+            }
+            state.cooldowns[skill.id,default:0]-=delta
+            guard state.cooldowns[skill.id,default:0]<=0,state.casts.count<48,let target=nearestEnemy(),(target.position-player).length<520 else { continue }
+            let damage=SurvivorLocalSkills.baseDamage(skill.id,level:level)*damageMultiplier
+            let duration=skill.localLevels?.first(where:{$0.level==level})?.duration ?? 3.5
+            if skill.id == "fireball" || skill.id == "seeking-swords" {
+                let candidates=enemies.filter{$0.health>0 && ($0.position-player).length<520}.sorted{($0.position-player).length<($1.position-player).length}
+                for i in 0..<level {
+                    let aim=candidates[i%candidates.count]
+                    let angle=atan2(aim.position.y-player.y,aim.position.x-player.x)+(Double(i)-Double(level-1)/2)*0.04
+                    let speed=skill.id == "fireball" ? 300.0:330
+                    let clip=skill.id == "fireball" ? "fireball-flight":"seeking-flight"
+                    state.casts.append(.init(clipID:clip,targetID:aim.id,id:identifier(),skillID:skill.id,profile:.projectile,level:level,position:player,velocity:.init(x:cos(angle)*speed,y:sin(angle)*speed),duration:2,radius:skill.id == "fireball" ? 9:7,damage:damage,age:-Double(i)*0.055))
+                }
+                if skill.id == "seeking-swords" && level==5 {
+                    state.casts.append(.init(clipID:"seeking-merged",targetID:target.id,id:identifier(),skillID:"seeking-merged",profile:.projectile,level:5,position:player,velocity:(target.position-player).normalized*390,duration:3.4,radius:17,damage:damage*2.5,age:-2.4))
+                }
+            } else if skill.id == "lightning" {
+                let radius=42*(1+Double(level-1)*0.25)
+                let candidates=enemies.filter{$0.health>0 && ($0.position-target.position).length<=radius}.sorted{($0.position-target.position).length<($1.position-target.position).length}
+                for (i,aim) in candidates.prefix(level).enumerated() {
+                    state.casts.append(.init(clipID:"lightning-lv1",events:[],id:identifier(),skillID:skill.id,profile:.zone,level:level,position:aim.position,velocity:.zero,duration:1.817,radius:12,damage:damage,age:-Double(i)*0.025,nextPulse:0.5))
+                }
+                if level==5 {
+                    state.casts.append(.init(clipID:"lightning-explosion",events:[],id:identifier(),skillID:"lightning-explosion",profile:.zone,level:5,position:target.position,velocity:.zero,duration:1.817,radius:84,damage:damage*1.6,age:-0.78,nextPulse:0.42))
+                }
+            } else {
+                state.casts.append(.init(clipID:"\(skill.id)-lv\(level)",events:[],id:identifier(),skillID:skill.id,profile:.zone,level:level,position:target.position,velocity:.zero,duration:duration,radius:50,damage:damage))
+            }
+            state.cooldowns[skill.id]=SurvivorLocalSkills.cooldown(skill.id,level:level,haste:rank(.haste))
+        }
+        for index in state.casts.indices {
+            var c=state.casts[index];c.age+=delta
+            if c.age<0 { state.casts[index]=c;continue }
+            if c.profile == .projectile {
+                let old=c.position
+                if c.skillID.hasPrefix("seeking"),let target=enemies.first(where:{$0.id==c.targetID && $0.health>0}) {
+                    let desired=(target.position-c.position).normalized*c.velocity.length
+                    c.velocity=c.velocity*(1-min(1,delta*7))+desired*min(1,delta*7)
+                }
+                c.position=c.position+c.velocity*delta;c.angle=atan2(c.velocity.y,c.velocity.x)
+                let hit=grid.query(from:old,to:c.position,margin:c.radius+45).filter { enemies[$0].health>0 && Self.segmentDistance(enemies[$0].position,old,c.position)<=c.radius+enemies[$0].radius }.min { (enemies[$0].position-old).length < (enemies[$1].position-old).length }
+                if let hit {
+                    enemies[hit].health-=c.damage;enemies[hit].hitUntil=now+0.12
+                    if c.skillID == "fireball" && c.level==5 {
+                        let at=enemies[hit].position
+                        for j in grid.query(from:at,to:at,margin:60) where (enemies[j].position-at).length<42+enemies[j].radius { enemies[j].health-=c.damage*0.7 }
+                        state.feedback.append(.init(id:identifier(),skillID:"fireball-impact",position:at,born:now))
+                    }
+                    c.age=c.duration
+                }
+            } else if c.profile == .orbit {
+                c.position=player;c.age=now;c.clipID="orbit-swords-lv\(rank(.effect("orbit-swords")))"
+                let swordRank=rank(.effect("orbit-swords"))
+                if now>=c.nextPulse { c.hitIDs=[];c.nextPulse=now+0.22 }
+                for blade in 0..<swordRank {
+                    let a = -Double.pi/2+now*2*Double.pi/2.6+Double(blade)*2*Double.pi/Double(swordRank)
+                    let dir=SurvivorVector(x:cos(a),y:sin(a))
+                    let start=player+dir*70,end=player+dir*104
+                    for j in grid.query(from:start,to:end,margin:40) where enemies[j].health>0 && !c.hitIDs.contains(enemies[j].id) {
+                        if Self.segmentDistance(enemies[j].position,start,end)<enemies[j].radius+5 { enemies[j].health-=SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier;enemies[j].hitUntil=now+0.1;c.hitIDs.insert(enemies[j].id) }
+                    }
+                    if swordRank==5 {
+                        let fired=2.12+Double(blade)*0.04
+                        let age=(now-fired+0.13).truncatingRemainder(dividingBy:2.6)
+                        let flightAge=(age<0 ? age+2.6:age)-0.13
+                        if flightAge>=0 && flightAge<0.5 {
+                            let angle = -Double.pi/2+fired*2*Double.pi/2.6+Double(blade)*2*Double.pi/5
+                            let forward=SurvivorVector(x:cos(angle),y:sin(angle))
+                            let point=player+forward*(106+54*min(1,flightAge/0.34))
+                            for j in grid.query(from:point,to:point,margin:50) where enemies[j].health>0 && !c.hitIDs.contains(enemies[j].id) {
+                                if (enemies[j].position-point).length<24+enemies[j].radius { enemies[j].health-=SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier;enemies[j].hitUntil=now+0.1;c.hitIDs.insert(enemies[j].id) }
+                            }
+                        }
+                    }
+                }
+            } else {
+                var hits:[(Int,Double,SurvivorVector,Double,Double,Double)]=[]
+                let l=c.level
+                switch c.skillID {
+                case "lightning": hits=[(0,0.5,.zero,12,1,1)]
+                case "lightning-explosion":hits=[(0,0.42,.zero,84,0.34,1)]
+                case "earth-spikes":
+                    for i in 0..<l {
+                        let p=SurvivorVector(x:(Double(i)-Double(l-1)/2)*Double(40+l*4),y:0)
+                        hits.append((i,0.35+Double(i)*0.105,p,Double(22+l*3)*0.5,0.5,1))
+                        if l==5 { hits.append((10+i,1.7+Double(i)*0.055,p,38,0.66,0.8)) }
+                    }
+                case "stone-fist":
+                    if l==5 { hits=[(0,0.47,.init(x:-62,y:0),38,0.5,1),(1,0.63,.init(x:62,y:0),38,0.5,1),(2,0.67,.zero,142,0.23,0.6)] }
+                    else { hits=[(0,0.47,.zero,46*[0.55,0.7,0.85,1][l-1],0.5,1)] }
+                case "boulder":
+                    hits=[(0,0.82,.zero,54*[0.58,0.74,0.9,1.06,1.13][l-1],0.35,1)]
+                    if l==5 { hits += [(1,1.05,.init(x:-98,y:0),34,0.35,0.65),(2,1.25,.init(x:98,y:0),34,0.35,0.65),(3,1.3,.zero,161,0.23,0.6)] }
+                case "quicksand":
+                    let scale=[0.5,0.65,0.8,0.95,1.1][l-1]
+                    for pulse in 0..<6 { hits.append((pulse,1.02+Double(pulse)*0.25,.zero,100*scale,0.32,0.5)) }
+                    if l==5 { hits.append((10,2.15,.zero,112,0.32,1.8)) }
+                    if c.age>=0.45 && c.age<2.5 {
+                        for j in grid.query(from:c.position,to:c.position,margin:120) where (enemies[j].position-c.position).length<100*scale {
+                            enemies[j].slowUntil=now+0.3
+                            enemies[j].position=enemies[j].position+(c.position-enemies[j].position).normalized*(delta*28)
+                        }
+                    }
+                default:break
+                }
+                for (event,t,offset,r,sy,multiplier) in hits where c.age>=t && !(c.events ?? []).contains(event) {
+                    let at=c.position+offset
+                    for j in grid.query(from:at,to:at,margin:r+45) where enemies[j].health>0 {
+                        let d=enemies[j].position-at
+                        if pow(d.x/(r+enemies[j].radius),2)+pow(d.y/(r*sy+enemies[j].radius),2)<=1 { enemies[j].health-=c.damage*multiplier;enemies[j].hitUntil=now+0.12 }
+                    }
+                    if c.events==nil {c.events=[]};c.events?.insert(event)
+                }
+            }
+            state.casts[index]=c
+        }
+        state.casts.removeAll{$0.age >= $0.duration}
+        if state.feedback.count>12 {state.feedback.removeFirst(state.feedback.count-12)}
+        pixelFX=state
+    }
+
+    fileprivate mutating func advanceLocalMonsters(_ delta:Double) {
+        let now=clock.elapsed
+        for i in enemies.indices where enemies[i].health>0 {
+            guard let variant=enemies[i].variant,now >= (enemies[i].nextAttack ?? now+1) else {continue}
+            enemies[i].nextAttack=now+(enemies[i].kind == .boss || variant.hasSuffix("group02-elites-boss-R2C1") ? 4.016667:3.5)
+            if enemies[i].kind == .boss {
+                let at=enemies[i].position,dir=SurvivorVector(x:enemies[i].facingLeft ? -1:1,y:0)
+                if Self.segmentDistance(player,at+dir*18,at+dir*96)<34 {takeDamage(22)}
+            } else if variant.contains("group01") && variant.contains("R3C") {
+                let at=enemies[i].position
+                for j in enemies.indices where (enemies[j].position-at).length<150 {enemies[j].health=min(enemies[j].maximumHealth,enemies[j].health+8)}
+            } else if variant.contains("R4C") || variant.hasSuffix("group02-elites-boss-R2C1") {
+                let at=enemies[i].position
+                if (player-at).length<600 {
+                    let shot=SurvivorMonsterShot(id:identifier(),position:at,velocity:(player-at).normalized*210,remaining:3,damage:8)
+                    if monsterShots==nil {monsterShots=[]};if (monsterShots?.count ?? 0)<60 {monsterShots?.append(shot)}
+                }
+            }
+        }
+        guard var shots=monsterShots else {return}
+        for i in shots.indices {
+            let old=shots[i].position;shots[i].position=old+shots[i].velocity*delta;shots[i].remaining-=delta
+            if Self.segmentDistance(player,old,shots[i].position)<18 {takeDamage(shots[i].damage);shots[i].remaining=0}
+        }
+        shots.removeAll{$0.remaining<=0};monsterShots=shots
     }
 }

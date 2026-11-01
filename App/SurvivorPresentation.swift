@@ -19,11 +19,11 @@ import AVFoundation
     private var sounds: [String:[AVAudioPlayer]] = [:]
     private var nextSound = 0.0
     init() {
-        guard let folder=Bundle.main.resourceURL?.appendingPathComponent("SurvivorGameV2/Audio") else { return }
+        guard let folder=Bundle.main.resourceURL?.appendingPathComponent("SurvivorGameV3/Audio") else { return }
         try? AVAudioSession.sharedInstance().setCategory(.ambient,mode:.default,options:[.mixWithOthers])
         music=try? AVAudioPlayer(contentsOf:folder.appendingPathComponent("music.wav"))
         music?.numberOfLoops = -1; music?.volume=0.3; music?.prepareToPlay()
-        for name in ["cast","hit","heal","upgrade"] {
+        for name in ["cast","hit","heal","upgrade"]+SurvivorLocalSkills.ids+["seeking-merged","lightning-explosion"] {
             sounds[name]=(0..<2).compactMap { _ in
                 guard let p=try? AVAudioPlayer(contentsOf:folder.appendingPathComponent(name+".wav")) else { return nil }
                 p.volume=0.22; p.prepareToPlay(); return p
