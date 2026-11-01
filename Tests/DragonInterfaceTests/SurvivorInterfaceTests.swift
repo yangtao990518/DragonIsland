@@ -16,7 +16,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         for _ in 0..<10 {
             let viewport=app.windows.firstMatch.frame.insetBy(dx:12,dy:12)
             if element.exists && element.isHittable && viewport.contains(CGPoint(x:element.frame.midX,y:element.frame.midY)) { return }
-            let scroll=app.scrollViews.containing(.button,identifier:element.identifier).lastMatch
+            let scroll=app.scrollViews.containing(.button,identifier:element.identifier).firstMatch
             if scroll.exists {scroll.swipeUp()} else {app.swipeUp()}
         }
         XCTAssertTrue(element.waitForExistence(timeout: 5))
