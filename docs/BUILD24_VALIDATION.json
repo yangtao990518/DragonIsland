@@ -1,0 +1,28 @@
+{
+  "validatedUTC": "2026-11-01T18:50:45.998866+00:00",
+  "version": "1.8",
+  "build": 24,
+  "source": "5854b3d5d17662eca46758f65044209f98063b86",
+  "branch": "codex/chat-media-tools",
+  "bytes": 1035403870,
+  "sha256": "8af942f85a472c18457b4c38fc0675d1fcec1663237a4c24a29001f06380510c",
+  "cloudChecksumMatches": true,
+  "appBundleID": "com.dragonisle.prototype.app",
+  "widgetBundleID": "com.dragonisle.prototype.app.widget",
+  "packageRun": "https://github.com/yangtao990518/DragonIsland/actions/runs/41337054558",
+  "proof": {
+    "source": "5854b3d5d17662eca46758f65044209f98063b86",
+    "run": "https://github.com/yangtao990518/DragonIsland/actions/runs/41335145972",
+    "swiftTests": 173,
+    "resourceTests": 6,
+    "nativeUITests": 3,
+    "failures": 0,
+    "screenshots": "Raw XCUIScreen PNG with EXIF orientation 6; displayed in landscape 2622x1206. Original app.screenshot crop was fixed by screen capture.",
+    "visualReview": "Skeleton alpha, stable feet and final frame; fireball alpha; battle hero, grass, minimap; Chinese upgrade icons/effects and resumed battle reviewed.",
+    "physicalTwentyMinuteStressVerified": false
+  },
+  "unsigned": true,
+  "physicalInstallationVerified": false,
+  "physicalTwentyMinuteStressVerified": false,
+  "materialLibrary": "https://github.com/yangtao990518/DragonIsland/releases/tag/material-library-2026-11-02"
+}
