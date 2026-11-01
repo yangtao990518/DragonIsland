@@ -106,7 +106,7 @@ import SpriteKit
     private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first(where: { $0.id == "fireball" && $0.selectable })?.id ?? skills.first(where: \.selectable)?.id ?? "fireball" }
     func tick(_ delta: Double) {
         guard playing, !preparing, battle.clock.running, battle.outcome == nil else { return }
-        let oldCast=battle.pixelFX?.casts.map(\.id).max() ?? 0
+        let oldCast=battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0
         let oldHealth=battle.health
         let oldKills=battle.kills
         let oldChoices = battle.choices, oldOutcome = battle.outcome
@@ -115,7 +115,7 @@ import SpriteKit
         if oldChoices != battle.choices { audio.play("upgrade",time:battle.clock.elapsed) }
         else if battle.health > oldHealth { audio.play("heal",time:battle.clock.elapsed) }
         else if battle.kills > oldKills { audio.play("hit",time:battle.clock.elapsed) }
-        else if (battle.pixelFX?.casts.map(\.id).max() ?? 0)>oldCast { audio.play(battle.pixelFX?.casts.last?.skillID ?? "cast",time:battle.clock.elapsed) }
+        else if (battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0)>oldCast { audio.play(battle.pixelFX?.casts.last(where:{$0.age>=0})?.skillID ?? "cast",time:battle.clock.elapsed) }
         audio.update(running:battle.clock.running && battle.outcome == nil)
         publishIn -= delta
         if publishIn <= 0 || oldChoices != battle.choices || oldOutcome != battle.outcome {

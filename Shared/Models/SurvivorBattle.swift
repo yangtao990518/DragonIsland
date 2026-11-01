@@ -141,7 +141,7 @@ private struct SurvivorRandom: Codable, Sendable {
 /// Native-renderer-independent combat rules. Particles are visual only; damage
 /// uses these stable circles and swept projectile paths, never texture alpha.
 struct SurvivorBattle: Codable, Sendable {
-    let configuration: SurvivorRunConfiguration
+    private(set) var configuration: SurvivorRunConfiguration
     private(set) var clock: SurvivorRunClock
     private(set) var player = SurvivorVector.zero
     private(set) var facingLeft = true
@@ -478,6 +478,13 @@ extension SurvivorBattle {
         upgrades = upgrades.filter { $0.key != .bubble && $0.key != .thunder && $0.key.effectID == nil }
         for (key,value) in previous where catalog.contains(where: { $0.upgrade == key && $0.selectable }) { upgrades[key] = value }
         if !upgrades.keys.contains(where: { $0.effectID != nil }) { upgrades[.effect(starter)] = 1 }
+        if catalog.first?.localLevels != nil {
+            if clock.duration == SurvivorRunConfiguration.standard.duration {configuration = .standard}
+            for i in enemies.indices where enemies[i].variant == nil {
+                let role=enemies[i].kind == .boss ? "group02-elites-boss-R2C2" : enemies[i].kind == .elite ? "group02-elites-boss-R1C1" : "group01-skeleton-roles-R1C\(1+Int(enemies[i].id%4))"
+                enemies[i].variant="skeleton-"+role;enemies[i].born=clock.elapsed;enemies[i].nextAttack=clock.elapsed+2.55
+            }
+        }
         monsterShots = nil
         pixelFX = PixelFXBattleState(catalog: catalog, pool: catalog.filter(\.selectable).map(\.id))
         bubbles = []; thunders = []; choices = []
@@ -620,7 +627,8 @@ extension SurvivorBattle {
                     state.casts.append(.init(clipID:clip,targetID:aim.id,id:identifier(),skillID:skill.id,profile:.projectile,level:level,position:player,velocity:.init(x:cos(angle)*speed,y:sin(angle)*speed),duration:2,radius:skill.id == "fireball" ? 9:7,damage:damage,age:-Double(i)*0.055))
                 }
                 if skill.id == "seeking-swords" && level==5 {
-                    state.casts.append(.init(clipID:"seeking-merged",targetID:target.id,id:identifier(),skillID:"seeking-merged",profile:.projectile,level:5,position:player,velocity:(target.position-player).normalized*390,duration:3.4,radius:17,damage:damage*2.5,age:-2.4))
+                    state.casts.append(.init(clipID:"seeking-merged",targetID:target.id,id:identifier(),skillID:"seeking-merged",profile:.projectile,level:5,position:player,velocity:(target.position-player).normalized*390,duration:3.4,radius:17,damage:damage*2.5,age:-3.24))
+                    state.casts.append(.init(clipOffset:2.4,clipID:"seeking-swords-lv5",id:identifier(),skillID:"seeking-charge",profile:.aura,level:5,position:player+SurvivorVector(x:72,y:0),velocity:.zero,duration:0.84,radius:0,damage:0,age:-2.4))
                 }
             } else if skill.id == "lightning" {
                 let radius=42*(1+Double(level-1)*0.25)

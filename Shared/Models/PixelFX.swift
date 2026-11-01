@@ -47,6 +47,7 @@ struct PixelFXSkill: Codable, Equatable, Identifiable, Sendable {
 }
 
 struct PixelFXCast: Codable, Identifiable, Sendable {
+    var clipOffset: Double? = nil
     var clipID: String? = nil
     var targetID: UInt64? = nil
     var events: Set<Int>? = nil

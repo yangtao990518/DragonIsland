@@ -251,7 +251,7 @@ final class SurvivorScene: SKScene {
         for effect in casts {
             let node=node(for:effect.id,in:&effectNodes)
             guard let id=effect.clipID,let clip=textures.clip(id) else {continue}
-            animate(node,clip:id,time:effect.age,height:CGFloat(clip.cellSize[1]) * CGFloat(clip.displayScale ?? 1),looping:clip.loop ?? false)
+            animate(node,clip:id,time:effect.age+(effect.clipOffset ?? 0),height:CGFloat(clip.cellSize[1]) * CGFloat(clip.displayScale ?? 1),looping:clip.loop ?? false)
             node.xScale=1;node.position=point(effect.position)
             node.zRotation=CGFloat(effect.angle ?? 0)
             node.zPosition=effect.profile == .orbit ? 200:150
