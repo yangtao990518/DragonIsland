@@ -12,8 +12,18 @@ struct SurvivorVector: Codable, Equatable, Sendable {
     func dot(_ other: Self) -> Double { x * other.x + y * other.y }
 }
 
-enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
-    case thunder, bubble, power, haste, stride, magnet, vitality, mend
+struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Identifiable, Sendable {
+    let rawValue: String
+    init(rawValue: String) { self.rawValue = rawValue }
+    static let thunder = Self(rawValue: "thunder"), bubble = Self(rawValue: "bubble")
+    static let power = Self(rawValue: "power"), haste = Self(rawValue: "haste")
+    static let stride = Self(rawValue: "stride"), magnet = Self(rawValue: "magnet")
+    static let vitality = Self(rawValue: "vitality"), mend = Self(rawValue: "mend")
+    static let allCases: [Self] = [.thunder,.bubble,.power,.haste,.stride,.magnet,.vitality,.mend]
+    static func effect(_ id: String) -> Self { .init(rawValue: "fx:" + id) }
+    var effectID: String? { rawValue.hasPrefix("fx:") ? String(rawValue.dropFirst(3)) : nil }
+    init(from decoder: Decoder) throws { rawValue = try decoder.singleValueContainer().decode(String.self) }
+    func encode(to encoder: Encoder) throws { var value = encoder.singleValueContainer(); try value.encode(rawValue) }
     var id: String { rawValue }
     var title: String {
         switch self {
@@ -25,6 +35,7 @@ enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
         case .magnet: return "聚灵"
         case .vitality: return "护心"
         case .mend: return "回春"
+        default: return effectID ?? rawValue
         }
     }
     var symbol: String {
@@ -37,6 +48,7 @@ enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
         case .magnet: return "circle.dotted.circle.fill"
         case .vitality: return "heart.fill"
         case .mend: return "cross.case.fill"
+        default: return "sparkles"
         }
     }
     var maximum: Int {
@@ -44,6 +56,7 @@ enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
         case .thunder, .bubble, .power, .haste: return 5
         case .stride, .magnet, .vitality: return 3
         case .mend: return Int.max
+        default: return 5
         }
     }
     func detail(current: Int) -> String {
@@ -56,6 +69,7 @@ enum SurvivorUpgrade: String, Codable, CaseIterable, Identifiable, Sendable {
         case .magnet: return "扩大经验拾取和吸引范围"
         case .vitality: return "生命上限增加20，并回复20点生命"
         case .mend: return "立即回复35点生命"
+        default: return "自动释放，升级增强伤害、范围或弹体数量"
         }
     }
 }
@@ -136,6 +150,7 @@ struct SurvivorBattle: Codable, Sendable {
     private(set) var drops: [SurvivorExperience] = []
     private(set) var thunders: [SurvivorThunder] = []
     private(set) var outcome: SurvivorOutcome?
+    private(set) var pixelFX: PixelFXBattleState?
     let thunderDuration: Double
     private var random: SurvivorRandom
     private var nextID: UInt64 = 1
@@ -215,7 +230,7 @@ struct SurvivorBattle: Codable, Sendable {
         let grid = SurvivorEnemyGrid(enemies)
 
         bubbleIn -= delta
-        if bubbleIn <= 0, let target = nearestEnemy() {
+        if rank(.bubble) > 0, bubbleIn <= 0, let target = nearestEnemy() {
             fireBubbles(toward: target.position)
             bubbleIn = max(0.18, 0.85 * pow(0.88, Double(rank(.haste))) * pow(0.95, Double(rank(.bubble)-1)))
         }
@@ -260,8 +275,10 @@ struct SurvivorBattle: Codable, Sendable {
             }
         }
         thunders.removeAll { $0.age >= $0.duration }
+        if pixelFX != nil { advancePixelFX(delta, grid: grid) }
         for enemy in enemies where enemy.health <= 0 {
             kills += 1
+            emitPixelFeedback("spawn-poof", at: enemy.position)
             let value = enemy.kind == .boss ? 500 : enemy.kind == .elite ? 80 : enemy.kind == .demon ? 12 : 18
             if drops.count < 350 {
                 let dropID = identifier()
@@ -282,7 +299,10 @@ struct SurvivorBattle: Codable, Sendable {
         }
         for i in drops.indices {
             let distance = (player - drops[i].position).length
-            if distance <= pickupRadius { experience += drops[i].value; drops[i].value = 0 }
+            if distance <= pickupRadius {
+                experience += drops[i].value; drops[i].value = 0
+                emitPixelFeedback("pickups-collect-burst", at: player)
+            }
             else if distance < absorbRadius {
                 drops[i].position = drops[i].position + (player - drops[i].position).normalized * min(distance, 300 * delta)
             }
@@ -304,6 +324,7 @@ struct SurvivorBattle: Codable, Sendable {
     mutating func takeDamage(_ damage: Double) {
         guard clock.running, clock.elapsed >= invincibleUntil, outcome == nil, damage.isFinite, damage > 0 else { return }
         health = max(0, health - damage)
+        emitPixelFeedback("impacts-hit-spark", at: player)
         invincibleUntil = clock.elapsed + 0.7
     }
 
@@ -316,12 +337,21 @@ struct SurvivorBattle: Codable, Sendable {
 
     private mutating func offerUpgradeIfNeeded() {
         guard choices.isEmpty, experience >= experienceNeeded, outcome == nil else { return }
-        let available = SurvivorUpgrade.allCases.filter {
+        var candidates = SurvivorUpgrade.allCases
+        if let state = pixelFX {
+            let equipped = upgrades.keys.filter { $0.effectID != nil && rank($0) > 0 }.count
+            candidates = [.power,.haste,.stride,.magnet,.vitality,.mend]
+            candidates += state.catalog.filter { state.pool.contains($0.id) && (equipped < 6 || rank($0.upgrade) > 0) }.map(\.upgrade)
+        }
+        let available = candidates.filter {
             rank($0) < $0.maximum && ($0 != .mend || health < maximumHealth)
         }
         var options = random.shuffle(available)
-        if rank(.thunder) == 0 {
+        if pixelFX == nil, rank(.thunder) == 0 {
             options.removeAll { $0 == .thunder }; options.insert(.thunder, at: 0)
+        }
+        if pixelFX != nil, let learned = options.first(where: { $0.effectID != nil && rank($0) > 0 }) {
+            options.removeAll { $0 == learned }; options.insert(learned, at: 0)
         }
         if options.isEmpty { options = [.mend] }
         choices = Array(options.prefix(3))
@@ -338,6 +368,7 @@ struct SurvivorBattle: Codable, Sendable {
             if upgrade == .vitality { health = min(maximumHealth, health + 20) }
             if upgrade == .thunder { thunderIn = 0.1 }
         }
+        emitPixelFeedback(upgrade == .mend || upgrade == .vitality ? "holy-heal" : "ui-level-up", at: player)
         experience -= required; level += 1; choices = []
         clock.resume(.upgrade)
         offerUpgradeIfNeeded() // Banked XP may earn another choice, still paused.
@@ -389,7 +420,114 @@ struct SurvivorBattle: Codable, Sendable {
     }
 }
 
-private struct SurvivorEnemyGrid {
+extension SurvivorBattle {
+    var pixelSkills: [PixelFXSkill] { pixelFX?.catalog ?? [] }
+    var equippedPixelSkills: [PixelFXSkill] { pixelSkills.filter { rank($0.upgrade) > 0 } }
+    func title(for upgrade: SurvivorUpgrade) -> String {
+        pixelSkills.first { $0.upgrade == upgrade }?.title ?? upgrade.title
+    }
+    func detail(for upgrade: SurvivorUpgrade) -> String {
+        guard let skill = pixelSkills.first(where: { $0.upgrade == upgrade }) else { return upgrade.detail(current: rank(upgrade)) }
+        return "\(skill.profile.title) · \(rank(upgrade) == 0 ? "学习后自动释放" : "提升至\(rank(upgrade)+1)级，增强威力与范围")"
+    }
+    mutating func configurePixelFX(_ catalog: [PixelFXSkill], starter: String) throws {
+        guard !catalog.isEmpty, Set(catalog.map(\.id)).count == catalog.count,
+              catalog.contains(where: { $0.id == starter }),
+              catalog.allSatisfy({ $0.duration.isFinite && $0.duration > 0 && $0.duration <= 20 }) else {
+            throw SurvivorRuleError.invalidConfiguration
+        }
+        // Continuing old build-21 runs keeps time, health, XP and passive ranks.
+        let previous = upgrades.filter { $0.key.effectID != nil }
+        upgrades = upgrades.filter { $0.key != .bubble && $0.key != .thunder && $0.key.effectID == nil }
+        for (key,value) in previous where catalog.contains(where: { $0.upgrade == key }) { upgrades[key] = value }
+        if !upgrades.keys.contains(where: { $0.effectID != nil }) { upgrades[.effect(starter)] = 1 }
+        pixelFX = PixelFXBattleState(catalog: catalog, pool: catalog.map(\.id))
+        bubbles = []; thunders = []; choices = []
+        clock.resume(.upgrade); offerUpgradeIfNeeded()
+    }
+    @discardableResult mutating func choosePixelFXFromLibrary(_ id: String) -> Bool {
+        let upgrade = SurvivorUpgrade.effect(id)
+        guard clock.pauseReasons.contains(.upgrade), let state = pixelFX,
+              state.catalog.contains(where: { $0.id == id }), rank(upgrade) < 5,
+              rank(upgrade) > 0 || equippedPixelSkills.count < 6 else { return false }
+        if !choices.contains(upgrade) { choices.append(upgrade) }
+        return choose(upgrade)
+    }
+    private mutating func emitPixelFeedback(_ id: String, at position: SurvivorVector) {
+        guard pixelFX != nil, pixelSkills.contains(where: { $0.id == id }) else { return }
+        let eventID = identifier()
+        pixelFX?.feedback.append(.init(id: eventID, skillID: id, position: position, born: clock.elapsed))
+        if let count = pixelFX?.feedback.count, count > 24 { pixelFX?.feedback.removeFirst(count-24) }
+    }
+    fileprivate mutating func advancePixelFX(_ delta: Double, grid: SurvivorEnemyGrid) {
+        guard var state = pixelFX else { return }
+        let durations = Dictionary(uniqueKeysWithValues: state.catalog.map { ($0.id,$0.duration) })
+        let now = clock.elapsed
+        state.feedback.removeAll { now - $0.born >= (durations[$0.skillID] ?? 4) }
+        let equipped = state.catalog.filter { rank($0.upgrade) > 0 }
+        for skill in equipped {
+            state.cooldowns[skill.id, default: 0] -= delta
+            guard state.cooldowns[skill.id, default: 0] <= 0, state.casts.count < 24 else { continue }
+            guard let target = nearestEnemy() else { continue }
+            if skill.profile != .projectile && (target.position-player).length > 340 { continue }
+            let level = rank(skill.upgrade), direction = (target.position-player).normalized
+            let duration = skill.profile == .projectile && skill.loop ? 2.5 : skill.duration
+            let speed = max(240, (target.position-player).length / max(0.15,duration-0.15))
+            let count = skill.profile == .projectile ? 1+(level-1)/2 : 1
+            for index in 0..<count {
+                let angle = atan2(direction.y,direction.x) + (Double(index)-Double(count-1)/2)*0.14
+                let velocity = skill.profile == .projectile ? SurvivorVector(x: cos(angle),y: sin(angle))*speed : .zero
+                let position = skill.profile == .zone ? target.position : player
+                let castID = identifier()
+                state.casts.append(.init(id: castID,skillID:skill.id,profile:skill.profile,level:level,position:position,
+                    velocity:velocity,duration:duration,radius:skill.profile == .projectile ? 9+Double(level) : 65+Double(level)*13,
+                    damage:(skill.profile == .projectile ? 16+Double(level)*7 : 12+Double(level)*7)*damageMultiplier))
+            }
+            if skill.profile == .heal { health = min(maximumHealth,health+6+Double(level)*4) }
+            state.cooldowns[skill.id] = skill.profile == .projectile
+                ? max(0.3,1.1*pow(0.88,Double(rank(.haste)))*pow(0.95,Double(level-1)))
+                : max(skill.duration+0.4,(6.5-Double(level)*0.35)*pow(0.92,Double(rank(.haste))))
+        }
+        for index in state.casts.indices {
+            state.casts[index].age += delta
+            let old = state.casts[index].position
+            switch state.casts[index].profile {
+            case .projectile: state.casts[index].position = old + state.casts[index].velocity*delta
+            case .aura,.heal: state.casts[index].position = player
+            case .orbit:
+                let angle = clock.elapsed*2.2+Double(index)*2.399
+                state.casts[index].position = player + SurvivorVector(x:cos(angle),y:sin(angle))*(55+Double(state.casts[index].level)*9)
+            case .zone: break
+            }
+            var cast = state.casts[index]
+            if cast.profile == .projectile {
+                let hits = grid.query(from:old,to:cast.position,margin:55).filter {
+                    enemies[$0].health > 0 && !cast.hitIDs.contains(enemies[$0].id) && Self.segmentDistance(enemies[$0].position,old,cast.position) <= cast.radius+enemies[$0].radius
+                }.sorted { (enemies[$0].position-old).length < (enemies[$1].position-old).length }
+                for enemy in hits {
+                    enemies[enemy].health -= cast.damage; enemies[enemy].hitUntil = clock.elapsed+0.12
+                    cast.hitIDs.insert(enemies[enemy].id)
+                    let eventID = identifier()
+                    state.feedback.append(.init(id:eventID,skillID:"impacts-hit-spark",position:enemies[enemy].position,born:clock.elapsed))
+                    if cast.hitIDs.count >= (cast.level >= 4 ? 2 : 1) { cast.age = cast.duration; break }
+                }
+            } else if cast.age >= cast.nextPulse {
+                cast.nextPulse += 0.65
+                for enemy in grid.query(from:cast.position,to:cast.position,margin:cast.radius+45) where enemies[enemy].health > 0 {
+                    if (enemies[enemy].position-cast.position).length <= cast.radius+enemies[enemy].radius {
+                        enemies[enemy].health -= cast.damage; enemies[enemy].hitUntil = clock.elapsed+0.12
+                    }
+                }
+            }
+            state.casts[index] = cast
+        }
+        state.casts.removeAll { $0.age >= $0.duration }
+        if state.feedback.count > 24 { state.feedback.removeFirst(state.feedback.count-24) }
+        pixelFX = state
+    }
+}
+
+fileprivate struct SurvivorEnemyGrid {
     private struct Cell: Hashable { let x: Int; let y: Int }
     private var cells: [Cell: [Int]] = [:]
     private let side = 80.0
