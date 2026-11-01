@@ -4,12 +4,27 @@ import AVFoundation
 @MainActor final class GameOrientationDelegate: NSObject, UIApplicationDelegate {
     static var mask: UIInterfaceOrientationMask = .portrait
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask { Self.mask }
+    private static var requestID=UUID()
     static func setGame(_ enabled: Bool) {
         mask = enabled ? .landscape : .portrait
-        for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
-            scene.windows.forEach { $0.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations() }
-            scene.requestGeometryUpdate(.iOS(interfaceOrientations:mask))
+        let request=UUID();requestID=request
+        func apply() {
+            guard requestID==request else{return}
+            func invalidate(_ controller:UIViewController) {
+                controller.setNeedsUpdateOfSupportedInterfaceOrientations()
+                controller.children.forEach(invalidate)
+                if let presented=controller.presentedViewController {invalidate(presented)}
+            }
+            for scene in UIApplication.shared.connectedScenes.compactMap({$0 as? UIWindowScene}) {
+                scene.windows.compactMap(\.rootViewController).forEach(invalidate)
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations:mask))
+            }
         }
+        apply()
+        // fullScreenCover finishes presenting after onAppear. Invalidate its
+        // hosting controller too, then retry once the transition has settled.
+        DispatchQueue.main.asyncAfter(deadline:.now()+0.35,execute:apply)
+        DispatchQueue.main.asyncAfter(deadline:.now()+0.9,execute:apply)
     }
 }
 

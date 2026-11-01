@@ -3,6 +3,7 @@ import XCTest
 final class SurvivorInterfaceTests: XCTestCase {
     private func launch(upgrade: Bool = false, stress: Bool = false) -> XCUIApplication {
         continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--chat-test-store", UUID().uuidString]
         if upgrade { app.launchArguments.append("--survivor-upgrade-preview") }
@@ -23,6 +24,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         let entry = app.buttons["openSurvivorGame"]
         show(entry, in: app); entry.tap()
         XCTAssertTrue(app.staticTexts["选择出战角色"].waitForExistence(timeout: 10))
+        XCUIDevice.shared.orientation = .landscapeRight
         XCTAssertTrue(app.wait(for:.runningForeground,timeout:5))
         let landscape=expectation(for:NSPredicate { _,_ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height },evaluatedWith:app)
         wait(for:[landscape],timeout:8)
@@ -47,6 +49,9 @@ final class SurvivorInterfaceTests: XCTestCase {
         app.launchArguments=["--maiverse-capture","--character-dafeiyu","--chat-test-store",UUID().uuidString,"--survivor-asset-smoke"]
         app.launch()
         let entry=app.buttons["openSurvivorGame"];show(entry,in:app);entry.tap()
+        XCUIDevice.shared.orientation = .landscapeRight
+        let landscape=expectation(for:NSPredicate {_,_ in app.windows.firstMatch.frame.width>app.windows.firstMatch.frame.height},evaluatedWith:app)
+        wait(for:[landscape],timeout:10)
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"nativeAssetProofScene").firstMatch.waitForExistence(timeout:30))
         Thread.sleep(forTimeInterval:0.7);capture(app,"native-skeleton-flame-alpha-feet-start")
         Thread.sleep(forTimeInterval:4);capture(app,"native-skeleton-complete-duration-last-frame")

@@ -215,14 +215,12 @@ struct SurvivorGameView: View {
             } else { lobby }
             if game.preparing { ZStack { Color.black.opacity(0.7).ignoresSafeArea(); ProgressView("正在准备战斗素材…").padding(24).background(.ultraThinMaterial,in:RoundedRectangle(cornerRadius:20)) } }
         }
-        .onAppear { GameOrientationDelegate.setGame(true) }
         .preferredColorScheme(.dark)
         .sheet(item:$libraryMode) { mode in PixelFXLibraryView(game:game,upgrading:mode == .upgrade) }
         .onChange(of: phase) { _, value in
             if value == .active { game.resume(.background) }
             else { game.pause(.background) }
         }
-        .onDisappear { if game.playing { game.pause(.background) }; GameOrientationDelegate.setGame(false) }
         .confirmationDialog("离开试炼？当前进度会保存在本机，可以稍后继续。", isPresented: $confirmExit, titleVisibility: .visible) {
             Button("保存并返回选角") { game.lobby() }.accessibilityIdentifier("survivorSaveExit")
             Button("继续战斗", role: .cancel) { }
