@@ -13,9 +13,11 @@ import SpriteKit
         scene?.isPaused=true; scene?.view?.isPaused=true
         let request=UUID(); preparationID=request
         let ids=battle.equippedPixelSkills.map(\.id)+["dafeiyu-run","demon-run","mushroom-run","impacts-hit-spark","spawn-poof","pickups-collect-burst","ui-level-up","holy-heal"]
-        textures.prepare(ids) { [weak self] in
+        textures.prepare(ids) { [weak self] ready in
             guard let self, self.preparationID == request else { return }
-            self.preparing=false; self.syncRenderer(); self.revision += 1
+            self.preparing=false
+            if !ready { self.error="战斗图集预载失败，已暂停。请重新进入试炼。"; self.battle.pause(.menu) }
+            self.syncRenderer(); self.revision += 1
         }
     }
     @Published private(set) var revision = 0
@@ -64,10 +66,6 @@ import SpriteKit
         if continuing, var previous = suspended {
             do { try previous.configurePixelFX(textures.skills,starter:validStarter) }
             catch { self.error = "无法更新本局技能。"; return }
-            if previous.pixelFX == nil {
-                do { try previous.configurePixelFX(textures.skills,starter:validStarter) }
-                catch { self.error = "无法迁移本局技能。"; return }
-            }
             previous.resume(.background); previous.resume(.menu); battle = previous
         } else {
             let duration = (textures.clip("thunder-1")?.durationMS ?? 4096.009) / 1000
@@ -100,15 +98,17 @@ import SpriteKit
         movement = .zero; scene?.resetRun(); playing = true; audio.reset(); prepareBattle(); revision += 1
         save()
     }
-    private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first?.id ?? "fire-fireball" }
+    private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first(where: { $0.id == "fire-fireball" && $0.selectable })?.id ?? skills.first(where: \.selectable)?.id ?? "fire-fireball" }
     func tick(_ delta: Double) {
         guard playing, !preparing, battle.clock.running, battle.outcome == nil else { return }
         let oldCast=battle.pixelFX?.casts.map(\.id).max() ?? 0
+        let oldHealth=battle.health
         let oldKills=battle.kills
         let oldChoices = battle.choices, oldOutcome = battle.outcome
         do { try battle.advance(by: delta, movement: movement) }
         catch { self.error = "战斗状态异常，已暂停。"; battle.pause(.menu) }
         if oldChoices != battle.choices { audio.play("upgrade",time:battle.clock.elapsed) }
+        else if battle.health > oldHealth { audio.play("heal",time:battle.clock.elapsed) }
         else if battle.kills > oldKills { audio.play("hit",time:battle.clock.elapsed) }
         else if (battle.pixelFX?.casts.map(\.id).max() ?? 0)>oldCast { audio.play("cast",time:battle.clock.elapsed) }
         audio.update(running:battle.clock.running && battle.outcome == nil)

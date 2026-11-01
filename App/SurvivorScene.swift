@@ -39,7 +39,7 @@ final class SurvivorTextures {
     }
     func clip(_ id: String) -> SurvivorMedia.Clip? { clipIndex[id] }
     // Decode off the render thread, then upload before resuming simulation.
-    func prepare(_ ids: [String], completion: @escaping () -> Void) {
+    func prepare(_ ids: [String], completion: @escaping (Bool) -> Void) {
         let files = Set(ids.flatMap { clip($0)?.pages.map(\.file) ?? [] })
         let root = self.root
         DispatchQueue.global(qos:.userInitiated).async {
@@ -48,12 +48,13 @@ final class SurvivorTextures {
                 return (file,image)
             }
             DispatchQueue.main.async {
+                guard images.count == files.count else { completion(false); return }
                 self.current.removeAll(); self.resident.removeAll()
                 for (file,image) in images {
                     let texture = SKTexture(image:image); texture.filteringMode = file.contains("dafeiyu") || file.contains("demon") || file.contains("mushroom") ? .linear : .nearest
                     self.resident[file] = texture
                 }
-                SKTexture.preload(Array(self.resident.values)) { DispatchQueue.main.async(execute:completion) }
+                SKTexture.preload(Array(self.resident.values)) { DispatchQueue.main.async { completion(true) } }
             }
         }
     }

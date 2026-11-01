@@ -62,6 +62,7 @@ def prepare():
     for skill in catalog['skills']:
         rule = gameplay[skill['id']]
         skill.update(rule)
+        skill['category_title']={'ui':'界面提示','impacts':'命中反馈','spawn':'生灭特效','transitions':'转场','pickups':'拾取物','moves':'连招演示','weather':'天气'}.get(skill['category'],skill['category_title'])
         skill['description'] = ("按可见落点范围命中，升级可查看具体数值。" if rule['role']=='attack' else "恢复自身生命，不对怪物造成伤害。" if rule['role']=='support' else "拾取物品素材，不占用攻击技能栏。" if rule['role']=='item' else "仅供特效预览，不加入攻击与升级池。")
     # Combat-only, lower-resolution atlas; ALL original frame timestamps retained.
     # Original full-resolution gallery pages above remain unchanged.

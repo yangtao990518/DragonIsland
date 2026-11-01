@@ -32,7 +32,7 @@ import AVFoundation
     }
     func update(running: Bool) {
         if running && !UserDefaults.standard.bool(forKey:"survivorMusicMuted") { music?.play() }
-        else { music?.pause() }
+        else { music?.pause(); sounds.values.flatMap{$0}.forEach{$0.stop()} }
     }
     func play(_ name:String, time:Double) {
         guard !UserDefaults.standard.bool(forKey:"survivorEffectsMuted"), time>=nextSound,

@@ -94,4 +94,17 @@ class PixelFXAssetsTests(unittest.TestCase):
                 self.assertGreater(audio.getnframes(),100)
             self.assertLess(path.stat().st_size,1_500_000)
 
+    def test_worst_six_skill_decoded_texture_budget(self):
+        clips=json.loads((self.app/'combat.json').read_text())['clips']
+        costs={}
+        for clip in clips:
+            cost=0
+            for page in clip['pages']:
+                with Image.open(self.app/page['file']) as image:
+                    cost+=image.width*image.height*4
+            costs[clip['id']]=cost
+        fixed={'dafeiyu-run','demon-run','mushroom-run','impacts-hit-spark','spawn-poof','pickups-collect-burst','ui-level-up','holy-heal'}
+        worst=sum(costs.get(key,0) for key in fixed)+sum(sorted((value for key,value in costs.items() if key not in fixed),reverse=True)[:6])
+        self.assertLess(worst,128*1024*1024)
+
 if __name__=='__main__': unittest.main()
