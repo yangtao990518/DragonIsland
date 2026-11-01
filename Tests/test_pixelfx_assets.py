@@ -61,4 +61,37 @@ class PixelFXAssetsTests(unittest.TestCase):
         self.assertTrue((self.app/'PixelFX/NOTICE.md').exists())
         self.assertFalse(list((ROOT/'ThirdParty/PixelFX').rglob('*.woff2')))
 
+    def test_chinese_roles_and_curated_combat(self):
+        catalog=json.loads((self.app/'PixelFXCatalog.json').read_text(encoding='utf-8'))['skills']
+        self.assertEqual(len(catalog),244)
+        for skill in catalog:
+            self.assertTrue(any('\u4e00'<=c<='\u9fff' for c in skill['title']))
+            self.assertIn(skill['role'],('attack','support','item','decoration'))
+            if skill['category'] in ('ui','weather','transitions','spawn','impacts','pickups'):
+                self.assertNotIn(skill['role'],('attack','support'))
+        self.assertEqual(sum(s['role']=='attack' for s in catalog),18)
+        self.assertEqual(sum(s['role']=='support' for s in catalog),2)
+
+    def test_combat_preserves_every_original_timestamp_with_bounded_pages(self):
+        combat=json.loads((self.app/'combat.json').read_text())['clips']
+        full={c['id']:c for c in self.runtime['clips']}
+        for clip in combat:
+            source=full[clip['id']]
+            self.assertEqual(clip['duration_ms'],source['duration_ms'])
+            self.assertEqual(len(clip['frames']),len(source['frames']))
+            self.assertEqual([(f['start_ms'],f['duration_ms']) for f in clip['frames']],[(f['start_ms'],f['duration_ms']) for f in source['frames']])
+            for page in clip['pages']:
+                with Image.open(self.app/page['file']) as image:
+                    self.assertLessEqual(max(image.size),768)
+
+    def test_game_audio_is_valid_and_small(self):
+        import wave
+        for name in ('music','cast','hit','heal','upgrade'):
+            path=self.app/'Audio'/f'{name}.wav'
+            with wave.open(str(path)) as audio:
+                self.assertEqual(audio.getnchannels(),1)
+                self.assertEqual(audio.getsampwidth(),2)
+                self.assertGreater(audio.getnframes(),100)
+            self.assertLess(path.stat().st_size,1_500_000)
+
 if __name__=='__main__': unittest.main()

@@ -422,33 +422,35 @@ struct SurvivorBattle: Codable, Sendable {
 
 extension SurvivorBattle {
     var pixelSkills: [PixelFXSkill] { pixelFX?.catalog ?? [] }
-    var equippedPixelSkills: [PixelFXSkill] { pixelSkills.filter { rank($0.upgrade) > 0 } }
+    var equippedPixelSkills: [PixelFXSkill] { pixelSkills.filter { $0.selectable && rank($0.upgrade) > 0 } }
     func title(for upgrade: SurvivorUpgrade) -> String {
         pixelSkills.first { $0.upgrade == upgrade }?.title ?? upgrade.title
     }
     func detail(for upgrade: SurvivorUpgrade) -> String {
         guard let skill = pixelSkills.first(where: { $0.upgrade == upgrade }) else { return upgrade.detail(current: rank(upgrade)) }
-        return "\(skill.profile.title) · \(rank(upgrade) == 0 ? "学习后自动释放" : "提升至\(rank(upgrade)+1)级，增强威力与范围")"
+        let level = rank(upgrade)
+        let next = skill.stats(at:level+1,haste:rank(.haste),power:damageMultiplier)
+        return level == 0 ? "学习："+next : "当前："+skill.stats(at:level,haste:rank(.haste),power:damageMultiplier)+"\n升级："+next
     }
     mutating func configurePixelFX(_ catalog: [PixelFXSkill], starter: String) throws {
         guard !catalog.isEmpty, Set(catalog.map(\.id)).count == catalog.count,
-              catalog.contains(where: { $0.id == starter }),
+              catalog.contains(where: { $0.id == starter && $0.selectable }),
               catalog.allSatisfy({ $0.duration.isFinite && $0.duration > 0 && $0.duration <= 20 }) else {
             throw SurvivorRuleError.invalidConfiguration
         }
         // Continuing old build-21 runs keeps time, health, XP and passive ranks.
         let previous = upgrades.filter { $0.key.effectID != nil }
         upgrades = upgrades.filter { $0.key != .bubble && $0.key != .thunder && $0.key.effectID == nil }
-        for (key,value) in previous where catalog.contains(where: { $0.upgrade == key }) { upgrades[key] = value }
+        for (key,value) in previous where catalog.contains(where: { $0.upgrade == key && $0.selectable }) { upgrades[key] = value }
         if !upgrades.keys.contains(where: { $0.effectID != nil }) { upgrades[.effect(starter)] = 1 }
-        pixelFX = PixelFXBattleState(catalog: catalog, pool: catalog.map(\.id))
+        pixelFX = PixelFXBattleState(catalog: catalog, pool: catalog.filter(\.selectable).map(\.id))
         bubbles = []; thunders = []; choices = []
         clock.resume(.upgrade); offerUpgradeIfNeeded()
     }
     @discardableResult mutating func choosePixelFXFromLibrary(_ id: String) -> Bool {
         let upgrade = SurvivorUpgrade.effect(id)
         guard clock.pauseReasons.contains(.upgrade), let state = pixelFX,
-              state.catalog.contains(where: { $0.id == id }), rank(upgrade) < 5,
+              state.catalog.contains(where: { $0.id == id && $0.selectable }), rank(upgrade) < 5,
               rank(upgrade) > 0 || equippedPixelSkills.count < 6 else { return false }
         if !choices.contains(upgrade) { choices.append(upgrade) }
         return choose(upgrade)
@@ -461,13 +463,13 @@ extension SurvivorBattle {
     }
     fileprivate mutating func advancePixelFX(_ delta: Double, grid: SurvivorEnemyGrid) {
         guard var state = pixelFX else { return }
-        let durations = Dictionary(uniqueKeysWithValues: state.catalog.map { ($0.id,$0.duration) })
         let now = clock.elapsed
-        state.feedback.removeAll { now - $0.born >= (durations[$0.skillID] ?? 4) }
-        let equipped = state.catalog.filter { rank($0.upgrade) > 0 }
+        let feedbackDurations = state.feedback.map { event in state.catalog.first { $0.id == event.skillID }?.duration ?? 4 }
+        state.feedback = zip(state.feedback,feedbackDurations).filter { now-$0.0.born < $0.1 }.map { $0.0 }
+        let equipped = state.catalog.filter { $0.selectable && rank($0.upgrade) > 0 }
         for skill in equipped {
             state.cooldowns[skill.id, default: 0] -= delta
-            guard state.cooldowns[skill.id, default: 0] <= 0, state.casts.count < 24 else { continue }
+            guard state.cooldowns[skill.id, default: 0] <= 0, state.casts.count < 16 else { continue }
             guard let target = nearestEnemy() else { continue }
             if skill.profile != .projectile && (target.position-player).length > 340 { continue }
             let level = rank(skill.upgrade), direction = (target.position-player).normalized
@@ -480,13 +482,11 @@ extension SurvivorBattle {
                 let position = skill.profile == .zone ? target.position : player
                 let castID = identifier()
                 state.casts.append(.init(id: castID,skillID:skill.id,profile:skill.profile,level:level,position:position,
-                    velocity:velocity,duration:duration,radius:skill.profile == .projectile ? 9+Double(level) : 65+Double(level)*13,
-                    damage:(skill.profile == .projectile ? 16+Double(level)*7 : 12+Double(level)*7)*damageMultiplier))
+                    velocity:velocity,duration:duration,radius:skill.radius(at:level),
+                    damage:skill.damage(at:level)*damageMultiplier,nextPulse:skill.hitDelay ?? 0.1))
             }
             if skill.profile == .heal { health = min(maximumHealth,health+6+Double(level)*4) }
-            state.cooldowns[skill.id] = skill.profile == .projectile
-                ? max(0.3,1.1*pow(0.88,Double(rank(.haste)))*pow(0.95,Double(level-1)))
-                : max(skill.duration+0.4,(6.5-Double(level)*0.35)*pow(0.92,Double(rank(.haste))))
+            state.cooldowns[skill.id] = skill.cooldown(at:level,haste:rank(.haste))
         }
         for index in state.casts.indices {
             state.casts[index].age += delta
@@ -511,7 +511,7 @@ extension SurvivorBattle {
                     state.feedback.append(.init(id:eventID,skillID:"impacts-hit-spark",position:enemies[enemy].position,born:clock.elapsed))
                     if cast.hitIDs.count >= (cast.level >= 4 ? 2 : 1) { cast.age = cast.duration; break }
                 }
-            } else if cast.age >= cast.nextPulse {
+            } else if cast.profile != .heal && cast.age >= cast.nextPulse && cast.age < cast.duration {
                 cast.nextPulse += 0.65
                 for enemy in grid.query(from:cast.position,to:cast.position,margin:cast.radius+45) where enemies[enemy].health > 0 {
                     if (enemies[enemy].position-cast.position).length <= cast.radius+enemies[enemy].radius {
@@ -522,7 +522,7 @@ extension SurvivorBattle {
             state.casts[index] = cast
         }
         state.casts.removeAll { $0.age >= $0.duration }
-        if state.feedback.count > 24 { state.feedback.removeFirst(state.feedback.count-24) }
+        if state.feedback.count > 10 { state.feedback.removeFirst(state.feedback.count-10) }
         pixelFX = state
     }
 }

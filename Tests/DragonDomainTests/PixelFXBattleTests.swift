@@ -67,4 +67,42 @@ final class PixelFXBattleTests: XCTestCase {
         XCTAssertThrowsError(try game.configurePixelFX(catalog(),starter:"missing"))
         XCTAssertThrowsError(try game.configurePixelFX(catalog()+catalog(),starter:"spell-0"))
     }
+
+    func testGalleryItemsNeverEnterCombatOrUpgradePool() throws {
+        var item = catalog()[1]; item.role = "item"
+        var gallery = catalog()[2]; gallery.role = "decoration"
+        var game = try SurvivorBattle()
+        XCTAssertThrowsError(try game.configurePixelFX([item],starter:item.id))
+        try game.configurePixelFX([catalog()[0],item,gallery],starter:"spell-0")
+        XCTAssertEqual(game.pixelFX?.pool,["spell-0"])
+        game.awardExperience(game.experienceNeeded)
+        XCTAssertFalse(game.choosePixelFXFromLibrary(item.id))
+        XCTAssertFalse(game.choosePixelFXFromLibrary(gallery.id))
+    }
+
+    func testHealingHasNoEnemyDamage() throws {
+        let heal=PixelFXSkill(role:"support",hitRadius:0,hitDelay:0.1,id:"heal",title:"治疗",category:"holy",categoryTitle:"圣光",profile:.heal,loop:false,duration:1,description:"")
+        var game = try SurvivorBattle()
+        try game.configurePixelFX([heal],starter:"heal")
+        game.spawnEnemy(at:.init(x:70,y:0),kind:.boss)
+        let health=game.enemies.first!.health
+        try game.advance(by:0.5,movement:.zero)
+        XCTAssertEqual(game.enemies.first?.health,health)
+        XCTAssertEqual(game.pixelFX?.casts.first?.damage,0)
+    }
+
+    func testAreaDamageWaitsForVisibleTelegraphAndUsesCalibratedRadius() throws {
+        let spell=PixelFXSkill(role:"attack",hitRadius:12,hitDelay:0.4,id:"zone",title:"落雷",category:"lightning",categoryTitle:"雷电",profile:.zone,loop:false,duration:1,description:"")
+        var game = try SurvivorBattle()
+        try game.configurePixelFX([spell],starter:"zone")
+        game.spawnEnemy(at:.init(x:200,y:0),kind:.boss)
+        let health=game.enemies.first!.health
+        try game.advance(by:0.2,movement:.zero)
+        XCTAssertEqual(game.enemies.first?.health,health)
+        XCTAssertEqual(game.pixelFX?.casts.first?.radius,12)
+        try game.advance(by:0.25,movement:.zero)
+        XCTAssertLessThan(game.enemies.first!.health,health)
+        XCTAssertTrue(game.detail(for:spell.upgrade).contains("冷却"))
+        XCTAssertTrue(game.detail(for:spell.upgrade).contains("半径"))
+    }
 }

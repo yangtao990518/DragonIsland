@@ -1,0 +1,1038 @@
+{
+  "arcane-arcane-beam": {
+    "title": "奥术光束",
+    "role": "decoration"
+  },
+  "arcane-arcane-missiles": {
+    "title": "奥术飞弹",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 12,
+    "hit_delay": 0.05
+  },
+  "arcane-arcane-orb": {
+    "title": "奥术宝珠",
+    "role": "decoration"
+  },
+  "arcane-blink-in": {
+    "title": "闪现入场",
+    "role": "decoration"
+  },
+  "arcane-blink-out": {
+    "title": "闪现离场",
+    "role": "decoration"
+  },
+  "arcane-magic-circle-cast": {
+    "title": "施法阵",
+    "role": "decoration"
+  },
+  "arcane-mana-burst": {
+    "title": "法力爆发",
+    "role": "decoration"
+  },
+  "arcane-portal": {
+    "title": "传送门",
+    "role": "decoration"
+  },
+  "arcane-rune-circle": {
+    "title": "符文环",
+    "role": "decoration"
+  },
+  "arcane-spell-charge": {
+    "title": "法术蓄力",
+    "role": "decoration"
+  },
+  "arcane-star-fall": {
+    "title": "星陨",
+    "role": "decoration"
+  },
+  "arcane-time-stop": {
+    "title": "时间静止",
+    "role": "decoration"
+  },
+  "critters-bat": {
+    "title": "蝙蝠",
+    "role": "decoration"
+  },
+  "critters-bird": {
+    "title": "飞鸟",
+    "role": "decoration"
+  },
+  "critters-butterfly": {
+    "title": "蝴蝶",
+    "role": "decoration"
+  },
+  "critters-eyeball": {
+    "title": "魔眼",
+    "role": "decoration"
+  },
+  "critters-fish-school": {
+    "title": "鱼群",
+    "role": "decoration"
+  },
+  "critters-flying-skull": {
+    "title": "飞颅",
+    "role": "decoration"
+  },
+  "critters-frog": {
+    "title": "青蛙",
+    "role": "decoration"
+  },
+  "critters-ghost": {
+    "title": "幽灵",
+    "role": "decoration"
+  },
+  "critters-jellyfish": {
+    "title": "水母",
+    "role": "decoration"
+  },
+  "critters-slime": {
+    "title": "史莱姆",
+    "role": "decoration"
+  },
+  "critters-snake": {
+    "title": "蛇灵",
+    "role": "decoration"
+  },
+  "critters-wisp": {
+    "title": "灵火",
+    "role": "decoration"
+  },
+  "explosions-barrel-explosion": {
+    "title": "木桶爆炸",
+    "role": "decoration"
+  },
+  "explosions-big-explosion": {
+    "title": "巨型爆炸",
+    "role": "decoration"
+  },
+  "explosions-cartoon-pow": {
+    "title": "漫画重击",
+    "role": "decoration"
+  },
+  "explosions-dirt-explosion": {
+    "title": "尘土爆破",
+    "role": "decoration"
+  },
+  "explosions-firework-burst": {
+    "title": "烟花绽放",
+    "role": "decoration"
+  },
+  "explosions-firework-rocket": {
+    "title": "烟花火箭",
+    "role": "decoration"
+  },
+  "explosions-grenade": {
+    "title": "手雷",
+    "role": "decoration"
+  },
+  "explosions-implosion": {
+    "title": "内爆",
+    "role": "decoration"
+  },
+  "explosions-nuke": {
+    "title": "核爆",
+    "role": "decoration"
+  },
+  "explosions-plasma-explosion": {
+    "title": "等离子爆炸",
+    "role": "decoration"
+  },
+  "explosions-small-explosion": {
+    "title": "小型爆炸",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 38,
+    "hit_delay": 0.15
+  },
+  "explosions-smoke-bomb": {
+    "title": "烟雾弹",
+    "role": "decoration"
+  },
+  "fire-brazier": {
+    "title": "火盆",
+    "role": "decoration"
+  },
+  "fire-campfire": {
+    "title": "篝火",
+    "role": "decoration"
+  },
+  "fire-candle": {
+    "title": "蜡烛",
+    "role": "decoration"
+  },
+  "fire-fire-breath": {
+    "title": "火焰吐息",
+    "role": "decoration"
+  },
+  "fire-fire-ring": {
+    "title": "烈焰环",
+    "role": "decoration"
+  },
+  "fire-fire-tornado": {
+    "title": "火龙卷",
+    "role": "decoration"
+  },
+  "fire-fireball": {
+    "title": "火球术",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 12,
+    "hit_delay": 0.05
+  },
+  "fire-flame-pillar": {
+    "title": "烈焰柱",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 38,
+    "hit_delay": 0.3
+  },
+  "fire-flamethrower": {
+    "title": "喷火",
+    "role": "decoration"
+  },
+  "fire-meteor": {
+    "title": "陨火",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 44,
+    "hit_delay": 0.6
+  },
+  "fire-spirit-flame": {
+    "title": "灵焰",
+    "role": "decoration"
+  },
+  "fire-torch": {
+    "title": "火炬",
+    "role": "decoration"
+  },
+  "holy-blessing": {
+    "title": "祝福",
+    "role": "decoration"
+  },
+  "holy-divine-shield": {
+    "title": "神圣护盾",
+    "role": "decoration"
+  },
+  "holy-feather-burst": {
+    "title": "飞羽爆发",
+    "role": "decoration"
+  },
+  "holy-halo": {
+    "title": "光环",
+    "role": "decoration"
+  },
+  "holy-heal-aoe": {
+    "title": "治愈之环",
+    "role": "decoration"
+  },
+  "holy-heal": {
+    "title": "治愈术",
+    "role": "support",
+    "profile": "heal",
+    "hit_radius": 0,
+    "hit_delay": 0.1
+  },
+  "holy-holy-pillar": {
+    "title": "圣光柱",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 34,
+    "hit_delay": 0.3
+  },
+  "holy-resurrection": {
+    "title": "复苏",
+    "role": "decoration"
+  },
+  "holy-smite": {
+    "title": "圣裁",
+    "role": "decoration"
+  },
+  "holy-sunburst": {
+    "title": "日耀",
+    "role": "decoration"
+  },
+  "ice-blizzard-vortex": {
+    "title": "暴雪漩涡",
+    "role": "decoration"
+  },
+  "ice-freeze": {
+    "title": "冰封",
+    "role": "decoration"
+  },
+  "ice-frost-breath": {
+    "title": "寒冰吐息",
+    "role": "decoration"
+  },
+  "ice-frost-nova": {
+    "title": "霜冻新星",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 52,
+    "hit_delay": 0.2
+  },
+  "ice-ice-crystal": {
+    "title": "冰晶",
+    "role": "decoration"
+  },
+  "ice-ice-lance": {
+    "title": "冰枪术",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 10,
+    "hit_delay": 0.05
+  },
+  "ice-ice-shatter": {
+    "title": "碎冰",
+    "role": "decoration"
+  },
+  "ice-ice-spikes": {
+    "title": "冰刺",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 38,
+    "hit_delay": 0.3
+  },
+  "ice-icicle-fall": {
+    "title": "落冰",
+    "role": "decoration"
+  },
+  "ice-snowflake-burst": {
+    "title": "雪花爆发",
+    "role": "decoration"
+  },
+  "impacts-blunt-hit": {
+    "title": "钝击",
+    "role": "decoration"
+  },
+  "impacts-bullet-impact": {
+    "title": "弹痕",
+    "role": "decoration"
+  },
+  "impacts-crit-hit": {
+    "title": "暴击",
+    "role": "decoration"
+  },
+  "impacts-ground-slam": {
+    "title": "震地重击",
+    "role": "decoration"
+  },
+  "impacts-heavy-landing": {
+    "title": "落地冲击",
+    "role": "decoration"
+  },
+  "impacts-hit-flash": {
+    "title": "命中闪光",
+    "role": "decoration"
+  },
+  "impacts-hit-spark": {
+    "title": "命中火花",
+    "role": "decoration"
+  },
+  "impacts-impact-frame": {
+    "title": "冲击定格",
+    "role": "decoration"
+  },
+  "impacts-parry": {
+    "title": "招架",
+    "role": "decoration"
+  },
+  "impacts-ricochet": {
+    "title": "跳弹",
+    "role": "decoration"
+  },
+  "impacts-shield-block": {
+    "title": "盾挡",
+    "role": "decoration"
+  },
+  "lightning-ball-lightning": {
+    "title": "球形闪电",
+    "role": "decoration"
+  },
+  "lightning-chain-lightning": {
+    "title": "连锁闪电",
+    "role": "decoration"
+  },
+  "lightning-charge-up": {
+    "title": "雷电蓄力",
+    "role": "decoration"
+  },
+  "lightning-electrified": {
+    "title": "电流缠身",
+    "role": "decoration"
+  },
+  "lightning-lightning-strike": {
+    "title": "落雷",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 28,
+    "hit_delay": 0.25
+  },
+  "lightning-plasma-ball": {
+    "title": "等离子球",
+    "role": "decoration"
+  },
+  "lightning-spark-arc": {
+    "title": "电弧",
+    "role": "decoration"
+  },
+  "lightning-storm-cloud": {
+    "title": "雷云",
+    "role": "decoration"
+  },
+  "lightning-tesla-coil": {
+    "title": "电塔",
+    "role": "decoration"
+  },
+  "lightning-thunderclap": {
+    "title": "雷鸣",
+    "role": "decoration"
+  },
+  "lightning-zap-hit": {
+    "title": "电击",
+    "role": "decoration"
+  },
+  "melee-claw-swipe": {
+    "title": "爪击",
+    "role": "decoration"
+  },
+  "melee-dagger-flurry": {
+    "title": "匕首连刺",
+    "role": "decoration"
+  },
+  "melee-double-slash": {
+    "title": "双斩",
+    "role": "decoration"
+  },
+  "melee-hammer-smash": {
+    "title": "重锤",
+    "role": "decoration"
+  },
+  "melee-heavy-cleave": {
+    "title": "重劈",
+    "role": "decoration"
+  },
+  "melee-scythe-reap": {
+    "title": "镰刀收割",
+    "role": "decoration"
+  },
+  "melee-spear-sweep": {
+    "title": "长枪横扫",
+    "role": "decoration"
+  },
+  "melee-spin-slash": {
+    "title": "旋风斩",
+    "role": "decoration"
+  },
+  "melee-sword-slash": {
+    "title": "剑斩",
+    "role": "decoration"
+  },
+  "melee-thrust": {
+    "title": "突刺",
+    "role": "decoration"
+  },
+  "melee-uppercut": {
+    "title": "升龙拳",
+    "role": "decoration"
+  },
+  "melee-whip-crack": {
+    "title": "鞭击",
+    "role": "decoration"
+  },
+  "moves-arrow-shot": {
+    "title": "射箭连招",
+    "role": "decoration"
+  },
+  "moves-dash-strike": {
+    "title": "突进斩",
+    "role": "decoration"
+  },
+  "moves-earth-stomp": {
+    "title": "震地踏",
+    "role": "decoration"
+  },
+  "moves-fireball-throw": {
+    "title": "投掷火球",
+    "role": "decoration"
+  },
+  "moves-ground-pound": {
+    "title": "砸地连招",
+    "role": "decoration"
+  },
+  "moves-holy-smite": {
+    "title": "圣裁连招",
+    "role": "decoration"
+  },
+  "moves-ice-lance-throw": {
+    "title": "投掷冰枪",
+    "role": "decoration"
+  },
+  "moves-lightning-call": {
+    "title": "召雷",
+    "role": "decoration"
+  },
+  "moves-meteor-call": {
+    "title": "召唤陨石",
+    "role": "decoration"
+  },
+  "moves-pistol-shots": {
+    "title": "手枪连射",
+    "role": "decoration"
+  },
+  "moves-rocket-launcher": {
+    "title": "火箭发射",
+    "role": "decoration"
+  },
+  "moves-sword-combo": {
+    "title": "剑术连招",
+    "role": "decoration"
+  },
+  "nature-acid-splash": {
+    "title": "酸液飞溅",
+    "role": "decoration"
+  },
+  "nature-boulder": {
+    "title": "滚石",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 16,
+    "hit_delay": 0.05
+  },
+  "nature-earth-spike": {
+    "title": "地刺",
+    "role": "decoration"
+  },
+  "nature-healing-bloom": {
+    "title": "治愈花",
+    "role": "support",
+    "profile": "heal",
+    "hit_radius": 0,
+    "hit_delay": 0.1
+  },
+  "nature-leaf-storm": {
+    "title": "叶刃风暴",
+    "role": "decoration"
+  },
+  "nature-poison-cloud": {
+    "title": "毒云",
+    "role": "decoration"
+  },
+  "nature-quake": {
+    "title": "地震",
+    "role": "decoration"
+  },
+  "nature-root-snare": {
+    "title": "根须束缚",
+    "role": "decoration"
+  },
+  "nature-spore-burst": {
+    "title": "孢子爆发",
+    "role": "decoration"
+  },
+  "nature-thorns": {
+    "title": "荆棘",
+    "role": "decoration"
+  },
+  "nature-tornado": {
+    "title": "龙卷风",
+    "role": "decoration"
+  },
+  "nature-toxic-puddle": {
+    "title": "毒沼",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 44,
+    "hit_delay": 0.2
+  },
+  "nature-vine-whip": {
+    "title": "藤鞭",
+    "role": "decoration"
+  },
+  "pickups-chest-open": {
+    "title": "宝箱开启",
+    "role": "item"
+  },
+  "pickups-coin-spin": {
+    "title": "金币",
+    "role": "item"
+  },
+  "pickups-collect-burst": {
+    "title": "拾取光效",
+    "role": "item"
+  },
+  "pickups-crystal-shard": {
+    "title": "水晶碎片",
+    "role": "item"
+  },
+  "pickups-gem-spin": {
+    "title": "宝石",
+    "role": "item"
+  },
+  "pickups-heart-pickup": {
+    "title": "生命之心",
+    "role": "item"
+  },
+  "pickups-key-glint": {
+    "title": "钥匙",
+    "role": "item"
+  },
+  "pickups-loot-beam": {
+    "title": "战利品光柱",
+    "role": "item"
+  },
+  "pickups-potion": {
+    "title": "药水",
+    "role": "item"
+  },
+  "pickups-power-star": {
+    "title": "能量星",
+    "role": "item"
+  },
+  "pickups-xp-orb": {
+    "title": "经验球",
+    "role": "item"
+  },
+  "projectiles-arrow": {
+    "title": "箭矢",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 8,
+    "hit_delay": 0.05
+  },
+  "projectiles-bullet-tracer": {
+    "title": "曳光弹",
+    "role": "decoration"
+  },
+  "projectiles-cannonball": {
+    "title": "炮弹",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 14,
+    "hit_delay": 0.05
+  },
+  "projectiles-energy-disc": {
+    "title": "能量飞盘",
+    "role": "decoration"
+  },
+  "projectiles-flare": {
+    "title": "信号弹",
+    "role": "decoration"
+  },
+  "projectiles-homing-missile": {
+    "title": "追踪导弹",
+    "role": "decoration"
+  },
+  "projectiles-laser-bolt": {
+    "title": "激光弹",
+    "role": "decoration"
+  },
+  "projectiles-magic-missile": {
+    "title": "魔法飞弹",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 10,
+    "hit_delay": 0.05
+  },
+  "projectiles-muzzle-pistol": {
+    "title": "手枪枪焰",
+    "role": "decoration"
+  },
+  "projectiles-muzzle-shotgun": {
+    "title": "霰弹枪焰",
+    "role": "decoration"
+  },
+  "projectiles-muzzle-smg": {
+    "title": "冲锋枪焰",
+    "role": "decoration"
+  },
+  "projectiles-plasma-shot": {
+    "title": "等离子弹",
+    "role": "attack",
+    "profile": "projectile",
+    "hit_radius": 12,
+    "hit_delay": 0.05
+  },
+  "projectiles-rocket": {
+    "title": "火箭弹",
+    "role": "decoration"
+  },
+  "scifi-emp-blast": {
+    "title": "电磁脉冲",
+    "role": "decoration"
+  },
+  "scifi-energy-core": {
+    "title": "能量核心",
+    "role": "decoration"
+  },
+  "scifi-force-field": {
+    "title": "力场",
+    "role": "decoration"
+  },
+  "scifi-glitch": {
+    "title": "故障闪烁",
+    "role": "decoration"
+  },
+  "scifi-hologram": {
+    "title": "全息影像",
+    "role": "decoration"
+  },
+  "scifi-jetpack": {
+    "title": "喷气背包",
+    "role": "decoration"
+  },
+  "scifi-laser-grid": {
+    "title": "激光网",
+    "role": "decoration"
+  },
+  "scifi-scanner": {
+    "title": "扫描仪",
+    "role": "decoration"
+  },
+  "scifi-teleporter-pad": {
+    "title": "传送台",
+    "role": "decoration"
+  },
+  "scifi-tractor-beam": {
+    "title": "牵引光束",
+    "role": "decoration"
+  },
+  "scifi-warp-in": {
+    "title": "跃迁入场",
+    "role": "decoration"
+  },
+  "scifi-warp-out": {
+    "title": "跃迁离场",
+    "role": "decoration"
+  },
+  "shadow-black-hole": {
+    "title": "黑洞",
+    "role": "decoration"
+  },
+  "shadow-curse": {
+    "title": "诅咒",
+    "role": "decoration"
+  },
+  "shadow-dark-explosion": {
+    "title": "暗影爆破",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 46,
+    "hit_delay": 0.25
+  },
+  "shadow-eclipse": {
+    "title": "日蚀",
+    "role": "decoration"
+  },
+  "shadow-grasping-hands": {
+    "title": "幽冥之手",
+    "role": "decoration"
+  },
+  "shadow-hex-sigil": {
+    "title": "咒印",
+    "role": "decoration"
+  },
+  "shadow-life-steal": {
+    "title": "汲取生命",
+    "role": "decoration"
+  },
+  "shadow-necro-skulls": {
+    "title": "亡灵飞颅",
+    "role": "decoration"
+  },
+  "shadow-shadow-flames": {
+    "title": "暗焰",
+    "role": "decoration"
+  },
+  "shadow-shadow-tendrils": {
+    "title": "暗影触须",
+    "role": "decoration"
+  },
+  "shadow-soul-drain": {
+    "title": "摄魂",
+    "role": "decoration"
+  },
+  "shadow-void-orb": {
+    "title": "虚空宝珠",
+    "role": "decoration"
+  },
+  "spawn-coin-drop": {
+    "title": "金币掉落",
+    "role": "decoration"
+  },
+  "spawn-disintegrate": {
+    "title": "湮灭",
+    "role": "decoration"
+  },
+  "spawn-dissolve-burn": {
+    "title": "燃烧消散",
+    "role": "decoration"
+  },
+  "spawn-egg-hatch": {
+    "title": "破壳",
+    "role": "decoration"
+  },
+  "spawn-poof": {
+    "title": "消失烟雾",
+    "role": "decoration"
+  },
+  "spawn-respawn-beam": {
+    "title": "重生光束",
+    "role": "decoration"
+  },
+  "spawn-shatter-death": {
+    "title": "碎裂消散",
+    "role": "decoration"
+  },
+  "spawn-soul-rise": {
+    "title": "灵魂升腾",
+    "role": "decoration"
+  },
+  "spawn-spawn-portal": {
+    "title": "出场传送门",
+    "role": "decoration"
+  },
+  "spawn-summon-rise": {
+    "title": "召唤升起",
+    "role": "decoration"
+  },
+  "status-bleeding": {
+    "title": "流血",
+    "role": "decoration"
+  },
+  "status-burning": {
+    "title": "燃烧",
+    "role": "decoration"
+  },
+  "status-charmed": {
+    "title": "魅惑",
+    "role": "decoration"
+  },
+  "status-confused": {
+    "title": "混乱",
+    "role": "decoration"
+  },
+  "status-cursed": {
+    "title": "诅咒状态",
+    "role": "decoration"
+  },
+  "status-frozen": {
+    "title": "冻结",
+    "role": "decoration"
+  },
+  "status-haste": {
+    "title": "疾速",
+    "role": "decoration"
+  },
+  "status-petrified": {
+    "title": "石化",
+    "role": "decoration"
+  },
+  "status-poisoned": {
+    "title": "中毒",
+    "role": "decoration"
+  },
+  "status-rage": {
+    "title": "狂怒",
+    "role": "decoration"
+  },
+  "status-sleep": {
+    "title": "睡眠",
+    "role": "decoration"
+  },
+  "status-slowed": {
+    "title": "减速",
+    "role": "decoration"
+  },
+  "status-stunned": {
+    "title": "眩晕",
+    "role": "decoration"
+  },
+  "transitions-blinds": {
+    "title": "百叶窗转场",
+    "role": "decoration"
+  },
+  "transitions-burn-away": {
+    "title": "燃烧转场",
+    "role": "decoration"
+  },
+  "transitions-crt-off": {
+    "title": "关屏转场",
+    "role": "decoration"
+  },
+  "transitions-diamond-wipe": {
+    "title": "菱形转场",
+    "role": "decoration"
+  },
+  "transitions-glitch-wipe": {
+    "title": "故障转场",
+    "role": "decoration"
+  },
+  "transitions-iris": {
+    "title": "圆形转场",
+    "role": "decoration"
+  },
+  "transitions-pixel-dissolve": {
+    "title": "像素溶解",
+    "role": "decoration"
+  },
+  "transitions-shatter-wipe": {
+    "title": "碎裂转场",
+    "role": "decoration"
+  },
+  "transitions-slash-wipe": {
+    "title": "斩击转场",
+    "role": "decoration"
+  },
+  "transitions-star-iris": {
+    "title": "星形转场",
+    "role": "decoration"
+  },
+  "ui-achievement": {
+    "title": "成就达成",
+    "role": "decoration"
+  },
+  "ui-coin-collect": {
+    "title": "金币到账",
+    "role": "decoration"
+  },
+  "ui-combo-counter": {
+    "title": "连击计数",
+    "role": "decoration"
+  },
+  "ui-confetti": {
+    "title": "彩纸",
+    "role": "decoration"
+  },
+  "ui-countdown": {
+    "title": "倒计时",
+    "role": "decoration"
+  },
+  "ui-crit-number": {
+    "title": "暴击数字",
+    "role": "decoration"
+  },
+  "ui-damage-number": {
+    "title": "伤害数字",
+    "role": "decoration"
+  },
+  "ui-exclamation": {
+    "title": "感叹号",
+    "role": "decoration"
+  },
+  "ui-health-bar-hit": {
+    "title": "血条受击",
+    "role": "decoration"
+  },
+  "ui-heart-lost": {
+    "title": "失去生命",
+    "role": "decoration"
+  },
+  "ui-level-up": {
+    "title": "升级光效",
+    "role": "decoration"
+  },
+  "ui-quest-complete": {
+    "title": "任务完成",
+    "role": "decoration"
+  },
+  "water-bubbles": {
+    "title": "气泡",
+    "role": "decoration"
+  },
+  "water-drip": {
+    "title": "滴水",
+    "role": "decoration"
+  },
+  "water-fountain": {
+    "title": "喷泉",
+    "role": "decoration"
+  },
+  "water-geyser": {
+    "title": "涌泉",
+    "role": "decoration"
+  },
+  "water-rain-splash": {
+    "title": "雨滴溅落",
+    "role": "decoration"
+  },
+  "water-ripples": {
+    "title": "水波",
+    "role": "decoration"
+  },
+  "water-splash": {
+    "title": "水花",
+    "role": "decoration"
+  },
+  "water-water-jet": {
+    "title": "水流喷射",
+    "role": "decoration"
+  },
+  "water-water-orb": {
+    "title": "水灵球",
+    "role": "decoration"
+  },
+  "water-waterfall": {
+    "title": "瀑布",
+    "role": "decoration"
+  },
+  "water-wave-crash": {
+    "title": "浪潮",
+    "role": "decoration"
+  },
+  "water-whirlpool": {
+    "title": "水漩涡",
+    "role": "attack",
+    "profile": "zone",
+    "hit_radius": 46,
+    "hit_delay": 0.2
+  },
+  "weather-aurora": {
+    "title": "极光",
+    "role": "decoration"
+  },
+  "weather-blizzard": {
+    "title": "暴风雪",
+    "role": "decoration"
+  },
+  "weather-cherry-blossoms": {
+    "title": "樱花",
+    "role": "decoration"
+  },
+  "weather-clouds": {
+    "title": "云朵",
+    "role": "decoration"
+  },
+  "weather-falling-leaves": {
+    "title": "落叶",
+    "role": "decoration"
+  },
+  "weather-fireflies": {
+    "title": "萤火虫",
+    "role": "decoration"
+  },
+  "weather-fog": {
+    "title": "薄雾",
+    "role": "decoration"
+  },
+  "weather-god-rays": {
+    "title": "天光",
+    "role": "decoration"
+  },
+  "weather-rain": {
+    "title": "降雨",
+    "role": "decoration"
+  },
+  "weather-shooting-stars": {
+    "title": "流星雨",
+    "role": "decoration"
+  },
+  "weather-snow": {
+    "title": "飘雪",
+    "role": "decoration"
+  },
+  "weather-storm": {
+    "title": "风暴",
+    "role": "decoration"
+  }
+}

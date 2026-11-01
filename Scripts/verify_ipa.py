@@ -156,7 +156,24 @@ def verify_pixelfx(archive, app_root, widget_root):
         raise ValueError('Legacy game effects or Widget game pages must not be bundled')
     archive.read(base+'PixelFX/LICENSE'); archive.read(base+'PixelFX/NOTICE.md')
     if any('PatchPixel' in n for n in names): raise ValueError('Excluded upstream gallery font')
-    print('PixelFX verified: 244 selectable effects, complete frame timelines, hashes, MIT notices, no legacy game effects.')
+    if base+'combat.json' in names:
+        combat=json.loads(archive.read(base+'combat.json'))['clips']
+        full={c['id']:c for c in media['clips']}
+        for clip in combat:
+            original=full[clip['id']]
+            if [(f['start_ms'],f['duration_ms']) for f in clip['frames']] != [(f['start_ms'],f['duration_ms']) for f in original['frames']]:
+                raise ValueError('Combat atlas changed original frame timing')
+            for page in clip['pages']:
+                if hashlib.sha256(archive.read(base+page['file'])).hexdigest()!=page['sha256']:
+                    raise ValueError('Changed combat atlas')
+        if sum(s.get('role')=='attack' for s in catalog['skills'])!=18 or sum(s.get('role')=='support' for s in catalog['skills'])!=2:
+            raise ValueError('Unexpected combat pool')
+        if any(not any('\u4e00'<=c<='\u9fff' for c in s['title']) for s in catalog['skills']):
+            raise ValueError('Missing Chinese effect name')
+        for name in ('music','cast','hit','heal','upgrade'):
+            if not archive.read(base+'Audio/'+name+'.wav').startswith(b'RIFF'):
+                raise ValueError('Missing game audio')
+    print('PixelFX verified: full 244-entry gallery, complete timelines, hashes and licenses; combat catalog verified when present.')
 
 
 def verify_voices(archive, app_root, app):

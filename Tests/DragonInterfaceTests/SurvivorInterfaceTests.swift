@@ -1,11 +1,12 @@
 import XCTest
 
 final class SurvivorInterfaceTests: XCTestCase {
-    private func launch(upgrade: Bool = false) -> XCUIApplication {
+    private func launch(upgrade: Bool = false, stress: Bool = false) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--chat-test-store", UUID().uuidString]
         if upgrade { app.launchArguments.append("--survivor-upgrade-preview") }
+        if stress { app.launchArguments.append("--survivor-stress-preview") }
         app.launch()
         openGame(app)
         return app
@@ -22,6 +23,8 @@ final class SurvivorInterfaceTests: XCTestCase {
         let entry = app.buttons["openSurvivorGame"]
         show(entry, in: app); entry.tap()
         XCTAssertTrue(app.staticTexts["选择出战角色"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.wait(for:.runningForeground,timeout:5))
+        XCTAssertGreaterThan(app.windows.firstMatch.frame.width,app.windows.firstMatch.frame.height)
     }
     private func start(_ app: XCUIApplication) {
         let button = app.buttons["survivorStart"]
@@ -80,13 +83,28 @@ final class SurvivorInterfaceTests: XCTestCase {
         show(entry,in:app); entry.tap()
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout:8))
-        search.tap(); search.typeText("Fireball\n")
+        search.tap(); search.typeText("fireball\n")
         let card = app.buttons["pixelFXSkill_fire-fireball"]
         XCTAssertTrue(card.waitForExistence(timeout:8)); card.tap()
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pixelFXLivePreview").firstMatch.waitForExistence(timeout:5))
         capture(app,"pixelfx-native-live-preview")
         app.buttons["pixelFXChooseSkill"].tap()
         XCTAssertTrue(app.buttons["survivorStart"].waitForExistence(timeout:8))
+    }
+
+    func testSixMaxRankSkillsAndCrowdKeepSimulationMoving() {
+        let app=launch(stress:true)
+        start(app)
+        let timer=app.staticTexts["survivorTimer"]
+        XCTAssertTrue(timer.waitForExistence(timeout:15))
+        let initial=timer.label
+        expectation(for:NSPredicate(format:"label != %@",initial),evaluatedWith:timer)
+        waitForExpectations(timeout:15)
+        Thread.sleep(forTimeInterval:8)
+        capture(app,"survivor-six-skill-crowd")
+        app.buttons["survivorPause"].tap()
+        XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout:5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","已装备6项技能")).firstMatch.exists)
     }
     func testSaveRelaunchContinueAndBackgroundPause() {
         let app = launch()

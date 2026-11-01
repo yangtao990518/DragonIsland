@@ -4,6 +4,7 @@ struct PixelFXLibraryView: View {
     @ObservedObject var game: SurvivorGameController
     let upgrading: Bool
     @Environment(\.dismiss) private var dismiss
+    @State private var archive = false
     @State private var query = ""
     @State private var category = "all"
     @State private var selected: PixelFXSkill?
@@ -11,8 +12,8 @@ struct PixelFXLibraryView: View {
     private var categories: [String] { Array(Set(game.skills.map(\.category))).sorted() }
     private var filtered: [PixelFXSkill] {
         game.skills.filter { skill in
-            (category == "all" || skill.category == category) &&
-            (query.isEmpty || "\(skill.title) \(skill.categoryTitle) \(skill.profile.title)".localizedCaseInsensitiveContains(query))
+            (archive || skill.selectable) && (category == "all" || skill.category == category) &&
+            (query.isEmpty || "\(skill.id) \(skill.title) \(skill.categoryTitle) \(skill.profile.title)".localizedCaseInsensitiveContains(query))
         }
     }
     var body: some View {
@@ -21,6 +22,7 @@ struct PixelFXLibraryView: View {
                 VStack(alignment:.leading,spacing:18) {
                     Text(upgrading ? "选择本次升级技能 · 已装备\(game.battle.equippedPixelSkills.count)/6" : "选择初始技能 · 所有技能均会自动释放")
                         .font(.subheadline).foregroundStyle(.secondary)
+                    Toggle("查看物品与展示特效（不可装备）",isOn:$archive).font(.caption)
                     ScrollView(.horizontal,showsIndicators:false) {
                         HStack {
                             categoryButton("全部 \(game.skills.count)",id:"all")
@@ -37,7 +39,7 @@ struct PixelFXLibraryView: View {
                                     }.frame(height:108)
                                     Text(skill.title).font(.subheadline.bold()).lineLimit(2).frame(height:36,alignment:.topLeading)
                                     HStack {
-                                        Text(skill.profile.title).font(.caption2).foregroundStyle(.secondary)
+                                        Text(skill.roleTitle).font(.caption2).foregroundStyle(.secondary)
                                         Spacer(minLength:0)
                                         if game.starterID == skill.id && !upgrading { Image(systemName:"checkmark.circle.fill").foregroundStyle(.cyan) }
                                         if upgrading && game.battle.rank(skill.upgrade)>0 { Text("Lv.\(game.battle.rank(skill.upgrade))").font(.caption2).foregroundStyle(.cyan) }
@@ -95,15 +97,18 @@ private struct PixelFXSkillDetail: View {
                         }.frame(height:280)
                     }.accessibilityIdentifier("pixelFXLivePreview")
                     Text(skill.title).font(.title.bold())
-                    HStack { Text(skill.categoryTitle); Text("·"); Text(skill.profile.title) }.font(.subheadline).foregroundStyle(.cyan)
+                    HStack { Text(skill.categoryTitle); Text("·"); Text(skill.roleTitle) }.font(.subheadline).foregroundStyle(.cyan)
                     Text(skill.description).font(.subheadline).foregroundStyle(.secondary)
-                    Text("自动释放 · 最高5级\n升级提升威力、范围或弹体数量；不需要手动施法。")
+                    Text(skill.selectable ? skill.stats(at:1)+"\n最高5级，选择前可查看每一级变化。" : "此项不进入战斗技能池。")
                         .font(.subheadline).lineSpacing(5)
+                    if skill.selectable {
+                        ForEach(1...5,id:\.self) { level in Text("\(level)级："+skill.stats(at:level)).font(.caption).foregroundStyle(.secondary) }
+                    }
                     Button(action:choose) {
                         Text(upgrading ? "选择本次强化" : "设为初始技能").font(.headline).frame(maxWidth:.infinity).padding(18)
                             .background(.indigo,in:RoundedRectangle(cornerRadius:18))
                     }.buttonStyle(.plain).accessibilityIdentifier("pixelFXChooseSkill")
-                        .disabled(upgrading && (game.battle.rank(skill.upgrade)>=5 || (game.battle.rank(skill.upgrade)==0 && game.battle.equippedPixelSkills.count>=6)))
+                        .disabled(!skill.selectable || upgrading && (game.battle.rank(skill.upgrade)>=5 || (game.battle.rank(skill.upgrade)==0 && game.battle.equippedPixelSkills.count>=6)))
                 }.padding(24)
             }.navigationTitle("技能预览").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement:.topBarTrailing) { Button("返回") { dismiss() } } }
