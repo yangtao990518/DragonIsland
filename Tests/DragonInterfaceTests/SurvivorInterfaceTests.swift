@@ -52,6 +52,16 @@ final class SurvivorInterfaceTests: XCTestCase {
         Thread.sleep(forTimeInterval:4);capture(app,"native-skeleton-complete-duration-last-frame")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","4.016667")).firstMatch.exists)
     }
+    func testConfirmedBattleStartsWithMinimapAndNativeSkills() {
+        let app=launch();start(app)
+        XCTAssertTrue(app.descendants(matching:.any).matching(NSPredicate(format:"label == %@","正方形草地小地图")).firstMatch.waitForExistence(timeout:15))
+        let timer=app.staticTexts["survivorTimer"]
+        expectation(for:NSPredicate(format:"label != %@","20:00"),evaluatedWith:timer)
+        waitForExpectations(timeout:15)
+        app.buttons["survivorPause"].tap()
+        XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout:5))
+        capture(app,"confirmed-native-battle-minimap-and-icons")
+    }
     func testNativeBattleClockMovementAndMenuPause() {
         let app = launch()
         capture(app, "survivor-character-selection")

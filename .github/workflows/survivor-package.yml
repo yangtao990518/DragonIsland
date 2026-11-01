@@ -1,0 +1,68 @@
+name: Package verified survivor integration
+"on":
+  workflow_dispatch:
+    inputs:
+      proof_run:
+        description: Successful confirmed integration run ID
+        required: true
+        type: string
+  push:
+    branches: [codex/chat-media-tools]
+    paths: ['.github/workflows/survivor-package.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      MAIVERSE_SKIP_ARCHIVED_GAME: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 10
+      - name: Require successful proof of identical game code
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROOF_RUN: ${{ inputs.proof_run }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,subprocess,urllib.request
+          run=os.environ['PROOF_RUN'];assert run.isdigit()
+          req=urllib.request.Request('https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+run,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req) as response:data=json.load(response)
+          assert data['conclusion']=='success' and data['path']=='.github/workflows/survivor-integration.yml', 'Native proof did not pass'
+          sha=data['head_sha'];assert re.fullmatch('[0-9a-f]{40}',sha)
+          subprocess.run(['git','diff','--exit-code',sha,'HEAD','--','App','Shared','Tests','Art/SurvivorV3','project.yml','Scripts/prepare_assets.py','Scripts/prepare_survivor_v3.py','Scripts/prepare_survivor_audio.py'],check=True)
+          print('Verified unchanged game source against successful native proof:',sha)
+          PY
+      - name: Tools
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          python3 -m venv .asset-venv
+          .asset-venv/bin/python -m pip install -r requirements-build.txt
+          echo "$GITHUB_WORKSPACE/.asset-venv/bin" >> "$GITHUB_PATH"
+      - name: Release App and Widget, verify IPA
+        id: build
+        run: bash Scripts/build_unsigned.sh
+      - name: Record validation scope
+        env:
+          PROOF_RUN: ${{ inputs.proof_run }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          Path('output/BUILD_STATUS.md').write_text('源码：'+os.environ['GITHUB_SHA']+'\n原生透明素材/逻辑/资源检查：https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['PROOF_RUN']+'\n本次App/Widget Release编译和IPA结构/资源校验通过。真机20分钟压力、发热、耗电和签名安装未验证。\n',encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: mAIverse-V${{ steps.build.outputs.version }}-build${{ steps.build.outputs.build }}-unsigned
+          path: |
+            output/*.ipa
+            output/*.md
+            output/*.txt
+          retention-days: 7

@@ -66,7 +66,7 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
         case .thunder: return current == 0 ? "自动召唤雷阵，持续打击前方敌人" : "雷阵提升至\(current + 1)级，扩大范围并增强伤害"
         case .bubble: return "增强自动水泡；3级、5级增加一枚弹体"
         case .power: return "全部攻击伤害提高14%"
-        case .haste: return "自动攻击速度增加12%，全部主动技能冷却同步缩短"
+        case .haste: return "攻击速度增加12%，所有有冷却的攻击技能释放更快"
         case .defense: return "每级增加2点护甲，承受伤害最低为1"
         case .stride: return "移动速度提高10%"
         case .magnet: return "扩大经验拾取和吸引范围"

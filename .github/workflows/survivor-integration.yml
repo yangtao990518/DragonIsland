@@ -55,6 +55,8 @@ jobs:
             -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/Integration \
             -resultBundlePath build/Integration.xcresult -parallel-testing-enabled NO \
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testConfirmedSkeletonAndFlameNativeSmoke \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testConfirmedBattleStartsWithMinimapAndNativeSkills \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testUpgradeSelectionStrengthensPixelSkillAndResumesBattle \
             CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test 2>&1 | tee build/integration-native.log
       - name: Export proof images
         if: always()

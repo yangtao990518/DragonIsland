@@ -322,15 +322,15 @@ struct SurvivorGameView: View {
                     }.padding(10).background(.black.opacity(0.3),in:RoundedRectangle(cornerRadius:14))
                 }.padding(.horizontal, 24).padding(.bottom, 24)
             }
+            SurvivorMinimapView(player:game.battle.player,viewport:game.scene?.size ?? CGSize(width:844,height:390))
+                .frame(width:108,height:108).padding(.trailing,16).padding(.top,10)
+                .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topTrailing)
             if let outcome = game.battle.outcome { result(outcome) }
             else if game.battle.clock.pauseReasons.contains(.menu) { pauseMenu }
             else if !game.battle.choices.isEmpty { upgrades }
             else if game.battle.clock.pauseReasons.contains(.background) {
                 Text("已暂停").font(.title2.bold()).padding(24).background(.ultraThinMaterial, in: Capsule())
             }
-        }.overlay(alignment:.topTrailing) {
-            SurvivorMinimapView(player:game.battle.player,viewport:game.scene?.size ?? CGSize(width:844,height:390))
-                .frame(width:108,height:108).padding(.trailing,16).padding(.top,10)
         }.foregroundStyle(.white)
     }
     private var hud: some View {

@@ -176,6 +176,42 @@ def verify_pixelfx(archive, app_root, widget_root):
     print('PixelFX verified: full 244-entry gallery, complete timelines, hashes and licenses; combat catalog verified when present.')
 
 
+def verify_confirmed_survivor(archive, app_root, widget_root):
+    base=app_root+'/SurvivorGameV3/'
+    media=json.loads(archive.read(base+'manifest.json'))
+    catalog=json.loads(archive.read(base+'PixelFXCatalog.json'))
+    expected={'fireball','lightning','earth-spikes','stone-fist','boulder','quicksand','orbit-swords','seeking-swords'}
+    if {s['id'] for s in catalog['skills']}!=expected or len(catalog['skills'])!=8:
+        raise ValueError('Missing confirmed skill library')
+    if sum(len(s['localLevels']) for s in catalog['skills'])!=40 or len(catalog['characters'])!=20:
+        raise ValueError('Missing skill levels or latest skeletons')
+    ids={c['id'] for c in media['clips']}
+    if ids.intersection({'demon-run','mushroom-run','thunder-1','water-bubble'}):
+        raise ValueError('Retired game resources reappeared')
+    for clip in media['clips']:
+        end=0
+        for frame in clip['frames']:
+            if abs(frame['start_ms']-end)>.01 or frame['duration_ms']<=0:raise ValueError('Broken confirmed timing')
+            end+=frame['duration_ms']
+        if abs(end-clip['duration_ms'])>.01:raise ValueError('Incomplete confirmed clip')
+        if clip.get('kind')=='skeleton' and (len(clip['frames'])!=240 or abs(end-4016.667)>.01):
+            raise ValueError('Skeleton source duration changed')
+        for page in clip['pages']:
+            path=page['file']
+            if '..' in path or path.startswith('/'):raise ValueError('Invalid game path')
+            if hashlib.sha256(archive.read(base+path)).hexdigest()!=page['sha256']:raise ValueError('Changed confirmed page')
+    for ident in expected|{'move-speed','attack-speed','damage','vitality','defense'}:
+        if not archive.read(base+'Icons/'+ident+'.png').startswith(b'\x89PNG'):raise ValueError('Missing V2 icon')
+    for ident in expected|{'music','hit','upgrade'}:
+        if not archive.read(base+'Audio/'+ident+'.wav').startswith(b'RIFF'):raise ValueError('Missing game sound')
+    archive.read(base+'Terrain/grass.png');archive.read(base+'arrow-pose.png')
+    archive.read(base+'LICENSE');archive.read(base+'NOTICE.md')
+    for name in archive.namelist():
+        if name.startswith(app_root+'/SurvivorGame/') or name.startswith(app_root+'/SurvivorGameV2/') or name.startswith(widget_root+'/SurvivorGameV3/'):
+            raise ValueError('Archived game or duplicate Widget game resources')
+    print('Confirmed survivor verified: 8 skills / 40 levels, 20 native skeletons, 13 V2 icons, original timing, terrain and distinct audio.')
+
+
 def verify_voices(archive, app_root, app):
     if not app.get('NSAlarmKitUsageDescription'):
         raise ValueError('Missing AlarmKit permission usage description')
@@ -264,7 +300,9 @@ def verify(path):
                 verify_current_video_atlases(archive, app_root)
             if int(app['CFBundleVersion']) >= 18:
                 verify_builtin_stickers(archive, app_root, widget_root)
-            if int(app['CFBundleVersion']) >= 22:
+            if int(app['CFBundleVersion']) >= 24:
+                verify_confirmed_survivor(archive, app_root, widget_root)
+            elif int(app['CFBundleVersion']) >= 22:
                 verify_pixelfx(archive, app_root, widget_root)
             elif int(app['CFBundleVersion']) >= 21:
                 verify_survivor(archive, app_root, widget_root)
