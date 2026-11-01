@@ -70,7 +70,7 @@ final class SurvivorTextures {
         else {
             if file.hasPrefix("Combat/") { return nil }
             guard let image = UIImage(contentsOfFile: root.appendingPathComponent(file).path) else { return nil }
-            page = SKTexture(image: image); page.filteringMode = file.hasPrefix("PixelFX/") ? .nearest : .linear
+            page = SKTexture(image: image); page.filteringMode = id == "dafeiyu-run" || id == "demon-run" || id == "mushroom-run" ? .linear : .nearest
             pages.setObject(page, forKey: file as NSString, cost: Int(image.size.width * image.size.height * 4))
         }
         let cell = frame.cell % capacity
@@ -78,7 +78,7 @@ final class SurvivorTextures {
         let rect = CGRect(x: CGFloat(cell % clip.grid[0]) * w,
                           y: 1 - CGFloat(cell / clip.grid[0] + 1) * h, width: w, height: h)
         let result = SKTexture(rect: rect, in: page)
-        result.filteringMode = file.hasPrefix("PixelFX/") ? .nearest : .linear
+        result.filteringMode = id == "dafeiyu-run" || id == "demon-run" || id == "mushroom-run" ? .linear : .nearest
         current[id] = (frame.cell, result)
         return result
     }

@@ -83,6 +83,7 @@ private struct PixelFXSkillDetail: View {
     let choose: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var phase
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var started = Date()
     var body: some View {
         NavigationStack {
@@ -94,7 +95,7 @@ private struct PixelFXSkillDetail: View {
                             if let image = game.preview(skill.id,time:context.date.timeIntervalSince(started)) {
                                 Image(uiImage:image).resizable().interpolation(.none).scaledToFit().padding(16)
                             }
-                        }.frame(height:280)
+                        }.frame(height:verticalSizeClass == .compact ? 150 : 280)
                     }.accessibilityIdentifier("pixelFXLivePreview")
                     Text(skill.title).font(.title.bold())
                     HStack { Text(skill.categoryTitle); Text("·"); Text(skill.roleTitle) }.font(.subheadline).foregroundStyle(.cyan)

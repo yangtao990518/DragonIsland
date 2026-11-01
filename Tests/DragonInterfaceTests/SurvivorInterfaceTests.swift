@@ -24,7 +24,8 @@ final class SurvivorInterfaceTests: XCTestCase {
         show(entry, in: app); entry.tap()
         XCTAssertTrue(app.staticTexts["选择出战角色"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.wait(for:.runningForeground,timeout:5))
-        XCTAssertGreaterThan(app.windows.firstMatch.frame.width,app.windows.firstMatch.frame.height)
+        let landscape=expectation(for:NSPredicate { _,_ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height },evaluatedWith:app)
+        wait(for:[landscape],timeout:8)
     }
     private func start(_ app: XCUIApplication) {
         let button = app.buttons["survivorStart"]
@@ -88,7 +89,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertTrue(card.waitForExistence(timeout:8)); card.tap()
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pixelFXLivePreview").firstMatch.waitForExistence(timeout:5))
         capture(app,"pixelfx-native-live-preview")
-        app.buttons["pixelFXChooseSkill"].tap()
+        show(app.buttons["pixelFXChooseSkill"],in:app); app.buttons["pixelFXChooseSkill"].tap()
         XCTAssertTrue(app.buttons["survivorStart"].waitForExistence(timeout:8))
     }
 
