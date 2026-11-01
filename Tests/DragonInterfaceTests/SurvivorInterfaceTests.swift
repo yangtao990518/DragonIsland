@@ -13,12 +13,15 @@ final class SurvivorInterfaceTests: XCTestCase {
         return app
     }
     private func show(_ element: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<6 {
-            if element.exists && element.isHittable { return }
-            app.swipeUp()
+        for _ in 0..<10 {
+            let viewport=app.windows.firstMatch.frame.insetBy(dx:12,dy:12)
+            if element.exists && element.isHittable && viewport.contains(CGPoint(x:element.frame.midX,y:element.frame.midY)) { return }
+            let scroll=app.scrollViews.containing(.button,identifier:element.identifier).lastMatch
+            if scroll.exists {scroll.swipeUp()} else {app.swipeUp()}
         }
         XCTAssertTrue(element.waitForExistence(timeout: 5))
         XCTAssertTrue(element.isHittable)
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(CGPoint(x:element.frame.midX,y:element.frame.midY)))
     }
     private func openGame(_ app: XCUIApplication) {
         let entry = app.buttons["openSurvivorGame"]
@@ -35,7 +38,11 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["survivorTimer"].waitForExistence(timeout: 10))
     }
     private func capture(_ app: XCUIApplication, _ name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        // iOS 26 app.screenshot() can crop a rotated fullScreenCover using the
+        // original portrait application rectangle. Capture the actual display.
+        let screenshot=XCUIScreen.main.screenshot()
+        XCTAssertGreaterThan(screenshot.image.size.width,screenshot.image.size.height)
+        let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
     }
     private func seconds(_ label: String) -> Int {
