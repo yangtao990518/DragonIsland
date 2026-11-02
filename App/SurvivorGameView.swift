@@ -48,7 +48,7 @@ import UIKit
     @Published var selectedHeroID = "dafeiyu"
     var heroID: String { playing ? (battle.heroID ?? "dafeiyu") : selectedHeroID }
     var heroName: String { heroID == "xiaobai" ? "小白" : "大肥鱼" }
-    var portrait: UIImage? { guard let root=textures?.root else {return nil};return UIImage(contentsOfFile:root.appendingPathComponent("hd-"+heroID+"-portrait.png").path) }
+    var portrait: UIImage? { textures?.heroPortraits[heroID] }
     @Published var starterID = UserDefaults.standard.string(forKey:"survivorPixelStarter") ?? "fireball"
     func icon(for upgrade:SurvivorUpgrade)->UIImage? { thumbnail(upgrade.effectID ?? SurvivorLocalSkills.supportIcons[upgrade] ?? "") }
     var skills: [PixelFXSkill] { textures?.skills ?? [] }

@@ -17,6 +17,7 @@ final class SurvivorTextures {
     // Other animation pages keep using the existing 96MB rolling cache.
     private var upgradePages: [String: SKTexture] = [:]
     private var upgradeFiles = Set<String>()
+    let heroPortraits: [String:UIImage]
     let idleImage: UIImage
     let arrowTexture:SKTexture
     let idleTexture: SKTexture
@@ -44,6 +45,8 @@ final class SurvivorTextures {
         let catalog=try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: root.appendingPathComponent("PixelFXCatalog.json")))
         skills=catalog.skills;characters=catalog.characters ?? []
         guard let idle = UIImage(contentsOfFile: root.appendingPathComponent("hd-dafeiyu-portrait.png").path) else { throw CocoaError(.fileReadCorruptFile) }
+        guard let white=UIImage(contentsOfFile:root.appendingPathComponent("hd-xiaobai-portrait.png").path) else {throw CocoaError(.fileReadCorruptFile)}
+        heroPortraits=["dafeiyu":idle,"xiaobai":white]
         idleImage = idle
         idleTexture = SKTexture(image: idle)
         guard let arrow=UIImage(contentsOfFile:root.appendingPathComponent("arrow-pose.png").path) else {throw CocoaError(.fileReadCorruptFile)}
@@ -382,11 +385,6 @@ final class SurvivorScene: SKScene {
             node.texture = bodyAlpha>0 ? textures.texture(death.variant,at:0):nil
             node.alpha=CGFloat(bodyAlpha)
             if age>=0.1 && age<0.64 {
-                let debris:SKSpriteNode
-                if let existing=node.childNode(withName:"bones") as? SKSpriteNode {debris=existing}
-                else {debris=SKSpriteNode();debris.name="bones";node.addChild(debris)}
-                // Child alpha would inherit body fade: render debris as a sibling instead.
-                debris.removeFromParent()
                 let key="bones-\(death.id)"
                 let fx:SKSpriteNode
                 if let existing=world.childNode(withName:key) as? SKSpriteNode {fx=existing}
@@ -407,7 +405,7 @@ final class SurvivorScene: SKScene {
                 let angle = -Double.pi/2+time*2*Double.pi/2.6+Double(i)*2*Double.pi/Double(effect.level)
                 let blade=node.children[i] as! SKSpriteNode
                 animate(blade,clip:"hd-orbit-blade",time:time,height:63)
-                blade.position=CGPoint(x:cos(angle)*87,y:sin(angle)*87);blade.zRotation=angle-Double.pi/2
+                blade.position=CGPoint(x:cos(angle)*87,y:sin(angle)*87);blade.zRotation=angle-Double.pi/2;blade.zPosition=sin(angle)<0 ? 310:-10
                 let crescent=node.children[i+effect.level] as! SKSpriteNode
                 let fired=2.12+Double(i)*0.04,raw=(time-fired).truncatingRemainder(dividingBy:2.6),age=raw<0 ? raw+2.6:raw
                 crescent.isHidden=effect.level<5 || time<fired || age>=0.5
