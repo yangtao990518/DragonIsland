@@ -194,10 +194,29 @@ final class SurvivorInterfaceTests: XCTestCase {
         let initial=timer.label
         expectation(for:NSPredicate(format:"label != %@",initial),evaluatedWith:timer)
         waitForExpectations(timeout:15)
-        Thread.sleep(forTimeInterval:8)
+        // Higher durability changes kill/pickup timing. A legitimate upgrade
+        // pauses simulation; resolve it rather than tapping through its modal.
+        func resolveUpgrade() -> Bool {
+            let choice = app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","survivorUpgrade_")).firstMatch
+            guard choice.exists else { return false }
+            choice.tap()
+            XCTAssertFalse(app.descendants(matching:.any).matching(identifier:"survivorLoading").firstMatch.exists)
+            return true
+        }
+        let startSeconds = seconds(timer.label), deadline = Date().addingTimeInterval(60)
+        while startSeconds - seconds(timer.label) < 8 && Date() < deadline {
+            if !resolveUpgrade() { Thread.sleep(forTimeInterval:0.2) }
+        }
+        XCTAssertGreaterThanOrEqual(startSeconds - seconds(timer.label), 8, "Eight seconds of simulation, excluding upgrade pauses")
+        _ = resolveUpgrade()
         capture(app,"survivor-six-skill-crowd")
-        app.buttons["survivorPause"].tap()
-        XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout:5))
+        let resume = app.buttons["survivorResume"]
+        for _ in 0..<8 {
+            if resolveUpgrade() { continue }
+            app.buttons["survivorPause"].tap()
+            if resume.waitForExistence(timeout:2) { break }
+        }
+        XCTAssertTrue(resume.exists)
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","已装备6项技能")).firstMatch.exists)
     }
     func testSaveRelaunchContinueAndBackgroundPause() {
