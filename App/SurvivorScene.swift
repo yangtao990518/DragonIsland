@@ -414,6 +414,7 @@ final class SurvivorScene: SKScene {
                 let angle = -Double.pi/2+time*2*Double.pi/2.6+Double(i)*2*Double.pi/Double(rank)
                 let blade=node.children[i] as! SKSpriteNode
                 animate(blade,clip:"hd-orbit-blade",time:time,height:63)
+                blade.name="hd-orbit-blade"
                 blade.position=CGPoint(x:cos(angle)*87,y:sin(angle)*87);blade.zRotation=angle-Double.pi/2;blade.zPosition=sin(angle)<0 ? 310:-10
                 let crescent=node.children[i+rank] as! SKSpriteNode
                 let fired=2.12+Double(i)*0.04,raw=(time-fired).truncatingRemainder(dividingBy:2.6),age=raw<0 ? raw+2.6:raw
@@ -424,6 +425,8 @@ final class SurvivorScene: SKScene {
                     crescent.position=CGPoint(x:cos(a)*(106+54*min(1,age/0.34)),y:sin(a)*(106+54*min(1,age/0.34)));crescent.zRotation=a
                 }
             }
+            let visible=node.children.compactMap {$0 as? SKSpriteNode}.filter {$0.name=="hd-orbit-blade" && $0.texture != nil && !$0.isHidden}.count
+            game?.reportOrbitBlades(visible)
             return true
         }
         if effect.skillID == "seeking-charge" {

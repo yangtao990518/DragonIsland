@@ -61,6 +61,10 @@ final class SurvivorInterfaceTests: XCTestCase {
         for id in ["fireball","lightning","orbit-swords","seeking-swords"] {
             XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"survivorSkillRank_"+id).firstMatch.waitForExistence(timeout:10))
         }
+        let scene=app.descendants(matching:.any).matching(identifier:"survivorBattleScene").firstMatch
+        XCTAssertTrue(scene.waitForExistence(timeout:10))
+        expectation(for:NSPredicate(format:"value == %@","环绕剑阵，5柄"),evaluatedWith:scene)
+        waitForExpectations(timeout:10)
         Thread.sleep(forTimeInterval:2.6);capture(app,"hd2d-four-max-rank-spells-charge-and-orbit")
         Thread.sleep(forTimeInterval:1.1);capture(app,"hd2d-four-max-rank-spells-merged-and-crescents")
         let timer=app.staticTexts["survivorTimer"]

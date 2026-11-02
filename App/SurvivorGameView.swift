@@ -8,6 +8,8 @@ import UIKit
     func reportRenderStatistics(_ value: SurvivorRenderStatistics, pageWaits: Int) {
         self.pageWaits = pageWaits; renderStatistics = value
     }
+    @Published private(set) var renderedOrbitBlades = 0
+    func reportOrbitBlades(_ count:Int) {if renderedOrbitBlades != count {renderedOrbitBlades=count}}
     @Published private(set) var preparing = false
     private let audio = SurvivorAudio()
     private let hurtFeedback = UIImpactFeedbackGenerator(style: .medium)
@@ -273,6 +275,8 @@ struct SurvivorGameView: View {
                 SpriteView(scene: scene, isPaused: game.preparing || !game.battle.clock.running || game.battle.outcome != nil,
                            preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
                     .ignoresSafeArea().accessibilityLabel("灵境试炼战场")
+                    .accessibilityIdentifier("survivorBattleScene")
+                    .accessibilityValue(game.battle.rank(.effect("orbit-swords")) > 0 ? "环绕剑阵，\(game.renderedOrbitBlades)柄":"自动战斗中")
                     .accessibilityIdentifier("survivorBattleScene")
                     .accessibilityValue(ProcessInfo.processInfo.arguments.contains("--maiverse-capture") ? "资源准备次数：\(game.preparationCount)" : "自动战斗")
                 battleOverlay
