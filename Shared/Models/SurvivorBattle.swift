@@ -90,6 +90,9 @@ struct SurvivorCombatHit: Codable, Identifiable, Sendable {
 }
 
 struct SurvivorEnemy: Codable, Identifiable, Sendable {
+    var actionStarted: Double? = nil
+    var actionReleased: Bool? = nil
+    var actionDirection: SurvivorVector? = nil
     var variant: String? = nil
     var born: Double? = nil
     var nextAttack: Double? = nil
@@ -167,6 +170,10 @@ struct SurvivorBattle: Codable, Sendable {
     private(set) var thunders: [SurvivorThunder] = []
     private(set) var outcome: SurvivorOutcome?
     private(set) var pixelFX: PixelFXBattleState?
+    var heroID: String? = nil
+    private(set) var hd2dMonsters: [SurvivorHD2DMonster]? = nil
+    private(set) var hd2dDeaths: [SurvivorHD2DDeath]? = nil
+    mutating func configureHD2D(_ rules: [SurvivorHD2DMonster]) { hd2dMonsters = rules }
     private(set) var monsterShots: [SurvivorMonsterShot]? = nil
     private(set) var cameraViewport: SurvivorVector? = nil
     private(set) var combatHits: [SurvivorCombatHit]? = nil // older saves omit this
@@ -263,10 +270,10 @@ struct SurvivorBattle: Codable, Sendable {
         }
         for i in enemies.indices where enemies[i].health > 0 {
             let toPlayer = player - enemies[i].position
-            if abs(toPlayer.x) > 0.5 { enemies[i].facingLeft = toPlayer.x < 0 }
+            if enemies[i].actionStarted == nil, abs(toPlayer.x) > 0.5 { enemies[i].facingLeft = toPlayer.x < 0 }
             let ranged = usesLocalSkills && (enemies[i].variant?.contains("R2C") == true || enemies[i].variant?.contains("R4C") == true)
             let phase=(clock.elapsed-(enemies[i].born ?? 0)).truncatingRemainder(dividingBy:4.016667)
-            let windingUp=usesLocalSkills && enemies[i].kind == .boss && phase>1.4 && phase<2.85
+            let windingUp = hd2dMonsters != nil ? enemies[i].actionStarted != nil : usesLocalSkills && enemies[i].kind == .boss && phase>1.4 && phase<2.85
             let advance = windingUp ? 0 : ranged && toPlayer.length < 220 ? 0.15 : 1.0
             let slow = clock.elapsed < (enemies[i].slowUntil ?? 0) ? 0.45 : 1.0
             enemies[i].position = enemies[i].position + toPlayer.normalized * (enemies[i].speed * delta * slow * advance)
@@ -323,7 +330,14 @@ struct SurvivorBattle: Codable, Sendable {
         thunders.removeAll { $0.age >= $0.duration }
         if usesLocalSkills { advanceLocalSkills(delta,grid:grid); advanceLocalMonsters(delta) }
         else if pixelFX != nil { advancePixelFX(delta, grid: grid) }
+        let deathClock=clock.elapsed
+        hd2dDeaths?.removeAll { deathClock - $0.born >= 0.68 }
         for enemy in enemies where enemy.health <= 0 {
+            if hd2dMonsters != nil, let variant = enemy.variant {
+                if hd2dDeaths == nil { hd2dDeaths = [] }
+                hd2dDeaths?.append(.init(id: enemy.id, variant: variant, position: enemy.position, facingLeft: enemy.facingLeft, born: clock.elapsed))
+                if (hd2dDeaths?.count ?? 0) > 64 { hd2dDeaths?.removeFirst() }
+            }
             kills += 1
             emitPixelFeedback("spawn-poof", at: enemy.position)
             let value = enemy.kind == .boss ? 500 : enemy.kind == .elite ? 80 : enemy.kind == .demon ? 12 : 18
@@ -345,7 +359,7 @@ struct SurvivorBattle: Codable, Sendable {
             let recycled = spawnPosition(angle: angle, padding: 160)
             enemies[i].position = usesLocalSkills ? SurvivorGrassland.clamp(recycled) : recycled
         }
-        for enemy in enemies where (enemy.position - player).length <= enemy.radius + 13 {
+        for enemy in enemies where hd2dMonsters == nil && (enemy.position - player).length <= enemy.radius + 13 {
             takeDamage(enemy.kind == .boss ? 18 : 8)
         }
         for i in drops.indices {
@@ -790,9 +804,45 @@ extension SurvivorBattle {
         pixelFX=state
     }
 
+    fileprivate mutating func advanceHD2DMonsters() {
+        let now = clock.elapsed
+        for i in enemies.indices where enemies[i].health > 0 {
+            guard let rule = hd2dMonsters?.first(where: { $0.id == enemies[i].variant }) else { continue }
+            let distance = (player - enemies[i].position).length
+            if enemies[i].actionStarted == nil {
+                guard now >= (enemies[i].nextAttack ?? 0), rule.effect == "healing-pulse" || distance < (rule.kind == "attack" ? (enemies[i].kind == .boss ? 180 : 100) : 600) else { continue }
+                enemies[i].actionStarted = now; enemies[i].actionReleased = false
+                enemies[i].actionDirection = (player - enemies[i].position).normalized
+            }
+            let age = now - (enemies[i].actionStarted ?? now)
+            if age >= rule.release && enemies[i].actionReleased != true {
+                enemies[i].actionReleased = true
+                let at = enemies[i].position, direction = enemies[i].actionDirection ?? .init(x: 1, y: 0)
+                if rule.kind == "attack" {
+                    let reach = enemies[i].kind == .boss ? 150.0 : 78.0
+                    if Self.segmentDistance(player, at, at + direction * reach) < 25 { takeDamage(enemies[i].kind == .boss ? 22 : 8) }
+                } else if rule.effect == "healing-pulse" {
+                    for j in enemies.indices where enemies[j].health > 0 && (enemies[j].position - at).length < 150 { enemies[j].health = min(enemies[j].maximumHealth, enemies[j].health + 8) }
+                } else if distance < 600 {
+                    if monsterShots == nil { monsterShots = [] }
+                    if (monsterShots?.count ?? 0) < 60 {
+                        let shot=SurvivorMonsterShot(effect: rule.effect, born: now, id: identifier(), position: at + direction * 18, velocity: direction * 210, remaining: 3, damage: 8)
+                        monsterShots?.append(shot)
+                    }
+                }
+            }
+            let end = rule.effect == "healing-pulse" ? max(rule.duration,rule.release+0.54):rule.duration
+            if age >= end {
+                enemies[i].actionStarted = nil; enemies[i].actionReleased = nil
+                enemies[i].nextAttack = now + max(0.1, (enemies[i].kind == .boss ? 4.016667 : 3.5) - end)
+            }
+        }
+    }
+
     fileprivate mutating func advanceLocalMonsters(_ delta:Double) {
         let now=clock.elapsed
-        for i in enemies.indices where enemies[i].health>0 {
+        if hd2dMonsters != nil { advanceHD2DMonsters() }
+        for i in enemies.indices where hd2dMonsters == nil && enemies[i].health>0 {
             guard let variant=enemies[i].variant,now >= (enemies[i].nextAttack ?? now+1) else {continue}
             enemies[i].nextAttack=now+(enemies[i].kind == .boss || variant.hasSuffix("group02-elites-boss-R2C1") ? 4.016667:3.5)
             if enemies[i].kind == .boss {

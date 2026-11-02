@@ -35,6 +35,7 @@ jobs:
           python3 Scripts/prepare_motion.py
           python3 Scripts/prepare_unread_avatar.py
           python3 -m unittest discover -s Tests -p test_survivor_v3.py -v 2>&1 | tee build/integration-assets.log
+          python3 -m unittest discover -s Tests -p test_hd2d.py -v 2>&1 | tee build/integration-hd2d-assets.log
       - name: Native one-character one-skill smoke
         run: |
           set -o pipefail
@@ -61,6 +62,7 @@ jobs:
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testSixMaxRankSkillsAndCrowdKeepSimulationMoving \
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testFourConsecutiveUpgradesNeverReenterBattlePreparation \
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testSmallCharacterAndMixedMonstersInRealBattle \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testHD2DXiaobaiSelectionAndBattle \
             CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test 2>&1 | tee build/integration-native.log
       - name: Export proof images
         if: always()

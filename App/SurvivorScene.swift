@@ -5,6 +5,8 @@ import UIKit
 /// Never materialize 240 individual UIImages for each monster.
 final class SurvivorTextures {
     private struct Catalog: Decodable { let skills: [PixelFXSkill]; let characters: [SurvivorLocalCharacter]? }
+    private struct HD2D: Decodable { let clips: [SurvivorMedia.Clip]; let monsters: [SurvivorHD2DMonster] }
+    let monsterRules: [SurvivorHD2DMonster]
     let media: SurvivorMedia
     let root: URL
     let characters: [SurvivorLocalCharacter]
@@ -35,9 +37,13 @@ final class SurvivorTextures {
         try combat.validate()
         clipIndex = Dictionary(uniqueKeysWithValues:decoded.clips.map { ($0.id,$0) })
         for clip in combat.clips { clipIndex[clip.id] = clip }
+        let hd = try JSONDecoder().decode(HD2D.self, from: Data(contentsOf: root.appendingPathComponent("hd2d.json")))
+        try SurvivorMedia(clips: hd.clips).validate()
+        monsterRules = hd.monsters
+        for clip in hd.clips { clipIndex[clip.id] = clip }
         let catalog=try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: root.appendingPathComponent("PixelFXCatalog.json")))
         skills=catalog.skills;characters=catalog.characters ?? []
-        guard let idle = UIImage(contentsOfFile: root.appendingPathComponent("dafeiyu-idle.png").path) else { throw CocoaError(.fileReadCorruptFile) }
+        guard let idle = UIImage(contentsOfFile: root.appendingPathComponent("hd-dafeiyu-portrait.png").path) else { throw CocoaError(.fileReadCorruptFile) }
         idleImage = idle
         idleTexture = SKTexture(image: idle)
         guard let arrow=UIImage(contentsOfFile:root.appendingPathComponent("arrow-pose.png").path) else {throw CocoaError(.fileReadCorruptFile)}
@@ -46,7 +52,14 @@ final class SurvivorTextures {
         pages.countLimit = 64
         previewPages.countLimit = 3; thumbnails.totalCostLimit = 20*1024*1024
     }
-    func resolved(_ id:String)->String { skills.first(where:{$0.id==id})?.localLevels?.first?.clipID ?? id }
+    func resolved(_ id:String)->String {
+        if id == "fireball" || id.hasPrefix("fireball-lv") { return "fireball-flight" }
+        if id == "seeking-swords" || id.hasPrefix("seeking-swords-lv") { return "seeking-flight" }
+        if id == "orbit-swords" || id.hasPrefix("orbit-swords-lv") { return "hd-orbit-blade" }
+        if id.hasPrefix("lightning-lv") { return "lightning-lv1" }
+        if id.hasPrefix("skeleton-"), clipIndex["hd-"+id] != nil { return "hd-"+id }
+        return skills.first(where:{$0.id==id})?.localLevels?.first?.clipID ?? id
+    }
     func clip(_ id: String) -> SurvivorMedia.Clip? { clipIndex[resolved(id)] }
     private var pending=Set<String>()
     private let decodeQueue = DispatchQueue(label: "maiverse.survivor.atlas-decode", qos: .userInitiated)
@@ -100,7 +113,7 @@ final class SurvivorTextures {
                 guard images.count == files.count else { completion(false); return }
                 self.current.removeAll(); self.resident.removeAll()
                 for (file,image) in images {
-                    let texture = SKTexture(image:image); texture.filteringMode = file.contains("dafeiyu") || file.contains("demon") || file.contains("mushroom") ? .linear : .nearest
+                    let texture = SKTexture(image:image); texture.filteringMode = .nearest
                     self.resident[file] = texture
                 }
                 SKTexture.preload(Array(self.resident.values)) { DispatchQueue.main.async { completion(true) } }
@@ -149,11 +162,11 @@ final class SurvivorTextures {
     func resetStatistics() { pageWaits = 0; stalledFiles.removeAll() }
     func thumbnail(_ id: String) -> UIImage? {
         if let image = thumbnails.object(forKey:id as NSString) { return image }
-        guard let image = UIImage(contentsOfFile:root.appendingPathComponent("Icons/\(id).png").path) else { return nil }
+        guard let image = UIImage(contentsOfFile:root.appendingPathComponent(["fireball","lightning","orbit-swords","seeking-swords"].contains(id) ? "HD2D/Icons/\(id).png" : "Icons/\(id).png").path) else { return nil }
         thumbnails.setObject(image,forKey:id as NSString,cost:Int(image.size.width*image.size.height*4)); return image
     }
     func preview(_ id: String, time: Double) -> UIImage? {
-        guard let clip = media.clips.first(where: { $0.id == resolved(id) }), let frame = clip.frame(at:time,looping:true) else { return nil }
+        guard let clip = clip(id), let frame = clip.frame(at:time,looping:true) else { return nil }
         let capacity = clip.grid[0]*clip.grid[1], cell = frame.cell%capacity, path = clip.pages[frame.cell/capacity].file
         let image: UIImage
         if let cached = previewPages.object(forKey:path as NSString) { image = cached }
@@ -175,6 +188,7 @@ final class SurvivorScene: SKScene {
     private let hero = SKSpriteNode()
     private let shadow = SKShapeNode(ellipseOf: CGSize(width: 36, height: 12))
     private var idle: SKTexture { textures.idleTexture }
+    private var deathNodes: [UInt64: SKSpriteNode] = [:]
     private var enemyNodes: [UInt64: SKSpriteNode] = [:]
     private var effectNodes: [UInt64: SKSpriteNode] = [:]
     private var dropNodes: [UInt64: SKSpriteNode] = [:]
@@ -210,8 +224,8 @@ final class SurvivorScene: SKScene {
     override func didChangeSize(_ oldSize: CGSize) { resetTimestamp() }
     func resetRun() {
         impactNodes.values.forEach { $0.removeFromParent() }; impactNodes.removeAll()
-        for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes,arrowNodes] { for node in dict.values { node.removeFromParent() } }
-        enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:];arrowNodes=[:]
+        for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes,arrowNodes,deathNodes] { for node in dict.values { node.removeFromParent() } }
+        deathNodes = [:]; enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:];arrowNodes=[:]
         lastTime = nil
         renderStatistics = SurvivorRenderStatistics(); textures.resetStatistics()
         lastSimulationTime = game?.battle.clock.elapsed ?? 0; heroAnimationTime = 0
@@ -240,8 +254,8 @@ final class SurvivorScene: SKScene {
     private func render(_ battle: SurvivorBattle) {
         let time = battle.clock.elapsed
         if Int(time*10)%10==0 {
-            let active=Set(battle.enemies.compactMap(\.variant)+(battle.pixelFX?.casts.compactMap(\.clipID) ?? [])+["dafeiyu-run"])
-            textures.retireUnused(active)
+            let active=Set(battle.enemies.compactMap(\.variant)+(battle.pixelFX?.casts.compactMap(\.clipID) ?? [])+["hd-dafeiyu-idle","hd-xiaobai-idle"])
+            textures.retireUnused(Set(active.map { textures.resolved($0) }))
         }
         let simulatedDelta = max(0, time - lastSimulationTime)
         lastSimulationTime = time
@@ -278,11 +292,7 @@ final class SurvivorScene: SKScene {
             marker.zPosition = -1; hero.addChild(marker)
         }
         hero.position = player; hero.zPosition = 500
-        if battle.moving { animate(hero, clip: "dafeiyu-run", time: heroAnimationTime, height: 100, left: battle.facingLeft) }
-        else {
-            hero.texture = idle; hero.size = CGSize(width: 100 * idle.size().width / max(1, idle.size().height), height: 100)
-            hero.anchorPoint = CGPoint(x: 0.5, y: 0.04); hero.xScale = 1
-        }
+        animate(hero, clip: "hd-"+(battle.heroID ?? "dafeiyu")+"-idle", time: time, height: 100, left: !battle.facingLeft)
         hero.alpha = battle.playerIsInvincible && Int(time * 12) % 2 == 0 ? 0.65 : 1
         hero.color = .init(red: 1, green: 0.12, blue: 0.17, alpha: 1)
         hero.colorBlendFactor = CGFloat(min(1, battle.playerHitRemaining / 0.08) * 0.82)
@@ -290,8 +300,19 @@ final class SurvivorScene: SKScene {
         for enemy in battle.enemies {
             let node = node(for: enemy.id, in: &enemyNodes)
             guard let clip = enemy.variant, textures.clip(clip) != nil else { continue }
-            animate(node, clip: clip, time: enemy.variant?.contains("group01") == true ? time : time-(enemy.born ?? 0), height: enemy.kind == .boss ? 170 : enemy.kind == .elite ? 110 : 72,
-                    left: !enemy.facingLeft)
+            let height: CGFloat = enemy.kind == .boss ? 170 : enemy.kind == .elite ? 110 : 72
+            if let start = enemy.actionStarted {
+                animate(node, clip: "hd-"+clip+"-attack", time: time-start, height: height*128/96, left: !enemy.facingLeft, looping: false)
+            } else { animate(node, clip: clip, time: time, height: height, left: !enemy.facingLeft) }
+            if let rule = textures.monsterRules.first(where: { $0.id == clip }), rule.effect == "healing-pulse", let start = enemy.actionStarted {
+                let age=time-start-rule.release
+                if age>=0 && age<0.54 {
+                    let pulse: SKSpriteNode
+                    if let existing=node.childNode(withName:"heal") as? SKSpriteNode { pulse=existing }
+                    else { pulse=SKSpriteNode();pulse.name="heal";node.addChild(pulse) }
+                    animate(pulse,clip:"hd-healing-pulse",time:age,height:100,looping:false);pulse.zPosition = -1
+                } else {node.childNode(withName:"heal")?.removeFromParent()}
+            } else {node.childNode(withName:"heal")?.removeFromParent()}
             node.position = point(enemy.position); node.zPosition = 90 - node.position.y * 0.01
             let hitRemaining = max(0, enemy.hitUntil - time)
             node.color = .init(red: 1, green: 0.12, blue: 0.17, alpha: 1)
@@ -310,6 +331,7 @@ final class SurvivorScene: SKScene {
                 bar.path = CGPath(rect: CGRect(x: -30, y: 128, width: 60 * max(0, enemy.health / enemy.maximumHealth), height: 5), transform: nil)
             }
         }
+        renderDeaths(battle)
         prune(&dropNodes, keeping: Set(battle.drops.map(\.id)))
         for drop in battle.drops {
             let node = node(for: drop.id, in: &dropNodes)
@@ -320,6 +342,7 @@ final class SurvivorScene: SKScene {
         prune(&effectNodes,keeping:Set(casts.map(\.id)))
         for effect in casts {
             let node=node(for:effect.id,in:&effectNodes)
+            if renderHDSpell(node, effect, time: time, player: battle.player) { continue }
             guard let id=effect.clipID,let clip=textures.clip(id) else {continue}
             animate(node,clip:id,time:effect.age+(effect.clipOffset ?? 0),height:CGFloat(clip.cellSize[1]) * CGFloat(clip.displayScale ?? 1),looping:clip.loop ?? false)
             node.xScale=1;node.position=point(effect.position)
@@ -330,7 +353,8 @@ final class SurvivorScene: SKScene {
         prune(&arrowNodes,keeping:Set(shots.map(\.id)))
         for shot in shots {
             let node=node(for:shot.id,in:&arrowNodes)
-            node.texture=textures.arrowTexture;node.size=CGSize(width:56,height:6);node.anchorPoint=CGPoint(x:0.9,y:0.5)
+            let effect = shot.effect ?? "bone-arrow"
+            animate(node,clip:effect == "fireball" ? "fireball-flight" : "hd-"+effect,time:time-(shot.born ?? 0),height:effect == "bone-arrow" ? 62:70)
             node.position=point(shot.position);node.zPosition=140;node.zRotation=CGFloat(atan2(shot.velocity.y,shot.velocity.x))
         }
 
@@ -343,6 +367,73 @@ final class SurvivorScene: SKScene {
             node.position = point(event.position); node.zPosition = 160
         }
         renderImpacts(battle)
+    }
+
+    private func renderDeaths(_ battle: SurvivorBattle) {
+        let deaths=battle.hd2dDeaths ?? [];prune(&deathNodes,keeping:Set(deaths.map(\.id)))
+        for death in deaths {
+            let node=node(for:death.id,in:&deathNodes), age=battle.clock.elapsed-death.born
+            let height:CGFloat = death.variant.hasSuffix("R2C2") && death.variant.contains("group02") ? 170 : death.variant.contains("group02") ? 110:72
+            animate(node,clip:death.variant,time:0,height:height,left:!death.facingLeft)
+            node.position=point(death.position);node.zPosition=90-node.position.y*0.01
+            // Fade body only, keeping the independent debris layer visible.
+            node.alpha=1;node.color = .white;node.colorBlendFactor=age<0.09 ? 1:0
+            let bodyAlpha=age<0.09 ? 1:max(0,1-(age-0.09)/0.18)
+            node.texture = bodyAlpha>0 ? textures.texture(death.variant,at:0):nil
+            node.alpha=CGFloat(bodyAlpha)
+            if age>=0.1 && age<0.64 {
+                let debris:SKSpriteNode
+                if let existing=node.childNode(withName:"bones") as? SKSpriteNode {debris=existing}
+                else {debris=SKSpriteNode();debris.name="bones";node.addChild(debris)}
+                // Child alpha would inherit body fade: render debris as a sibling instead.
+                debris.removeFromParent()
+                let key="bones-\(death.id)"
+                let fx:SKSpriteNode
+                if let existing=world.childNode(withName:key) as? SKSpriteNode {fx=existing}
+                else {fx=SKSpriteNode();fx.name=key;world.addChild(fx)}
+                animate(fx,clip:"hd-bone-death",time:age-0.1,height:height,looping:false)
+                fx.position=point(death.position);fx.zPosition=91;fx.alpha=CGFloat(min(1,(0.64-age)/0.18))
+            }
+        }
+        for child in world.children where child.name?.hasPrefix("bones-")==true {
+            if !deaths.contains(where:{"bones-\($0.id)"==child.name && battle.clock.elapsed-$0.born<0.64}) {child.removeFromParent()}
+        }
+    }
+    private func renderHDSpell(_ node: SKSpriteNode, _ effect: PixelFXCast, time:Double, player:SurvivorVector)->Bool {
+        if effect.skillID == "orbit-swords" {
+            node.texture=nil;node.position=point(player);node.zRotation=0;node.zPosition=200
+            if node.children.count != effect.level*2 {node.removeAllChildren();for _ in 0..<effect.level*2 {node.addChild(SKSpriteNode())}}
+            for i in 0..<effect.level {
+                let angle = -Double.pi/2+time*2*Double.pi/2.6+Double(i)*2*Double.pi/Double(effect.level)
+                let blade=node.children[i] as! SKSpriteNode
+                animate(blade,clip:"hd-orbit-blade",time:time,height:63)
+                blade.position=CGPoint(x:cos(angle)*87,y:sin(angle)*87);blade.zRotation=angle-Double.pi/2
+                let crescent=node.children[i+effect.level] as! SKSpriteNode
+                let fired=2.12+Double(i)*0.04,raw=(time-fired).truncatingRemainder(dividingBy:2.6),age=raw<0 ? raw+2.6:raw
+                crescent.isHidden=effect.level<5 || time<fired || age>=0.5
+                if !crescent.isHidden {
+                    let a = -Double.pi/2+fired*2*Double.pi/2.6+Double(i)*2*Double.pi/5
+                    animate(crescent,clip:"hd-orbit-crescent",time:age,height:72,looping:false)
+                    crescent.position=CGPoint(x:cos(a)*(106+54*min(1,age/0.34)),y:sin(a)*(106+54*min(1,age/0.34)));crescent.zRotation=a
+                }
+            }
+            return true
+        }
+        if effect.skillID == "seeking-charge" {
+            node.texture=nil;node.position=point(player);node.zRotation=0;node.zPosition=200
+            if node.children.count != 5 {node.removeAllChildren();for _ in 0..<5 {node.addChild(SKSpriteNode())}}
+            let q=min(1,effect.age/0.84)
+            for i in 0..<5 {
+                let child=node.children[i] as! SKSpriteNode,a=Double(i)*2*Double.pi/5+q*0.6,r=48*pow(1-q,1.4)
+                animate(child,clip:"seeking-flight",time:effect.age,height:36*(1-0.28*q));child.position=CGPoint(x:cos(a)*r,y:sin(a)*r);child.alpha=1-q*0.7
+            }
+            return true
+        }
+        let heights:[String:CGFloat] = ["fireball":96,"fireball-impact":84,"lightning":122,"lightning-explosion":190,"seeking-swords":48,"seeking-merged":70]
+        guard let height=heights[effect.skillID],let id=effect.clipID else {return false}
+        animate(node,clip:id,time:effect.age,height:height,looping:textures.clip(id)?.loop ?? false)
+        node.position=point(effect.position);node.xScale=1;node.zRotation=effect.angle ?? 0;node.zPosition=150
+        return true
     }
 
     private func renderImpacts(_ battle: SurvivorBattle) {

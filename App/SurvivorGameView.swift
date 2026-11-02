@@ -25,7 +25,7 @@ import UIKit
         preparing = true; movement = .zero
         scene?.isPaused=true; scene?.view?.isPaused=true
         let request=UUID(); preparationID=request
-        let ids=battle.equippedPixelSkills.compactMap { skill in skill.localLevels?.first(where:{$0.level==battle.rank(skill.upgrade)})?.clipID } + textures.characters.map(\.id) + ["dafeiyu-run","fireball-flight","fireball-impact","lightning-lv1","lightning-explosion","archer-arrow","seeking-flight","seeking-merged"]
+        let ids=battle.equippedPixelSkills.compactMap { skill in skill.localLevels?.first(where:{$0.level==battle.rank(skill.upgrade)})?.clipID } + textures.characters.flatMap { ["hd-"+$0.id,"hd-"+$0.id+"-attack"] } + ["hd-dafeiyu-idle","hd-xiaobai-idle","hd-orbit-blade","hd-orbit-crescent","hd-bone-death","hd-bone-arrow","hd-curse-bolt","hd-frost-bolt","hd-healing-pulse","fireball-flight","fireball-impact","lightning-lv1","lightning-explosion","archer-arrow","seeking-flight","seeking-merged"]
         textures.prepare(ids + upcomingClipIDs) { [weak self] ready in
             guard let self, self.preparationID == request else { return }
             self.preparing=false
@@ -45,7 +45,10 @@ import UIKit
     private var suspended: SurvivorBattle?
     private let saveURL: URL?
     var canContinue: Bool { suspended != nil }
-    var portrait: UIImage? { textures?.idleImage }
+    @Published var selectedHeroID = "dafeiyu"
+    var heroID: String { playing ? (battle.heroID ?? "dafeiyu") : selectedHeroID }
+    var heroName: String { heroID == "xiaobai" ? "小白" : "大肥鱼" }
+    var portrait: UIImage? { guard let root=textures?.root else {return nil};return UIImage(contentsOfFile:root.appendingPathComponent("hd-"+heroID+"-portrait.png").path) }
     @Published var starterID = UserDefaults.standard.string(forKey:"survivorPixelStarter") ?? "fireball"
     func icon(for upgrade:SurvivorUpgrade)->UIImage? { thumbnail(upgrade.effectID ?? SurvivorLocalSkills.supportIcons[upgrade] ?? "") }
     var skills: [PixelFXSkill] { textures?.skills ?? [] }
@@ -125,6 +128,8 @@ import UIKit
         #endif
         movement = .zero; scene?.resetRun(); renderStatistics = SurvivorRenderStatistics(); pageWaits = 0
         preparationCount = 0; upgradeWarmIn = 0
+        if !continuing { battle.heroID = selectedHeroID }
+        battle.configureHD2D(textures.monsterRules)
         playing = true; audio.reset(); prepareBattle(); revision += 1
         save()
     }
@@ -288,14 +293,21 @@ struct SurvivorGameView: View {
                         Spacer()
                         Button { dismiss() } label: { Image(systemName: "xmark").font(.headline).frame(width: 44, height: 44).background(.white.opacity(0.1), in: Circle()) }.accessibilityLabel("关闭游戏")
                     }
-                    HStack { Label("选择出战角色", systemImage: "person.crop.circle"); Spacer(); Text("01 / 01").monospacedDigit().foregroundStyle(.secondary) }.font(.subheadline)
+                    HStack { Label("选择出战角色", systemImage: "person.crop.circle"); Spacer(); Text(game.heroID == "xiaobai" ? "02 / 02":"01 / 02").monospacedDigit().foregroundStyle(.secondary) }.font(.subheadline)
+                    HStack {
+                        ForEach(["dafeiyu","xiaobai"], id: \.self) { id in
+                            Button(id == "dafeiyu" ? "大肥鱼":"小白") {game.selectedHeroID=id}
+                                .buttonStyle(.bordered).tint(game.selectedHeroID == id ? .cyan:.gray)
+                                .accessibilityIdentifier("survivorHero_"+id)
+                        }
+                    }
                     ZStack(alignment: .bottomLeading) {
                         RoundedRectangle(cornerRadius: 28).fill(LinearGradient(colors: [.indigo.opacity(0.5), .cyan.opacity(0.12)], startPoint: .topLeading, endPoint: .bottomTrailing))
                         Circle().stroke(.cyan.opacity(0.25), lineWidth: 1).frame(width: 220, height: 220).offset(x: 100, y: -40)
                         Image(uiImage: game.portrait ?? UIImage()).resizable().scaledToFit().frame(height: 260).frame(maxWidth: .infinity).padding(.bottom, 58)
                         HStack {
                             VStack(alignment: .leading, spacing: 5) {
-                                Text("大肥鱼").font(.title2.bold())
+                                Text(game.heroName).font(.title2.bold())
                                 Text("鲸潮使者 · \(game.starterName)").font(.caption).foregroundStyle(.white.opacity(0.7))
                             }
                             Spacer()
@@ -381,7 +393,7 @@ struct SurvivorGameView: View {
             HStack {
                 Image(uiImage: game.portrait ?? UIImage()).resizable().scaledToFit().frame(width: 34, height: 40)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("大肥鱼 · Lv.\(game.battle.level)").font(.caption.bold())
+                    Text("\(game.heroName) · Lv.\(game.battle.level)").font(.caption.bold())
                     ProgressView(value: game.battle.health, total: game.battle.maximumHealth).tint(.mint).frame(width: 98)
                     Text("\(Int(game.battle.health)) / \(Int(game.battle.maximumHealth))").font(.system(size: 9).monospacedDigit()).foregroundStyle(.white.opacity(0.7))
                 }

@@ -54,6 +54,13 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertEqual(pieces.count, 2)
         return pieces.count == 2 ? pieces[0] * 60 + pieces[1] : 0
     }
+    func testHD2DXiaobaiSelectionAndBattle() {
+        let app=launch()
+        let choice=app.buttons["survivorHero_xiaobai"];show(choice,in:app);choice.tap()
+        start(app)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","小白 · Lv.")).firstMatch.waitForExistence(timeout:10))
+        capture(app,"hd2d-xiaobai-native-battle")
+    }
     func testConfirmedSkeletonAndFlameNativeSmoke() {
         continueAfterFailure=false
         let app=XCUIApplication()
@@ -66,7 +73,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"nativeAssetProofScene").firstMatch.waitForExistence(timeout:30))
         Thread.sleep(forTimeInterval:0.7);capture(app,"native-skeleton-flame-alpha-feet-start")
         Thread.sleep(forTimeInterval:4);capture(app,"native-skeleton-complete-duration-last-frame")
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","4.016667")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format:"label CONTAINS %@","4.097")).firstMatch.exists)
     }
     func testConfirmedBattleStartsWithMinimapAndNativeSkills() {
         let app=launch();start(app)

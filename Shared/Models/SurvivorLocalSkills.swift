@@ -55,6 +55,8 @@ struct SurvivorLocalCharacter: Codable, Sendable {
 }
 
 struct SurvivorMonsterShot: Codable, Identifiable, Sendable {
+    var effect: String? = nil
+    var born: Double? = nil
     let id:UInt64
     var position:SurvivorVector
     let velocity:SurvivorVector

@@ -63,6 +63,8 @@ def prepare():
     for name in ['LICENSE','NOTICE.md']:shutil.copyfile(source/name,target/name)
     if (source/'Terrain').exists():shutil.copytree(source/'Terrain',target/'Terrain',dirs_exist_ok=True)
     prepare_audio(target/'Audio')
+    from prepare_hd2d import prepare as prepare_hd2d
+    prepare_hd2d(target)
     print('Confirmed library:',len(catalog),'skills / 40 levels;',len(data['characters']),'latest skeletons; 13 V2 icons.')
 
 
