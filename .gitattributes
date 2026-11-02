@@ -6,3 +6,4 @@
 *.webp binary
 *.mp4 binary
 Art/HomeScenes/**/SourceParts/*.bin binary
+*.part binary

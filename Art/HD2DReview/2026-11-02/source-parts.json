@@ -611,6 +611,33 @@
           "sha256": "825f8594c07eacfe646aaea740ac42a4f9cf5656f078bf2031c126e3705ee2b1"
         }
       ]
+    },
+    {
+      "path": "Art/HD2DReview/2026-11-02/Candidates/grassland-lighting-study-v1.png",
+      "bytes": 3494823,
+      "sha256": "258da34c31f769ead36d27b6cad8a78f3ff3699cf7f8ffc97925710d32f95bf0",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/grassland-lighting-study-v1.png/0000.part",
+          "bytes": 1048576,
+          "sha256": "1ae31ae7a6d48508787b1671c2c23e233675e8f1e05f162923de807021f1dd1f"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/grassland-lighting-study-v1.png/0001.part",
+          "bytes": 1048576,
+          "sha256": "4f483ac47ba4fd896ef8bebdb1dd2e3e230bdf63db3230779d9975e0c5be29b9"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/grassland-lighting-study-v1.png/0002.part",
+          "bytes": 1048576,
+          "sha256": "0e2c53b0500206ac9d2962b4fdaff5a3c55259378fb06bc3df6c24100f69bb87"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/grassland-lighting-study-v1.png/0003.part",
+          "bytes": 349095,
+          "sha256": "f4205d893fe00effc4f12b033901d410ea2f8338cb0ff45742820d010b1aeb8f"
+        }
+      ]
     }
   ]
 }

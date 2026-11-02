@@ -1,0 +1,56 @@
+{
+  "status": "raw draft source sheets and lighting study only; not approved, not native runtime assets",
+  "checks": [
+    {
+      "file": "earth-spikes-draft-v1.png",
+      "bytes": 1283948,
+      "sha256": "6c012a0191d566c97aed0ca5191a1a07f0ed249660b4f87c783388e8b87a81e7",
+      "size": [
+        1254,
+        1254
+      ],
+      "opaque_red_pixels": 0
+    },
+    {
+      "file": "stone-fist-draft-v1.png",
+      "bytes": 1841390,
+      "sha256": "96c608999b0ff33924b8c3afab49d9e46085df6b5a442f4a062f89ad7a171e08",
+      "size": [
+        1254,
+        1254
+      ],
+      "opaque_red_pixels": 0
+    },
+    {
+      "file": "boulder-draft-v1.png",
+      "bytes": 1718428,
+      "sha256": "0746aa920ec83b42f788758baeb509f7ead3691a1095a6c3fbffc0b197d1740b",
+      "size": [
+        1254,
+        1254
+      ],
+      "opaque_red_pixels": 0
+    },
+    {
+      "file": "quicksand-draft-v1.png",
+      "bytes": 1816562,
+      "sha256": "b30f2dca5f7e5f1ade72558da87a17d9261211d36e6c95970143ccaf3d15bce1",
+      "size": [
+        1254,
+        1254
+      ],
+      "opaque_red_pixels": 0
+    },
+    {
+      "file": "grassland-lighting-study-v1.png",
+      "bytes": 3494823,
+      "sha256": "258da34c31f769ead36d27b6cad8a78f3ff3699cf7f8ffc97925710d32f95bf0",
+      "size": [
+        1844,
+        853
+      ],
+      "opaque_red_pixels": 0
+    }
+  ],
+  "note": "Low alpha source RGB may look red in some viewers; QA contact sheet uses actual alpha compositing. No generated pixel or source alpha was edited."
+}
