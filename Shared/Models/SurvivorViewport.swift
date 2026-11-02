@@ -3,7 +3,9 @@ import Foundation
 /// World units stay unchanged: camera zoom changes the size of everything on
 /// screen together, including hit areas, projectiles and the map's view box.
 enum SurvivorViewport {
-    static let cameraScale = 1.25
+    // 100-world-unit hero -> 40pt, ordinary 72-unit enemy -> 28.8pt.
+    // Half the on-screen size of the previous 1.25 camera.
+    static let cameraScale = 2.5
 
     static func size(width: Double, height: Double) -> SurvivorVector {
         .init(x: width * cameraScale, y: height * cameraScale)
@@ -16,6 +18,33 @@ enum SurvivorViewport {
         let yLimit = max(0, half - visible.y / 2)
         return .init(x: max(-xLimit, min(xLimit, player.x)),
                      y: max(-yLimit, min(yLimit, player.y + 55)))
+    }
+
+    static func contains(_ point: SurvivorVector, player: SurvivorVector, width: Double, height: Double) -> Bool {
+        let visible = size(width: width, height: height)
+        let origin = center(player: player, width: width, height: height)
+        return abs(point.x - origin.x) <= visible.x / 2 && abs(point.y - origin.y) <= visible.y / 2
+    }
+
+    static func spawnPoint(player: SurvivorVector, width: Double, height: Double,
+                           angle: Double, padding: Double) -> SurvivorVector {
+        let visible = size(width: width, height: height)
+        let origin = center(player: player, width: width, height: height)
+        func edge(_ direction: SurvivorVector) -> SurvivorVector {
+            let x = abs(direction.x) > 0.000001 ? (visible.x / 2 + padding) / abs(direction.x) : Double.infinity
+            let y = abs(direction.y) > 0.000001 ? (visible.y / 2 + padding) / abs(direction.y) : Double.infinity
+            return SurvivorGrassland.clamp(origin + direction * min(x, y))
+        }
+        let proposed = edge(.init(x: cos(angle), y: sin(angle)))
+        if !contains(proposed, player: player, width: width, height: height) { return proposed }
+        // At an outer wall, spawn beyond the inward screen edge, not inside
+        // the visible rectangle after clamping an out-of-world candidate.
+        let inward = origin.length > 0.001 ? origin.normalized * -1 : .init(x: 1, y: 0)
+        return edge(inward)
+    }
+
+    static func floorTileCount(span: Double, side: Double) -> Int {
+        max(3, Int(ceil(span / side)) + 3)
     }
 }
 

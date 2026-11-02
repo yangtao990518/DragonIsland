@@ -94,4 +94,16 @@ final class SurvivorLocalSkillsTests:XCTestCase {
         XCTAssertTrue(ids.contains("boulder-lv5"))
         XCTAssertFalse(ids.contains("fireball-lv2"));XCTAssertFalse(ids.contains("boulder-lv6"))
     }
+
+    func testNaturalWaveSpawnsBeyondTheZoomedOutBattleView() throws {
+        var game=try game("fireball")
+        game.setViewport(width:844,height:390)
+        try game.advance(by:0.6,movement:.zero)
+        XCTAssertEqual(game.enemies.count,3)
+        for enemy in game.enemies {
+            XCTAssertFalse(SurvivorViewport.contains(enemy.position,player:game.player,width:844,height:390))
+        }
+        let restored=try JSONDecoder().decode(SurvivorBattle.self,from:JSONEncoder().encode(game))
+        XCTAssertEqual(restored.cameraViewport,.init(x:844,y:390))
+    }
 }

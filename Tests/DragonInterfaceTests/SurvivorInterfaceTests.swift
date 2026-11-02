@@ -1,7 +1,7 @@
 import XCTest
 
 final class SurvivorInterfaceTests: XCTestCase {
-    private func launch(upgrade: Bool = false, stress: Bool = false, chain: Bool = false) -> XCUIApplication {
+    private func launch(upgrade: Bool = false, stress: Bool = false, chain: Bool = false, scale: Bool = false) -> XCUIApplication {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
         let app = XCUIApplication()
@@ -9,6 +9,7 @@ final class SurvivorInterfaceTests: XCTestCase {
         if upgrade { app.launchArguments.append("--survivor-upgrade-preview") }
         if stress { app.launchArguments.append("--survivor-stress-preview") }
         if chain { app.launchArguments.append("--survivor-upgrade-chain-preview") }
+        if scale { app.launchArguments.append("--survivor-scale-preview") }
         app.launch()
         openGame(app)
         return app
@@ -170,6 +171,19 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertEqual(timer.value as? String,"运行中")
         XCTAssertEqual(scene.value as? String,"资源准备次数：1")
         capture(app,"four-upgrades-without-resource-reload")
+    }
+
+    func testSmallCharacterAndMixedMonstersInRealBattle() {
+        let app=launch(scale:true);start(app)
+        let timer=app.staticTexts["survivorTimer"]
+        expectation(for:NSPredicate(format:"label != %@","20:00"),evaluatedWith:timer)
+        waitForExpectations(timeout:15)
+        capture(app,"small-scale-hero-normal-elite-boss-real-battle")
+        app.buttons["survivorPause"].tap()
+        XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout:5))
+        let map=app.descendants(matching:.any).matching(identifier:"survivorPauseMap").firstMatch
+        XCTAssertTrue(map.exists)
+        capture(app,"small-scale-matching-camera-map")
     }
 
     func testSixMaxRankSkillsAndCrowdKeepSimulationMoving() {

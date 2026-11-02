@@ -102,6 +102,13 @@ import SpriteKit
         }
         #endif
         #if DEBUG
+        if args.contains("--survivor-scale-preview"), args.contains("--maiverse-capture") {
+            for index in 0..<18 {
+                let angle=Double(index)*Double.pi/9
+                let kind:SurvivorEnemyKind = index == 0 ? .boss : index % 6 == 0 ? .elite : .demon
+                battle.spawnEnemy(at:.init(x:cos(angle)*740,y:sin(angle)*320),kind:kind)
+            }
+        }
         if args.contains("--survivor-stress-preview"), args.contains("--maiverse-capture") {
             for skill in textures.skills.filter(\.selectable).prefix(6) {
                 for _ in battle.rank(skill.upgrade)..<5 {
@@ -123,6 +130,7 @@ import SpriteKit
     func tick(_ delta: Double) {
         guard playing, !preparing, battle.clock.running, battle.outcome == nil,
               let scene, scene.size.width > scene.size.height else { return }
+        battle.setViewport(width: Double(scene.size.width), height: Double(scene.size.height))
         let oldCast=battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0
         let oldHealth=battle.health
         let oldKills=battle.kills

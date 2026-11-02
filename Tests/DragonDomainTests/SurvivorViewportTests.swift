@@ -4,9 +4,10 @@ import XCTest
 final class SurvivorViewportTests: XCTestCase {
     func testZoomShrinksEverythingWithoutChangingWorldCoordinates() {
         let viewport = SurvivorViewport.size(width: 844, height: 390)
-        XCTAssertEqual(viewport.x, 1055)
-        XCTAssertEqual(viewport.y, 487.5)
-        XCTAssertEqual(100 / SurvivorViewport.cameraScale, 80)
+        XCTAssertEqual(viewport.x, 2110)
+        XCTAssertEqual(viewport.y, 975)
+        XCTAssertEqual(100 / SurvivorViewport.cameraScale, 40)
+        XCTAssertEqual(72 / SurvivorViewport.cameraScale, 28.8)
     }
 
     func testCameraViewRemainsInsideWorldAtEveryCorner() {
@@ -52,5 +53,30 @@ final class SurvivorViewportTests: XCTestCase {
         statistics.record(at: 100 + 1.0 / 60)
         XCTAssertEqual(statistics.slowFrames, 1)
         XCTAssertEqual(statistics.longestFrameMS, 50, accuracy: 0.001)
+    }
+
+    func testSpawnsStayOutsideLargerViewIncludingWorldCorners() {
+        for x in [-6304.0,0,6304] {
+            for y in [-6304.0,0,6304] {
+                let player=SurvivorVector(x:x,y:y)
+                for i in 0..<32 {
+                    let p=SurvivorViewport.spawnPoint(player:player,width:956,height:440,
+                        angle:Double(i)*Double.pi/16,padding:100)
+                    XCTAssertFalse(SurvivorViewport.contains(p,player:player,width:956,height:440))
+                    XCTAssertLessThanOrEqual(abs(p.x),6304);XCTAssertLessThanOrEqual(abs(p.y),6304)
+                }
+            }
+        }
+    }
+
+    func testFloorPoolCoversBothEdgesAtEverySubtileCameraOffset() {
+        let span=956.0*SurvivorViewport.cameraScale,side=480.0
+        let columns=SurvivorViewport.floorTileCount(span:span,side:side)
+        let left = -Double(columns/2)*side-side/2
+        let right=Double(columns-1-columns/2)*side+side/2
+        for offset in stride(from:0.0,through:479,by:1) {
+            XCTAssertLessThanOrEqual(left,offset-span/2)
+            XCTAssertGreaterThanOrEqual(right,offset+span/2)
+        }
     }
 }

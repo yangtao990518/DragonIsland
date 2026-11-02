@@ -185,6 +185,8 @@ final class SurvivorScene: SKScene {
     private var lastSimulationTime = 0.0
     private var heroAnimationTime = 0.0
     private var tiles: [SKSpriteNode] = []
+    private var tileColumns = 0
+    private var tileRows = 0
     private let tileSize: CGFloat = 480
     private lazy var floorTexture = makeFloor()
     private lazy var experienceTexture = makeExperience()
@@ -196,10 +198,6 @@ final class SurvivorScene: SKScene {
         backgroundColor = UIColor(red: 0.08, green: 0.14, blue: 0.19, alpha: 1)
         addChild(world); addChild(viewpoint); camera = viewpoint
         viewpoint.setScale(SurvivorViewport.cameraScale)
-        for _ in 0..<49 {
-            let tile = SKSpriteNode(texture: floorTexture, size: CGSize(width: tileSize, height: tileSize))
-            tile.zPosition = -10000; world.addChild(tile); tiles.append(tile)
-        }
         shadow.fillColor = .black.withAlphaComponent(0.24); shadow.strokeColor = .clear
         shadow.zPosition = -500; world.addChild(shadow)
         world.addChild(hero)
@@ -249,10 +247,21 @@ final class SurvivorScene: SKScene {
         let half=CGFloat(SurvivorGrassland.halfSide)
         let cameraCenter = SurvivorViewport.center(player: battle.player, width: Double(size.width), height: Double(size.height))
         viewpoint.position = point(cameraCenter)
-        let originX = floor(player.x / tileSize), originY = floor(player.y / tileSize)
+        let visible = SurvivorViewport.size(width: Double(size.width), height: Double(size.height))
+        let columns = SurvivorViewport.floorTileCount(span: visible.x, side: Double(tileSize))
+        let rows = SurvivorViewport.floorTileCount(span: visible.y, side: Double(tileSize))
+        if columns != tileColumns || rows != tileRows {
+            tiles.forEach { $0.removeFromParent() }; tiles.removeAll()
+            tileColumns = columns; tileRows = rows
+            for _ in 0..<(columns * rows) {
+                let tile = SKSpriteNode(texture: floorTexture, size: CGSize(width: tileSize, height: tileSize))
+                tile.zPosition = -10000; world.addChild(tile); tiles.append(tile)
+            }
+        }
+        let originX = floor(CGFloat(cameraCenter.x) / tileSize), originY = floor(CGFloat(cameraCenter.y) / tileSize)
         for (index, tile) in tiles.enumerated() {
-            tile.position = CGPoint(x: (originX + CGFloat(index % 7 - 3)) * tileSize,
-                                    y: (originY + CGFloat(index / 7 - 3)) * tileSize)
+            tile.position = CGPoint(x: (originX + CGFloat(index % tileColumns - tileColumns / 2)) * tileSize,
+                                    y: (originY + CGFloat(index / tileColumns - tileRows / 2)) * tileSize)
         }
         for tile in tiles {
             tile.isHidden=abs(tile.position.x)>half || abs(tile.position.y)>half

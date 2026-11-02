@@ -159,6 +159,7 @@ struct SurvivorBattle: Codable, Sendable {
     private(set) var outcome: SurvivorOutcome?
     private(set) var pixelFX: PixelFXBattleState?
     private(set) var monsterShots: [SurvivorMonsterShot]? = nil
+    private(set) var cameraViewport: SurvivorVector? = nil
     let thunderDuration: Double
     private var random: SurvivorRandom
     private var nextID: UInt64 = 1
@@ -195,6 +196,18 @@ struct SurvivorBattle: Codable, Sendable {
     mutating func resume(_ reason: SurvivorRunClock.PauseReason) { clock.resume(reason) }
     private mutating func identifier() -> UInt64 { defer { nextID += 1 }; return nextID }
 
+    mutating func setViewport(width: Double, height: Double) {
+        guard width.isFinite, height.isFinite, width > height, height > 0 else { return }
+        cameraViewport = .init(x: width, y: height)
+    }
+    private func spawnPosition(angle: Double, padding: Double) -> SurvivorVector {
+        if usesLocalSkills, let viewport = cameraViewport {
+            return SurvivorViewport.spawnPoint(player: player, width: viewport.x, height: viewport.y,
+                                                angle: angle, padding: padding)
+        }
+        return player + SurvivorVector(x: cos(angle), y: sin(angle)) * (440 + padding)
+    }
+
     mutating func advance(by delta: Double, movement: SurvivorVector) throws {
         guard delta.isFinite, delta >= 0, movement.x.isFinite, movement.y.isFinite else {
             throw SurvivorRuleError.invalidDelta
@@ -223,16 +236,17 @@ struct SurvivorBattle: Codable, Sendable {
                 let batch = usesLocalSkills ? min(stage.enemyLimit-enemies.count,clock.elapsed < 60 ? 3 : clock.elapsed < 300 ? 5 : clock.elapsed < 840 ? 8 : 12) : 1
                 for _ in 0..<batch {
                     let angle = random.unit() * .pi * 2
-                    let distance = 520 + random.unit() * 130
+                    let padding = 80 + random.unit() * 130
                     let kind: SurvivorEnemyKind = usesLocalSkills && clock.elapsed > 240 && random.unit() < 0.035 ? .elite : random.unit() < 0.42 ? .mushroom : .demon
-                    let position = player + SurvivorVector(x: cos(angle), y: sin(angle)) * distance
+                    let position = spawnPosition(angle: angle, padding: padding)
                     _ = spawnEnemy(at: usesLocalSkills ? SurvivorGrassland.clamp(position) : position, kind: kind)
                 }
             }
         }
         if !bossSpawned, clock.elapsed >= configuration.duration * 0.90 {
             bossSpawned = true
-            _ = spawnEnemy(at: player + .init(x: 0, y: 480), kind: .boss)
+            let at = usesLocalSkills && cameraViewport != nil ? spawnPosition(angle: .pi / 2, padding: 100) : player + .init(x: 0, y: 480)
+            _ = spawnEnemy(at: at, kind: .boss)
         }
         for i in enemies.indices where enemies[i].health > 0 {
             let toPlayer = player - enemies[i].position
@@ -312,9 +326,12 @@ struct SurvivorBattle: Codable, Sendable {
         enemies.removeAll { $0.health <= 0 }
         // Recycle remote pursuers so long straight movement cannot fill the
         // whole spawn budget with enemies permanently far behind the camera.
-        for i in enemies.indices where (enemies[i].position - player).length > 950 {
+        let recycleDistance = cameraViewport.map { max(950, SurvivorViewport.size(width: $0.x, height: $0.y).length / 2 + 400) } ?? 950
+        for i in enemies.indices where (enemies[i].position - player).length > recycleDistance {
+            if usesLocalSkills, let viewport = cameraViewport,
+               SurvivorViewport.contains(enemies[i].position, player: player, width: viewport.x, height: viewport.y) { continue }
             let angle = random.unit() * .pi * 2
-            let recycled=player + SurvivorVector(x: cos(angle), y: sin(angle)) * 600
+            let recycled = spawnPosition(angle: angle, padding: 160)
             enemies[i].position = usesLocalSkills ? SurvivorGrassland.clamp(recycled) : recycled
         }
         for enemy in enemies where (enemy.position - player).length <= enemy.radius + 13 {
