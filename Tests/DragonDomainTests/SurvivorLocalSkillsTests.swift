@@ -95,6 +95,92 @@ final class SurvivorLocalSkillsTests:XCTestCase {
         XCTAssertFalse(ids.contains("fireball-lv2"));XCTAssertFalse(ids.contains("boulder-lv6"))
     }
 
+    func testEntrySkeletonSurvivesTwoFireballsAndDiesOnThird() throws {
+        var game = try game("fireball")
+        game.spawnEnemy(at: .init(x: 200, y: 0), kind: .demon)
+        let damage = SurvivorLocalSkills.baseDamage("fireball", level: 1)
+        game.damageEnemy(at: 0, damage: damage)
+        game.damageEnemy(at: 0, damage: damage)
+        XCTAssertGreaterThan(game.enemies[0].health, 0)
+        game.damageEnemy(at: 0, damage: damage)
+        XCTAssertEqual(game.enemies[0].health, 0)
+        let count = game.combatHits?.count
+        game.damageEnemy(at: 0, damage: damage)
+        XCTAssertEqual(game.combatHits?.count, count, "Dead targets cannot emit repeated hits")
+        try game.advance(by: 0.01, movement: .zero)
+        XCTAssertEqual(game.kills, 1)
+        XCTAssertEqual(game.drops.count, 1)
+    }
+
+    func testConfirmedEliteAndBossHaveMoreHealthWithoutChangingArchivedBalance() throws {
+        var game = try game("fireball")
+        game.spawnEnemy(at: .init(x: 300, y: 0), kind: .elite)
+        game.spawnEnemy(at: .init(x: -300, y: 0), kind: .boss)
+        XCTAssertEqual(game.enemies.map(\.maximumHealth), [480, 3200])
+        var archived = try SurvivorBattle()
+        archived.spawnEnemy(at: .zero, kind: .demon)
+        XCTAssertEqual(archived.enemies[0].health, 30)
+    }
+
+    func testNonlethalProjectileHitEmitsFeedbackAndStartsRedFlash() throws {
+        var game = try game("fireball")
+        let id = game.spawnEnemy(at: .init(x: 120, y: 0), kind: .demon)
+        try game.advance(by: 0.35, movement: .zero)
+        let target = try XCTUnwrap(game.enemies.first { $0.id == id })
+        XCTAssertGreaterThan(target.health, 0)
+        XCTAssertLessThan(target.health, target.maximumHealth)
+        XCTAssertGreaterThan(target.hitUntil, game.clock.elapsed)
+        XCTAssertTrue(game.combatHits?.contains { $0.enemyID == id && $0.damage == 34 } == true)
+    }
+
+    func testPlayerFlashExpiresBeforeInvulnerabilityAndBlockedHitsDoNotRestartIt() throws {
+        var game = try game("fireball")
+        game.takeDamage(8)
+        XCTAssertEqual(game.playerHitRemaining, 0.18, accuracy: 0.0001)
+        let hitID = game.combatHits?.last?.id
+        try game.advance(by: 0.2, movement: .zero)
+        XCTAssertEqual(game.playerHitRemaining, 0)
+        XCTAssertTrue(game.playerIsInvincible)
+        game.takeDamage(8)
+        XCTAssertEqual(game.health, 92)
+        XCTAssertEqual(game.combatHits?.last?.id, hitID)
+        try game.advance(by: 0.51, movement: .zero)
+        game.takeDamage(8)
+        XCTAssertEqual(game.health, 84)
+        XCTAssertGreaterThan(game.playerHitRemaining, 0)
+    }
+
+    func testHitEventsAreBoundedExpireAndDoNotApplyDamageWhilePaused() throws {
+        var game = try game("fireball")
+        game.spawnEnemy(at: .init(x: 600, y: 0), kind: .boss)
+        for _ in 0..<100 { game.damageEnemy(at: 0, damage: 1) }
+        XCTAssertEqual(game.combatHits?.count, 48)
+        game.pause(.menu)
+        game.damageEnemy(at: 0, damage: 10)
+        XCTAssertEqual(game.enemies[0].health, 3100)
+        game.resume(.menu)
+        game.damageEnemy(at: -1, damage: 10)
+        game.damageEnemy(at: 0, damage: .nan)
+        game.damageEnemy(at: 0, damage: -2)
+        XCTAssertEqual(game.enemies[0].health, 3100)
+        try game.advance(by: 0.5, movement: .zero)
+        XCTAssertTrue(game.combatHits?.isEmpty == true)
+    }
+
+    func testHitFeedbackRoundTripAndOldSaveWithoutEventsStillLoads() throws {
+        var game = try game("fireball")
+        game.takeDamage(8)
+        let data = try JSONEncoder().encode(game)
+        let copy = try JSONDecoder().decode(SurvivorBattle.self, from: data)
+        XCTAssertEqual(copy.combatHits?.last?.damage, 8)
+        XCTAssertEqual(copy.playerHitRemaining, game.playerHitRemaining)
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        json.removeValue(forKey: "combatHits")
+        let old = try JSONDecoder().decode(SurvivorBattle.self, from: JSONSerialization.data(withJSONObject: json))
+        XCTAssertNil(old.combatHits)
+        XCTAssertEqual(old.health, 92)
+    }
+
     func testNaturalWaveSpawnsBeyondTheZoomedOutBattleView() throws {
         var game=try game("fireball")
         game.setViewport(width:844,height:390)

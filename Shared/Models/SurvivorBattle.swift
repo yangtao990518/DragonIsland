@@ -80,6 +80,15 @@ struct SurvivorUpgrade: RawRepresentable, Codable, CaseIterable, Hashable, Ident
 enum SurvivorEnemyKind: String, Codable, Sendable { case demon, mushroom, elite, boss }
 enum SurvivorOutcome: String, Codable, Sendable { case victory, defeat }
 
+/// Short lived presentation events. Damage and collision never depend on these.
+struct SurvivorCombatHit: Codable, Identifiable, Sendable {
+    let id: UInt64
+    let enemyID: UInt64? // nil means the player was hurt
+    let position: SurvivorVector
+    let damage: Double
+    let born: Double
+}
+
 struct SurvivorEnemy: Codable, Identifiable, Sendable {
     var variant: String? = nil
     var born: Double? = nil
@@ -160,6 +169,7 @@ struct SurvivorBattle: Codable, Sendable {
     private(set) var pixelFX: PixelFXBattleState?
     private(set) var monsterShots: [SurvivorMonsterShot]? = nil
     private(set) var cameraViewport: SurvivorVector? = nil
+    private(set) var combatHits: [SurvivorCombatHit]? = nil // older saves omit this
     let thunderDuration: Double
     private var random: SurvivorRandom
     private var nextID: UInt64 = 1
@@ -177,6 +187,7 @@ struct SurvivorBattle: Codable, Sendable {
     var pickupRadius: Double { 30 + Double(rank(.magnet)) * 18 }
     var absorbRadius: Double { 100 + Double(rank(.magnet)) * 50 }
     var playerIsInvincible: Bool { clock.elapsed < invincibleUntil }
+    var playerHitRemaining: Double { max(0, invincibleUntil - 0.7 + 0.18 - clock.elapsed) }
 
     init(configuration: SurvivorRunConfiguration = .standard, seed: UInt64 = 1,
          thunderDuration: Double = 4.096009) throws {
@@ -222,6 +233,8 @@ struct SurvivorBattle: Codable, Sendable {
 
     private mutating func tick(_ delta: Double, movement: SurvivorVector) throws {
         try clock.advance(by: delta)
+        let hitClock = clock.elapsed
+        combatHits?.removeAll { hitClock - $0.born >= 0.48 }
         if clock.finished { outcome = .victory; moving = false; return }
         let direction = movement.length > 1 ? movement.normalized : movement
         moving = direction.length > 0.01
@@ -289,8 +302,7 @@ struct SurvivorBattle: Codable, Sendable {
                     <= enemies[index].radius + bubbles[i].radius
             }.min { (enemies[$0].position - start).length < (enemies[$1].position - start).length }
             if let target {
-                enemies[target].health -= bubbles[i].damage
-                enemies[target].hitUntil = clock.elapsed + 0.12
+                damageEnemy(at: target, damage: bubbles[i].damage)
                 bubbles[i].life = 0
             }
         }
@@ -303,8 +315,7 @@ struct SurvivorBattle: Codable, Sendable {
                 for index in grid.query(from: effect.position, to: effect.position, margin: effect.radius + 45) {
                     if enemies[index].health > 0,
                        (enemies[index].position - effect.position).length <= effect.radius + enemies[index].radius {
-                        enemies[index].health -= effect.damage
-                        enemies[index].hitUntil = clock.elapsed + 0.15
+                        damageEnemy(at: index, damage: effect.damage)
                     }
                 }
             }
@@ -354,7 +365,11 @@ struct SurvivorBattle: Codable, Sendable {
 
     @discardableResult mutating func spawnEnemy(at position: SurvivorVector, kind: SurvivorEnemyKind) -> UInt64 {
         let enemyID = identifier()
-        let hp = kind == .boss ? 1600.0 : kind == .elite ? 220 : (kind == .demon ? 30.0 : 45) + clock.elapsed * 0.055
+        // Entry fireballs deal 34: ordinary skeletons now take 3–4 hits.
+        // Keep archived combat balance isolated from the confirmed V3 battle.
+        let hp: Double = usesLocalSkills
+            ? (kind == .boss ? 3200 : kind == .elite ? 480 : (kind == .demon ? 90 : 120) + clock.elapsed * 0.11)
+            : (kind == .boss ? 1600 : kind == .elite ? 220 : (kind == .demon ? 30 : 45) + clock.elapsed * 0.055)
         let speed = kind == .boss ? 47.0 : kind == .demon ? 56.0 : 42.0
         enemies.append(.init(id: enemyID, kind: kind, position: usesLocalSkills ? SurvivorGrassland.clamp(position) : position, health: hp, maximumHealth: hp,
                              speed: speed + min(22, clock.elapsed / 80), radius: kind == .boss ? 35 : 14))
@@ -376,9 +391,29 @@ struct SurvivorBattle: Codable, Sendable {
 
     mutating func takeDamage(_ damage: Double) {
         guard clock.running, clock.elapsed >= invincibleUntil, outcome == nil, damage.isFinite, damage > 0 else { return }
-        health = max(0, health - max(1,damage-Double(rank(.defense))*2))
+        let loss = min(health, max(1,damage-Double(rank(.defense))*2))
+        health -= loss
+        recordHit(enemyID: nil, position: player, damage: loss)
         emitPixelFeedback("impacts-hit-spark", at: player)
         invincibleUntil = clock.elapsed + 0.7
+    }
+
+    /// All weapons, including splash and periodic damage, share one hit path.
+    mutating func damageEnemy(at index: Int, damage: Double) {
+        guard clock.running, outcome == nil, enemies.indices.contains(index),
+              enemies[index].health > 0, damage.isFinite, damage > 0 else { return }
+        let loss = min(enemies[index].health, damage)
+        enemies[index].health -= loss
+        enemies[index].hitUntil = clock.elapsed + 0.18
+        recordHit(enemyID: enemies[index].id, position: enemies[index].position, damage: loss)
+    }
+
+    private mutating func recordHit(enemyID: UInt64?, position: SurvivorVector, damage: Double) {
+        guard damage > 0 else { return }
+        let hit = SurvivorCombatHit(id: identifier(), enemyID: enemyID, position: position, damage: damage, born: clock.elapsed)
+        if combatHits == nil { combatHits = [] }
+        combatHits?.append(hit)
+        if let count = combatHits?.count, count > 48 { combatHits?.removeFirst(count - 48) }
     }
 
     /// Awarding experience is shared by orb pickup and future stage rewards.
@@ -566,7 +601,7 @@ extension SurvivorBattle {
                     enemies[$0].health > 0 && !cast.hitIDs.contains(enemies[$0].id) && Self.segmentDistance(enemies[$0].position,old,cast.position) <= cast.radius+enemies[$0].radius
                 }.sorted { (enemies[$0].position-old).length < (enemies[$1].position-old).length }
                 for enemy in hits {
-                    enemies[enemy].health -= cast.damage; enemies[enemy].hitUntil = clock.elapsed+0.12
+                    damageEnemy(at: enemy, damage: cast.damage)
                     cast.hitIDs.insert(enemies[enemy].id)
                     let eventID = identifier()
                     state.feedback.append(.init(id:eventID,skillID:"impacts-hit-spark",position:enemies[enemy].position,born:clock.elapsed))
@@ -576,7 +611,7 @@ extension SurvivorBattle {
                 cast.nextPulse += 0.65
                 for enemy in grid.query(from:cast.position,to:cast.position,margin:cast.radius+45) where enemies[enemy].health > 0 {
                     if (enemies[enemy].position-cast.position).length <= cast.radius+enemies[enemy].radius {
-                        enemies[enemy].health -= cast.damage; enemies[enemy].hitUntil = clock.elapsed+0.12
+                        damageEnemy(at: enemy, damage: cast.damage)
                     }
                 }
             }
@@ -676,10 +711,10 @@ extension SurvivorBattle {
                 c.position=c.position+c.velocity*delta;c.angle=atan2(c.velocity.y,c.velocity.x)
                 let hit=grid.query(from:old,to:c.position,margin:c.radius+45).filter { enemies[$0].health>0 && Self.segmentDistance(enemies[$0].position,old,c.position)<=c.radius+enemies[$0].radius }.min { (enemies[$0].position-old).length < (enemies[$1].position-old).length }
                 if let hit {
-                    enemies[hit].health-=c.damage;enemies[hit].hitUntil=now+0.12
+                    damageEnemy(at: hit, damage: c.damage)
                     if c.skillID == "fireball" && c.level==5 {
                         let at=enemies[hit].position
-                        for j in grid.query(from:at,to:at,margin:60) where (enemies[j].position-at).length<42+enemies[j].radius { enemies[j].health-=c.damage*0.7 }
+                        for j in grid.query(from:at,to:at,margin:60) where (enemies[j].position-at).length<42+enemies[j].radius { damageEnemy(at: j, damage: c.damage*0.7) }
                         state.feedback.append(.init(id:identifier(),skillID:"fireball-impact",position:at,born:now))
                     }
                     c.age=c.duration
@@ -693,7 +728,7 @@ extension SurvivorBattle {
                     let dir=SurvivorVector(x:cos(a),y:sin(a))
                     let start=player+dir*70,end=player+dir*104
                     for j in grid.query(from:start,to:end,margin:40) where enemies[j].health>0 && !c.hitIDs.contains(enemies[j].id) {
-                        if Self.segmentDistance(enemies[j].position,start,end)<enemies[j].radius+5 { enemies[j].health-=SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier;enemies[j].hitUntil=now+0.1;c.hitIDs.insert(enemies[j].id) }
+                        if Self.segmentDistance(enemies[j].position,start,end)<enemies[j].radius+5 { damageEnemy(at: j, damage: SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier);c.hitIDs.insert(enemies[j].id) }
                     }
                     if swordRank==5 {
                         let fired=2.12+Double(blade)*0.04
@@ -704,7 +739,7 @@ extension SurvivorBattle {
                             let forward=SurvivorVector(x:cos(angle),y:sin(angle))
                             let point=player+forward*(106+54*min(1,flightAge/0.34))
                             for j in grid.query(from:point,to:point,margin:50) where enemies[j].health>0 && !c.hitIDs.contains(enemies[j].id) {
-                                if (enemies[j].position-point).length<24+enemies[j].radius { enemies[j].health-=SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier;enemies[j].hitUntil=now+0.1;c.hitIDs.insert(enemies[j].id) }
+                                if (enemies[j].position-point).length<24+enemies[j].radius { damageEnemy(at: j, damage: SurvivorLocalSkills.baseDamage("orbit-swords",level:swordRank)*damageMultiplier);c.hitIDs.insert(enemies[j].id) }
                             }
                         }
                     }
@@ -743,7 +778,7 @@ extension SurvivorBattle {
                     let at=c.position+offset
                     for j in grid.query(from:at,to:at,margin:r+45) where enemies[j].health>0 {
                         let d=enemies[j].position-at
-                        if pow(d.x/(r+enemies[j].radius),2)+pow(d.y/(r*sy+enemies[j].radius),2)<=1 { enemies[j].health-=c.damage*multiplier;enemies[j].hitUntil=now+0.12 }
+                        if pow(d.x/(r+enemies[j].radius),2)+pow(d.y/(r*sy+enemies[j].radius),2)<=1 { damageEnemy(at: j, damage: c.damage*multiplier) }
                     }
                     if c.events==nil {c.events=[]};c.events?.insert(event)
                 }

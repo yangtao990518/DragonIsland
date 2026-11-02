@@ -180,6 +180,8 @@ final class SurvivorScene: SKScene {
     private var dropNodes: [UInt64: SKSpriteNode] = [:]
     private var arrowNodes: [UInt64: SKSpriteNode] = [:]
     private var feedbackNodes: [UInt64: SKSpriteNode] = [:]
+    private var impactNodes: [UInt64: SKNode] = [:]
+    private lazy var impactTexture = makeImpact()
     private var renderStatistics = SurvivorRenderStatistics()
     private var lastTime: TimeInterval?
     private var lastSimulationTime = 0.0
@@ -207,6 +209,7 @@ final class SurvivorScene: SKScene {
     func resetTimestamp() { lastTime = nil; renderStatistics.resumeSampling() }
     override func didChangeSize(_ oldSize: CGSize) { resetTimestamp() }
     func resetRun() {
+        impactNodes.values.forEach { $0.removeFromParent() }; impactNodes.removeAll()
         for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes,arrowNodes] { for node in dict.values { node.removeFromParent() } }
         enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:];arrowNodes=[:]
         lastTime = nil
@@ -281,6 +284,8 @@ final class SurvivorScene: SKScene {
             hero.anchorPoint = CGPoint(x: 0.5, y: 0.04); hero.xScale = 1
         }
         hero.alpha = battle.playerIsInvincible && Int(time * 12) % 2 == 0 ? 0.65 : 1
+        hero.color = .init(red: 1, green: 0.12, blue: 0.17, alpha: 1)
+        hero.colorBlendFactor = CGFloat(min(1, battle.playerHitRemaining / 0.08) * 0.82)
         prune(&enemyNodes, keeping: Set(battle.enemies.map(\.id)))
         for enemy in battle.enemies {
             let node = node(for: enemy.id, in: &enemyNodes)
@@ -288,7 +293,16 @@ final class SurvivorScene: SKScene {
             animate(node, clip: clip, time: enemy.variant?.contains("group01") == true ? time : time-(enemy.born ?? 0), height: enemy.kind == .boss ? 170 : enemy.kind == .elite ? 110 : 72,
                     left: !enemy.facingLeft)
             node.position = point(enemy.position); node.zPosition = 90 - node.position.y * 0.01
-            node.color = .white; node.colorBlendFactor = time < enemy.hitUntil ? 0.65 : 0
+            let hitRemaining = max(0, enemy.hitUntil - time)
+            node.color = .init(red: 1, green: 0.12, blue: 0.17, alpha: 1)
+            node.colorBlendFactor = CGFloat(min(1, hitRemaining / 0.08) * 0.82)
+            // Only a tiny visual recoil; physics, feet pivot and source frames stay unchanged.
+            if hitRemaining > 0, !UIAccessibility.isReduceMotionEnabled {
+                let phase = (0.18 - hitRemaining) / 0.18
+                let away = (enemy.position - battle.player).normalized
+                node.position.x += CGFloat(away.x * sin(phase * .pi) * 7)
+                node.position.y += CGFloat(away.y * sin(phase * .pi) * 7)
+            }
             if enemy.kind == .boss {
                 let bar: SKShapeNode
                 if let existing = node.childNode(withName: "health") as? SKShapeNode { bar = existing }
@@ -328,6 +342,61 @@ final class SurvivorScene: SKScene {
             animate(node,clip:event.skillID,time:time-event.born,height:CGFloat(height),looping:false)
             node.position = point(event.position); node.zPosition = 160
         }
+        renderImpacts(battle)
+    }
+
+    private func renderImpacts(_ battle: SurvivorBattle) {
+        let hits = battle.combatHits ?? [], keep = Set(hits.map(\.id))
+        for id in Array(impactNodes.keys) where !keep.contains(id) {
+            impactNodes.removeValue(forKey: id)?.removeFromParent()
+        }
+        for hit in hits {
+            let node: SKNode
+            if let existing = impactNodes[hit.id] { node = existing }
+            else {
+                node = SKNode(); world.addChild(node); impactNodes[hit.id] = node
+                let spark = SKSpriteNode(texture: impactTexture)
+                spark.name = "spark"; spark.size = CGSize(width: 88, height: 88)
+                spark.zRotation = CGFloat(hit.id % 8) * .pi / 4; node.addChild(spark)
+                let number = SKLabelNode(fontNamed: "AvenirNext-Heavy")
+                number.name = "damage"; number.text = "\(Int(ceil(hit.damage)))"
+                number.fontSize = hit.enemyID == nil ? 38 : 32
+                number.fontColor = hit.enemyID == nil ? .systemRed : .init(red: 1, green: 0.9, blue: 0.6, alpha: 1)
+                number.zPosition = 1; node.addChild(number)
+            }
+            let age = max(0, battle.clock.elapsed - hit.born)
+            let progress = min(1, age / 0.48)
+            node.position = point(hit.position + SurvivorVector(x: 0, y: hit.enemyID == nil ? 48 : 34))
+            node.zPosition = 650
+            if let spark = node.childNode(withName: "spark") {
+                spark.alpha = CGFloat(max(0, 1 - age / 0.16))
+                spark.setScale(CGFloat(0.65 + min(1, age / 0.12) * 0.65))
+            }
+            if let number = node.childNode(withName: "damage") {
+                number.position = CGPoint(x: Double(Int(hit.id % 3) - 1) * 12, y: 18 + (UIAccessibility.isReduceMotionEnabled ? 0 : progress * 44))
+                number.alpha = CGFloat(min(1, (1 - progress) * 3))
+            }
+        }
+    }
+
+    /// One resident sharp texture; no new files, atlas decoding or emitter per hit.
+    private func makeImpact() -> SKTexture {
+        let format = UIGraphicsImageRendererFormat(); format.scale = 2
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 96, height: 96), format: format).image { context in
+            let c = context.cgContext
+            c.translateBy(x: 48, y: 48)
+            UIColor(red: 1, green: 0.55, blue: 0.18, alpha: 1).setFill()
+            for i in 0..<8 {
+                c.saveGState(); c.rotate(by: CGFloat(i) * .pi / 4)
+                c.move(to: CGPoint(x: 13, y: -3)); c.addLine(to: CGPoint(x: 44, y: 0)); c.addLine(to: CGPoint(x: 13, y: 3)); c.closePath(); c.fillPath(); c.restoreGState()
+            }
+            UIColor.white.setFill()
+            c.move(to: CGPoint(x: 0, y: -30)); c.addLine(to: CGPoint(x: 6, y: -6))
+            c.addLine(to: CGPoint(x: 30, y: 0)); c.addLine(to: CGPoint(x: 6, y: 6))
+            c.addLine(to: CGPoint(x: 0, y: 30)); c.addLine(to: CGPoint(x: -6, y: 6))
+            c.addLine(to: CGPoint(x: -30, y: 0)); c.addLine(to: CGPoint(x: -6, y: -6)); c.closePath(); c.fillPath()
+        }
+        return SKTexture(image: image)
     }
     private func node(for id: UInt64, in nodes: inout [UInt64: SKSpriteNode]) -> SKSpriteNode {
         if let node = nodes[id] { return node }

@@ -1,5 +1,6 @@
 import SwiftUI
 import SpriteKit
+import UIKit
 
 @MainActor final class SurvivorGameController: ObservableObject {
     @Published private(set) var renderStatistics = SurvivorRenderStatistics()
@@ -9,6 +10,7 @@ import SpriteKit
     }
     @Published private(set) var preparing = false
     private let audio = SurvivorAudio()
+    private let hurtFeedback = UIImpactFeedbackGenerator(style: .medium)
     private var preparationID = UUID()
     private(set) var preparationCount = 0
     private var upgradeWarmIn = 0.0
@@ -133,13 +135,17 @@ import SpriteKit
         battle.setViewport(width: Double(scene.size.width), height: Double(scene.size.height))
         let oldCast=battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0
         let oldHealth=battle.health
-        let oldKills=battle.kills
+        let oldHit=battle.combatHits?.last?.id ?? 0
         let oldChoices = battle.choices, oldOutcome = battle.outcome
         do { try battle.advance(by: delta, movement: movement) }
         catch { self.error = "战斗状态异常，已暂停。"; battle.pause(.menu) }
-        if oldChoices != battle.choices { audio.play("upgrade",time:battle.clock.elapsed) }
+        if battle.health < oldHealth {
+            hurtFeedback.impactOccurred(intensity: 0.8)
+            audio.play("hit",time:battle.clock.elapsed)
+        }
+        else if oldChoices != battle.choices { audio.play("upgrade",time:battle.clock.elapsed) }
         else if battle.health > oldHealth { audio.play("heal",time:battle.clock.elapsed) }
-        else if battle.kills > oldKills { audio.play("hit",time:battle.clock.elapsed) }
+        else if (battle.combatHits?.last?.id ?? 0) > oldHit { audio.play("hit",time:battle.clock.elapsed) }
         else if (battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0)>oldCast { audio.play(battle.pixelFX?.casts.last(where:{$0.age>=0})?.skillID ?? "cast",time:battle.clock.elapsed) }
         audio.update(running:battle.clock.running && battle.outcome == nil)
         upgradeWarmIn -= delta
