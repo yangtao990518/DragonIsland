@@ -403,7 +403,7 @@ struct SurvivorGameView: View {
                     SurvivorMinimapView(player: game.battle.player,
                         viewport: game.scene?.size ?? CGSize(width: 844, height: 390),
                         drops: game.battle.drops, zoom: mapZoom)
-                        .frame(width: 200, height: 200)
+                        .frame(width: pauseMapSize, height: pauseMapSize)
                     HStack {
                         ForEach([1.0, 2.0, 4.0], id: \.self) { zoom in
                             Button("\(Int(zoom))×") { mapZoom = zoom }
@@ -419,8 +419,10 @@ struct SurvivorGameView: View {
                     Text(String(format: "慢帧 %d · 最长 %.1f ms · 图集等候 %d", game.renderStatistics.slowFrames, game.renderStatistics.longestFrameMS, game.pageWaits))
                         .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
                         .accessibilityIdentifier("survivorRenderDiagnostics")
-                    Toggle("背景音乐",isOn:Binding(get:{!musicMuted},set:{musicMuted = !$0}))
-                    Toggle("攻击音效",isOn:Binding(get:{!effectsMuted},set:{effectsMuted = !$0}))
+                    HStack(spacing: 18) {
+                        Toggle("音乐",isOn:Binding(get:{!musicMuted},set:{musicMuted = !$0}))
+                        Toggle("音效",isOn:Binding(get:{!effectsMuted},set:{effectsMuted = !$0}))
+                    }
                     actionButton("继续试炼", icon: "play.fill") { game.resume(.menu) }
                         .accessibilityIdentifier("survivorResume")
                     Button("保存并返回选角") { confirmExit = true }.font(.subheadline).padding(6).accessibilityIdentifier("survivorReturnLobby")
@@ -432,6 +434,7 @@ struct SurvivorGameView: View {
         let fps = game.renderStatistics.framesPerSecond
         return fps > 0 ? "\(fps) FPS" : "采样中"
     }
+    private var pauseMapSize: CGFloat { (game.scene?.size.height ?? 390) < 360 ? 148 : 184 }
     private func result(_ outcome: SurvivorOutcome) -> some View {
         modal {
             Image(systemName: outcome == .victory ? "crown.fill" : "leaf.fill").font(.system(size: 48)).foregroundStyle(outcome == .victory ? .yellow : .cyan)
