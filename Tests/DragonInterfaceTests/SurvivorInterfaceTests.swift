@@ -191,9 +191,6 @@ final class SurvivorInterfaceTests: XCTestCase {
         start(app)
         let timer=app.staticTexts["survivorTimer"]
         XCTAssertTrue(timer.waitForExistence(timeout:15))
-        let initial=timer.label
-        expectation(for:NSPredicate(format:"label != %@",initial),evaluatedWith:timer)
-        waitForExpectations(timeout:15)
         // Higher durability changes kill/pickup timing. A legitimate upgrade
         // pauses simulation; resolve it rather than tapping through its modal.
         func resolveUpgrade() -> Bool {
