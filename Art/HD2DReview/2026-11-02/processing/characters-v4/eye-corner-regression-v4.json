@@ -1,0 +1,30 @@
+{
+  "dafeiyu": {
+    "v3": {
+      "reviewedFrames": 108,
+      "framesWithResidual": 104,
+      "totalResidualPixels": 450,
+      "worstPixels": 11
+    },
+    "v4": {
+      "reviewedFrames": 108,
+      "framesWithResidual": 0,
+      "totalResidualPixels": 0,
+      "worstPixels": 0
+    }
+  },
+  "xiaobai": {
+    "v3": {
+      "reviewedFrames": 108,
+      "framesWithResidual": 105,
+      "totalResidualPixels": 568,
+      "worstPixels": 10
+    },
+    "v4": {
+      "reviewedFrames": 108,
+      "framesWithResidual": 0,
+      "totalResidualPixels": 0,
+      "worstPixels": 0
+    }
+  }
+}

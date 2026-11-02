@@ -1,0 +1,154 @@
+{
+  "id": "bone-death",
+  "rawFile": "raw-sheet.png",
+  "rawSHA256": "0b152014c87b1af40f3bdb0b07083a3f2d363c23bc0fca4d163d49b1eb724d72",
+  "cell": [
+    96,
+    96
+  ],
+  "columns": 2,
+  "frameCount": 6,
+  "posesPerActor": 6,
+  "actors": 1,
+  "anchor": [
+    48,
+    48
+  ],
+  "sourceEdgeTouch": [],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        652,
+        430
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        38,
+        56,
+        62,
+        74
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        652,
+        0,
+        1304,
+        430
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        32,
+        46,
+        63,
+        72
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        0,
+        430,
+        652,
+        885
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        33,
+        38,
+        68,
+        70
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        652,
+        430,
+        1304,
+        885
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        27,
+        50,
+        65,
+        70
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        0,
+        885,
+        652,
+        1206
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        38,
+        45,
+        60,
+        55
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        652,
+        885,
+        1304,
+        1206
+      ],
+      "sharedActorScale": 0.147239263803681,
+      "translation": [
+        0,
+        24
+      ],
+      "groundFootY": null,
+      "bbox": [
+        43,
+        49,
+        52,
+        54
+      ],
+      "edgeTouch": false
+    }
+  ],
+  "body": false,
+  "scalePolicy": "shared neutral-reference scale and horizontal origin per actor; integer vertical ground-foot registration only; no per-frame scale or bbox centering"
+}

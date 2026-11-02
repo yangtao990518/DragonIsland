@@ -1,0 +1,225 @@
+{
+  "id": "seeking-flight",
+  "frameCount": 16,
+  "cell": [
+    96,
+    96
+  ],
+  "anchor": [
+    74,
+    50
+  ],
+  "rawSHA256": "51709c4d63886c1f3e20518baf67c068288567ee1f1825f5ecf8096e74000c7e",
+  "builtInImageGeneration": true,
+  "frameExtraction": "fixed grid and shared scale, no per-frame bbox fit",
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "id": "hd2d-fireball-flight-v1",
+  "status": "visual sample; not integrated into game",
+  "creativeSource": "built-in image_gen",
+  "rawSHA256": "7bf533131442603595f436a729c5cfa7b4d8107beb43ffb2acbc6feea8e89f1c",
+  "frameCount": 16,
+  "cellSize": [
+    96,
+    96
+  ],
+  "anchorPixels": [
+    67,
+    48
+  ],
+  "anchorMeaning": "hot projectile head",
+  "loop": true,
+  "durationMs": 533.3333333333334,
+  "frameExtraction": "fixed equal source slots, one shared nearest-neighbor scale; no per-frame bbox fitting",
+  "generatedIntermediateFrames": false,
+  "residualMagentaMethod": "warm-palette physical color unmix on blue-excess edge pixels only",
+  "frames": [
+    {
+      "index": 0,
+      "file": "frames/00.png",
+      "sha256": "89f4db3ee57ea95c0124e1f1a5bc778a093e7f8e0365fa0046b4190ffb856178",
+      "sourceRect": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 1,
+      "file": "frames/01.png",
+      "sha256": "353fac1293867c6e45118033e0045d09f3ecb3e6858a1f8138b746df7aaa7c82",
+      "sourceRect": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 2,
+      "file": "frames/02.png",
+      "sha256": "0dd92c68df0f6f9104d92660c0f515558cdd524542aa3208b31a0d94ed0e7a0f",
+      "sourceRect": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 3,
+      "file": "frames/03.png",
+      "sha256": "056da5235e36fce8e5dbd138da2f1ba02a7291bf34bf2bc0b1bd213e453812ad",
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 4,
+      "file": "frames/04.png",
+      "sha256": "bfe1eadd26cc24da85c4c533218d7d472e101b334e09c3c288a53a75d1e04583",
+      "sourceRect": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 5,
+      "file": "frames/05.png",
+      "sha256": "fac7a0bcf5cd2d221f9d531affc16e5878e0a66d99eac0e658910078bcdf1d2b",
+      "sourceRect": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 6,
+      "file": "frames/06.png",
+      "sha256": "8ec1f8fc75ac82267c071899421eaa15b73e8c6adc4564dcbc47abbb1c5cf3ad",
+      "sourceRect": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 7,
+      "file": "frames/07.png",
+      "sha256": "32b90caef110eddb6c11ea437d635f8f19f07325096ade982606870425e0a5db",
+      "sourceRect": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 8,
+      "file": "frames/08.png",
+      "sha256": "9032ae7dbb65f90605700b169c16553acda6caf32985e91ad4ba2485b03ceb2e",
+      "sourceRect": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 9,
+      "file": "frames/09.png",
+      "sha256": "55e18eb8f476fa061eb5ea41485847615d8ea121a20d061fd730bb6aecd1da55",
+      "sourceRect": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 10,
+      "file": "frames/10.png",
+      "sha256": "209134ce43ff555bb60aa6d81194d44bddab386329623a748818221ff3ffccd7",
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 11,
+      "file": "frames/11.png",
+      "sha256": "2091a74be90d8a26258454aff19f7570a753ad4ba56c65633a02818fabe99cf7",
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 12,
+      "file": "frames/12.png",
+      "sha256": "5f653abdcfdfa94a0171f11f958b0a4c0e059231716a005086865a3cfd03f75a",
+      "sourceRect": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 13,
+      "file": "frames/13.png",
+      "sha256": "53d024f4129098e407da823775c120c4a177c4c4234b454df34ed0c88d9577c6",
+      "sourceRect": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 14,
+      "file": "frames/14.png",
+      "sha256": "f2bf831fba7ac485c0fb674edd5e9f60ea90c150d585c275f156070f28e3039e",
+      "sourceRect": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 15,
+      "file": "frames/15.png",
+      "sha256": "add605c718b816f9670f3cf93607178cb0774d347e07b5d2078c67c9b92487c9",
+      "sourceRect": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    }
+  ]
+}

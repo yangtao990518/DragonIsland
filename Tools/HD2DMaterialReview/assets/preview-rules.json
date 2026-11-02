@@ -1,0 +1,62 @@
+{
+  "source": "DragonIsland codex/chat-media-tools existing mechanics",
+  "skills": {
+    "fireball": {
+      "counts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "damageBase": 34,
+      "cooldown": 1.3,
+      "maxLevel": "42-radius splash at70% damage"
+    },
+    "lightning": {
+      "counts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "damageBase": 32,
+      "cooldown": 4.6,
+      "strikeHitAt": 0.5,
+      "maxLevel": "star burst after0.78s, hits0.42s later, radius84, yScale0.34, damage160%"
+    },
+    "orbit-swords": {
+      "counts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "damageBase": 16,
+      "persistent": true,
+      "orbitPeriod": 2.6,
+      "hitSegment": [
+        70,
+        104
+      ],
+      "maxLevel": "5 crescent events each orbit, starting2.12s with0.04s staggering"
+    },
+    "seeking-swords": {
+      "counts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "damageBase": 32,
+      "cooldown": 5.5,
+      "speed": 330,
+      "maxLevel": "charge2.4s, release3.24s, merged speed390, damage250%"
+    }
+  },
+  "damageGrowth": "base*(1+(level-1)*0.18)",
+  "phaseAndRendererNotes": "Web visual study only. Character v4 unchanged. Fusion artwork converges at visible projectile launch point for continuity. Not integrated into native battle."
+}

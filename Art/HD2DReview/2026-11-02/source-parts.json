@@ -1,0 +1,616 @@
+{
+  "version": 1,
+  "partBytes": 1048576,
+  "files": [
+    {
+      "path": "Art/HD2DReview/2026-11-02/SourceBundles/all-skills-source-assets.zip",
+      "bytes": 13675236,
+      "sha256": "216540f8f041faee59d6bb0f596b7b3566e13962feada643b076e7275bc37448",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0000.part",
+          "bytes": 1048576,
+          "sha256": "b8f8e33b809c6d79668cbd217cb56f4e5a803a5879007c09b1aba23c04950757"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0001.part",
+          "bytes": 1048576,
+          "sha256": "39381d69b74af359425586225766c7081d1c06e2f65c1bd777480d62aea8a79f"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0002.part",
+          "bytes": 1048576,
+          "sha256": "a8fc76e276827275d08b85a8f12287516b7c5eac5ee12e2ea6066481879ba51d"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0003.part",
+          "bytes": 1048576,
+          "sha256": "088df0471863f562536242d51e5d6cba9ea5364eeda92f85099f14afa39157ff"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0004.part",
+          "bytes": 1048576,
+          "sha256": "a091a1c86108286bf98e51f44df5d390ffd03f4798f8df61bd28a1e2f628290b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0005.part",
+          "bytes": 1048576,
+          "sha256": "bea693343f092f49d1ea8084450f4ec095b2952b47ff17c5f27f931840c24152"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0006.part",
+          "bytes": 1048576,
+          "sha256": "b7685fe30d72de8874312a0e41d643d8b44af098ec9056b43aa70549b955174f"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0007.part",
+          "bytes": 1048576,
+          "sha256": "92513956a4f8ea457ec4396a474df9b8f0b5d4e4eeba3c84d738c5ee64ba945b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0008.part",
+          "bytes": 1048576,
+          "sha256": "09af61a69061718a456e09ff5d1a15b5fa75d175fa3633cf87cba5ee67700327"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0009.part",
+          "bytes": 1048576,
+          "sha256": "a76be09c4edc45fb5eaa0d289a68ecfd76a83765d26d12f7ccfeca0e3e4c08d4"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0010.part",
+          "bytes": 1048576,
+          "sha256": "e87ef8d1cc52316eb56aa392ae9ad3fcb0a553d96fb7a0bd531fd218eea93dbb"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0011.part",
+          "bytes": 1048576,
+          "sha256": "355aa30dc52e6a97ddbe8b5a3e592e8ea1de8c482dba69930f6e9541fd1c9a6a"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0012.part",
+          "bytes": 1048576,
+          "sha256": "c07fe4078b86210490440ca619a63c3446bce3c601e64af97bc14e6f01569668"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/all-skills-source-assets.zip/0013.part",
+          "bytes": 43748,
+          "sha256": "d0f3ccf58b171776c4df546701a00371a97d1b4cb1c7e8b5dd2d958d9de70a55"
+        }
+      ]
+    },
+    {
+      "path": "Art/HD2DReview/2026-11-02/SourceBundles/HD2D-characters-idle-eye-only-v4.zip",
+      "bytes": 63028651,
+      "sha256": "521b0a3ce5709a3c0d82d8c6975b5596271e29b98b20736da57f7efc9caaba40",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0000.part",
+          "bytes": 1048576,
+          "sha256": "592f476e47497891f059fd2ac2284a3df358b79c314fa02f9723e5d53b710c4c"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0001.part",
+          "bytes": 1048576,
+          "sha256": "55b3fe1cd5a12672131cab4ad78daf9272ca42409f78d2f765da169045b51acc"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0002.part",
+          "bytes": 1048576,
+          "sha256": "cc8f48fdca7579c10bd5e8682ba0d30ca6a01f6262402f16bd32f8bf30979728"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0003.part",
+          "bytes": 1048576,
+          "sha256": "4c1b43f037811bf99f2c4bc7e32f983681bdd561a2e687895baac94635c74d10"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0004.part",
+          "bytes": 1048576,
+          "sha256": "704d213c5e29ff5847ec5fc9f4a6d3d085d8fdfa1edd3992bfd2927afdf2afe4"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0005.part",
+          "bytes": 1048576,
+          "sha256": "062fa7d5ca25fe750951a5b172e20e20e4953b3eb06c385dcd819c217a7bac11"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0006.part",
+          "bytes": 1048576,
+          "sha256": "6b3561bf622542d88f796c47dbcdf768780e5bd8a13c473b65191fa615263357"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0007.part",
+          "bytes": 1048576,
+          "sha256": "47ed9bab44a99928b876971b2dce0c0608a50bc1e2e6e7f7928191c38289b5d1"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0008.part",
+          "bytes": 1048576,
+          "sha256": "07767460e65c73e4e982977fb4fa93aa47f7a3856907b2b8cb8e7fc30a158b60"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0009.part",
+          "bytes": 1048576,
+          "sha256": "568a0b95ca8c3244bd58fdaf43687c862223f357c4fb0ab36e4f1773518c8877"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0010.part",
+          "bytes": 1048576,
+          "sha256": "9e970a1daf5166cc5d245da90931d7eb99e3aa825c6a43592f9a3150b04a7b15"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0011.part",
+          "bytes": 1048576,
+          "sha256": "139f5322ca8f008aae346704b1a608f06ffb97372bcdf21487f2809a45f27412"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0012.part",
+          "bytes": 1048576,
+          "sha256": "ef4ec9b6c0c4d63a1f5491efc0e8ff96634aa45c34ef75c9e54e5a19abed9930"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0013.part",
+          "bytes": 1048576,
+          "sha256": "239b8229cddbbe32b43649e2371949e341818fe86953d4c29be64baaef57db64"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0014.part",
+          "bytes": 1048576,
+          "sha256": "cd1caf3b3cec823c510fefb48099dd4834a3e02d34600785cfb07576572df388"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0015.part",
+          "bytes": 1048576,
+          "sha256": "33c30a01f0ceb0956a00e5a701df474cd2a87e1b425298b31819397e9d565d35"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0016.part",
+          "bytes": 1048576,
+          "sha256": "a02bf930c0dd16df3248e90a674f0b4bf3220aea8aa6551a36714782e8d1e067"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0017.part",
+          "bytes": 1048576,
+          "sha256": "75f92faa43f285cacc0c2c0e280dd728ba990d8618bf912c67f4381720c40b87"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0018.part",
+          "bytes": 1048576,
+          "sha256": "3c502150f0a8884153f052955ad701a588787039c56f3edd18f846bf17497b76"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0019.part",
+          "bytes": 1048576,
+          "sha256": "d5159a3ffbb33398a5c5bdb4d86050e8ad89850cc93f11c24876a21dd7cd00ae"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0020.part",
+          "bytes": 1048576,
+          "sha256": "eaf6d8821ad91dcb2a62d92870fb3bdb8cf187d9830bb55b082989fcdc3f5516"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0021.part",
+          "bytes": 1048576,
+          "sha256": "b5a094fdd647ebf8e14ecbb557978b2f9ce6d04d1a11ab02dd641206e75e5f61"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0022.part",
+          "bytes": 1048576,
+          "sha256": "2bb19dc2e365eb94dfc52dfa43fe25f50551bf56f5a2c87db9ba4178fc58e983"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0023.part",
+          "bytes": 1048576,
+          "sha256": "a3021ea47974194a3b094eb6bd1c608cc4048097ff13976c128a572fae3e4001"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0024.part",
+          "bytes": 1048576,
+          "sha256": "e8a41992d219c09afb8299f24035a35ff20289fb3e12f1ece1254e886784a6f0"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0025.part",
+          "bytes": 1048576,
+          "sha256": "dbe5575af5bef0d65bd857075fc9f99a513d8476d3fd9c69b50104f2a0a794fc"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0026.part",
+          "bytes": 1048576,
+          "sha256": "ef48cffcb5aabd5d96d17fb1f1d6c3545dd1c8204fcddc9e7b90cd09f5203a5d"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0027.part",
+          "bytes": 1048576,
+          "sha256": "998a667036529e425ca21742bb0ce89e280ff7180f5467d73d401f9ab584bdc8"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0028.part",
+          "bytes": 1048576,
+          "sha256": "5105b4bef44b75be22364550503166e666c5110d9af4eedae7963873df6ebba5"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0029.part",
+          "bytes": 1048576,
+          "sha256": "6e0a017d3b172db204b15bcd5c8a54c3254612d7a142db83282b59f4c9e23863"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0030.part",
+          "bytes": 1048576,
+          "sha256": "909539db39410857f5ffceae31816bea3c884d9a4caa944572df329f9c6d63b5"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0031.part",
+          "bytes": 1048576,
+          "sha256": "b311e0afaceecc89c9476d2ca1254d270aad0306f24354c72a2600ef5374ba37"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0032.part",
+          "bytes": 1048576,
+          "sha256": "6286bec7ec10e1f06431ebe1668108f7e0b1b67a67886f673908bd65b3f36138"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0033.part",
+          "bytes": 1048576,
+          "sha256": "a4d487f7f7471a639d9dc5157cbed179552183aa3f6393079885491d0808132c"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0034.part",
+          "bytes": 1048576,
+          "sha256": "b2d03a39d712d92a7c58159904a9bc723a35d783380fb8d40dc3fd58fc057adc"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0035.part",
+          "bytes": 1048576,
+          "sha256": "e41a33d77edf10deeecc7a76573fc18baa34fc63ea84ad51c33874aecdd7bfc6"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0036.part",
+          "bytes": 1048576,
+          "sha256": "4e593cca15f4529b34de56a9475c14258cabc4cb3cfae1855d6c76b147319b65"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0037.part",
+          "bytes": 1048576,
+          "sha256": "4aff905151cb2f093801c6d11a94ebb69f8347a2dd93382fba3902367b3ecb45"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0038.part",
+          "bytes": 1048576,
+          "sha256": "c1d6ad69b2d0b39c3737da938ec766e0fd71311890d80991ed0fb3f43ed52419"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0039.part",
+          "bytes": 1048576,
+          "sha256": "167f9c526fa0241e87f56d4622f5a5df6cea37a51e9dcb185f68b0155c0c4e5e"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0040.part",
+          "bytes": 1048576,
+          "sha256": "b13397cb303307c8dc62cb45470ce3bbfbd2900b58456c0ef6f8d722938dcef1"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0041.part",
+          "bytes": 1048576,
+          "sha256": "1c7d360c46b607991b248bbc46495ad13d8f72fe1e0eb6b43ad5d81c24258b94"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0042.part",
+          "bytes": 1048576,
+          "sha256": "204f488b49d35f63a1ba45e3bebaa94487820299efa9d31b37d529bf3528b3d3"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0043.part",
+          "bytes": 1048576,
+          "sha256": "de337021ecde7ca48126b7c81ed564087a99db5daf434e44b698a865d0d4343b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0044.part",
+          "bytes": 1048576,
+          "sha256": "c351df164385c3ad9a8da6ffb61e20750b15772d91fdba30a054cdf80c74a7e8"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0045.part",
+          "bytes": 1048576,
+          "sha256": "515ff4a7eb4fd670ddddfbdc043f704995b3e39a4e055985794098dd6fc50bfc"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0046.part",
+          "bytes": 1048576,
+          "sha256": "6cd95c20f8164ba3480ddd6458d0be31d391e36f0fb7e4472af5de324eb87151"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0047.part",
+          "bytes": 1048576,
+          "sha256": "0562e933918a1422c3e42488ec4acff7a6ba2453d1ce6d1eb979f9f83505ecc3"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0048.part",
+          "bytes": 1048576,
+          "sha256": "6779d6ad80d2cd17605042299ab8105e82097ee98f922c00cf7a32d0e2eb2972"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0049.part",
+          "bytes": 1048576,
+          "sha256": "fa5e759467f14be8dd5e7a8e4b1ed1ca9d37788e34c7342993e17d4565903a16"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0050.part",
+          "bytes": 1048576,
+          "sha256": "7bbec375b881f6b600342d382bd3fa997f0d2c1cbc5e58cea1aaaba5d1309b6e"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0051.part",
+          "bytes": 1048576,
+          "sha256": "f7716e498fd4f9a987abd5509ceeb05990e5b573c4498c14b5119968e98c1a6e"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0052.part",
+          "bytes": 1048576,
+          "sha256": "a1abc6332aa87e82cfc4a7188b050d22e326dfc31b71627a36dfd41fc452fa9e"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0053.part",
+          "bytes": 1048576,
+          "sha256": "6ee70721370360f95c918c6c0bbdf6552fd7ba3d919f85be78696f15e9e0defd"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0054.part",
+          "bytes": 1048576,
+          "sha256": "773ead341f863e25cfd33cbea064f05f96d3098d4b1a1fb05014aedcbf81c979"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0055.part",
+          "bytes": 1048576,
+          "sha256": "07d0676dec4634b201cd1bbf1dbfc35bd21ef040a95095a911d176ee4838a56d"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0056.part",
+          "bytes": 1048576,
+          "sha256": "6713654476cb1c9348fb408e1a5dbfd04e456d5b23d0e791410bddc220f52c16"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0057.part",
+          "bytes": 1048576,
+          "sha256": "870f9fc5441b0ddcfe957ab9f1820b9655cbc67d7437510794cee7c979145ed0"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0058.part",
+          "bytes": 1048576,
+          "sha256": "2f3059cffbca955610b38b44ab2d3b63c39fa21155ddacab553c695ebc324687"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0059.part",
+          "bytes": 1048576,
+          "sha256": "786396322d530dfe704c9b3d9ce73e934a9ddffc092f0e3e6978044e7b1b9b8c"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/HD2D-characters-idle-eye-only-v4.zip/0060.part",
+          "bytes": 114091,
+          "sha256": "ff9c2c3cbe9fcbe3155c14161afb91e4bf6f737812fbb6daed75671e304f5417"
+        }
+      ]
+    },
+    {
+      "path": "Art/HD2DReview/2026-11-02/SourceBundles/monster-combat-source-assets.zip",
+      "bytes": 21084953,
+      "sha256": "24ebecd0ceff64bba89775827f161e1bee2b8091b3dfb000b1c0cd15516dc3c1",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0000.part",
+          "bytes": 1048576,
+          "sha256": "38cd9117b8d841522a97531748073fd4347c57c344a8d035bd186aa49799dd81"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0001.part",
+          "bytes": 1048576,
+          "sha256": "beed51afdff523ac0fd5f25a0450d347d72788b343910b78220beb1ae01c4364"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0002.part",
+          "bytes": 1048576,
+          "sha256": "1ed3f6a2d3c5b523096dc96f46b7535cd04684c2e5df7dc4d93622249993704b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0003.part",
+          "bytes": 1048576,
+          "sha256": "63c6f144ff73fa4af75d235ff0d8973d3ef4ee26cc7511344ce97d6a85eceee5"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0004.part",
+          "bytes": 1048576,
+          "sha256": "3670530705223f88a3be47fcd1885ad06ab7ca15c0c96544068e8c797c300667"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0005.part",
+          "bytes": 1048576,
+          "sha256": "57e1541ea0803019693c6915b824ba642bdb6d7e0e29ee4971667e9f0d721c0d"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0006.part",
+          "bytes": 1048576,
+          "sha256": "988c75548a5c8b9f71327b4199cec2bc4b2dea3884a1c7f212842bf7be20d1ed"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0007.part",
+          "bytes": 1048576,
+          "sha256": "1904416313da18d6e847489e793295be896f85fbc7d3bf4d08166b017d362e70"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0008.part",
+          "bytes": 1048576,
+          "sha256": "08fea430f482861b1c7332a3f9c6580b9ce4b7c662e12e1375f96650f5f1228b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0009.part",
+          "bytes": 1048576,
+          "sha256": "ee6756dac6a492b34070781a19c9ce855e1cdf576293cd6d429ca8aa36876f95"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0010.part",
+          "bytes": 1048576,
+          "sha256": "71fb7864907c5bdf014b97bd887bde6b6d3058052bbd5667efd9c706058b234b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0011.part",
+          "bytes": 1048576,
+          "sha256": "ae4b801b7c3951ee55ff39e8939975cf5f87368a05f6ca271650135738e3374c"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0012.part",
+          "bytes": 1048576,
+          "sha256": "5d51e73a6eee491f1eaf5318c74cf6ac17607c0adcc86645a0973f6102ebf756"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0013.part",
+          "bytes": 1048576,
+          "sha256": "b8aa684145f4fadfe4677884771e28e11d01e117c85415dab467a5cd7f896c0f"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0014.part",
+          "bytes": 1048576,
+          "sha256": "aa45b82aef2b56141ca4fa80eacfbcc3c9392c57705821d11daa5eb64718ccaf"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0015.part",
+          "bytes": 1048576,
+          "sha256": "57da5d93ce220fcc6e9ce6d6f288529a10068acb8eec1bfdf2ebbbe76de6c64b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0016.part",
+          "bytes": 1048576,
+          "sha256": "1366b78f043417c1b53016abfa2bcec49344dc819fd3733addc5a11fad462bc9"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0017.part",
+          "bytes": 1048576,
+          "sha256": "502e92651b16eefd1f02034da5d8444d147bed4262a0ab494bc5b461af794c35"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0018.part",
+          "bytes": 1048576,
+          "sha256": "4a14849d451e5e9f89e2144e64ee10538d06e3561dbb1b926712d097ac02d56b"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0019.part",
+          "bytes": 1048576,
+          "sha256": "e77dde3cd062e284e02128c5d26e15723cba780ef49bba988b31718961d6f800"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-combat-source-assets.zip/0020.part",
+          "bytes": 113433,
+          "sha256": "7ae826da82d4452e58a7a88d23cb73e5f00dfb72e16095b54e9f481dec75d70c"
+        }
+      ]
+    },
+    {
+      "path": "Art/HD2DReview/2026-11-02/SourceBundles/monster-source-assets.zip",
+      "bytes": 12546854,
+      "sha256": "9d0426f62e7ffc44598844f76ae003d72f5026782b0a40339bbd6a222c226733",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0000.part",
+          "bytes": 1048576,
+          "sha256": "82b195366fa7f2e58328809f808cfd8abfc9b921e67ae0f0959e301dfbf42eba"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0001.part",
+          "bytes": 1048576,
+          "sha256": "0e3118ce972ae2b4a37ce8052dbc7c68c1d0e4f550af0e1d1b894bf0291922ed"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0002.part",
+          "bytes": 1048576,
+          "sha256": "f553b66ccdc5a918da002d160f4c06bbc930198b780f94fca830d58a506f8a38"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0003.part",
+          "bytes": 1048576,
+          "sha256": "0aa53220be8ecdd802c51bbd04d0c89b4e2ac939acbddab632c9ca61194841c1"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0004.part",
+          "bytes": 1048576,
+          "sha256": "393b7549e6a264315288f7ed2b16668b2474d44d0e496f025f911e66d2a1f567"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0005.part",
+          "bytes": 1048576,
+          "sha256": "beafc5972c0331121d065745b845223b745fc83025fb08264a756cd650159abe"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0006.part",
+          "bytes": 1048576,
+          "sha256": "63f4e534b9b009c01f2e38064bc20450422fc2c0e8ee457aa82b721e2ecdbb44"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0007.part",
+          "bytes": 1048576,
+          "sha256": "d4dbc02b06aedbb4818d30fd4f3a215fe53e19111a12b0398c68fb97c905ad15"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0008.part",
+          "bytes": 1048576,
+          "sha256": "42411736e8d67373ba47e7760cf78ed61de8fc033919b76198b1da2428f95ade"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0009.part",
+          "bytes": 1048576,
+          "sha256": "c75e36b2973652ad4503a7574fef4fdf907df62e1b13d53299e7a9d18e2219e6"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0010.part",
+          "bytes": 1048576,
+          "sha256": "6b0cdbac49fa348d61820c6b2757ab4dcebe1a13988effc959cbdc89d4e48c44"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/monster-source-assets.zip/0011.part",
+          "bytes": 1012518,
+          "sha256": "fdfdc419010a268296460083443cbd0760f20287f261a33c70cb7a98e00d0a0f"
+        }
+      ]
+    },
+    {
+      "path": "Art/HD2DReview/2026-11-02/SourceVideos/two-heroes-idle-4s.mp4",
+      "bytes": 7225847,
+      "sha256": "1c64bdcf26b6e80bc0845c74b8bbc49f83efd2643aac77e8b1976dfe93d9844d",
+      "parts": [
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0000.part",
+          "bytes": 1048576,
+          "sha256": "a4c4db00f2751b59450e856a1fcbd3a0e44dbd6e354f2decb0272be9acd388b4"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0001.part",
+          "bytes": 1048576,
+          "sha256": "a939e88beb3a476aa3159ee0b0d2a695b7acd0808e67c3d0c25663946b306732"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0002.part",
+          "bytes": 1048576,
+          "sha256": "7820ff6efae1eb650602fbce450438d37043d8fdeed4695c70669836cc6a5621"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0003.part",
+          "bytes": 1048576,
+          "sha256": "2d2ca676cb57139526950d716ecec3dfac885cb83c76d4531d8009ac0ad2949e"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0004.part",
+          "bytes": 1048576,
+          "sha256": "e9ef31df27f45b175c9a0b6f8a62c1b9cdf3332822352b0c974364931d7833ed"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0005.part",
+          "bytes": 1048576,
+          "sha256": "ccc7fd811567ebe2f8cc6757cb4e95e4079e0afa3632d923c242fe2b152bee73"
+        },
+        {
+          "path": "Art/HD2DReview/2026-11-02/.parts/two-heroes-idle-4s.mp4/0006.part",
+          "bytes": 934391,
+          "sha256": "825f8594c07eacfe646aaea740ac42a4f9cf5656f078bf2031c126e3705ee2b1"
+        }
+      ]
+    }
+  ]
+}

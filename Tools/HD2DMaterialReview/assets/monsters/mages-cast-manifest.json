@@ -1,0 +1,374 @@
+{
+  "id": "mages-cast",
+  "rawFile": "raw-sheet.png",
+  "rawSHA256": "7d956793e630b33a4b6e14fa6d5a952ac7eba44427d1ee26edaeb617a7b1d056",
+  "cell": [
+    192,
+    128
+  ],
+  "columns": 4,
+  "frameCount": 16,
+  "posesPerActor": 4,
+  "actors": 4,
+  "anchor": [
+    96,
+    108
+  ],
+  "sourceEdgeTouch": [],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        314,
+        312
+      ],
+      "sharedActorScale": 0.29515418502202645,
+      "translation": [
+        70,
+        27
+      ],
+      "groundFootY": 273,
+      "bbox": [
+        84,
+        42,
+        144,
+        107
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        314,
+        0,
+        627,
+        312
+      ],
+      "sharedActorScale": 0.29515418502202645,
+      "translation": [
+        70,
+        27
+      ],
+      "groundFootY": 273,
+      "bbox": [
+        82,
+        41,
+        145,
+        107
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        627,
+        0,
+        940,
+        312
+      ],
+      "sharedActorScale": 0.29515418502202645,
+      "translation": [
+        70,
+        27
+      ],
+      "groundFootY": 273,
+      "bbox": [
+        78,
+        41,
+        149,
+        107
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        312
+      ],
+      "sharedActorScale": 0.29515418502202645,
+      "translation": [
+        70,
+        27
+      ],
+      "groundFootY": 273,
+      "bbox": [
+        83,
+        41,
+        142,
+        107
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        0,
+        312,
+        314,
+        619
+      ],
+      "sharedActorScale": 0.30131004366812225,
+      "translation": [
+        68,
+        27
+      ],
+      "groundFootY": 270,
+      "bbox": [
+        83,
+        39,
+        146,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        314,
+        312,
+        627,
+        619
+      ],
+      "sharedActorScale": 0.30131004366812225,
+      "translation": [
+        68,
+        27
+      ],
+      "groundFootY": 270,
+      "bbox": [
+        80,
+        39,
+        144,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        627,
+        312,
+        940,
+        619
+      ],
+      "sharedActorScale": 0.30131004366812225,
+      "translation": [
+        68,
+        27
+      ],
+      "groundFootY": 270,
+      "bbox": [
+        73,
+        40,
+        154,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        940,
+        312,
+        1254,
+        619
+      ],
+      "sharedActorScale": 0.30131004366812225,
+      "translation": [
+        68,
+        27
+      ],
+      "groundFootY": 270,
+      "bbox": [
+        80,
+        39,
+        142,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        0,
+        619,
+        314,
+        921
+      ],
+      "sharedActorScale": 0.3039647577092511,
+      "translation": [
+        65,
+        27
+      ],
+      "groundFootY": 268,
+      "bbox": [
+        80,
+        40,
+        140,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        314,
+        619,
+        627,
+        921
+      ],
+      "sharedActorScale": 0.3039647577092511,
+      "translation": [
+        65,
+        27
+      ],
+      "groundFootY": 268,
+      "bbox": [
+        76,
+        39,
+        141,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        627,
+        619,
+        940,
+        921
+      ],
+      "sharedActorScale": 0.3039647577092511,
+      "translation": [
+        65,
+        27
+      ],
+      "groundFootY": 268,
+      "bbox": [
+        71,
+        41,
+        151,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        940,
+        619,
+        1254,
+        921
+      ],
+      "sharedActorScale": 0.3039647577092511,
+      "translation": [
+        65,
+        27
+      ],
+      "groundFootY": 268,
+      "bbox": [
+        78,
+        39,
+        139,
+        109
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        0,
+        921,
+        314,
+        1254
+      ],
+      "sharedActorScale": 0.2926829268292683,
+      "translation": [
+        70,
+        26
+      ],
+      "groundFootY": 281,
+      "bbox": [
+        82,
+        36,
+        146,
+        108
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        314,
+        921,
+        627,
+        1254
+      ],
+      "sharedActorScale": 0.2926829268292683,
+      "translation": [
+        70,
+        26
+      ],
+      "groundFootY": 281,
+      "bbox": [
+        79,
+        36,
+        145,
+        108
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        627,
+        921,
+        940,
+        1254
+      ],
+      "sharedActorScale": 0.2926829268292683,
+      "translation": [
+        70,
+        26
+      ],
+      "groundFootY": 281,
+      "bbox": [
+        75,
+        36,
+        153,
+        108
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        940,
+        921,
+        1254,
+        1254
+      ],
+      "sharedActorScale": 0.2926829268292683,
+      "translation": [
+        70,
+        26
+      ],
+      "groundFootY": 281,
+      "bbox": [
+        80,
+        36,
+        142,
+        108
+      ],
+      "edgeTouch": false
+    }
+  ],
+  "body": true,
+  "scalePolicy": "shared neutral-reference scale and horizontal origin per actor; integer vertical ground-foot registration only; no per-frame scale or bbox centering"
+}

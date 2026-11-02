@@ -1,0 +1,1030 @@
+{
+  "version": 2,
+  "style": "classic-HD-2D-pixel",
+  "source": "built-in-imagegen",
+  "cycleSeconds": 0.6,
+  "uniquePosesPerEnemy": 4,
+  "groups": [
+    {
+      "id": "warriors",
+      "file": "warriors.png"
+    },
+    {
+      "id": "mages",
+      "file": "mages.png"
+    },
+    {
+      "id": "healers",
+      "file": "healers.png"
+    },
+    {
+      "id": "archers",
+      "file": "archers.png"
+    },
+    {
+      "id": "elites-boss",
+      "file": "elites-boss.png"
+    }
+  ],
+  "characters": [
+    {
+      "id": "R1C1",
+      "sourceID": "skeleton-group01-skeleton-roles-R1C1",
+      "name": "锈刃盾卫",
+      "role": "战士",
+      "group": "warriors",
+      "row": 0,
+      "rank": "common",
+      "weapon": "剑盾",
+      "anchor": [
+        48,
+        90
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "战士 · 剑盾，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "warriors-attack",
+        "frames": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.24,
+          0.36
+        ],
+        "duration": 0.6,
+        "release": 0.15,
+        "repeatAfter": 1.35,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R1C2",
+      "sourceID": "skeleton-group01-skeleton-roles-R1C2",
+      "name": "断枪骸兵",
+      "role": "战士",
+      "group": "warriors",
+      "row": 1,
+      "rank": "common",
+      "weapon": "长枪盾",
+      "anchor": [
+        48,
+        90
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "战士 · 长枪盾，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "warriors-attack",
+        "frames": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.24,
+          0.36
+        ],
+        "duration": 0.6,
+        "release": 0.15,
+        "repeatAfter": 1.35,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R1C3",
+      "sourceID": "skeleton-group01-skeleton-roles-R1C3",
+      "name": "巨剑骨卫",
+      "role": "战士",
+      "group": "warriors",
+      "row": 2,
+      "rank": "common",
+      "weapon": "巨剑",
+      "anchor": [
+        48,
+        86
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "战士 · 巨剑，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "warriors-attack",
+        "frames": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.24,
+          0.36
+        ],
+        "duration": 0.6,
+        "release": 0.15,
+        "repeatAfter": 1.35,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R1C4",
+      "sourceID": "skeleton-group01-skeleton-roles-R1C4",
+      "name": "重斧骷髅",
+      "role": "战士",
+      "group": "warriors",
+      "row": 3,
+      "rank": "common",
+      "weapon": "重斧",
+      "anchor": [
+        48,
+        82
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "战士 · 重斧，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "warriors-attack",
+        "frames": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.24,
+          0.36
+        ],
+        "duration": 0.6,
+        "release": 0.15,
+        "repeatAfter": 1.35,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R2C1",
+      "sourceID": "skeleton-group01-skeleton-roles-R2C1",
+      "name": "紫袍咒术师",
+      "role": "法师",
+      "group": "mages",
+      "row": 0,
+      "rank": "common",
+      "weapon": "咒术杖",
+      "anchor": [
+        48,
+        83
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "法师 · 咒术杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "mages-cast",
+        "frames": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "curse-bolt",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R2C2",
+      "sourceID": "skeleton-group01-skeleton-roles-R2C2",
+      "name": "寒霜法师",
+      "role": "法师",
+      "group": "mages",
+      "row": 1,
+      "rank": "common",
+      "weapon": "冰晶杖",
+      "anchor": [
+        48,
+        82
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "法师 · 冰晶杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "mages-cast",
+        "frames": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "frost-bolt",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R2C3",
+      "sourceID": "skeleton-group01-skeleton-roles-R2C3",
+      "name": "赤烬术士",
+      "role": "法师",
+      "group": "mages",
+      "row": 2,
+      "rank": "common",
+      "weapon": "赤金杖",
+      "anchor": [
+        48,
+        80
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "法师 · 赤金杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "mages-cast",
+        "frames": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "fireball",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R2C4",
+      "sourceID": "skeleton-group01-skeleton-roles-R2C4",
+      "name": "黑冠巫师",
+      "role": "法师",
+      "group": "mages",
+      "row": 3,
+      "rank": "common",
+      "weapon": "骷髅杖",
+      "anchor": [
+        48,
+        80
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "法师 · 骷髅杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "mages-cast",
+        "frames": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "curse-bolt",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R3C1",
+      "sourceID": "skeleton-group01-skeleton-roles-R3C1",
+      "name": "白袍骨医",
+      "role": "治疗师",
+      "group": "healers",
+      "row": 0,
+      "rank": "common",
+      "weapon": "骨医杖",
+      "anchor": [
+        48,
+        88
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "治疗师 · 骨医杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "healers-cast",
+        "frames": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "healing-pulse",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R3C2",
+      "sourceID": "skeleton-group01-skeleton-roles-R3C2",
+      "name": "金纹祭司",
+      "role": "治疗师",
+      "group": "healers",
+      "row": 1,
+      "rank": "common",
+      "weapon": "日轮杖",
+      "anchor": [
+        48,
+        87
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "治疗师 · 日轮杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "healers-cast",
+        "frames": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "healing-pulse",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R3C3",
+      "sourceID": "skeleton-group01-skeleton-roles-R3C3",
+      "name": "提灯牧者",
+      "role": "治疗师",
+      "group": "healers",
+      "row": 2,
+      "rank": "common",
+      "weapon": "提灯",
+      "anchor": [
+        48,
+        86
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "治疗师 · 提灯，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "healers-cast",
+        "frames": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "healing-pulse",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R3C4",
+      "sourceID": "skeleton-group01-skeleton-roles-R3C4",
+      "name": "圣冠主教",
+      "role": "治疗师",
+      "group": "healers",
+      "row": 3,
+      "rank": "common",
+      "weapon": "主教杖",
+      "anchor": [
+        48,
+        89
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "治疗师 · 主教杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "healers-cast",
+        "frames": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.18,
+          0.4,
+          0.52
+        ],
+        "duration": 0.76,
+        "release": 0.4,
+        "repeatAfter": 1.51,
+        "effect": "healing-pulse",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R4C1",
+      "sourceID": "skeleton-group01-skeleton-roles-R4C1",
+      "name": "残弓斥候",
+      "role": "弓箭手",
+      "group": "archers",
+      "row": 0,
+      "rank": "common",
+      "weapon": "短弓",
+      "anchor": [
+        48,
+        87
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "弓箭手 · 短弓，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "archers-shoot",
+        "frames": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "kind": "shoot",
+        "label": "射击",
+        "starts": [
+          0,
+          0.16,
+          0.38,
+          0.48
+        ],
+        "duration": 0.72,
+        "release": 0.38,
+        "repeatAfter": 1.47,
+        "effect": "bone-arrow",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R4C2",
+      "sourceID": "skeleton-group01-skeleton-roles-R4C2",
+      "name": "兜帽猎手",
+      "role": "弓箭手",
+      "group": "archers",
+      "row": 1,
+      "rank": "common",
+      "weapon": "猎弓",
+      "anchor": [
+        48,
+        86
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "弓箭手 · 猎弓，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "archers-shoot",
+        "frames": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "shoot",
+        "label": "射击",
+        "starts": [
+          0,
+          0.16,
+          0.38,
+          0.48
+        ],
+        "duration": 0.72,
+        "release": 0.38,
+        "repeatAfter": 1.47,
+        "effect": "bone-arrow",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R4C3",
+      "sourceID": "skeleton-group01-skeleton-roles-R4C3",
+      "name": "骨弩射手",
+      "role": "弓箭手",
+      "group": "archers",
+      "row": 2,
+      "rank": "common",
+      "weapon": "骨弩",
+      "anchor": [
+        48,
+        83
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "弓箭手 · 骨弩，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "archers-shoot",
+        "frames": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "kind": "shoot",
+        "label": "射击",
+        "starts": [
+          0,
+          0.16,
+          0.38,
+          0.48
+        ],
+        "duration": 0.72,
+        "release": 0.38,
+        "repeatAfter": 1.47,
+        "effect": "bone-arrow",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "R4C4",
+      "sourceID": "skeleton-group01-skeleton-roles-R4C4",
+      "name": "月骨长弓手",
+      "role": "弓箭手",
+      "group": "archers",
+      "row": 3,
+      "rank": "common",
+      "weapon": "长弓",
+      "anchor": [
+        48,
+        80
+      ],
+      "previewSize": 52,
+      "relativeScale": 0.7,
+      "description": "弓箭手 · 长弓，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "archers-shoot",
+        "frames": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "kind": "shoot",
+        "label": "射击",
+        "starts": [
+          0,
+          0.16,
+          0.38,
+          0.48
+        ],
+        "duration": 0.72,
+        "release": 0.38,
+        "repeatAfter": 1.47,
+        "effect": "bone-arrow",
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "elite-R1C1",
+      "sourceID": "skeleton-group02-elites-boss-R1C1",
+      "name": "骸盾禁卫",
+      "role": "精英",
+      "group": "elites-boss",
+      "row": 0,
+      "rank": "elite",
+      "weapon": "重盾巨剑",
+      "anchor": [
+        48,
+        88
+      ],
+      "previewSize": 79,
+      "relativeScale": 1.1,
+      "description": "精英 · 重盾巨剑，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "elite-guard-attack",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.31,
+          0.49,
+          0.59,
+          0.73
+        ],
+        "duration": 0.98,
+        "release": 0.49,
+        "repeatAfter": 1.73,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    },
+    {
+      "id": "elite-R1C2",
+      "sourceID": "skeleton-group02-elites-boss-R1C2",
+      "name": "幽焰骨法师",
+      "role": "精英",
+      "group": "elites-boss",
+      "row": 1,
+      "rank": "elite",
+      "weapon": "幽焰杖",
+      "anchor": [
+        48,
+        86
+      ],
+      "previewSize": 79,
+      "relativeScale": 1.1,
+      "description": "精英 · 幽焰杖，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "elite-mage-cast",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "kind": "cast",
+        "label": "施法",
+        "starts": [
+          0,
+          0.15,
+          0.31,
+          0.49,
+          0.59,
+          0.73
+        ],
+        "duration": 0.98,
+        "release": 0.49,
+        "repeatAfter": 1.73,
+        "effect": "curse-bolt",
+        "eliteProjectiles": 2
+      }
+    },
+    {
+      "id": "elite-R2C1",
+      "sourceID": "skeleton-group02-elites-boss-R2C1",
+      "name": "猎魂弓卫",
+      "role": "精英",
+      "group": "elites-boss",
+      "row": 2,
+      "rank": "elite",
+      "weapon": "猎魂弓",
+      "anchor": [
+        48,
+        90
+      ],
+      "previewSize": 79,
+      "relativeScale": 1.1,
+      "description": "精英 · 猎魂弓，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "elite-archer-shoot",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "kind": "shoot",
+        "label": "射击",
+        "starts": [
+          0,
+          0.15,
+          0.31,
+          0.49,
+          0.59,
+          0.73
+        ],
+        "duration": 0.98,
+        "release": 0.49,
+        "repeatAfter": 1.73,
+        "effect": "bone-arrow",
+        "eliteProjectiles": 3
+      }
+    },
+    {
+      "id": "elite-R2C2",
+      "sourceID": "skeleton-group02-elites-boss-R2C2",
+      "name": "冥冠骨王",
+      "role": "Boss",
+      "group": "elites-boss",
+      "row": 3,
+      "rank": "boss",
+      "weapon": "双手巨剑",
+      "anchor": [
+        48,
+        81
+      ],
+      "previewSize": 128,
+      "relativeScale": 1.6,
+      "description": "首领 · 双手巨剑，保留原怪物的职业与装备辨识度。",
+      "combat": {
+        "asset": "boss-attack",
+        "frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "attack",
+        "label": "攻击",
+        "starts": [
+          0,
+          0.15,
+          0.32,
+          0.52,
+          0.72,
+          0.81,
+          0.94,
+          1.11
+        ],
+        "duration": 1.38,
+        "release": 0.72,
+        "repeatAfter": 2.13,
+        "effect": null,
+        "eliteProjectiles": 1
+      }
+    }
+  ],
+  "nativeIntegration": false,
+  "actions": [
+    "walk",
+    "combat",
+    "death"
+  ],
+  "pendingActions": [],
+  "combatAssets": [
+    {
+      "id": "warriors-attack",
+      "file": "warriors-attack.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 16,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "mages-cast",
+      "file": "mages-cast.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 16,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "healers-cast",
+      "file": "healers-cast.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 16,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "archers-shoot",
+      "file": "archers-shoot.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 16,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "elite-guard-attack",
+      "file": "elite-guard-attack.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 6,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "elite-mage-cast",
+      "file": "elite-mage-cast.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 6,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "elite-archer-shoot",
+      "file": "elite-archer-shoot.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 6,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "boss-attack",
+      "file": "boss-attack.png",
+      "cell": [
+        192,
+        128
+      ],
+      "columns": 4,
+      "frameCount": 8,
+      "anchor": [
+        96,
+        108
+      ]
+    },
+    {
+      "id": "curse-bolt",
+      "file": "curse-bolt.png",
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frameCount": 4,
+      "anchor": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "frost-bolt",
+      "file": "frost-bolt.png",
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frameCount": 4,
+      "anchor": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "bone-arrow",
+      "file": "bone-arrow.png",
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frameCount": 4,
+      "anchor": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "healing-pulse",
+      "file": "healing-pulse.png",
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frameCount": 4,
+      "anchor": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "bone-death",
+      "file": "bone-death.png",
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frameCount": 6,
+      "anchor": [
+        48,
+        48
+      ]
+    }
+  ],
+  "death": {
+    "duration": 0.68,
+    "flashEnd": 0.09,
+    "bodyGone": 0.27,
+    "debrisStart": 0.1,
+    "debrisEnd": 0.64,
+    "asset": "bone-death"
+  }
+}

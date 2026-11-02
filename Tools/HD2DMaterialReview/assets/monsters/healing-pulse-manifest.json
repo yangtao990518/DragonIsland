@@ -1,0 +1,110 @@
+{
+  "id": "healing-pulse",
+  "rawFile": "raw-sheet.png",
+  "rawSHA256": "f4becb0f9ea3bb43dd31490022fe18fffefaf2304a4121806de09f67b612183b",
+  "cell": [
+    96,
+    96
+  ],
+  "columns": 2,
+  "frameCount": 4,
+  "posesPerActor": 4,
+  "actors": 1,
+  "anchor": [
+    48,
+    48
+  ],
+  "sourceEdgeTouch": [],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        627,
+        608
+      ],
+      "sharedActorScale": 0.15311004784688995,
+      "translation": [
+        0,
+        -1
+      ],
+      "groundFootY": null,
+      "bbox": [
+        31,
+        50,
+        65,
+        68
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        627,
+        0,
+        1254,
+        608
+      ],
+      "sharedActorScale": 0.15311004784688995,
+      "translation": [
+        0,
+        -1
+      ],
+      "groundFootY": null,
+      "bbox": [
+        20,
+        38,
+        77,
+        71
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        0,
+        608,
+        627,
+        1254
+      ],
+      "sharedActorScale": 0.15311004784688995,
+      "translation": [
+        0,
+        -1
+      ],
+      "groundFootY": null,
+      "bbox": [
+        11,
+        20,
+        85,
+        75
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        627,
+        608,
+        1254,
+        1254
+      ],
+      "sharedActorScale": 0.15311004784688995,
+      "translation": [
+        0,
+        -1
+      ],
+      "groundFootY": null,
+      "bbox": [
+        8,
+        36,
+        88,
+        73
+      ],
+      "edgeTouch": false
+    }
+  ],
+  "body": false,
+  "scalePolicy": "shared neutral-reference scale and horizontal origin per actor; integer vertical ground-foot registration only; no per-frame scale or bbox centering"
+}

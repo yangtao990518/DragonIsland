@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "roster": 20,
+  "uniqueWalkPoses": 80,
+  "checks": [
+    "20 selections",
+    "5 filters",
+    "pause",
+    "four pose stepping",
+    "180ms flash clears",
+    "themes",
+    "both heroes",
+    "boss deep link",
+    "390px layout",
+    "existing four skills",
+    "two-way navigation"
+  ],
+  "errors": []
+}

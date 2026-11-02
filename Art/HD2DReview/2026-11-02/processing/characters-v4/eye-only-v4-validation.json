@@ -1,0 +1,26 @@
+{
+  "sourceSHA256": "1c64bdcf26b6e80bc0845c74b8bbc49f83efd2643aac77e8b1976dfe93d9844d",
+  "characters": {
+    "dafeiyu": {
+      "frames": 240,
+      "losslessAtlasRoundTrips": 240,
+      "alphaChangedPixels": 0,
+      "changedPixelsOutsideFaceRegion": 0,
+      "bodyTiming": "source PTS unchanged",
+      "blinkRetimingAffectsWholeBody": false
+    },
+    "xiaobai": {
+      "frames": 240,
+      "losslessAtlasRoundTrips": 240,
+      "alphaChangedPixels": 0,
+      "changedPixelsOutsideFaceRegion": 0,
+      "bodyTiming": "source PTS unchanged",
+      "blinkRetimingAffectsWholeBody": false
+    }
+  },
+  "durationSeconds": 4.097,
+  "previewEncodedLoopSeconds": 4.1,
+  "previewRepeats": 2,
+  "previewSHA256": "3de3d418a48ba7d79fcbece069e531d6a129dedfed035f09a10ae021f8ac24a8",
+  "knownLimit": "Original source breathing/hair movement and loop boundary are retained; not a guaranteed motionless or hand-animated source."
+}

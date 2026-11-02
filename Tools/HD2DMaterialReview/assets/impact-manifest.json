@@ -1,0 +1,279 @@
+{
+  "id": "hd2d-fireball-impact-v1",
+  "status": "visual sample; not integrated into game",
+  "creativeSource": "built-in image_gen",
+  "rawSHA256": "094129bb32bb30f3e7e58ccc107d0fb378f0a7c8b1d762e124b09996dc1b2aef",
+  "frameCount": 16,
+  "cellSize": [
+    96,
+    96
+  ],
+  "anchorPixels": [
+    49,
+    80
+  ],
+  "anchorMeaning": "fixed ground emission point",
+  "loop": false,
+  "durationMs": 900.0,
+  "frameExtraction": "fixed equal source slots, one shared nearest-neighbor scale; no per-frame bbox fitting",
+  "generatedIntermediateFrames": false,
+  "residualMagentaMethod": "warm-palette physical color unmix on blue-excess edge pixels only",
+  "frames": [
+    {
+      "index": 0,
+      "file": "frames/00.png",
+      "sha256": "389a3752394a0391d66919576c051f45671812a68bb88ab08d59d70eb66a2872",
+      "sourceRect": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "integerTranslation": [
+        1,
+        7
+      ],
+      "durationMs": 16.666666666666668
+    },
+    {
+      "index": 1,
+      "file": "frames/01.png",
+      "sha256": "3f483dac27e52830d2dd4016d867c4ff64a4a23402de5042844a32b3fc187789",
+      "sourceRect": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        7
+      ],
+      "durationMs": 16.666666666666668
+    },
+    {
+      "index": 2,
+      "file": "frames/02.png",
+      "sha256": "4bdcaf5c26c81a6b04efe2d1316ab88c82273642f46e910857fb1552d179c055",
+      "sourceRect": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        2
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 3,
+      "file": "frames/03.png",
+      "sha256": "4b8e1fd6815a6c50ecbada0dc7d05a725622eeabf66b039fddd45ca58c1f7757",
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 33.333333333333336
+    },
+    {
+      "index": 4,
+      "file": "frames/04.png",
+      "sha256": "b501f88942fbff39968a69a29b094f4efbb830d2264141ef3411c750016f30f2",
+      "sourceRect": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        3
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 5,
+      "file": "frames/05.png",
+      "sha256": "f4ff5f8c9578bda93b3c7d00cac2b30ff81377f9f591ba643ce22403f7d81eb3",
+      "sourceRect": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        1
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 6,
+      "file": "frames/06.png",
+      "sha256": "a2ce09e742905a1a9d95d415a356053a8ee81cafbd138380459ead1eea87ed2c",
+      "sourceRect": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        1
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 7,
+      "file": "frames/07.png",
+      "sha256": "2a727f10f6928334fca0da71dec0262ab651a3888f37316ab4f3d987372225dc",
+      "sourceRect": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 8,
+      "file": "frames/08.png",
+      "sha256": "d1532c92ee36d0267524a6c1fd26912ebe1b260d66759ad02a211e40cae7aa0d",
+      "sourceRect": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 9,
+      "file": "frames/09.png",
+      "sha256": "ef9c55522611e9545dd4b1882a1c777722f0c61e430200fad6e6b04c576d2ff3",
+      "sourceRect": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 50.0
+    },
+    {
+      "index": 10,
+      "file": "frames/10.png",
+      "sha256": "5111a4537902d12130c25b9197bdc306347b8cf4941e6cea2e73c8783ac6509b",
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 66.66666666666667
+    },
+    {
+      "index": 11,
+      "file": "frames/11.png",
+      "sha256": "c8204bae13ee620f339666061e9c6037d24e8146734588fd1a69330862ad09ae",
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 66.66666666666667
+    },
+    {
+      "index": 12,
+      "file": "frames/12.png",
+      "sha256": "db40d21e1e2c108b2e858e6cfbcb9951cea1d24db13bb1e6fd340740918e93f5",
+      "sourceRect": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "index": 13,
+      "file": "frames/13.png",
+      "sha256": "ce5610903d94bfb37d1a137bfc2dc685015eec2de1b38fdf847d649ed2f755d3",
+      "sourceRect": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 83.33333333333333
+    },
+    {
+      "index": 14,
+      "file": "frames/14.png",
+      "sha256": "eb19cc3163ad4b2ac438257caa9a98a2f399f07d7384a93ad7240190d455272f",
+      "sourceRect": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 100.0
+    },
+    {
+      "index": 15,
+      "file": "frames/15.png",
+      "sha256": "a74e9bc511ad92ebd21817a461e033f0670d744d48b0ded906e518c71acf4595",
+      "sourceRect": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "integerTranslation": [
+        0,
+        0
+      ],
+      "durationMs": 100.0
+    }
+  ]
+}

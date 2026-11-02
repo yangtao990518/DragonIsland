@@ -1,0 +1,308 @@
+{
+  "id": "archers",
+  "rows": 4,
+  "columns": 4,
+  "cell": [
+    96,
+    96
+  ],
+  "frameCount": 16,
+  "action": "walk",
+  "frameDurationMs": 150,
+  "cycleSeconds": 0.6,
+  "anchors": [
+    [
+      48,
+      87
+    ],
+    [
+      48,
+      86
+    ],
+    [
+      48,
+      83
+    ],
+    [
+      48,
+      80
+    ]
+  ],
+  "rawSHA256": "ddda4c5819593425f2c6c9bc9117b1a2a34e9f5286583f350b95d104555eea86",
+  "fixedGrid": true,
+  "perFrameFit": false,
+  "frames": [
+    {
+      "row": 0,
+      "frame": 0,
+      "bbox": [
+        27,
+        14,
+        81,
+        87
+      ],
+      "sourceRect": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 0,
+      "frame": 1,
+      "bbox": [
+        27,
+        14,
+        77,
+        87
+      ],
+      "sourceRect": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 0,
+      "frame": 2,
+      "bbox": [
+        22,
+        17,
+        78,
+        87
+      ],
+      "sourceRect": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 0,
+      "frame": 3,
+      "bbox": [
+        28,
+        16,
+        75,
+        87
+      ],
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 1,
+      "frame": 0,
+      "bbox": [
+        15,
+        12,
+        81,
+        86
+      ],
+      "sourceRect": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 1,
+      "frame": 1,
+      "bbox": [
+        23,
+        12,
+        80,
+        86
+      ],
+      "sourceRect": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 1,
+      "frame": 2,
+      "bbox": [
+        17,
+        13,
+        80,
+        86
+      ],
+      "sourceRect": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 1,
+      "frame": 3,
+      "bbox": [
+        22,
+        13,
+        76,
+        86
+      ],
+      "sourceRect": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 2,
+      "frame": 0,
+      "bbox": [
+        25,
+        9,
+        87,
+        83
+      ],
+      "sourceRect": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 2,
+      "frame": 1,
+      "bbox": [
+        29,
+        8,
+        84,
+        83
+      ],
+      "sourceRect": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 2,
+      "frame": 2,
+      "bbox": [
+        22,
+        9,
+        82,
+        83
+      ],
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 2,
+      "frame": 3,
+      "bbox": [
+        28,
+        9,
+        85,
+        83
+      ],
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 3,
+      "frame": 0,
+      "bbox": [
+        16,
+        6,
+        79,
+        80
+      ],
+      "sourceRect": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 3,
+      "frame": 1,
+      "bbox": [
+        20,
+        6,
+        81,
+        80
+      ],
+      "sourceRect": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 3,
+      "frame": 2,
+      "bbox": [
+        16,
+        7,
+        77,
+        80
+      ],
+      "sourceRect": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "edgeTouch": false
+    },
+    {
+      "row": 3,
+      "frame": 3,
+      "bbox": [
+        22,
+        6,
+        80,
+        80
+      ],
+      "sourceRect": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "edgeTouch": false
+    }
+  ]
+}
