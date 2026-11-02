@@ -63,6 +63,7 @@ jobs:
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testFourConsecutiveUpgradesNeverReenterBattlePreparation \
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testSmallCharacterAndMixedMonstersInRealBattle \
             -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testHD2DXiaobaiSelectionAndBattle \
+            -only-testing:DragonInterfaceTests/SurvivorInterfaceTests/testFourHD2DMaxRankSpellsRenderAndBattleContinues \
             CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO test 2>&1 | tee build/integration-native.log
       - name: Export proof images
         if: always()

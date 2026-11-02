@@ -54,6 +54,19 @@ final class SurvivorInterfaceTests: XCTestCase {
         XCTAssertEqual(pieces.count, 2)
         return pieces.count == 2 ? pieces[0] * 60 + pieces[1] : 0
     }
+    func testFourHD2DMaxRankSpellsRenderAndBattleContinues() {
+        let app=XCUIApplication()
+        app.launchArguments=["--maiverse-capture","--character-dafeiyu","--chat-test-store",UUID().uuidString,"--survivor-hd2d-spells-preview"]
+        app.launch();openGame(app);start(app)
+        for id in ["fireball","lightning","orbit-swords","seeking-swords"] {
+            XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"survivorSkillRank_"+id).firstMatch.waitForExistence(timeout:10))
+        }
+        Thread.sleep(forTimeInterval:2.6);capture(app,"hd2d-four-max-rank-spells-charge-and-orbit")
+        Thread.sleep(forTimeInterval:1.1);capture(app,"hd2d-four-max-rank-spells-merged-and-crescents")
+        let timer=app.staticTexts["survivorTimer"]
+        let before=timer.label
+        expectation(for:NSPredicate(format:"label != %@",before),evaluatedWith:timer);waitForExpectations(timeout:10)
+    }
     func testHD2DXiaobaiSelectionAndBattle() {
         let app=launch()
         let choice=app.buttons["survivorHero_xiaobai"];show(choice,in:app);choice.tap()
