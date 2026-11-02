@@ -16,6 +16,9 @@ final class SurvivorHD2DTests: XCTestCase {
         try game.advance(by:0.3,movement:.zero);XCTAssertTrue((game.monsterShots ?? []).isEmpty)
         try game.advance(by:0.15,movement:.zero)
         XCTAssertEqual(game.monsterShots?.count,1);XCTAssertEqual(game.monsterShots?.first?.effect,"curse-bolt")
+        let shot=try XCTUnwrap(game.monsterShots?.first), aim=game.player-shot.position
+        XCTAssertGreaterThan(shot.position.y,0)
+        XCTAssertEqual(aim.x*shot.velocity.y-aim.y*shot.velocity.x,0,accuracy:0.001)
         XCTAssertGreaterThanOrEqual(try XCTUnwrap(game.monsterShots?.first?.born),start+0.4-0.001)
         try game.advance(by:0.1,movement:.zero);XCTAssertEqual(game.monsterShots?.count,1)
         let saved=try JSONEncoder().encode(game);let restored=try JSONDecoder().decode(SurvivorBattle.self,from:saved)
@@ -26,6 +29,7 @@ final class SurvivorHD2DTests: XCTestCase {
         let victim=try XCTUnwrap(game.enemies.first)
         game.configureHD2D([.init(id:try XCTUnwrap(victim.variant),duration:0.8,release:0.4,kind:"cast",effect:"curse-bolt")])
         for _ in 0..<600 where !(game.hd2dDeaths ?? []).contains(where:{$0.id==victim.id}) {try game.advance(by:0.01,movement:.zero)}
+        XCTAssertNotNil(game.hd2dDeaths?.first(where:{$0.id==victim.id})?.clipID);XCTAssertNotNil(game.hd2dDeaths?.first(where:{$0.id==victim.id})?.frameTime)
         XCTAssertTrue((game.hd2dDeaths ?? []).contains(where:{$0.id==victim.id}));XCTAssertFalse(game.enemies.contains(where:{$0.id==victim.id}))
         try game.advance(by:0.7,movement:.zero);XCTAssertFalse((game.hd2dDeaths ?? []).contains(where:{$0.id==victim.id}))
     }

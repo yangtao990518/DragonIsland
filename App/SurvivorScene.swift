@@ -384,12 +384,13 @@ final class SurvivorScene: SKScene {
         for death in deaths {
             let node=node(for:death.id,in:&deathNodes), age=battle.clock.elapsed-death.born
             let height:CGFloat = death.variant.hasSuffix("R2C2") && death.variant.contains("group02") ? 170 : death.variant.contains("group02") ? 110:72
-            animate(node,clip:death.variant,time:0,height:height,left:!death.facingLeft)
+            let clipID=death.clipID ?? death.variant, frameTime=death.frameTime ?? 0, attack=clipID.hasSuffix("-attack")
+            animate(node,clip:clipID,time:frameTime,height:attack ? height*128/96:height,left:!death.facingLeft,looping:!attack)
             node.position=point(death.position);node.zPosition=90-node.position.y*0.01
             // Fade body only, keeping the independent debris layer visible.
             node.alpha=1;node.color = .white;node.colorBlendFactor=age<0.09 ? 1:0
             let bodyAlpha=age<0.09 ? 1:max(0,1-(age-0.09)/0.18)
-            node.texture = bodyAlpha>0 ? textures.texture(death.variant,at:0):nil
+            node.texture = bodyAlpha>0 ? textures.texture(clipID,at:frameTime,looping:!attack):nil
             node.alpha=CGFloat(bodyAlpha)
             if age>=0.1 && age<0.64 {
                 let key="bones-\(death.id)"

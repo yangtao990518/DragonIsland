@@ -8,6 +8,8 @@ struct SurvivorHD2DMonster: Codable, Sendable {
     let effect: String?
 }
 struct SurvivorHD2DDeath: Codable, Identifiable, Sendable {
+    var clipID: String? = nil
+    var frameTime: Double? = nil
     let id: UInt64
     let variant: String
     let position: SurvivorVector

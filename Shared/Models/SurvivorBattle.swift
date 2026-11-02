@@ -93,6 +93,7 @@ struct SurvivorEnemy: Codable, Identifiable, Sendable {
     var actionStarted: Double? = nil
     var actionReleased: Bool? = nil
     var actionDirection: SurvivorVector? = nil
+    var actionTarget: SurvivorVector? = nil
     var variant: String? = nil
     var born: Double? = nil
     var nextAttack: Double? = nil
@@ -335,7 +336,8 @@ struct SurvivorBattle: Codable, Sendable {
         for enemy in enemies where enemy.health <= 0 {
             if hd2dMonsters != nil, let variant = enemy.variant {
                 if hd2dDeaths == nil { hd2dDeaths = [] }
-                hd2dDeaths?.append(.init(id: enemy.id, variant: variant, position: enemy.position, facingLeft: enemy.facingLeft, born: clock.elapsed))
+                let frozenTime=enemy.actionStarted.map { deathClock-$0 } ?? deathClock
+                hd2dDeaths?.append(.init(clipID: enemy.actionStarted == nil ? variant : "hd-"+variant+"-attack", frameTime: frozenTime, id: enemy.id, variant: variant, position: enemy.position, facingLeft: enemy.facingLeft, born: clock.elapsed))
                 if (hd2dDeaths?.count ?? 0) > 64 { hd2dDeaths?.removeFirst() }
             }
             kills += 1
@@ -813,6 +815,7 @@ extension SurvivorBattle {
                 guard now >= (enemies[i].nextAttack ?? 0), rule.effect == "healing-pulse" || distance < (rule.kind == "attack" ? (enemies[i].kind == .boss ? 180 : 100) : 600) else { continue }
                 enemies[i].actionStarted = now; enemies[i].actionReleased = false
                 enemies[i].actionDirection = (player - enemies[i].position).normalized
+                enemies[i].actionTarget = player
             }
             let age = now - (enemies[i].actionStarted ?? now)
             if age >= rule.release && enemies[i].actionReleased != true {
@@ -826,7 +829,8 @@ extension SurvivorBattle {
                 } else if distance < 600 {
                     if monsterShots == nil { monsterShots = [] }
                     if (monsterShots?.count ?? 0) < 60 {
-                        let shot=SurvivorMonsterShot(effect: rule.effect, born: now, id: identifier(), position: at + direction * 18, velocity: direction * 210, remaining: 3, damage: 8)
+                        let origin=at+SurvivorVector(x:direction.x*18,y:30)
+                        let shot=SurvivorMonsterShot(effect: rule.effect, born: now, id: identifier(), position: origin, velocity: ((enemies[i].actionTarget ?? player)-origin).normalized * 210, remaining: 3, damage: 8)
                         monsterShots?.append(shot)
                     }
                 }
