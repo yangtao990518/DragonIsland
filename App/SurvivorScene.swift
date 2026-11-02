@@ -347,6 +347,21 @@ final class SurvivorScene: SKScene {
 
     private func renderImpacts(_ battle: SurvivorBattle) {
         let hits = battle.combatHits ?? [], keep = Set(hits.map(\.id))
+        // Nearby hits on the same target share a short number window; this is
+        // presentation only and never combines or skips damage calculations.
+        func numberKey(_ hit: SurvivorCombatHit) -> String {
+            "\(hit.enemyID ?? 0):\(Int(floor(hit.born / 0.12)))"
+        }
+        var numbers: [String: (id: UInt64, damage: Double, player: Bool)] = [:]
+        for hit in hits {
+            let key = numberKey(hit)
+            if let group = numbers[key] { numbers[key] = (group.id, group.damage + hit.damage, group.player) }
+            else { numbers[key] = (hit.id, hit.damage, hit.enemyID == nil) }
+        }
+        let visibleNumbers = Set(numbers.values.sorted {
+            if $0.player != $1.player { return $0.player }
+            return $0.id > $1.id
+        }.prefix(16).map { $0.id })
         for id in Array(impactNodes.keys) where !keep.contains(id) {
             impactNodes.removeValue(forKey: id)?.removeFromParent()
         }
@@ -358,23 +373,35 @@ final class SurvivorScene: SKScene {
                 let spark = SKSpriteNode(texture: impactTexture)
                 spark.name = "spark"; spark.size = CGSize(width: 88, height: 88)
                 spark.zRotation = CGFloat(hit.id % 8) * .pi / 4; node.addChild(spark)
-                let number = SKLabelNode(fontNamed: "AvenirNext-Heavy")
-                number.name = "damage"; number.text = "\(Int(ceil(hit.damage)))"
-                number.fontSize = hit.enemyID == nil ? 38 : 32
-                number.fontColor = hit.enemyID == nil ? .systemRed : .init(red: 1, green: 0.9, blue: 0.6, alpha: 1)
+                let number = SKLabelNode()
+                number.name = "damage"
+                number.verticalAlignmentMode = .bottom
                 number.zPosition = 1; node.addChild(number)
             }
             let age = max(0, battle.clock.elapsed - hit.born)
-            let progress = min(1, age / 0.48)
             node.position = point(hit.position + SurvivorVector(x: 0, y: hit.enemyID == nil ? 48 : 34))
             node.zPosition = 650
             if let spark = node.childNode(withName: "spark") {
                 spark.alpha = CGFloat(max(0, 1 - age / 0.16))
                 spark.setScale(CGFloat(0.65 + min(1, age / 0.12) * 0.65))
             }
-            if let number = node.childNode(withName: "damage") {
-                number.position = CGPoint(x: Double(Int(hit.id % 3) - 1) * 12, y: 18 + (UIAccessibility.isReduceMotionEnabled ? 0 : progress * 44))
-                number.alpha = CGFloat(min(1, (1 - progress) * 3))
+            if let number = node.childNode(withName: "damage") as? SKLabelNode,
+               let group = numbers[numberKey(hit)] {
+                number.isHidden = group.id != hit.id || !visibleNumbers.contains(hit.id)
+                if !number.isHidden {
+                    let value = "\(Int(ceil(group.damage)))"
+                    if number.attributedText?.string != value {
+                        let size: CGFloat = hit.enemyID == nil ? 24 : 20
+                        let font = UIFont(name: "Menlo-Bold", size: size) ?? .monospacedDigitSystemFont(ofSize: size, weight: .semibold)
+                        let color: UIColor = hit.enemyID == nil ? .init(red: 1, green: 0.42, blue: 0.4, alpha: 1) : .init(red: 0.96, green: 0.95, blue: 0.88, alpha: 1)
+                        number.attributedText = NSAttributedString(string: value, attributes: [
+                            .font: font, .foregroundColor: color,
+                            .strokeColor: UIColor(red: 0.12, green: 0.1, blue: 0.17, alpha: 1), .strokeWidth: -6.0
+                        ])
+                    }
+                    number.position = CGPoint(x: Double(Int(hit.id % 3) - 1) * 8, y: 12 + (UIAccessibility.isReduceMotionEnabled ? 0 : min(1, age / 0.36) * 28))
+                    number.alpha = CGFloat(min(1, max(0, (0.36 - age) / 0.12)))
+                }
             }
         }
     }
