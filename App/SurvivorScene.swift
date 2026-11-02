@@ -352,7 +352,7 @@ final class SurvivorScene: SKScene {
         prune(&effectNodes,keeping:Set(casts.map(\.id)))
         for effect in casts {
             let node=node(for:effect.id,in:&effectNodes)
-            if renderHDSpell(node, effect, time: time, player: battle.player) { continue }
+            if renderHDSpell(node, effect, time: time, player: battle.player, orbitRank: battle.rank(.effect("orbit-swords"))) { continue }
             guard let id=effect.clipID,let clip=textures.clip(id) else {continue}
             animate(node,clip:id,time:effect.age+(effect.clipOffset ?? 0),height:CGFloat(clip.cellSize[1]) * CGFloat(clip.displayScale ?? 1),looping:clip.loop ?? false)
             node.xScale=1;node.position=point(effect.position)
@@ -405,18 +405,19 @@ final class SurvivorScene: SKScene {
             if !deaths.contains(where:{"bones-\($0.id)"==child.name && battle.clock.elapsed-$0.born<0.64}) {child.removeFromParent()}
         }
     }
-    private func renderHDSpell(_ node: SKSpriteNode, _ effect: PixelFXCast, time:Double, player:SurvivorVector)->Bool {
+    private func renderHDSpell(_ node: SKSpriteNode, _ effect: PixelFXCast, time:Double, player:SurvivorVector, orbitRank:Int)->Bool {
         if effect.skillID == "orbit-swords" {
+            let rank=max(1,min(5,orbitRank))
             node.texture=nil;node.position=point(player);node.zRotation=0;node.zPosition=200
-            if node.children.count != effect.level*2 {node.removeAllChildren();for _ in 0..<effect.level*2 {node.addChild(SKSpriteNode())}}
-            for i in 0..<effect.level {
-                let angle = -Double.pi/2+time*2*Double.pi/2.6+Double(i)*2*Double.pi/Double(effect.level)
+            if node.children.count != rank*2 {node.removeAllChildren();for _ in 0..<rank*2 {node.addChild(SKSpriteNode())}}
+            for i in 0..<rank {
+                let angle = -Double.pi/2+time*2*Double.pi/2.6+Double(i)*2*Double.pi/Double(rank)
                 let blade=node.children[i] as! SKSpriteNode
                 animate(blade,clip:"hd-orbit-blade",time:time,height:63)
                 blade.position=CGPoint(x:cos(angle)*87,y:sin(angle)*87);blade.zRotation=angle-Double.pi/2;blade.zPosition=sin(angle)<0 ? 310:-10
-                let crescent=node.children[i+effect.level] as! SKSpriteNode
+                let crescent=node.children[i+rank] as! SKSpriteNode
                 let fired=2.12+Double(i)*0.04,raw=(time-fired).truncatingRemainder(dividingBy:2.6),age=raw<0 ? raw+2.6:raw
-                crescent.isHidden=effect.level<5 || time<fired || age>=0.5
+                crescent.isHidden=rank<5 || time<fired || age>=0.5
                 if !crescent.isHidden {
                     let a = -Double.pi/2+fired*2*Double.pi/2.6+Double(i)*2*Double.pi/5
                     animate(crescent,clip:"hd-orbit-crescent",time:age,height:72,looping:false)

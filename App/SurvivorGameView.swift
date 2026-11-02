@@ -110,7 +110,11 @@ import UIKit
         if args.contains("--survivor-hd2d-spells-preview"), args.contains("--maiverse-capture"),
            let index=args.firstIndex(of:"--chat-test-store"),args.indices.contains(index+1),UUID(uuidString:args[index+1]) != nil {
             for skill in textures.skills.filter({["fireball","lightning","orbit-swords","seeking-swords"].contains($0.id)}) {
-                for _ in battle.rank(skill.upgrade)..<5 { battle.awardExperience(battle.experienceNeeded);_ = battle.choosePixelFXFromLibrary(skill.id) }
+                for _ in battle.rank(skill.upgrade)..<5 {
+                    battle.awardExperience(battle.experienceNeeded);_ = battle.choosePixelFXFromLibrary(skill.id)
+                    // Keep the same rank-1 orbit cast alive across the next four upgrades.
+                    if skill.id == "orbit-swords", battle.rank(skill.upgrade) == 1 { try? battle.advance(by:0.01,movement:.zero) }
+                }
             }
             for i in 0..<24 {let a=Double(i)*2*Double.pi/24;battle.spawnEnemy(at:.init(x:cos(a)*280,y:sin(a)*280),kind:.elite)}
         }
