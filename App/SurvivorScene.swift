@@ -21,6 +21,7 @@ final class SurvivorTextures {
     let idleImage: UIImage
     let arrowTexture:SKTexture
     let idleTexture: SKTexture
+    private let singlePageCells = NSCache<NSString,SKTexture>()
     private let pages = NSCache<NSString, SKTexture>()
     private var current: [String: (Int, SKTexture)] = [:]
     private let previewPages = NSCache<NSString, UIImage>()
@@ -53,6 +54,7 @@ final class SurvivorTextures {
         arrowTexture=SKTexture(image:arrow)
         pages.totalCostLimit = 96 * 1024 * 1024
         pages.countLimit = 64
+        singlePageCells.countLimit = 384
         previewPages.countLimit = 3; thumbnails.totalCostLimit = 20*1024*1024
     }
     func resolved(_ id:String)->String {
@@ -126,6 +128,10 @@ final class SurvivorTextures {
     func texture(_ id: String, at seconds: Double, looping: Bool = true) -> SKTexture? {
         guard let clip = clip(id), let frame = clip.frame(at: seconds, looping: looping) else { return nil }
         if let cached = current[clip.id], cached.0 == frame.cell { return cached.1 }
+        let cellKey="\(clip.id):\(frame.cell)" as NSString
+        if clip.pages.count == 1, let cached=singlePageCells.object(forKey:cellKey) {
+            current[clip.id]=(frame.cell,cached);return cached
+        }
         let capacity = clip.grid[0] * clip.grid[1]
         let pageIndex = frame.cell / capacity
         let file = clip.pages[pageIndex].file
@@ -155,6 +161,7 @@ final class SurvivorTextures {
                           y: 1 - CGFloat(cell / clip.grid[0] + 1) * h, width: w, height: h)
         let result = SKTexture(rect: rect, in: page)
         result.filteringMode = id == "dafeiyu-run" || id == "demon-run" || id == "mushroom-run" ? .linear : .nearest
+        if clip.pages.count == 1 {singlePageCells.setObject(result,forKey:cellKey)}
         current[clip.id] = (frame.cell, result)
         return result
     }

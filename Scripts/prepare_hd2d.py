@@ -9,7 +9,7 @@ def prepare(target):
  subprocess.run([sys.executable,str(ROOT/'Tools/HD2DMaterialReview/restore_sources.py')],check=True)
  source=ROOT/'Tools/HD2DMaterialReview/assets';clips=[];rules=[]
  def pack(id,images,durations,pivot,loop=False):
-  w,h=images[0].size;cols=max(1,1024//w);rows=max(1,1024//h);cap=cols*rows;pages=[];frames=[];t=0
+  w,h=images[0].size;cols=min(len(images),max(1,1024//w));rows=min(max(1,1024//h),(len(images)+cols-1)//cols);cap=cols*rows;pages=[];frames=[];t=0
   for i,(im,dt) in enumerate(zip(images,durations)):
    if i%cap==0:page=Image.new('RGBA',(cols*w,rows*h))
    page.paste(im,((i%cap)%cols*w,(i%cap)//cols*h));frames.append(dict(cell=i,start_ms=t,duration_ms=dt));t+=dt

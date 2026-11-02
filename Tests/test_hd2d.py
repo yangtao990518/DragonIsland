@@ -26,11 +26,14 @@ class HD2DAssets(unittest.TestCase):
    im=Image.open(ROOT/f'Tools/HD2DMaterialReview/assets/{name}.png').convert('RGBA');c=self.clips[id];self.assertEqual(len(c['frames']),16)
    for i in range(16):self.assertEqual(self.frame(c,i).tobytes(),im.crop((i%4*96,i//4*96,i%4*96+96,i//4*96+96)).tobytes())
  def test_pages_bounded_and_hashes_intact(self):
+  first_bytes=0
   for c in self.clips.values():
+   with Image.open(TARGET/c['pages'][0]['file']) as first:first_bytes+=first.width*first.height*4
    end=0
    for f in c['frames']:self.assertAlmostEqual(f['start_ms'],end);self.assertGreater(f['duration_ms'],0);end+=f['duration_ms']
    self.assertAlmostEqual(end,c['duration_ms'])
    for p in c['pages']:
     path=TARGET/p['file'];self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),p['sha256']);
     with Image.open(path) as image:self.assertLessEqual(max(image.size),1024)
+  self.assertLess(first_bytes,32*1024*1024)
 if __name__=='__main__':unittest.main()
