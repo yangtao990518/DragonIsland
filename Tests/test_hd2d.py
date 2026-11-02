@@ -21,6 +21,8 @@ class HD2DAssets(unittest.TestCase):
   for m in cat['characters']:
    c=self.clips['hd-'+m['sourceID']];attack=self.clips[c['id']+'-attack'];rule=next(r for r in self.data['monsters'] if r['id']==m['sourceID'])
    self.assertEqual(len(c['frames']),4);self.assertAlmostEqual(c['duration_ms'],600);self.assertEqual(len(attack['frames']),len(m['combat']['frames']));self.assertAlmostEqual(rule['release'],m['combat']['release']);self.assertAlmostEqual(attack['duration_ms'],m['combat']['duration']*1000)
+   if rule['kind']=='attack':
+    i=max(i for i,t in enumerate(m['combat']['starts']) if t<=rule['release']+1e-9);bbox=self.frame(attack,i).getbbox();height=170 if m['rank']=='boss' else 110 if m['rank']=='elite' else 72;self.assertAlmostEqual(rule['reach'],max(24,(bbox[2]-96)*height/96))
  def test_fx_source_pixels_and_every_frame_present(self):
   for name,id in [('flight','fireball-flight'),('impact','fireball-impact'),('lightning-strike','lightning-lv1'),('lightning-star','lightning-explosion'),('orbit-blade','hd-orbit-blade'),('orbit-crescent','hd-orbit-crescent'),('seeking-flight','seeking-flight'),('seeking-merged','seeking-merged')]:
    im=Image.open(ROOT/f'Tools/HD2DMaterialReview/assets/{name}.png').convert('RGBA');c=self.clips[id];self.assertEqual(len(c['frames']),16)

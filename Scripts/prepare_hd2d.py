@@ -34,8 +34,13 @@ def prepare(target):
  cat=json.loads((source/'monsters/catalog.json').read_text());assets={a['id']:a for a in cat['combatAssets']}
  for c in cat['characters']:
   walk='hd-'+c['sourceID'];pack(walk,sheet(source/'monsters'/f"{c['group']}.png",[96,96],range(c['row']*4,c['row']*4+4),4),[150]*4,c['anchor'],True)
-  a=assets[c['combat']['asset']];spec=c['combat'];starts=spec['starts']+[spec['duration']];pack(walk+'-attack',sheet(source/'monsters'/a['file'],a['cell'],spec['frames'],a['columns']),[(starts[i+1]-starts[i])*1000 for i in range(len(spec['frames']))],a['anchor'])
-  rules.append(dict(id=c['sourceID'],duration=spec['duration'],release=spec['release'],kind=spec['kind'],effect=spec['effect']))
+  a=assets[c['combat']['asset']];spec=c['combat'];starts=spec['starts']+[spec['duration']];attack_images=sheet(source/'monsters'/a['file'],a['cell'],spec['frames'],a['columns'])
+  pack(walk+'-attack',attack_images,[(starts[i+1]-starts[i])*1000 for i in range(len(spec['frames']))],a['anchor'])
+  rule=dict(id=c['sourceID'],duration=spec['duration'],release=spec['release'],kind=spec['kind'],effect=spec['effect'])
+  if spec['kind']=='attack':
+   release_index=max(i for i,t in enumerate(spec['starts']) if t<=spec['release']+1e-9);bbox=attack_images[release_index].getbbox();height=170 if c['rank']=='boss' else 110 if c['rank']=='elite' else 72
+   rule['reach']=max(24,(bbox[2]-a['anchor'][0])*height/96)
+  rules.append(rule)
  for a in cat['combatAssets']:
   if a['id'] not in ['curse-bolt','frost-bolt','bone-arrow','healing-pulse','bone-death']:continue
   duration=.54 if a['id']=='bone-death' else .54 if a['id']=='healing-pulse' else .4

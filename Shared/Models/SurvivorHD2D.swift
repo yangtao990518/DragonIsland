@@ -1,6 +1,7 @@
 import Foundation
 
 struct SurvivorHD2DMonster: Codable, Sendable {
+    var reach: Double? = nil
     let id: String
     let duration: Double
     let release: Double

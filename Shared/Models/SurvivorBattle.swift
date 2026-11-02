@@ -811,8 +811,9 @@ extension SurvivorBattle {
         for i in enemies.indices where enemies[i].health > 0 {
             guard let rule = hd2dMonsters?.first(where: { $0.id == enemies[i].variant }) else { continue }
             let distance = (player - enemies[i].position).length
+            let reach=rule.reach ?? (enemies[i].kind == .boss ? 150.0:78.0)
             if enemies[i].actionStarted == nil {
-                guard now >= (enemies[i].nextAttack ?? 0), rule.effect == "healing-pulse" || distance < (rule.kind == "attack" ? (enemies[i].kind == .boss ? 180 : 100) : 600) else { continue }
+                guard now >= (enemies[i].nextAttack ?? 0), rule.effect == "healing-pulse" || distance < (rule.kind == "attack" ? reach+18 : 600) else { continue }
                 enemies[i].actionStarted = now; enemies[i].actionReleased = false
                 enemies[i].actionDirection = (player - enemies[i].position).normalized
                 enemies[i].actionTarget = player
@@ -822,8 +823,7 @@ extension SurvivorBattle {
                 enemies[i].actionReleased = true
                 let at = enemies[i].position, direction = enemies[i].actionDirection ?? .init(x: 1, y: 0)
                 if rule.kind == "attack" {
-                    let reach = enemies[i].kind == .boss ? 150.0 : 78.0
-                    if Self.segmentDistance(player, at, at + direction * reach) < 25 { takeDamage(enemies[i].kind == .boss ? 22 : 8) }
+                    if Self.segmentDistance(player, at, at + direction * reach) < 18 { takeDamage(enemies[i].kind == .boss ? 22 : 8) }
                 } else if rule.effect == "healing-pulse" {
                     for j in enemies.indices where enemies[j].health > 0 && (enemies[j].position - at).length < 150 { enemies[j].health = min(enemies[j].maximumHealth, enemies[j].health + 8) }
                 } else if distance < 600 {
