@@ -365,7 +365,7 @@ final class SurvivorScene: SKScene {
         prune(&feedbackNodes,keeping:Set(feedback.map(\.id)))
         for event in feedback {
             let node = node(for:event.id,in:&feedbackNodes)
-            let height = min(220,Double(textures.clip(event.skillID)?.cellSize[1] ?? 100)*1.7)
+            let height = event.skillID == "fireball-impact" ? 84 : min(220,Double(textures.clip(event.skillID)?.cellSize[1] ?? 100)*1.7)
             animate(node,clip:event.skillID,time:time-event.born,height:CGFloat(height),looping:false)
             node.position = point(event.position); node.zPosition = 160
         }
