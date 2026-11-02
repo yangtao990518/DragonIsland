@@ -27,21 +27,23 @@ final class SurvivorInterfaceTests: XCTestCase {
         let entry = app.buttons["openSurvivorGame"]
         show(entry, in: app); entry.tap()
         XCTAssertTrue(app.staticTexts["选择出战角色"].waitForExistence(timeout: 10))
-        XCUIDevice.shared.orientation = .landscapeRight
         XCTAssertTrue(app.wait(for:.runningForeground,timeout:5))
-        let landscape=expectation(for:NSPredicate { _,_ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height },evaluatedWith:app)
-        wait(for:[landscape],timeout:8)
+        let portrait=expectation(for:NSPredicate { _,_ in app.windows.firstMatch.frame.width < app.windows.firstMatch.frame.height },evaluatedWith:app)
+        wait(for:[portrait],timeout:8)
     }
     private func start(_ app: XCUIApplication) {
         let button = app.buttons["survivorStart"]
         show(button, in: app); button.tap()
         XCTAssertTrue(app.staticTexts["survivorTimer"].waitForExistence(timeout: 10))
+        let landscape=expectation(for:NSPredicate { _,_ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height },evaluatedWith:app)
+        wait(for:[landscape],timeout:10)
     }
-    private func capture(_ app: XCUIApplication, _ name: String) {
+    private func capture(_ app: XCUIApplication, _ name: String, landscape: Bool = true) {
         // iOS 26 app.screenshot() can crop a rotated fullScreenCover using the
         // original portrait application rectangle. Capture the actual display.
         let screenshot=XCUIScreen.main.screenshot()
-        XCTAssertGreaterThan(screenshot.image.size.width,screenshot.image.size.height)
+        if landscape { XCTAssertGreaterThan(screenshot.image.size.width,screenshot.image.size.height) }
+        else { XCTAssertLessThan(screenshot.image.size.width,screenshot.image.size.height) }
         let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
     }
@@ -66,17 +68,18 @@ final class SurvivorInterfaceTests: XCTestCase {
     }
     func testConfirmedBattleStartsWithMinimapAndNativeSkills() {
         let app=launch();start(app)
-        XCTAssertTrue(app.descendants(matching:.any).matching(NSPredicate(format:"label == %@","正方形草地小地图")).firstMatch.waitForExistence(timeout:15))
+        XCTAssertFalse(app.descendants(matching: .any).matching(identifier: "survivorPauseMap").firstMatch.exists)
         let timer=app.staticTexts["survivorTimer"]
         expectation(for:NSPredicate(format:"label != %@","20:00"),evaluatedWith:timer)
         waitForExpectations(timeout:15)
         app.buttons["survivorPause"].tap()
         XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout:5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorPauseMap").firstMatch.exists)
         capture(app,"confirmed-native-battle-minimap-and-icons")
     }
     func testNativeBattleClockMovementAndMenuPause() {
         let app = launch()
-        capture(app, "survivor-character-selection")
+        capture(app, "survivor-character-selection", landscape: false)
         start(app)
         let timer = app.staticTexts["survivorTimer"]
         XCTAssertEqual(timer.value as? String, "运行中")
@@ -121,9 +124,30 @@ final class SurvivorInterfaceTests: XCTestCase {
         let card = app.buttons["pixelFXSkill_fireball"]
         XCTAssertTrue(card.waitForExistence(timeout:8)); card.tap()
         XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pixelFXLivePreview").firstMatch.waitForExistence(timeout:5))
-        capture(app,"pixelfx-native-live-preview")
+        capture(app,"pixelfx-native-live-preview", landscape: false)
         show(app.buttons["pixelFXChooseSkill"],in:app); app.buttons["pixelFXChooseSkill"].tap()
         XCTAssertTrue(app.buttons["survivorStart"].waitForExistence(timeout:8))
+    }
+
+    func testLobbyIsPortraitBattleIsLandscapeAndReturningRestoresPortrait() {
+        let app = launch()
+        capture(app, "portrait-prebattle-selection", landscape: false)
+        start(app)
+        let timer = app.staticTexts["survivorTimer"]
+        expectation(for: NSPredicate(format: "label != %@", "20:00"), evaluatedWith: timer)
+        waitForExpectations(timeout: 15)
+        capture(app, "landscape-zoomed-out-battle")
+        app.buttons["survivorPause"].tap()
+        XCTAssertTrue(app.buttons["survivorResume"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "survivorPauseMap").firstMatch.exists)
+        app.buttons["survivorReturnLobby"].tap()
+        app.buttons.matching(identifier: "survivorSaveExit").firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["选择出战角色"].waitForExistence(timeout: 8))
+        let portrait = expectation(for: NSPredicate { _, _ in
+            app.windows.firstMatch.frame.width < app.windows.firstMatch.frame.height
+        }, evaluatedWith: app)
+        wait(for: [portrait], timeout: 10)
+        capture(app, "portrait-returned-selection", landscape: false)
     }
 
     func testSixMaxRankSkillsAndCrowdKeepSimulationMoving() {

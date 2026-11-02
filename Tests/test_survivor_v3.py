@@ -49,6 +49,25 @@ class ConfirmedSurvivorAssetsTests(unittest.TestCase):
                     self.assertLessEqual(max(image.size),1024)
                     self.assertEqual(image.getchannel('A').getextrema()[0],0)
 
+    def test_mobile_frames_preserve_master_resolution_and_pixels(self):
+        masters={c['id']:c for c in self.master['clips']}
+        for clip in self.mobile['clips']:
+            if clip['id']=='dafeiyu-run':continue
+            original=masters[clip['id']]
+            self.assertEqual(clip['cell_size'],original['cell_size'])
+            self.assertEqual(clip['display_scale'],1)
+            width,height=clip['cell_size']
+            for index in {0,len(clip['frames'])//2,len(clip['frames'])-1}:
+                samples=[]
+                for catalog,folder in [(original,self.source),(clip,self.runtime)]:
+                    cell=catalog['frames'][index]['cell']
+                    capacity=catalog['grid'][0]*catalog['grid'][1]
+                    slot=cell%capacity
+                    x=slot%catalog['grid'][0]*width;y=slot//catalog['grid'][0]*height
+                    with Image.open(folder/catalog['pages'][cell//capacity]['file']) as page:
+                        samples.append(page.convert('RGBA').crop((x,y,x+width,y+height)).tobytes())
+                self.assertEqual(samples[0],samples[1],(clip['id'],index))
+
     def test_no_retired_monsters_or_unconfirmed_effects(self):
         ids={c['id'] for c in self.mobile['clips']}
         self.assertFalse(ids.intersection({'demon-run','mushroom-run','thunder-1','water-bubble'}))

@@ -45,13 +45,17 @@ final class SurvivorTextures {
     func resolved(_ id:String)->String { skills.first(where:{$0.id==id})?.localLevels?.first?.clipID ?? id }
     func clip(_ id: String) -> SurvivorMedia.Clip? { clipIndex[resolved(id)] }
     private var pending=Set<String>()
+    private let decodeQueue = DispatchQueue(label: "maiverse.survivor.atlas-decode", qos: .userInitiated)
+    private var stalledFiles = Set<String>()
+    private(set) var pageWaits = 0
     private func request(_ file:String) {
         guard !pending.contains(file),pages.object(forKey:file as NSString)==nil,resident[file]==nil else { return }
         pending.insert(file);let root=self.root
-        DispatchQueue.global(qos:.userInitiated).async {
+        decodeQueue.async {
             let image=UIImage(contentsOfFile:root.appendingPathComponent(file).path)?.preparingForDisplay()
             DispatchQueue.main.async {
                 self.pending.remove(file)
+                self.stalledFiles.remove(file)
                 if let image { let t=SKTexture(image:image);t.filteringMode = .nearest
                     self.pages.setObject(t,forKey:file as NSString,cost:Int(image.size.width*image.size.height*4)) }
             }
@@ -84,12 +88,24 @@ final class SurvivorTextures {
         let capacity = clip.grid[0] * clip.grid[1]
         let pageIndex = frame.cell / capacity
         let file = clip.pages[pageIndex].file
-        if pageIndex+1<clip.pages.count { request(clip.pages[pageIndex+1].file) }
-        else if clip.loop == true { request(clip.pages[0].file) }
+        // Decode two pages ahead, including the wrap of full-length walking
+        // clips. The runtime looping argument also covers loop=false sources
+        // which the game explicitly repeats without altering their timing.
+        if clip.pages.count > 1 {
+            for offset in 1...min(2, clip.pages.count - 1) {
+                let next = pageIndex + offset
+                if next < clip.pages.count || looping {
+                    request(clip.pages[next % clip.pages.count].file)
+                }
+            }
+        }
         let page: SKTexture
         if let cached = resident[file] { page = cached }
         else if let cached = pages.object(forKey: file as NSString) { page = cached }
-        else { request(file);return current[clip.id]?.1 }
+        else {
+            if stalledFiles.insert(file).inserted { pageWaits += 1 }
+            request(file); return current[clip.id]?.1
+        }
 
         let cell = frame.cell % capacity
         let w = 1 / CGFloat(clip.grid[0]), h = 1 / CGFloat(clip.grid[1])
@@ -101,6 +117,7 @@ final class SurvivorTextures {
         return result
     }
     func releaseCache() { current.removeAll(); pages.removeAllObjects(); resident.removeAll() }
+    func resetStatistics() { pageWaits = 0; stalledFiles.removeAll() }
     func thumbnail(_ id: String) -> UIImage? {
         if let image = thumbnails.object(forKey:id as NSString) { return image }
         guard let image = UIImage(contentsOfFile:root.appendingPathComponent("Icons/\(id).png").path) else { return nil }
@@ -134,8 +151,7 @@ final class SurvivorScene: SKScene {
     private var dropNodes: [UInt64: SKSpriteNode] = [:]
     private var arrowNodes: [UInt64: SKSpriteNode] = [:]
     private var feedbackNodes: [UInt64: SKSpriteNode] = [:]
-    private var fpsTime: TimeInterval?
-    private var frameCount=0
+    private var renderStatistics = SurvivorRenderStatistics()
     private var lastTime: TimeInterval?
     private var lastSimulationTime = 0.0
     private var heroAnimationTime = 0.0
@@ -150,7 +166,7 @@ final class SurvivorScene: SKScene {
         scaleMode = .resizeFill
         backgroundColor = UIColor(red: 0.08, green: 0.14, blue: 0.19, alpha: 1)
         addChild(world); addChild(viewpoint); camera = viewpoint
-        viewpoint.setScale(1.0)
+        viewpoint.setScale(SurvivorViewport.cameraScale)
         for _ in 0..<49 {
             let tile = SKSpriteNode(texture: floorTexture, size: CGSize(width: tileSize, height: tileSize))
             tile.zPosition = -10000; world.addChild(tile); tiles.append(tile)
@@ -161,11 +177,12 @@ final class SurvivorScene: SKScene {
         addGrasslandFeatures()
     }
     required init?(coder: NSCoder) { fatalError("Use init(textures:)") }
-    func resetTimestamp() { lastTime = nil; fpsTime=nil; frameCount=0 }
+    func resetTimestamp() { lastTime = nil; renderStatistics.resumeSampling() }
     func resetRun() {
         for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes,arrowNodes] { for node in dict.values { node.removeFromParent() } }
         enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:];arrowNodes=[:]
         lastTime = nil
+        renderStatistics = SurvivorRenderStatistics(); textures.resetStatistics()
         lastSimulationTime = game?.battle.clock.elapsed ?? 0; heroAnimationTime = 0
         textures.releaseCache()
         if let battle = game?.battle { render(battle) }
@@ -174,10 +191,9 @@ final class SurvivorScene: SKScene {
         guard let game else { return }
         let delta = lastTime.map { min(0.05, max(0, currentTime - $0)) } ?? 0
         lastTime = currentTime
-        frameCount += 1
-        if let start=fpsTime, currentTime-start>=1 {
-            game.reportFrameRate(Int(Double(frameCount)/(currentTime-start))); frameCount=0; fpsTime=currentTime
-        } else if fpsTime == nil { fpsTime=currentTime }
+        if renderStatistics.record(at: currentTime) {
+            game.reportRenderStatistics(renderStatistics, pageWaits: textures.pageWaits)
+        }
         game.tick(delta)
         render(game.battle)
     }
@@ -201,7 +217,8 @@ final class SurvivorScene: SKScene {
         heroAnimationTime = battle.moving ? heroAnimationTime + simulatedDelta : 0
         let player = point(battle.player)
         let half=CGFloat(SurvivorGrassland.halfSide)
-        viewpoint.position=CGPoint(x:max(-half+size.width/2,min(half-size.width/2,player.x)),y:max(-half+size.height/2,min(half-size.height/2,player.y+55)))
+        let cameraCenter = SurvivorViewport.center(player: battle.player, width: Double(size.width), height: Double(size.height))
+        viewpoint.position = point(cameraCenter)
         let originX = floor(player.x / tileSize), originY = floor(player.y / tileSize)
         for (index, tile) in tiles.enumerated() {
             tile.position = CGPoint(x: (originX + CGFloat(index % 7 - 3)) * tileSize,

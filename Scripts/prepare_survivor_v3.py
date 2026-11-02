@@ -16,8 +16,10 @@ def prepare():
     target.mkdir(parents=True,exist_ok=True); clips=[]
     for original in data['clips']:
         clip=json.loads(json.dumps(original));w,h=clip['cell_size']
-        limit=192 if clip['kind']=='skeleton' else 288
-        scale=min(1,limit/max(w,h));nw,nh=max(1,round(w*scale)),max(1,round(h*scale))
+        # Keep the actual master pixels. Reducing a 343px effect to 288px and
+        # enlarging it again on a Retina display loses detail irreversibly.
+        # Page splitting limits texture size without reducing frame resolution.
+        scale=1; nw,nh=w,h
         cols,rows=max(1,768//nw),max(1,768//nh);cap=cols*rows;oldcap=original['grid'][0]*original['grid'][1]
         oldimage=None;oldpage=-1;pages=[]
         for i,frame in enumerate(clip['frames']):
@@ -28,7 +30,6 @@ def prepare():
                 oldimage=Image.open(path).convert('RGBA');oldpage=pageIndex
             slot=cell%oldcap;x,y=slot%original['grid'][0]*w,slot//original['grid'][0]*h
             image=oldimage.crop((x,y,x+w,y+h))
-            if scale<1:image=image.resize((nw,nh),Image.Resampling.NEAREST)
             if i%cap==0:page=Image.new('RGBA',(cols*nw,rows*nh))
             page.paste(image,((i%cap)%cols*nw,(i%cap)//cols*nh));frame['cell']=i
             if i%cap==cap-1 or i==len(clip['frames'])-1:

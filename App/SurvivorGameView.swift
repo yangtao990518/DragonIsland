@@ -2,8 +2,11 @@ import SwiftUI
 import SpriteKit
 
 @MainActor final class SurvivorGameController: ObservableObject {
-    @Published private(set) var frameRate = 60
-    func reportFrameRate(_ value:Int) { frameRate=value }
+    @Published private(set) var renderStatistics = SurvivorRenderStatistics()
+    private(set) var pageWaits = 0
+    func reportRenderStatistics(_ value: SurvivorRenderStatistics, pageWaits: Int) {
+        self.pageWaits = pageWaits; renderStatistics = value
+    }
     @Published private(set) var preparing = false
     private let audio = SurvivorAudio()
     private var preparationID = UUID()
@@ -100,12 +103,14 @@ import SpriteKit
             }
         }
         #endif
-        movement = .zero; scene?.resetRun(); playing = true; audio.reset(); prepareBattle(); revision += 1
+        movement = .zero; scene?.resetRun(); renderStatistics = SurvivorRenderStatistics(); pageWaits = 0
+        playing = true; audio.reset(); prepareBattle(); revision += 1
         save()
     }
     private var validStarter: String { skills.contains { $0.id == starterID && $0.selectable } ? starterID : skills.first(where: { $0.id == "fireball" && $0.selectable })?.id ?? skills.first(where: \.selectable)?.id ?? "fireball" }
     func tick(_ delta: Double) {
-        guard playing, !preparing, battle.clock.running, battle.outcome == nil else { return }
+        guard playing, !preparing, battle.clock.running, battle.outcome == nil,
+              let scene, scene.size.width > scene.size.height else { return }
         let oldCast=battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0
         let oldHealth=battle.health
         let oldKills=battle.kills
@@ -191,6 +196,7 @@ struct SurvivorGameView: View {
     @AppStorage("survivorEffectsMuted") private var effectsMuted=false
     @State private var confirmExit = false
     @State private var libraryMode: LibraryMode?
+    @State private var mapZoom = 1.0
     private let ink = Color(red: 0.07, green: 0.12, blue: 0.22)
 
     var body: some View {
@@ -202,8 +208,16 @@ struct SurvivorGameView: View {
             gameContent
             #endif
         }
-        .onAppear { GameOrientationDelegate.setGame(true) }
+        .onAppear { GameOrientationDelegate.setGame(game.playing || isAssetProof) }
+        .onChange(of: game.playing) { _, playing in GameOrientationDelegate.setGame(playing) }
         .onDisappear { if game.playing {game.pause(.background)};GameOrientationDelegate.setGame(false) }
+    }
+    private var isAssetProof: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("--survivor-asset-smoke")
+        #else
+        false
+        #endif
     }
     private var gameContent:some View {
         ZStack {
@@ -295,7 +309,7 @@ struct SurvivorGameView: View {
     private var battleOverlay: some View {
         ZStack {
             VStack {
-                hud.padding(.trailing,120)
+                hud
                 Spacer()
                 HStack(alignment: .bottom) {
                     SurvivorJoystick(enabled: game.battle.clock.running && game.battle.outcome == nil) { game.movement = $0 }
@@ -320,9 +334,6 @@ struct SurvivorGameView: View {
                     }.padding(10).background(.black.opacity(0.3),in:RoundedRectangle(cornerRadius:14))
                 }.padding(.horizontal, 24).padding(.bottom, 24)
             }
-            SurvivorMinimapView(player:game.battle.player,viewport:game.scene?.size ?? CGSize(width:844,height:390))
-                .frame(width:108,height:108).padding(.trailing,16).padding(.top,10)
-                .frame(maxWidth:.infinity,maxHeight:.infinity,alignment:.topTrailing)
             if let outcome = game.battle.outcome { result(outcome) }
             else if game.battle.clock.pauseReasons.contains(.menu) { pauseMenu }
             else if !game.battle.choices.isEmpty { upgrades }
@@ -350,7 +361,7 @@ struct SurvivorGameView: View {
                 Spacer(minLength: 6)
                 Button { game.pause(.menu) } label: {
                     Image(systemName: "pause.fill").frame(width: 42, height: 42).background(.white.opacity(0.12), in: Circle())
-                }.accessibilityLabel("暂停试炼").accessibilityIdentifier("survivorPause")
+                }.accessibilityLabel("暂停与地图").accessibilityIdentifier("survivorPause")
             }
             ProgressView(value: Double(min(game.battle.experience, game.battle.experienceNeeded)), total: Double(game.battle.experienceNeeded)).tint(.cyan)
         }.padding(10).background(.black.opacity(0.4), in: RoundedRectangle(cornerRadius: 22)).padding(.horizontal, 14).padding(.top, 6)
@@ -386,17 +397,40 @@ struct SurvivorGameView: View {
     }
     private var pauseMenu: some View {
         modal {
-            Image(systemName: "moon.stars").font(.largeTitle).foregroundStyle(.cyan)
-            Text("稍作休息").font(.title.bold())
-            Text("计时、怪物和技能均已暂停").font(.subheadline).foregroundStyle(.secondary)
-            if let error = game.error { Text(error).font(.caption).foregroundStyle(.orange) }
-            Text("渲染 \(game.frameRate) FPS · 已装备\(game.battle.equippedPixelSkills.count)项技能").font(.caption).foregroundStyle(.secondary)
-            Toggle("背景音乐",isOn:Binding(get:{!musicMuted},set:{musicMuted = !$0}))
-            Toggle("攻击音效",isOn:Binding(get:{!effectsMuted},set:{effectsMuted = !$0}))
-            actionButton("继续试炼", icon: "play.fill") { game.resume(.menu) }
-                .accessibilityIdentifier("survivorResume")
-            Button("保存并返回选角") { confirmExit = true }.font(.subheadline).padding(10).accessibilityIdentifier("survivorReturnLobby")
+            Text("暂停 · 地图").font(.title2.bold())
+            HStack(alignment: .top, spacing: 24) {
+                VStack(spacing: 8) {
+                    SurvivorMinimapView(player: game.battle.player,
+                        viewport: game.scene?.size ?? CGSize(width: 844, height: 390),
+                        drops: game.battle.drops, zoom: mapZoom)
+                        .frame(width: 200, height: 200)
+                    HStack {
+                        ForEach([1.0, 2.0, 4.0], id: \.self) { zoom in
+                            Button("\(Int(zoom))×") { mapZoom = zoom }
+                                .tint(mapZoom == zoom ? .cyan : .gray)
+                        }
+                    }.buttonStyle(.bordered)
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("计时、怪物和技能均已暂停").font(.caption).foregroundStyle(.secondary)
+                    Text("金点：人物  白框：视野  蓝点：经验").font(.caption2).foregroundStyle(.secondary)
+                    if let error = game.error { Text(error).font(.caption).foregroundStyle(.orange) }
+                    Text("渲染 \(renderFPS) · 已装备\(game.battle.equippedPixelSkills.count)项技能").font(.caption)
+                    Text(String(format: "慢帧 %d · 最长 %.1f ms · 图集等候 %d", game.renderStatistics.slowFrames, game.renderStatistics.longestFrameMS, game.pageWaits))
+                        .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("survivorRenderDiagnostics")
+                    Toggle("背景音乐",isOn:Binding(get:{!musicMuted},set:{musicMuted = !$0}))
+                    Toggle("攻击音效",isOn:Binding(get:{!effectsMuted},set:{effectsMuted = !$0}))
+                    actionButton("继续试炼", icon: "play.fill") { game.resume(.menu) }
+                        .accessibilityIdentifier("survivorResume")
+                    Button("保存并返回选角") { confirmExit = true }.font(.subheadline).padding(6).accessibilityIdentifier("survivorReturnLobby")
+                }
+            }
         }
+    }
+    private var renderFPS: String {
+        let fps = game.renderStatistics.framesPerSecond
+        return fps > 0 ? "\(fps) FPS" : "采样中"
     }
     private func result(_ outcome: SurvivorOutcome) -> some View {
         modal {
