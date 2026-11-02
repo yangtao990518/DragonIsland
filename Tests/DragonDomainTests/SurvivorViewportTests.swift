@@ -79,4 +79,15 @@ final class SurvivorViewportTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(right,offset+span/2)
         }
     }
+
+    func testRecyclingKeepsFarVisibleEnemiesWhenPlayerIsAtWorldWall() {
+        let player=SurvivorVector(x:6304,y:6304)
+        let center=SurvivorViewport.center(player:player,width:956,height:440)
+        let visible=SurvivorViewport.size(width:956,height:440)
+        let farCorner=center + .init(x:-visible.x/2,y:-visible.y/2)
+        let limit=SurvivorViewport.recycleDistance(player:player,width:956,height:440)
+        XCTAssertGreaterThan(limit,(farCorner-player).length+300)
+        let spawn=SurvivorViewport.spawnPoint(player:player,width:956,height:440,angle:0,padding:100)
+        XCTAssertLessThan((spawn-player).length,limit)
+    }
 }

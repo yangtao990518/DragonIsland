@@ -326,7 +326,7 @@ struct SurvivorBattle: Codable, Sendable {
         enemies.removeAll { $0.health <= 0 }
         // Recycle remote pursuers so long straight movement cannot fill the
         // whole spawn budget with enemies permanently far behind the camera.
-        let recycleDistance = cameraViewport.map { max(950, SurvivorViewport.size(width: $0.x, height: $0.y).length / 2 + 400) } ?? 950
+        let recycleDistance = cameraViewport.map { SurvivorViewport.recycleDistance(player: player, width: $0.x, height: $0.y) } ?? 950
         for i in enemies.indices where (enemies[i].position - player).length > recycleDistance {
             if usesLocalSkills, let viewport = cameraViewport,
                SurvivorViewport.contains(enemies[i].position, player: player, width: viewport.x, height: viewport.y) { continue }

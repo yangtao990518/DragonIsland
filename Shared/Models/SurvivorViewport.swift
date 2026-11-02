@@ -46,6 +46,14 @@ enum SurvivorViewport {
     static func floorTileCount(span: Double, side: Double) -> Int {
         max(3, Int(ceil(span / side)) + 3)
     }
+
+    static func recycleDistance(player: SurvivorVector, width: Double, height: Double) -> Double {
+        let visible = size(width: width, height: height)
+        let origin = center(player: player, width: width, height: height)
+        let x = abs(player.x - origin.x) + visible.x / 2
+        let y = abs(player.y - origin.y) + visible.y / 2
+        return max(950, hypot(x, y) + 400)
+    }
 }
 
 /// North-up square map. Zoom follows the player and clamps at world edges.
