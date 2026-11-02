@@ -5,6 +5,15 @@ import Foundation
 enum SurvivorLocalSkills {
     static let ids = ["fireball","lightning","earth-spikes","stone-fist","boulder","quicksand","orbit-swords","seeking-swords"]
     static let supportIcons: [SurvivorUpgrade:String] = [.stride:"move-speed",.haste:"attack-speed",.power:"damage",.vitality:"vitality",.defense:"defense"]
+    /// At most current+next for each weapon. Prewarm before a choice is made,
+    /// rather than throwing away the live atlas set after each upgrade.
+    static func warmClipIDs(skills: [PixelFXSkill], ranks: [String: Int]) -> [String] {
+        skills.flatMap { skill -> [String] in
+            let rank = max(0, min(5, ranks[skill.id, default: 0]))
+            let levels = Set([max(1, rank), min(5, rank + 1)])
+            return (skill.localLevels ?? []).filter { levels.contains($0.level) }.map(\.clipID)
+        }
+    }
     static func baseDamage(_ id:String, level:Int)->Double {
         let base:Double = id == "fireball" ? 34 : id == "quicksand" ? 12 : id == "orbit-swords" ? 16 : 32
         return base * (1+Double(level-1)*0.18)

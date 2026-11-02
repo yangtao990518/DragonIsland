@@ -1,13 +1,14 @@
 import XCTest
 
 final class SurvivorInterfaceTests: XCTestCase {
-    private func launch(upgrade: Bool = false, stress: Bool = false) -> XCUIApplication {
+    private func launch(upgrade: Bool = false, stress: Bool = false, chain: Bool = false) -> XCUIApplication {
         continueAfterFailure = false
         XCUIDevice.shared.orientation = .portrait
         let app = XCUIApplication()
         app.launchArguments = ["--maiverse-capture", "--character-dafeiyu", "--chat-test-store", UUID().uuidString]
         if upgrade { app.launchArguments.append("--survivor-upgrade-preview") }
         if stress { app.launchArguments.append("--survivor-stress-preview") }
+        if chain { app.launchArguments.append("--survivor-upgrade-chain-preview") }
         app.launch()
         openGame(app)
         return app
@@ -148,6 +149,27 @@ final class SurvivorInterfaceTests: XCTestCase {
         }, evaluatedWith: app)
         wait(for: [portrait], timeout: 10)
         capture(app, "portrait-returned-selection", landscape: false)
+    }
+
+    func testFourConsecutiveUpgradesNeverReenterBattlePreparation() {
+        let app=launch(upgrade:true,chain:true);start(app)
+        let scene=app.descendants(matching:.any).matching(identifier:"survivorBattleScene").firstMatch
+        let choice=app.buttons["survivorUpgrade_fx:fireball"]
+        expectation(for:NSPredicate { _,_ in choice.isHittable && !app.descendants(matching:.any).matching(identifier:"survivorLoading").firstMatch.exists },evaluatedWith:app)
+        waitForExpectations(timeout:15)
+        XCTAssertEqual(scene.value as? String,"资源准备次数：1")
+        for level in 2...5 {
+            choice.tap()
+            if level<5 {XCTAssertTrue(app.staticTexts["Lv.\(level) → \(level+1)"].waitForExistence(timeout:5))}
+            XCTAssertEqual(scene.value as? String,"资源准备次数：1")
+            XCTAssertFalse(app.descendants(matching:.any).matching(identifier:"survivorLoading").firstMatch.exists)
+        }
+        let timer=app.staticTexts["survivorTimer"]
+        expectation(for:NSPredicate(format:"label != %@","20:00"),evaluatedWith:timer)
+        waitForExpectations(timeout:10)
+        XCTAssertEqual(timer.value as? String,"运行中")
+        XCTAssertEqual(scene.value as? String,"资源准备次数：1")
+        capture(app,"four-upgrades-without-resource-reload")
     }
 
     func testSixMaxRankSkillsAndCrowdKeepSimulationMoving() {

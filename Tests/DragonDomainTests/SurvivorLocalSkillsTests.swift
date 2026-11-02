@@ -79,4 +79,19 @@ final class SurvivorLocalSkillsTests:XCTestCase {
         XCTAssertEqual(copy.pixelFX?.casts.first?.clipID,"fireball-flight")
         XCTAssertTrue(copy.usesLocalSkills)
     }
+
+    func testWarmPlanIncludesCurrentNextAndUnlearnedEntryWithoutAllFiveLevels() {
+        let ids=Set(SurvivorLocalSkills.warmClipIDs(skills:catalog(),ranks:["fireball":1]))
+        XCTAssertEqual(ids.count,9)
+        XCTAssertTrue(ids.contains("fireball-lv1"));XCTAssertTrue(ids.contains("fireball-lv2"))
+        XCTAssertTrue(ids.contains("boulder-lv1"))
+        XCTAssertFalse(ids.contains("fireball-lv3"))
+    }
+
+    func testWarmPlanReleasesRetiredLevelAndNeverRequestsLevelSix() {
+        let ids=Set(SurvivorLocalSkills.warmClipIDs(skills:catalog(),ranks:["fireball":4,"boulder":5]))
+        XCTAssertTrue(ids.contains("fireball-lv4"));XCTAssertTrue(ids.contains("fireball-lv5"))
+        XCTAssertTrue(ids.contains("boulder-lv5"))
+        XCTAssertFalse(ids.contains("fireball-lv2"));XCTAssertFalse(ids.contains("boulder-lv6"))
+    }
 }

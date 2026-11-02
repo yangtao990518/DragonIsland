@@ -11,6 +11,10 @@ final class SurvivorTextures {
     let skills: [PixelFXSkill]
     private var clipIndex: [String: SurvivorMedia.Clip] = [:]
     private var resident: [String: SKTexture] = [:]
+    // A bounded set of current/next weapon entry pages survives cache eviction.
+    // Other animation pages keep using the existing 96MB rolling cache.
+    private var upgradePages: [String: SKTexture] = [:]
+    private var upgradeFiles = Set<String>()
     let idleImage: UIImage
     let arrowTexture:SKTexture
     let idleTexture: SKTexture
@@ -49,7 +53,7 @@ final class SurvivorTextures {
     private var stalledFiles = Set<String>()
     private(set) var pageWaits = 0
     private func request(_ file:String) {
-        guard !pending.contains(file),pages.object(forKey:file as NSString)==nil,resident[file]==nil else { return }
+        guard !pending.contains(file),pages.object(forKey:file as NSString)==nil,resident[file]==nil,upgradePages[file]==nil else { return }
         pending.insert(file);let root=self.root
         decodeQueue.async {
             let image=UIImage(contentsOfFile:root.appendingPathComponent(file).path)?.preparingForDisplay()
@@ -57,14 +61,35 @@ final class SurvivorTextures {
                 self.pending.remove(file)
                 self.stalledFiles.remove(file)
                 if let image { let t=SKTexture(image:image);t.filteringMode = .nearest
+                    if self.upgradeFiles.contains(file) { self.upgradePages[file] = t }
                     self.pages.setObject(t,forKey:file as NSString,cost:Int(image.size.width*image.size.height*4)) }
             }
         }
     }
     func retireUnused(_ ids:Set<String>) { current=current.filter{ids.contains($0.key)} }
+    private func entryFiles(_ ids: [String]) -> Set<String> {
+        Set(ids.flatMap { id -> [String] in
+            guard let clip = clip(id) else { return [] }
+            var files = Array(clip.pages.prefix(1).map(\.file))
+            // This confirmed charge module begins at 2.4s, not source frame 0.
+            if clip.id == "seeking-swords-lv5", let frame = clip.frame(at: 2.4, looping: false) {
+                files.append(clip.pages[frame.cell / (clip.grid[0] * clip.grid[1])].file)
+            }
+            return files
+        })
+    }
+    func warmUpgrades(_ ids: [String]) {
+        upgradeFiles = entryFiles(ids)
+        upgradePages = upgradePages.filter { upgradeFiles.contains($0.key) }
+        for file in upgradeFiles {
+            if let texture = resident[file] ?? pages.object(forKey: file as NSString) {
+                upgradePages[file] = texture
+            } else { request(file) }
+        }
+    }
     // Decode off the render thread, then upload before resuming simulation.
     func prepare(_ ids: [String], completion: @escaping (Bool) -> Void) {
-        let files = Set(ids.flatMap { clip($0)?.pages.prefix(1).map(\.file) ?? [] })
+        let files = entryFiles(ids)
         let root = self.root
         DispatchQueue.global(qos:.userInitiated).async {
             let images = files.compactMap { file -> (String,UIImage)? in
@@ -101,6 +126,7 @@ final class SurvivorTextures {
         }
         let page: SKTexture
         if let cached = resident[file] { page = cached }
+        else if let cached = upgradePages[file] { page = cached }
         else if let cached = pages.object(forKey: file as NSString) { page = cached }
         else {
             if stalledFiles.insert(file).inserted { pageWaits += 1 }
@@ -116,7 +142,10 @@ final class SurvivorTextures {
         current[clip.id] = (frame.cell, result)
         return result
     }
-    func releaseCache() { current.removeAll(); pages.removeAllObjects(); resident.removeAll() }
+    func releaseCache() {
+        current.removeAll(); pages.removeAllObjects(); resident.removeAll()
+        upgradeFiles.removeAll(); upgradePages.removeAll()
+    }
     func resetStatistics() { pageWaits = 0; stalledFiles.removeAll() }
     func thumbnail(_ id: String) -> UIImage? {
         if let image = thumbnails.object(forKey:id as NSString) { return image }
@@ -178,6 +207,7 @@ final class SurvivorScene: SKScene {
     }
     required init?(coder: NSCoder) { fatalError("Use init(textures:)") }
     func resetTimestamp() { lastTime = nil; renderStatistics.resumeSampling() }
+    override func didChangeSize(_ oldSize: CGSize) { resetTimestamp() }
     func resetRun() {
         for dict in [enemyNodes, effectNodes, dropNodes, feedbackNodes,arrowNodes] { for node in dict.values { node.removeFromParent() } }
         enemyNodes = [:]; effectNodes = [:]; dropNodes = [:]; feedbackNodes = [:];arrowNodes=[:]

@@ -10,16 +10,25 @@ import SpriteKit
     @Published private(set) var preparing = false
     private let audio = SurvivorAudio()
     private var preparationID = UUID()
+    private(set) var preparationCount = 0
+    private var upgradeWarmIn = 0.0
+    private var upcomingClipIDs: [String] {
+        SurvivorLocalSkills.warmClipIDs(skills: battle.pixelSkills,
+            ranks: Dictionary(uniqueKeysWithValues: battle.pixelSkills.map { ($0.id, battle.rank($0.upgrade)) }))
+    }
+    private func warmUpcomingUpgrades() { textures?.warmUpgrades(upcomingClipIDs) }
     private func prepareBattle() {
         guard let textures else { return }
+        preparationCount += 1
         preparing = true; movement = .zero
         scene?.isPaused=true; scene?.view?.isPaused=true
         let request=UUID(); preparationID=request
         let ids=battle.equippedPixelSkills.compactMap { skill in skill.localLevels?.first(where:{$0.level==battle.rank(skill.upgrade)})?.clipID } + textures.characters.map(\.id) + ["dafeiyu-run","fireball-flight","fireball-impact","lightning-lv1","lightning-explosion","archer-arrow","seeking-flight","seeking-merged"]
-        textures.prepare(ids) { [weak self] ready in
+        textures.prepare(ids + upcomingClipIDs) { [weak self] ready in
             guard let self, self.preparationID == request else { return }
             self.preparing=false
             if !ready { self.error="战斗图集预载失败，已暂停。请重新进入试炼。"; self.battle.pause(.menu) }
+            self.warmUpcomingUpgrades()
             self.syncRenderer(); self.revision += 1
         }
     }
@@ -47,11 +56,11 @@ import SpriteKit
     }
     @discardableResult func chooseSupport(_ upgrade:SurvivorUpgrade)->Bool {
         guard battle.chooseLocalSupport(upgrade) else{return false}
-        syncRenderer();revision += 1;save();return true
+        warmUpcomingUpgrades(); syncRenderer();revision += 1;save();return true
     }
     @discardableResult func chooseLibrarySkill(_ id: String) -> Bool {
         guard battle.choosePixelFXFromLibrary(id) else { return false }
-        prepareBattle(); revision += 1; save(); return true
+        warmUpcomingUpgrades(); syncRenderer(); revision += 1; save(); return true
     }
 
     init() {
@@ -87,7 +96,9 @@ import SpriteKit
         let args = ProcessInfo.processInfo.arguments
         if !continuing, args.contains("--survivor-upgrade-preview"), args.contains("--maiverse-capture"),
            let index = args.firstIndex(of: "--chat-test-store"), args.indices.contains(index + 1), UUID(uuidString: args[index + 1]) != nil {
-            battle.awardExperience(battle.experienceNeeded)
+            let points = args.contains("--survivor-upgrade-chain-preview") ?
+                (0..<4).reduce(0) { $0 + 20 + (battle.level + $1) * 12 } : battle.experienceNeeded
+            battle.awardExperience(points)
         }
         #endif
         #if DEBUG
@@ -104,6 +115,7 @@ import SpriteKit
         }
         #endif
         movement = .zero; scene?.resetRun(); renderStatistics = SurvivorRenderStatistics(); pageWaits = 0
+        preparationCount = 0; upgradeWarmIn = 0
         playing = true; audio.reset(); prepareBattle(); revision += 1
         save()
     }
@@ -122,6 +134,10 @@ import SpriteKit
         else if battle.kills > oldKills { audio.play("hit",time:battle.clock.elapsed) }
         else if (battle.pixelFX?.casts.filter{$0.age>=0}.map(\.id).max() ?? 0)>oldCast { audio.play(battle.pixelFX?.casts.last(where:{$0.age>=0})?.skillID ?? "cast",time:battle.clock.elapsed) }
         audio.update(running:battle.clock.running && battle.outcome == nil)
+        upgradeWarmIn -= delta
+        if upgradeWarmIn <= 0 || oldChoices != battle.choices {
+            upgradeWarmIn = 1; warmUpcomingUpgrades()
+        }
         publishIn -= delta
         if publishIn <= 0 || oldChoices != battle.choices || oldOutcome != battle.outcome {
             publishIn = 0.1; revision += 1
@@ -129,7 +145,9 @@ import SpriteKit
         if oldChoices != battle.choices || oldOutcome != battle.outcome { movement = .zero; save() }
     }
     func choose(_ upgrade: SurvivorUpgrade) {
-        if battle.choose(upgrade) { prepareBattle(); revision += 1; save() }
+        if battle.choose(upgrade) {
+            warmUpcomingUpgrades(); syncRenderer(); revision += 1; save()
+        }
     }
     func pause(_ reason: SurvivorRunClock.PauseReason) {
         movement = .zero; battle.pause(reason); syncRenderer(); revision += 1
@@ -225,9 +243,11 @@ struct SurvivorGameView: View {
                 SpriteView(scene: scene, isPaused: game.preparing || !game.battle.clock.running || game.battle.outcome != nil,
                            preferredFramesPerSecond: 60, options: [.ignoresSiblingOrder])
                     .ignoresSafeArea().accessibilityLabel("灵境试炼战场")
+                    .accessibilityIdentifier("survivorBattleScene")
+                    .accessibilityValue(ProcessInfo.processInfo.arguments.contains("--maiverse-capture") ? "资源准备次数：\(game.preparationCount)" : "自动战斗")
                 battleOverlay
             } else { lobby }
-            if game.preparing { ZStack { Color.black.opacity(0.7).ignoresSafeArea(); ProgressView("正在准备战斗素材…").padding(24).background(.ultraThinMaterial,in:RoundedRectangle(cornerRadius:20)) } }
+            if game.preparing { ZStack { Color.black.opacity(0.7).ignoresSafeArea(); ProgressView("正在准备战斗素材…").padding(24).background(.ultraThinMaterial,in:RoundedRectangle(cornerRadius:20)) }.accessibilityIdentifier("survivorLoading") }
         }
         .preferredColorScheme(.dark)
         .sheet(item:$libraryMode) { mode in PixelFXLibraryView(game:game,upgrading:mode == .upgrade) }
