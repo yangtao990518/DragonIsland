@@ -5,12 +5,13 @@ OUT=Path(__file__).resolve().parent;SITE=OUT.parents[1]/'sites/fireball-hd2d-lev
 sys.path.insert(0,str(OUT.parents[1]/'DragonIsland-IslandReview/output'))
 from github_review_api import request,credential,REPO
 from publish_hd2d_handoff import build_tree_incrementally,gitsha
-BASE='dcf64313c998cac8c7da2fdc82f9e2923815f81f';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
+BASE='8608d45e61142c4c4bd622d538cd4ad4fc815d69';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
 def stage():
  ART.mkdir(parents=True,exist_ok=True);TOOLS.mkdir(parents=True,exist_ok=True);bundles=[]
  for file in ['fx60-source-assets-20261103.zip','earth-source-assets-20261103.zip']:
   p=SITE/'dist/assets'/file
   if not p.exists():p=OUT/'skill-fx-60hz-2026-11-03'/file
+  if not p.exists():p=OUT/'skill-fx-60hz-2026-11-03/site-download-backup'/file
   directory=ART/'SourceBundles';directory.mkdir(exist_ok=True);parts=directory/(file+'.parts');parts.mkdir(exist_ok=True);data=p.read_bytes();records=[]
   for i,start in enumerate(range(0,len(data),1048576)):
    chunk=data[start:start+1048576];target=parts/f'{i:04d}.part';target.write_bytes(chunk);records.append({'path':str(target.relative_to(ART)).replace('\\','/'),'bytes':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()})

@@ -45,3 +45,5 @@ async function boot(){try{
  window.monsterStudy={get snapshot(){return{ready,selected:catalog.characters[selected].id,selectedIndex:selected,rank:catalog.characters[selected].rank,count:cards.length,visible:cards.filter(c=>!c.el.hidden).length,elapsed,actionTime,playing,speed,theme,hero,group,hit:elapsed-hitAt<.18,images:Object.keys(images).length,combatImages:catalog.combatAssets.length,currentAction:action,combatKind:catalog.characters[selected].combat.kind,effect:catalog.characters[selected].combat.effect,repeat,...renderState};}};requestAnimationFrame(tick);
  }catch(error){$('#monster-error').style.display='block';$('#monster-error').textContent='加载失败，请刷新重试。'+error.message;console.error(error);}}
 function tick(stamp){const dt=last?Math.min((stamp-last)/1000,.05):0;last=stamp;if(playing&&!document.hidden){elapsed+=dt*speed;actionTime+=dt*speed;const p=sample(catalog.characters[selected],action,actionTime,repeat,catalog);if(p.complete)toggle(false);}draw();requestAnimationFrame(tick);}boot();
+import {installDownloads} from './source-download.js';
+installDownloads();

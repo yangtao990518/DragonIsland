@@ -20,7 +20,7 @@
   "fireball-icon.png": "89f4db3ee57ea95c0124e1f1a5bc778a093e7f8e0365fa0046b4190ffb856178",
   "flight-manifest.json": "71b98a6995d7f03815049a7e61e6b6b2d345e2eab2b67b888039dee3ca129bdb",
   "flight.png": "b77d9c14537153304d88d4a16bbf1cd6ce3b4dbb83fdfa51134b976268c3584e",
-  "fx60-download.json": "ca1845075c003cad50e3f9ec310e8079437c797e1e89b646a34e8613bcb54d9f",
+  "fx60-download.json": "aeda86162a27793907817614016e0432e07fbdf141d0310ecc7df5d0e31e4396",
   "impact-manifest.json": "591308b32f726f86c45c9f4d5e3211284cd03ea2edc0a33660469c3ef68770d1",
   "impact.png": "4333f3defb4dfa0f32bed46e03fe6ed177872aca6358495936ab9a0575456fd8",
   "lightning-star-icon.png": "ea7b8bcd6a52395c1e351058b0054bfa1d79c817bd7a14966c6f614d9e9511b1",
@@ -165,5 +165,9 @@
   "monsters/warriors-attack-manifest.json": "9992ccf822845be50fd9730219ef55169bc7667f9c555fc8fcc5dd7ffb1511ea",
   "monsters/warriors-attack.png": "6bf2bc6c4dcb9bd23e31d1506ef50cc51c84fd4c427b58ed3648c4bbed1b9dec",
   "monsters/warriors-manifest.json": "e1d5db84c5c61eff13cd8643caa4f8b8a88dc90819baf8c244ac2b7a58590534",
-  "monsters/warriors.png": "87bfc32113040058c6a5a367ad48f5446395c360aa948b61e032c7c582423dda"
+  "monsters/warriors.png": "87bfc32113040058c6a5a367ad48f5446395c360aa948b61e032c7c582423dda",
+  "source-downloads/all-skills-source-assets.json": "14dbc5afa9a06a4014dc92afe0f805f2be1a1bd480d68013965651694ae6c3f7",
+  "source-downloads/earth-source-assets-20261103.json": "70d2f32e776c772e2901486ce3881b3c5f3bcdde4a1f4266003947046f31f613",
+  "source-downloads/monster-combat-source-assets.json": "8dab634b42bd62d72e48c4d53badf2a2638c7a42c5ee8da9c352d6349eecee06",
+  "source-downloads/monster-source-assets.json": "0ed16ca6727caf58a7d933e856cee5e68c64f2eaf05d2560b505cf8a1860762b"
 }
