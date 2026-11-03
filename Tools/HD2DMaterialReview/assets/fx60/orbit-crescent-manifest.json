@@ -1,0 +1,681 @@
+{
+  "id": "orbit-crescent",
+  "file": "orbit-crescent.png",
+  "columns": 8,
+  "cell": [
+    96,
+    96
+  ],
+  "count": 30,
+  "duration": 0.5,
+  "loop": false,
+  "fps": 60,
+  "anchor": [
+    48,
+    48
+  ],
+  "unionBounds": [
+    19,
+    7,
+    79,
+    84
+  ],
+  "extent": {
+    "w": 60,
+    "h": 77
+  },
+  "frameStarts": [
+    0.0,
+    0.016666666666666666,
+    0.03333333333333333,
+    0.05,
+    0.06666666666666667,
+    0.08333333333333333,
+    0.1,
+    0.11666666666666667,
+    0.13333333333333333,
+    0.15,
+    0.16666666666666666,
+    0.18333333333333332,
+    0.2,
+    0.21666666666666667,
+    0.23333333333333334,
+    0.25,
+    0.26666666666666666,
+    0.2833333333333333,
+    0.3,
+    0.31666666666666665,
+    0.3333333333333333,
+    0.35,
+    0.36666666666666664,
+    0.38333333333333336,
+    0.4,
+    0.4166666666666667,
+    0.43333333333333335,
+    0.45,
+    0.4666666666666667,
+    0.48333333333333334
+  ],
+  "frameDurations": [
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666663
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        229,
+        229
+      ],
+      "bbox": [
+        43,
+        20,
+        57,
+        71
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        229,
+        0,
+        458,
+        229
+      ],
+      "bbox": [
+        43,
+        18,
+        59,
+        73
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        458,
+        0,
+        687,
+        229
+      ],
+      "bbox": [
+        42,
+        16,
+        61,
+        75
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        687,
+        0,
+        916,
+        229
+      ],
+      "bbox": [
+        40,
+        16,
+        63,
+        77
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        916,
+        0,
+        1145,
+        229
+      ],
+      "bbox": [
+        36,
+        15,
+        65,
+        79
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        1145,
+        0,
+        1374,
+        229
+      ],
+      "bbox": [
+        36,
+        14,
+        69,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        0,
+        229,
+        229,
+        458
+      ],
+      "bbox": [
+        34,
+        10,
+        70,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        229,
+        229,
+        458,
+        458
+      ],
+      "bbox": [
+        30,
+        11,
+        71,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        458,
+        229,
+        687,
+        458
+      ],
+      "bbox": [
+        29,
+        11,
+        74,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        687,
+        229,
+        916,
+        458
+      ],
+      "bbox": [
+        27,
+        10,
+        75,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        916,
+        229,
+        1145,
+        458
+      ],
+      "bbox": [
+        25,
+        10,
+        75,
+        83
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        1145,
+        229,
+        1374,
+        458
+      ],
+      "bbox": [
+        24,
+        9,
+        78,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        0,
+        458,
+        229,
+        687
+      ],
+      "bbox": [
+        23,
+        8,
+        78,
+        83
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        229,
+        458,
+        458,
+        687
+      ],
+      "bbox": [
+        23,
+        8,
+        78,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        458,
+        458,
+        687,
+        687
+      ],
+      "bbox": [
+        23,
+        8,
+        78,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        687,
+        458,
+        916,
+        687
+      ],
+      "bbox": [
+        22,
+        7,
+        78,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 16,
+      "sourceRect": [
+        916,
+        458,
+        1145,
+        687
+      ],
+      "bbox": [
+        23,
+        8,
+        77,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 17,
+      "sourceRect": [
+        1145,
+        458,
+        1374,
+        687
+      ],
+      "bbox": [
+        23,
+        8,
+        79,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 18,
+      "sourceRect": [
+        0,
+        687,
+        229,
+        916
+      ],
+      "bbox": [
+        23,
+        8,
+        77,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 19,
+      "sourceRect": [
+        229,
+        687,
+        458,
+        916
+      ],
+      "bbox": [
+        22,
+        9,
+        74,
+        79
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 20,
+      "sourceRect": [
+        458,
+        687,
+        687,
+        916
+      ],
+      "bbox": [
+        22,
+        9,
+        74,
+        79
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 21,
+      "sourceRect": [
+        687,
+        687,
+        916,
+        916
+      ],
+      "bbox": [
+        21,
+        9,
+        74,
+        78
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 22,
+      "sourceRect": [
+        916,
+        687,
+        1145,
+        916
+      ],
+      "bbox": [
+        19,
+        10,
+        75,
+        78
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 23,
+      "sourceRect": [
+        1145,
+        687,
+        1374,
+        916
+      ],
+      "bbox": [
+        24,
+        14,
+        73,
+        74
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 24,
+      "sourceRect": [
+        0,
+        916,
+        229,
+        1145
+      ],
+      "bbox": [
+        19,
+        11,
+        73,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 25,
+      "sourceRect": [
+        229,
+        916,
+        458,
+        1145
+      ],
+      "bbox": [
+        20,
+        13,
+        72,
+        74
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 26,
+      "sourceRect": [
+        458,
+        916,
+        687,
+        1145
+      ],
+      "bbox": [
+        23,
+        15,
+        71,
+        73
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 27,
+      "sourceRect": [
+        687,
+        916,
+        916,
+        1145
+      ],
+      "bbox": [
+        27,
+        17,
+        67,
+        70
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 28,
+      "sourceRect": [
+        916,
+        916,
+        1145,
+        1145
+      ],
+      "bbox": [
+        27,
+        18,
+        65,
+        67
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    },
+    {
+      "index": 29,
+      "sourceRect": [
+        1145,
+        916,
+        1374,
+        1145
+      ],
+      "bbox": [
+        30,
+        23,
+        60,
+        69
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "cb0b334ece4ed2b2104a3a6fdaaf3cdd5ffdd76b7246f50e32a814738dd4f1e0"
+    }
+  ],
+  "frameHashes": [
+    "93b39a08cc01d0d3bc7b053946f9e4641adb3c3fd4ebbe39e33dba523a4eae2c",
+    "c1e39dbc655de2107a62c6fe5ee66d1eded8d763f3fa1b878f146f89db8183d8",
+    "16f96388e3e57adfe3062f567e3e951936f203d9fc91ad414220f76380a19f2b",
+    "565efbed45851c779967487154037f586754f9f9fe24ec1472727856bd4e0fef",
+    "26bf5c043bede8581d18d1016d1aee5224596d469b720c69dfb6b3f4020b3e29",
+    "09c559e399f425c956ac18bc4c5c69fea93c4e40a6956e33a1d2742beabef0b0",
+    "918d0269f6c4b3d6b339e276c7c5a7f5383dd756576e1c046b912de0fb6c4996",
+    "dec92d6c40c850a2e09f6b1ea96c2df5da56c4554da60f70f574ce22ef3be0ab",
+    "b6945fb9273db957558a8840cb92d7891e662e701223c8c41196b25239cdb43e",
+    "9e1de92d9c2d1a506e91c652468f1f8c4b5c5037078544de17eac4a1fd719854",
+    "30fad7c59e384a9c2be851b1a6b4b6a13a23592bd127982968ae0cd530da90ac",
+    "46a39aae7b3c6553a2412cc3e0e28da27fe1c5bd82bf671d818e4627f1b2a8ad",
+    "15eb2dfd1e54d65ece6a733f499c4bbbe09572e35419ad7278e00b853dc279ee",
+    "80417207cc7508cd3af16421046ab710124b7748d27c01e12967f8b26384c11b",
+    "21da6cb733e12b090a86882d5b14335df4b00aa472485fabb352c7df6a540428",
+    "b3a8a017a56ac398ad280e96ae3736f9c5d5e2391c9b6c5c5a846bfa1b45b26d",
+    "a27a2954882433af214f40ef619375ed759a2a656be8511a204c5bd635f71db4",
+    "0e54e2a7f3d4f148a73b71b5e2645a3ec9a940d1649aee366ab447e6e345eb93",
+    "b3de5675f56409dd04961c69018ce2f07cffd32ac0db7502ae50a1978178ea2d",
+    "903b5005b4496d05de300067cb8dc2380f40e49d52b525b14b18fc79dae93f81",
+    "58e8b694fb0572e901763953c1040cab55b2c90ee9af93156ceb996fb778fe38",
+    "bdd3427879cb1193b25be8a0bd9b06573b6ac5613fed078310e3f876fd30115a",
+    "0c2fe0a5c75eb8ff779a74b6a795f7184983dc95faa2a66d5b625e54c097ec46",
+    "ebacad1270232680c47d1280a55f61b107cfc9a2fb287ef0a114d1a35888de65",
+    "f0fccee9aae0ff5c450bfb2f263a279976add7d1f4f9ba75ba4e876e9ad426ca",
+    "ac2e860741769e1e9b71645d2f2c06469aaeca75732dbeb4b2a17d6dc12e2497",
+    "769a649f31ebfa1a01cf21a431e1035e5c68df8969faacac99d6e7e4798a5ff2",
+    "2f77b1994f0c47bd72592189de3d765dfb4d187b4682cffe8b77084f4a978e7f",
+    "1006db003fa8a72b553f7fbcc1383aa7f0fce019b500c01b8d81a58a625519f1",
+    "7ebd243d50f88969d1e2355f212fe538616fb5c84948a74c2973097a2ae9ecc7"
+  ],
+  "consecutiveExactDuplicates": [],
+  "source": "built-in-imagegen-original-drawings",
+  "interpolated": false,
+  "perFrameBboxFit": false,
+  "sheetSHA256": "d7e886cda978edb8fbcfe682605de06e64aa9f335f37453feed4d63c2ef39522",
+  "nonEmptyDrawings": 30,
+  "transparentTailSamples": [],
+  "distinctSamples": 30,
+  "pageTransforms": [
+    {
+      "page": 0,
+      "gridOffsetY": 0,
+      "sharedAcrossEveryCell": true
+    }
+  ],
+  "matting": "v3: boundary unmix, earth RGB-only interior despill, no silhouette erosion"
+}

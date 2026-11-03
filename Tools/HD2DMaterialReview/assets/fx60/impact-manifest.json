@@ -1,0 +1,1182 @@
+{
+  "id": "impact",
+  "file": "impact.png",
+  "columns": 8,
+  "cell": [
+    96,
+    96
+  ],
+  "count": 54,
+  "duration": 0.9,
+  "loop": false,
+  "fps": 60,
+  "anchor": [
+    49,
+    80
+  ],
+  "unionBounds": [
+    2,
+    13,
+    95,
+    90
+  ],
+  "extent": {
+    "w": 93,
+    "h": 77
+  },
+  "frameStarts": [
+    0.0,
+    0.016666666666666666,
+    0.03333333333333333,
+    0.05,
+    0.06666666666666667,
+    0.08333333333333333,
+    0.1,
+    0.11666666666666667,
+    0.13333333333333333,
+    0.15,
+    0.16666666666666666,
+    0.18333333333333332,
+    0.2,
+    0.21666666666666667,
+    0.23333333333333334,
+    0.25,
+    0.26666666666666666,
+    0.2833333333333333,
+    0.3,
+    0.31666666666666665,
+    0.3333333333333333,
+    0.35,
+    0.36666666666666664,
+    0.38333333333333336,
+    0.4,
+    0.4166666666666667,
+    0.43333333333333335,
+    0.45,
+    0.4666666666666667,
+    0.48333333333333334,
+    0.5,
+    0.5166666666666667,
+    0.5333333333333333,
+    0.55,
+    0.5666666666666667,
+    0.5833333333333334,
+    0.6,
+    0.6166666666666667,
+    0.6333333333333333,
+    0.65,
+    0.6666666666666666,
+    0.6833333333333333,
+    0.7,
+    0.7166666666666667,
+    0.7333333333333333,
+    0.75,
+    0.7666666666666667,
+    0.7833333333333333,
+    0.8,
+    0.8166666666666667,
+    0.8333333333333334,
+    0.85,
+    0.8666666666666667,
+    0.8833333333333333
+  ],
+  "frameDurations": [
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        171,
+        171
+      ],
+      "bbox": [
+        45,
+        66,
+        64,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        171,
+        0,
+        341,
+        171
+      ],
+      "bbox": [
+        40,
+        58,
+        65,
+        79
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        341,
+        0,
+        512,
+        171
+      ],
+      "bbox": [
+        33,
+        55,
+        67,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        512,
+        0,
+        683,
+        171
+      ],
+      "bbox": [
+        25,
+        52,
+        66,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        683,
+        0,
+        853,
+        171
+      ],
+      "bbox": [
+        24,
+        47,
+        64,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        853,
+        0,
+        1024,
+        171
+      ],
+      "bbox": [
+        21,
+        43,
+        65,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        0,
+        171,
+        171,
+        341
+      ],
+      "bbox": [
+        29,
+        37,
+        80,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        171,
+        171,
+        341,
+        341
+      ],
+      "bbox": [
+        24,
+        33,
+        81,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        341,
+        171,
+        512,
+        341
+      ],
+      "bbox": [
+        20,
+        28,
+        81,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        512,
+        171,
+        683,
+        341
+      ],
+      "bbox": [
+        13,
+        27,
+        80,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        683,
+        171,
+        853,
+        341
+      ],
+      "bbox": [
+        9,
+        23,
+        80,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        853,
+        171,
+        1024,
+        341
+      ],
+      "bbox": [
+        7,
+        20,
+        78,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        0,
+        341,
+        171,
+        512
+      ],
+      "bbox": [
+        15,
+        20,
+        94,
+        89
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        171,
+        341,
+        341,
+        512
+      ],
+      "bbox": [
+        11,
+        16,
+        95,
+        90
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        341,
+        341,
+        512,
+        512
+      ],
+      "bbox": [
+        7,
+        13,
+        95,
+        90
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        512,
+        341,
+        683,
+        512
+      ],
+      "bbox": [
+        7,
+        19,
+        93,
+        90
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 16,
+      "sourceRect": [
+        683,
+        341,
+        853,
+        512
+      ],
+      "bbox": [
+        5,
+        20,
+        86,
+        89
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 17,
+      "sourceRect": [
+        853,
+        341,
+        1024,
+        512
+      ],
+      "bbox": [
+        2,
+        20,
+        82,
+        89
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 18,
+      "sourceRect": [
+        0,
+        512,
+        171,
+        683
+      ],
+      "bbox": [
+        14,
+        22,
+        94,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 19,
+      "sourceRect": [
+        171,
+        512,
+        341,
+        683
+      ],
+      "bbox": [
+        13,
+        22,
+        93,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 20,
+      "sourceRect": [
+        341,
+        512,
+        512,
+        683
+      ],
+      "bbox": [
+        12,
+        22,
+        90,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 21,
+      "sourceRect": [
+        512,
+        512,
+        683,
+        683
+      ],
+      "bbox": [
+        11,
+        24,
+        85,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 22,
+      "sourceRect": [
+        683,
+        512,
+        853,
+        683
+      ],
+      "bbox": [
+        9,
+        22,
+        83,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 23,
+      "sourceRect": [
+        853,
+        512,
+        1024,
+        683
+      ],
+      "bbox": [
+        8,
+        24,
+        79,
+        86
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 24,
+      "sourceRect": [
+        0,
+        683,
+        171,
+        853
+      ],
+      "bbox": [
+        19,
+        21,
+        92,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 25,
+      "sourceRect": [
+        171,
+        683,
+        341,
+        853
+      ],
+      "bbox": [
+        19,
+        20,
+        91,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 26,
+      "sourceRect": [
+        341,
+        683,
+        512,
+        853
+      ],
+      "bbox": [
+        17,
+        21,
+        87,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 27,
+      "sourceRect": [
+        512,
+        683,
+        683,
+        853
+      ],
+      "bbox": [
+        12,
+        22,
+        83,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 28,
+      "sourceRect": [
+        683,
+        683,
+        853,
+        853
+      ],
+      "bbox": [
+        10,
+        22,
+        78,
+        85
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 29,
+      "sourceRect": [
+        853,
+        683,
+        1024,
+        853
+      ],
+      "bbox": [
+        9,
+        22,
+        75,
+        85
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 30,
+      "sourceRect": [
+        0,
+        853,
+        171,
+        1024
+      ],
+      "bbox": [
+        21,
+        22,
+        88,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 31,
+      "sourceRect": [
+        171,
+        853,
+        341,
+        1024
+      ],
+      "bbox": [
+        19,
+        20,
+        86,
+        86
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 32,
+      "sourceRect": [
+        341,
+        853,
+        512,
+        1024
+      ],
+      "bbox": [
+        17,
+        20,
+        83,
+        88
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 33,
+      "sourceRect": [
+        512,
+        853,
+        683,
+        1024
+      ],
+      "bbox": [
+        15,
+        21,
+        81,
+        85
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 34,
+      "sourceRect": [
+        683,
+        853,
+        853,
+        1024
+      ],
+      "bbox": [
+        12,
+        24,
+        79,
+        84
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 35,
+      "sourceRect": [
+        853,
+        853,
+        1024,
+        1024
+      ],
+      "bbox": [
+        10,
+        26,
+        76,
+        86
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 36,
+      "sourceRect": [
+        0,
+        1024,
+        171,
+        1195
+      ],
+      "bbox": [
+        22,
+        26,
+        86,
+        83
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 37,
+      "sourceRect": [
+        171,
+        1024,
+        341,
+        1195
+      ],
+      "bbox": [
+        20,
+        26,
+        82,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 38,
+      "sourceRect": [
+        341,
+        1024,
+        512,
+        1195
+      ],
+      "bbox": [
+        19,
+        28,
+        77,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 39,
+      "sourceRect": [
+        512,
+        1024,
+        683,
+        1195
+      ],
+      "bbox": [
+        17,
+        28,
+        75,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 40,
+      "sourceRect": [
+        683,
+        1024,
+        853,
+        1195
+      ],
+      "bbox": [
+        16,
+        29,
+        73,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 41,
+      "sourceRect": [
+        853,
+        1024,
+        1024,
+        1195
+      ],
+      "bbox": [
+        16,
+        30,
+        71,
+        78
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 42,
+      "sourceRect": [
+        0,
+        1195,
+        171,
+        1365
+      ],
+      "bbox": [
+        26,
+        28,
+        81,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 43,
+      "sourceRect": [
+        171,
+        1195,
+        341,
+        1365
+      ],
+      "bbox": [
+        25,
+        29,
+        78,
+        75
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 44,
+      "sourceRect": [
+        341,
+        1195,
+        512,
+        1365
+      ],
+      "bbox": [
+        25,
+        36,
+        75,
+        75
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 45,
+      "sourceRect": [
+        512,
+        1195,
+        683,
+        1365
+      ],
+      "bbox": [
+        24,
+        41,
+        74,
+        75
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 46,
+      "sourceRect": [
+        683,
+        1195,
+        853,
+        1365
+      ],
+      "bbox": [
+        23,
+        42,
+        73,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 47,
+      "sourceRect": [
+        853,
+        1195,
+        1024,
+        1365
+      ],
+      "bbox": [
+        21,
+        44,
+        70,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 48,
+      "sourceRect": [
+        0,
+        1365,
+        171,
+        1536
+      ],
+      "bbox": [
+        35,
+        39,
+        70,
+        72
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 49,
+      "sourceRect": [
+        171,
+        1365,
+        341,
+        1536
+      ],
+      "bbox": [
+        34,
+        40,
+        79,
+        72
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 50,
+      "sourceRect": [
+        341,
+        1365,
+        512,
+        1536
+      ],
+      "bbox": [
+        30,
+        44,
+        63,
+        71
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 51,
+      "sourceRect": [
+        512,
+        1365,
+        683,
+        1536
+      ],
+      "bbox": [
+        29,
+        45,
+        61,
+        72
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 52,
+      "sourceRect": [
+        683,
+        1365,
+        853,
+        1536
+      ],
+      "bbox": [
+        28,
+        45,
+        29,
+        46
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    },
+    {
+      "index": 53,
+      "sourceRect": [
+        853,
+        1365,
+        1024,
+        1536
+      ],
+      "bbox": null,
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "17952075a7ac4bed2fbe64cf8fe8affa520f8780e701d0d1482bf4a229ade3de"
+    }
+  ],
+  "frameHashes": [
+    "6d41addc45246a6ef61f1755847d6bf4729ebc05f162de85172060b763f540d2",
+    "7a731af8337abca6962ae2a6e3fae348e650fd6f7fbe49a53c898645755631b3",
+    "85dea545d97e5a3a1c56210af27bad300c5d68bf63f0f9feb66603c907d603d6",
+    "0a893c84397239078000917465fca528827c56f87f5b5e1c05baf18194dbfe0d",
+    "f6414880655a44499ea9c6240cc7a87c11f06fbff1748085e6185ac91d00e20e",
+    "0340cab84a27ca62a5d6009d3fe77be11dd90a50426f2b09e43513995818e68f",
+    "97ec0a6b1503376434830bc31e131e57535a1c3bc4fba64c0f5236154edeb9a3",
+    "f293b913d983b23c949279880fda9d2974586ee1843cdc5f317fdda48823b482",
+    "cc979cf3afeecb1e76a8d8c22daa0a74f70f2ad8acfc29a3b746a5abf0a357c1",
+    "b9fe24b027a64b706824e8bf6f172514118d2a206e0aec562d0b763ab4d994a5",
+    "7d2346730fbe5e223a32fdd7de7f0c5e5e73d0b578f54d4a0cd8c67af4d99796",
+    "6d5a1a91d70e081ff954fc90ef98f4985a2d8037065243faf40347083948a371",
+    "37d8981801bb954726520e3065a95cf8e3d2188a8a79cb403640b6504f18142f",
+    "cd20d9474c0ced9220e6065ebf421ac6410187246c3ce632790680218de05995",
+    "4082266a2e0fc24a54ebe8ffc0b7b3c2828bc600b14466a81559a89d29759bbd",
+    "9ff26b2eabe36af33cec1c445b487dcd8704b317f008b2fdbcac99a0a166ad21",
+    "a73b569142507aebccc138217f7ee6424ece2a4ad9c6b1236ada8bf8bfd0de62",
+    "c5db7b2db59eb3df729287b123d85950bb56b634f88d712377853390409aff8b",
+    "273d1c3987715cf977dc14383470373cb17d14d06cf8bd3d1d1602ae9a6ff58b",
+    "ae68a8ace599e91251218747996e43ee938971df1f2e3ef4de49e5fb96274e0d",
+    "213530eccdef093776e10e69ddcd6d73a581f54d3a106f87dd481385435dd3dc",
+    "e2c7c6bb1a4958acc4f68ebbf66fbcd478d727fcc72b0de02e6f80de92f62da9",
+    "090a19591b8f36c7ef3334efbf511a937f202e463cc2b8b51bbc106690828ebb",
+    "a9e58cffc7430b6bc4f50f7b330aa43cffdd1d99841233df564fce12ff388c5c",
+    "c95b902cd9b7271e5ede8ce9b4fd0a4867c3a5943be9cac73bafee7aa64ea217",
+    "2ae63353684986ff5eddaea07ccfaf86c88584c12deb7e16ed66d731fcdbc56c",
+    "3cc0cf9bd96d74cc280d657b546d886b637a30f9384f99047ebd209b79515ec0",
+    "e395c052025daf06debc9a488decca10d8a0e42043b8ca4fafb5ae5ac9927493",
+    "fc28648dbb6b232ff18557fad4da563efbe83318b6d7d10cd712e6614370a5bd",
+    "1cf19b85775636602b8377ea6325ee0aec55a0c032b318fa9f94e367ec59909a",
+    "08b7cb9de1b45cc0b8021206bd1f74d52f01b15261aafeb3d40a9321871f5446",
+    "a5252b9858557540ebbdb64d1c8014c951f42216ce18352e3acf3391b693a193",
+    "1ee8cc25d7b9c581014b5a24769a95f7fd52226e9a4039ad57a60d80cc780715",
+    "343347a84aec03e79e5045dac63169654ef6217e15e40240d77a3503fe3da80e",
+    "40e3deec242f6c7d63ede452d47915fc722036d8668504f4e8ac2109cb0061de",
+    "854a4379c49b54e1214d9d18d7d1c7647b052017a1f9949fe1c3679bfa77ed78",
+    "19aa64c66e4e495f184a8d1b4fb22fdda5710dc9ce74384f8cc7b55141b0824c",
+    "1d4bcf711b97351387859a9580f3d9d251e37db3707da2c260cf53a961979599",
+    "d583ca8d0f3837a29d38f5435dbc2eedd1707f29c7409c991adad410851dbc58",
+    "1339f03e31b14d9910256f3628dd18aba2726b0b80355b1837ba4b559db89ee6",
+    "2d4768c38e3c47d89cc6215a6984a68d6192f5f361df418b9a9e9b9e19cace25",
+    "0c1525e8bd2aceebf638a0ff7de5655cf3efd1713ee926b13a7cb1b61e6db1a3",
+    "a39052b9991c35ee79ade86e71c5fcc7b59445b677ac2412f0d0c297bd82b1e2",
+    "14689be2ecf4f2e4e06371f5d09f08c19a568c0552b2755b44f8f2de521c1829",
+    "08f6caf82253205bd212da1d1e8548e61ec0d55f3929e518aefa3e44a77edbc5",
+    "e413ac24a2be6563685d495945aad4f577e4949c7e460fa7d07424ec336662cc",
+    "3ca0d42f1bf4544dc64cf12d3faa6985a69fe1d29e5bdef16ad528cddbe81cb6",
+    "ffaccccaba3ab5d0144ca70d988503d6fdd78df770609076db1d807e42b9b31f",
+    "4eba4d4e0dea01aee6c5df35143eb8f92cdb0602828a28085ff181504c064a7c",
+    "cc9509b6ad06a2f0b38e230aeceb22547bc792de2d9df34d1c6d6972b80bbc91",
+    "b1c53e72c3ba8bae73c219cbb3a4fb77a1097e09543a4d1167352b654da8f324",
+    "df6357cfc265497b0b95ffb67470e36cb6ba76af6811b628461d0918968ecbe3",
+    "4f9c0e7396ce156e656891737f4df77619bb1c93862b5a974360da6d7db97bcb",
+    "1c0273095382988333e2f2b5ae487cea460737ed9be65cbad9c5de537f95bf75"
+  ],
+  "consecutiveExactDuplicates": [],
+  "source": "built-in-imagegen-original-drawings",
+  "interpolated": false,
+  "perFrameBboxFit": false,
+  "sheetSHA256": "c5d9e789605b15bb62266c7e2786361c93718a179977cacf363df645bfa38f1b",
+  "nonEmptyDrawings": 53,
+  "transparentTailSamples": [
+    53
+  ],
+  "distinctSamples": 54,
+  "pageTransforms": [
+    {
+      "page": 0,
+      "gridOffsetY": 0,
+      "sharedAcrossEveryCell": true
+    }
+  ],
+  "matting": "v3: boundary unmix, earth RGB-only interior despill, no silhouette erosion"
+}

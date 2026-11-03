@@ -1,0 +1,2015 @@
+{
+  "version": 1,
+  "nativeBase": "ad965b1aa4750c27b3052c6c7544c378c1d1a321",
+  "assets": {
+    "earth-pillar": {
+      "id": "earth-pillar",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "24ef6a44f30376d6bd4fafbb56e5b20ed2ca9ecf23d561e772581efcc64ef505",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        76
+      ],
+      "unionBounds": [
+        22,
+        16,
+        74,
+        83
+      ],
+      "extent": {
+        "w": 52,
+        "h": 67
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            26,
+            72,
+            71,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            26,
+            66,
+            71,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            24,
+            63,
+            71,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            24,
+            48,
+            72,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            24,
+            34,
+            73,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            22,
+            22,
+            72,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            22,
+            17,
+            72,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            23,
+            16,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            22,
+            17,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            22,
+            17,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            22,
+            18,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            23,
+            25,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            22,
+            31,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            22,
+            42,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            22,
+            54,
+            74,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            24,
+            64,
+            72,
+            83
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "earth-shatter": {
+      "id": "earth-shatter",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "691a43039242c131ad40fe0e55c79c2edf12a25a9d8141c30839967ff97e95b0",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        70
+      ],
+      "unionBounds": [
+        11,
+        32,
+        86,
+        83
+      ],
+      "extent": {
+        "w": 75,
+        "h": 51
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            35,
+            61,
+            63,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            29,
+            58,
+            67,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            26,
+            54,
+            68,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            22,
+            48,
+            71,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            19,
+            44,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            14,
+            38,
+            83,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            12,
+            35,
+            86,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            11,
+            33,
+            85,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            11,
+            32,
+            86,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            13,
+            35,
+            84,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            16,
+            39,
+            82,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            19,
+            44,
+            79,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            22,
+            50,
+            74,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            24,
+            58,
+            71,
+            80
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            29,
+            61,
+            60,
+            79
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            35,
+            65,
+            58,
+            77
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "stone-fist": {
+      "id": "stone-fist",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "359da52da9df04e5440228da5d501f0bb1c17e26cc976e4b03a34c906a9b90b3",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        76
+      ],
+      "unionBounds": [
+        12,
+        17,
+        83,
+        86
+      ],
+      "extent": {
+        "w": 71,
+        "h": 69
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            24,
+            60,
+            73,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            22,
+            55,
+            76,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            19,
+            47,
+            76,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            20,
+            37,
+            75,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            21,
+            33,
+            75,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            20,
+            27,
+            75,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            19,
+            22,
+            75,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            20,
+            17,
+            73,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            15,
+            27,
+            75,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            13,
+            43,
+            81,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            12,
+            48,
+            83,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            16,
+            37,
+            79,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            16,
+            36,
+            77,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            16,
+            39,
+            74,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            18,
+            46,
+            75,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            22,
+            53,
+            77,
+            85
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "earth-shockwave": {
+      "id": "earth-shockwave",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "c73ab8e75824c1572a6f25a8073a47df925d7928ddb26ca56f04c2a177a1fa27",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        62
+      ],
+      "unionBounds": [
+        6,
+        38,
+        91,
+        86
+      ],
+      "extent": {
+        "w": 85,
+        "h": 48
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            37,
+            64,
+            60,
+            77
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            33,
+            59,
+            63,
+            78
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            28,
+            56,
+            67,
+            79
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            23,
+            52,
+            73,
+            81
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            19,
+            50,
+            77,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            15,
+            46,
+            82,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            11,
+            43,
+            86,
+            84
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            8,
+            40,
+            89,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            6,
+            38,
+            91,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            6,
+            39,
+            90,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            8,
+            40,
+            89,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            9,
+            41,
+            87,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            10,
+            43,
+            86,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            16,
+            49,
+            82,
+            78
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            22,
+            50,
+            74,
+            76
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            26,
+            53,
+            70,
+            75
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "boulder-roll": {
+      "id": "boulder-roll",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "f4951147f3d3e22c0b4f207557c62123eb2be4a6933a261c097c05425b805a7a",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        76
+      ],
+      "unionBounds": [
+        20,
+        29,
+        78,
+        84
+      ],
+      "extent": {
+        "w": 58,
+        "h": 55
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            21,
+            32,
+            76,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            21,
+            30,
+            75,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            21,
+            29,
+            76,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            20,
+            29,
+            76,
+            82
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            21,
+            31,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            20,
+            29,
+            78,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            20,
+            29,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            20,
+            29,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            20,
+            29,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            20,
+            29,
+            78,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            20,
+            29,
+            77,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            20,
+            29,
+            76,
+            84
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            20,
+            29,
+            76,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            21,
+            30,
+            75,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            20,
+            31,
+            76,
+            83
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            21,
+            32,
+            76,
+            82
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "quicksand-vortex": {
+      "id": "quicksand-vortex",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "0313bdbdd060692fe6900ab770987b66a882e2d64cf61058f859a7d36fee3bb1",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        62
+      ],
+      "unionBounds": [
+        10,
+        40,
+        86,
+        86
+      ],
+      "extent": {
+        "w": 76,
+        "h": 46
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            10,
+            46,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            10,
+            45,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            10,
+            44,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            11,
+            43,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            11,
+            43,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            10,
+            41,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            11,
+            41,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            11,
+            40,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            11,
+            40,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            10,
+            41,
+            86,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            10,
+            42,
+            85,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            11,
+            40,
+            85,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            10,
+            42,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            10,
+            45,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            10,
+            45,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            11,
+            45,
+            86,
+            85
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    },
+    "quicksand-burst": {
+      "id": "quicksand-burst",
+      "rawFile": "raw-sheet.png",
+      "rawSHA256": "9af13955280bedb94ac4a142469a95f3f7f4e6493d7d98b293f799113212b78b",
+      "frameCount": 16,
+      "cell": [
+        96,
+        96
+      ],
+      "columns": 4,
+      "anchor": [
+        48,
+        68
+      ],
+      "unionBounds": [
+        8,
+        13,
+        85,
+        89
+      ],
+      "extent": {
+        "w": 77,
+        "h": 76
+      },
+      "frames": [
+        {
+          "index": 0,
+          "sourceRect": [
+            0,
+            0,
+            314,
+            314
+          ],
+          "bbox": [
+            15,
+            49,
+            83,
+            88
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 1,
+          "sourceRect": [
+            314,
+            0,
+            627,
+            314
+          ],
+          "bbox": [
+            15,
+            50,
+            78,
+            89
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 2,
+          "sourceRect": [
+            627,
+            0,
+            940,
+            314
+          ],
+          "bbox": [
+            19,
+            50,
+            79,
+            88
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 3,
+          "sourceRect": [
+            940,
+            0,
+            1254,
+            314
+          ],
+          "bbox": [
+            21,
+            54,
+            75,
+            87
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 4,
+          "sourceRect": [
+            0,
+            314,
+            314,
+            627
+          ],
+          "bbox": [
+            20,
+            48,
+            77,
+            87
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 5,
+          "sourceRect": [
+            314,
+            314,
+            627,
+            627
+          ],
+          "bbox": [
+            17,
+            37,
+            79,
+            87
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 6,
+          "sourceRect": [
+            627,
+            314,
+            940,
+            627
+          ],
+          "bbox": [
+            11,
+            26,
+            83,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 7,
+          "sourceRect": [
+            940,
+            314,
+            1254,
+            627
+          ],
+          "bbox": [
+            9,
+            16,
+            85,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 8,
+          "sourceRect": [
+            0,
+            627,
+            314,
+            940
+          ],
+          "bbox": [
+            8,
+            13,
+            85,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 9,
+          "sourceRect": [
+            314,
+            627,
+            627,
+            940
+          ],
+          "bbox": [
+            13,
+            27,
+            82,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 10,
+          "sourceRect": [
+            627,
+            627,
+            940,
+            940
+          ],
+          "bbox": [
+            14,
+            38,
+            82,
+            86
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 11,
+          "sourceRect": [
+            940,
+            627,
+            1254,
+            940
+          ],
+          "bbox": [
+            14,
+            44,
+            80,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 12,
+          "sourceRect": [
+            0,
+            940,
+            314,
+            1254
+          ],
+          "bbox": [
+            15,
+            49,
+            80,
+            85
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 13,
+          "sourceRect": [
+            314,
+            940,
+            627,
+            1254
+          ],
+          "bbox": [
+            15,
+            52,
+            79,
+            84
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 14,
+          "sourceRect": [
+            627,
+            940,
+            940,
+            1254
+          ],
+          "bbox": [
+            16,
+            56,
+            78,
+            84
+          ],
+          "edgeTouch": false
+        },
+        {
+          "index": 15,
+          "sourceRect": [
+            940,
+            940,
+            1254,
+            1254
+          ],
+          "bbox": [
+            16,
+            65,
+            77,
+            84
+          ],
+          "edgeTouch": false
+        }
+      ],
+      "source": "built-in-imagegen",
+      "sharedScale": true,
+      "perFrameBboxFit": false,
+      "matting": "boundary-unmix-v2; no silhouette erosion"
+    }
+  }
+}

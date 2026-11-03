@@ -1,4 +1,5 @@
 import {definitions,preload as preloadExtra,createState as createExtraState,advance as advanceExtra,render as renderExtra,drawBlade} from './skills.js';
+import {upgrade,frameIndex as fxIndex,sourceRect,summary as fxSummary} from './fx60.js';
 const $ = s => document.querySelector(s);
 const roman = ['', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ'];
 const names = ['', '初燃', '双焰', '三重火光', '四重连焰', '五重焰爆'];
@@ -58,8 +59,9 @@ function advance(s,dt) {
 }
 
 function tile(ctx,sheet,index,x,y,size,anchor=[67,48],rotation=0,alpha=1) {
+  anchor=sheet.fx60?.anchor??anchor;
   ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y));if(rotation)ctx.rotate(rotation);
-  ctx.drawImage(sheet,index%4*96,Math.floor(index/4)*96,96,96,-anchor[0]*size/96,-anchor[1]*size/96,size,size);ctx.restore();
+  ctx.drawImage(sheet,...sourceRect(sheet,index),-anchor[0]*size/96,-anchor[1]*size/96,size,size);ctx.restore();
 }
 function halo(ctx,x,y,r,alpha) {
   const gradient=ctx.createRadialGradient(x,y,0,x,y,r);gradient.addColorStop(0,`rgba(255,163,61,${alpha})`);gradient.addColorStop(.45,`rgba(252,109,26,${alpha*.35})`);gradient.addColorStop(1,'rgba(247,91,25,0)');ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
@@ -90,11 +92,11 @@ function draw(stage) {
   const entities=[{...(s.player??player),player:true},...s.enemies,...(s.blades??[])].sort((a,b)=>a.y-b.y);
   for(const e of entities){if(e.player)body(ctx,e.x,e.y,elapsed);else if(e.blade)drawBlade(ctx,e,s,{tile,assets});else dummy(ctx,e,s.time);}
   if(selectedSkill!=='fireball')renderExtra(ctx,s,{tile,assets,frameAt});
-  if(selectedSkill==='fireball')for(const shot of s.shots){halo(ctx,shot.x,shot.y,22,.11);tile(ctx,assets.flight,Math.floor((s.time-shot.born)*30)%16,shot.x,shot.y,48,[67,48],shot.angle);}
+  if(selectedSkill==='fireball')for(const shot of s.shots){halo(ctx,shot.x,shot.y,22,.11);tile(ctx,assets.flight,fxIndex(assets.flight,s.time-shot.born,Math.floor((s.time-shot.born)*30)%16),shot.x,shot.y,48,[67,48],shot.angle);}
   if(selectedSkill==='fireball')for(const hit of s.hits) {
     const age=s.time-hit.born;
-    if(hit.large){const i=frameAt(impactStarts,age);tile(ctx,assets.impact,i,hit.x,hit.y+7,100,[49,80]);}
-    else {const i=age<.045?0:1;tile(ctx,assets.impact,i,hit.x,hit.y,52,[49,74],0,1-age/.15);}
+    if(hit.large){const i=fxIndex(assets.impact,age,frameAt(impactStarts,age));tile(ctx,assets.impact,i,hit.x,hit.y+7,100,[49,80]);}
+    else {const sheet=assets.fx['fireball-hit']??assets.impact;const i=fxIndex(sheet,age,age<.045?0:1);tile(ctx,sheet,i,hit.x,hit.y,52,[49,74],0,1-age/.15);}
   }
   ctx.font='bold 10px ui-monospace, Consolas, monospace';ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=2;
   if(!stage.mini)for(const n of s.numbers) {const age=s.time-n.born;ctx.save();ctx.globalAlpha=clamp((.64-age)/.2,0,1);ctx.strokeStyle=light?'#f5f0df':'#20221d';ctx.fillStyle=n.splash?(light?'#a15119':'#ffbd76'):(light?'#313b33':'#eee9db');const y=n.y-age*25;ctx.strokeText(String(Math.floor(n.amount)),n.x,y);ctx.fillText(String(Math.floor(n.amount)),n.x,y);ctx.restore();}
@@ -103,12 +105,12 @@ function draw(stage) {
   ctx.setTransform(1,0,0,1,0,0);
 }
 
-function renderAll(){if(!ready)return;for(const stage of stages)draw(stage);const main=stages[0].state;$('#status').textContent=!playing?'已暂停':selectedSkill==='orbit-swords'?'剑阵环绕':main.charges?.some(c=>main.time>=c.born)?'正在合剑':main.strikes?.some(c=>main.time>=c.born)?'落雷释放':main.hits.some(h=>h.large)?'命中焰爆':main.shots.length?'弹体飞行':'等待释放';}
+function renderAll(){if(!ready)return;for(const stage of stages)draw(stage);const main=stages[0].state;$('#status').textContent=!playing?'已暂停':selectedSkill==='orbit-swords'?'剑阵环绕':main.charges?.some(c=>main.time>=c.born)?'正在合剑':main.strikes?.some(c=>main.time>=c.born)?'落雷释放':main.zones?.length?(selectedSkill==='quicksand'?'流沙牵引':'土系释放'):main.hits.some(h=>h.large)?'命中焰爆':main.shots.length?'弹体飞行':'等待释放';}
 function reset(){elapsed=0;for(const stage of stages)stage.state=makeState(stage.level);renderAll();}
 function selectLevel(level,scroll=false) {
   selected=level;for(const tab of document.querySelectorAll('[role=tab]'))tab.setAttribute('aria-selected',String(Number(tab.dataset.level)===level));
   for(const card of document.querySelectorAll('.level-card')){card.classList.toggle('selected',Number(card.dataset.level)===level);card.setAttribute('aria-pressed',String(Number(card.dataset.level)===level));}
-  const definition=selectedSkill==='fireball'?null:definitions[selectedSkill];const currentNames=definition?.levelNames??names;const currentCaptions=definition?.captions??captions;const unit=definition?.unit??'颗';const l=data.levels[level-1];$('#level-badge').textContent=roman[level];$('#level-title').textContent=`${level}级 · ${currentNames[level]}`;$('#level-caption').textContent=currentCaptions[level];$('#count').innerHTML=`${level} <small>${unit}</small>`;$('#damage').textContent=l.displayDamage;$('#effect').textContent=definition?definition.effects[level]:level===5?'范围焰爆':'命中火花';$('#main-stage').setAttribute('aria-label',`${level}级${definition?.title??'火球术'}动画预览`);
+  const definition=selectedSkill==='fireball'?null:definitions[selectedSkill];const currentNames=definition?.levelNames??names;const currentCaptions=definition?.captions??captions;const unit=definition?.unit??'颗';const l=data.levels[level-1];$('#level-badge').textContent=roman[level];$('#level-title').textContent=`${level}级 · ${currentNames[level]}`;$('#level-caption').textContent=currentCaptions[level];$('#count').innerHTML=`${l.count??level} <small>${unit}</small>`;$('#damage').textContent=l.displayDamage;$('#effect').textContent=definition?definition.effects[level]:level===5?'范围焰爆':'命中火花';$('#main-stage').setAttribute('aria-label',`${level}级${definition?.title??'火球术'}动画预览`);
   stages[0].level=level;reset();if(scroll)document.querySelector('.study').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function selectSkill(id){
@@ -118,12 +120,18 @@ function selectSkill(id){
   $('#skill-title').innerHTML=(def?.title??'火球术')+' <span>Ⅰ—Ⅴ</span>';
   $('#skill-tag').textContent=def?.tag??'焰系 · 自动弹体';
   $('#skill-lede').textContent=def?def.captions[5]:'一颗火光，逐级长成五重焰爆。看看每一级的飞行与命中。';
-  $('#max-tag').textContent=id==='fireball'?'焰爆':id==='lightning'?'雷爆':id==='orbit-swords'?'月牙':'合剑';
+  $('#max-tag').textContent=def?.badge??(id==='fireball'?'焰爆':id==='lightning'?'雷爆':id==='orbit-swords'?'月牙':'合剑');$('#damage-label').textContent=def?.countNote?'基础伤害':'单颗伤害';$('#count-title').textContent=def?.countNote?'数量与体量成长':'数量成长，尺寸统一';$('#comparison-tag').textContent=def?.countNote?'同一时间 · 等级成长':'同一时间 · 同一尺寸';
   $('#count-label').textContent=def?.countLabel??'每轮数量';$('#interval-label').textContent=def?.intervalLabel??'释放间隔';$('#interval').innerHTML=(def?.interval??'1.3')+' <small>秒</small>';
   $('#auto').disabled=id==='orbit-swords';$('#auto').checked=id==='orbit-swords'||auto;$('#auto').nextElementSibling.textContent=id==='orbit-swords'?'常驻运转':'自动连发';
-  $('#count-note').textContent=id==='orbit-swords'?'1—5级保持1—5柄剑均分环绕位置。旋转由运行时控制，剑身与光泽使用独立动画素材。':`1—5级每轮分别释放1—5${def?.unit??'颗'}。单个主体保持相同大小，等级差异体现为数量与满级追加效果。`;
+  $('#count-note').textContent=def?.countNote??(id==='orbit-swords'?'1—5级保持1—5柄剑均分环绕位置。旋转由运行时控制，剑身与光泽使用独立动画素材。':`1—5级每轮分别释放1—5${def?.unit??'颗'}。单个主体保持相同大小，等级差异体现为数量与满级追加效果。`);
   $('#feature-title').textContent=def?('满级 · '+def.maxFeature):'满级，命中才爆开';$('#feature-note').textContent=def?.note??'5级追加半径42的范围伤害，溅射倍率70%。低等级保留短促命中火花。';
-  for(const card of document.querySelectorAll('.level-card')){const n=Number(card.dataset.level),l=data.levels[n-1],unit=def?.unit??'颗';card.querySelector('h3').textContent=roman[n]+' · '+(def?.levelNames??names)[n];card.querySelector('.card-heading span').textContent=n===5?(def?.maxFeature??'范围焰爆'):n+unit+(id==='lightning'?'落雷':id==='orbit-swords'?'环剑':id==='seeking-swords'?'追踪剑':'火球');card.querySelector('.card-bottom').innerHTML=`<span><b>${n}${unit}</b> / ${id==='orbit-swords'?'常驻':'每轮'}</span><span>伤害 <b>${l.displayDamage}</b>${n===5?' ＋ 强化':''}</span>`;card.setAttribute('aria-label',`放大查看${n}级${def?.title??'火球术'}`);}
+  for(const card of document.querySelectorAll('.level-card')){
+    const n=Number(card.dataset.level),l=data.levels[n-1],unit=def?.unit??'颗',count=l.count??n;
+    card.querySelector('h3').textContent=roman[n]+' · '+(def?.levelNames??names)[n];
+    card.querySelector('.card-heading span').textContent=n===5?(def?.maxFeature??'范围焰爆'):def?.countNote?(id==='earth-spikes'?count+'根岩柱':Math.round(l.scale*100)+'%范围/体量'):n+unit+(id==='lightning'?'落雷':id==='orbit-swords'?'环剑':id==='seeking-swords'?'追踪剑':'火球');
+    card.querySelector('.card-bottom').innerHTML=`<span><b>${count}${unit}</b> / ${id==='orbit-swords'?'常驻':'每轮'}</span><span>${def?.countNote?'基础伤害':'伤害'} <b>${l.displayDamage}</b>${n===5?' ＋ 强化':''}</span>`;
+    card.setAttribute('aria-label',`放大查看${n}级${def?.title??'火球术'}`);
+  }
   selectLevel(selected);history.replaceState(null,'','#'+id);
 }
 function setPlaying(value){playing=value;$('#play-text').textContent=value?'暂停':'播放';$('#play-icon').textContent=value?'Ⅱ':'▶';$('#play').setAttribute('aria-label',value?'暂停动画':'播放动画');renderAll();}
@@ -136,6 +144,7 @@ async function boot() {
     const [flight,impact,dummyImage,...heroImages]=await Promise.all([image('flight.png'),image('impact.png'),image('dummy.png'),...Object.values(data.heroes).flatMap(h=>h.atlases.map(image))]);
     assets={flight,impact,dummy:dummyImage,heroes:{dafeiyu:heroImages.slice(0,4),xiaobai:heroImages.slice(4,8)}};
     assets.fx=await preloadExtra(image);
+    await upgrade(assets,image);
     const red=document.createElement('canvas');red.width=dummyImage.width;red.height=dummyImage.height;const rc=red.getContext('2d');rc.drawImage(dummyImage,0,0);rc.globalCompositeOperation='source-atop';rc.fillStyle='#f35d4dbb';rc.fillRect(0,0,red.width,red.height);assets.redDummy=red;
     stages=[{canvas:$('#main-stage'),level:5,mini:false,state:makeState(5)}];
     for(const l of data.levels) {
@@ -156,7 +165,7 @@ async function boot() {
     $('#loading').classList.add('hidden');$('#play').disabled=false;$('#replay').disabled=false;ready=true;
     if(matchMedia('(prefers-reduced-motion: reduce)').matches)setPlaying(false);
     // Read-only inspection hook for reproducible local verification.
-    window.fireballStudy={get snapshot(){return {ready,skill:selectedSkill,selected,playing,elapsed,theme,speed,hero,auto,stages:stages.map(s=>({level:s.level,volleys:s.state.volleys,emitted:s.state.emitted,collisions:s.state.collisionCount,splash:s.state.splashCount,activeShots:s.state.shots.length,hitEffects:s.state.hits.length,bladeCount:s.state.blades?.length??0,lightningEmitted:s.state.lightningEmitted??0,starBursts:s.state.starBursts??0,crescentsFired:s.state.crescentsFired??0,mergedEmitted:s.state.mergedEmitted??0}))};}};
+    window.fireballStudy={get snapshot(){return {ready,fx60:fxSummary(),skill:selectedSkill,selected,playing,elapsed,theme,speed,hero,auto,stages:stages.map(s=>({level:s.level,volleys:s.state.volleys,emitted:s.state.emitted,collisions:s.state.collisionCount,splash:s.state.splashCount,activeShots:s.state.shots.length,hitEffects:s.state.hits.length,bladeCount:s.state.blades?.length??0,lightningEmitted:s.state.lightningEmitted??0,starBursts:s.state.starBursts??0,crescentsFired:s.state.crescentsFired??0,mergedEmitted:s.state.mergedEmitted??0,peakActiveShots:s.state.peakActiveShots??0,pillarEruptions:s.state.pillarEruptions??0,pillarExplosions:s.state.pillarExplosions??0,fistHits:s.state.fistHits??0,mainBoulders:s.state.mainBoulders??0,companionBoulders:s.state.companionBoulders??0,shockwaves:s.state.shockwaves??0,sandPulses:s.state.sandPulses??0,sandRebounds:s.state.sandRebounds??0,pullDistance:s.state.pullDistance??0,enemies:s.state.enemies.map(e=>({id:e.id,x:e.x,y:e.y}))}))};}};
     const requested=location.hash.slice(1);if(definitions[requested])selectSkill(requested);
     renderAll();requestAnimationFrame(tick);
   } catch(error) {$('#loading').textContent='加载失败，请刷新重试。'+error.message;$('#loading').setAttribute('role','alert');console.error(error);}

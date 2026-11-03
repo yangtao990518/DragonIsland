@@ -1,0 +1,287 @@
+{
+  "id": "quicksand-vortex",
+  "rawFile": "raw-sheet.png",
+  "rawSHA256": "0313bdbdd060692fe6900ab770987b66a882e2d64cf61058f859a7d36fee3bb1",
+  "frameCount": 16,
+  "cell": [
+    96,
+    96
+  ],
+  "columns": 4,
+  "anchor": [
+    48,
+    62
+  ],
+  "unionBounds": [
+    10,
+    40,
+    86,
+    86
+  ],
+  "extent": {
+    "w": 76,
+    "h": 46
+  },
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        314,
+        314
+      ],
+      "bbox": [
+        10,
+        46,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        314,
+        0,
+        627,
+        314
+      ],
+      "bbox": [
+        10,
+        45,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        627,
+        0,
+        940,
+        314
+      ],
+      "bbox": [
+        10,
+        44,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        940,
+        0,
+        1254,
+        314
+      ],
+      "bbox": [
+        11,
+        43,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        0,
+        314,
+        314,
+        627
+      ],
+      "bbox": [
+        11,
+        43,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        314,
+        314,
+        627,
+        627
+      ],
+      "bbox": [
+        10,
+        41,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        627,
+        314,
+        940,
+        627
+      ],
+      "bbox": [
+        11,
+        41,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        940,
+        314,
+        1254,
+        627
+      ],
+      "bbox": [
+        11,
+        40,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        0,
+        627,
+        314,
+        940
+      ],
+      "bbox": [
+        11,
+        40,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 9,
+      "sourceRect": [
+        314,
+        627,
+        627,
+        940
+      ],
+      "bbox": [
+        10,
+        41,
+        86,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 10,
+      "sourceRect": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "bbox": [
+        10,
+        42,
+        85,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 11,
+      "sourceRect": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "bbox": [
+        11,
+        40,
+        85,
+        86
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 12,
+      "sourceRect": [
+        0,
+        940,
+        314,
+        1254
+      ],
+      "bbox": [
+        10,
+        42,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 13,
+      "sourceRect": [
+        314,
+        940,
+        627,
+        1254
+      ],
+      "bbox": [
+        10,
+        45,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 14,
+      "sourceRect": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "bbox": [
+        10,
+        45,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    },
+    {
+      "index": 15,
+      "sourceRect": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "bbox": [
+        11,
+        45,
+        86,
+        85
+      ],
+      "edgeTouch": false
+    }
+  ],
+  "source": "built-in-imagegen",
+  "sharedScale": true,
+  "perFrameBboxFit": false,
+  "matting": "boundary-unmix-v2; no silhouette erosion"
+}

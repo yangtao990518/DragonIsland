@@ -1,0 +1,1813 @@
+{
+  "passed": true,
+  "nativeBase": "ad965b1",
+  "checks": [
+    "earth deep link",
+    "eight skills",
+    "earth-spikes single round level 5",
+    "earth-spikes actual collision level 5",
+    "earth-spikes pillar count 5",
+    "earth-spikes explosions 5",
+    "earth-spikes single round level 1",
+    "earth-spikes actual collision level 1",
+    "earth-spikes pillar count 1",
+    "earth-spikes explosions 1",
+    "earth-spikes single round level 2",
+    "earth-spikes actual collision level 2",
+    "earth-spikes pillar count 2",
+    "earth-spikes explosions 2",
+    "earth-spikes single round level 3",
+    "earth-spikes actual collision level 3",
+    "earth-spikes pillar count 3",
+    "earth-spikes explosions 3",
+    "earth-spikes single round level 4",
+    "earth-spikes actual collision level 4",
+    "earth-spikes pillar count 4",
+    "earth-spikes explosions 4",
+    "earth-spikes single round level 5",
+    "earth-spikes actual collision level 5",
+    "earth-spikes pillar count 5",
+    "earth-spikes explosions 5",
+    "earth-spikes switch level 1",
+    "earth-spikes count label 1",
+    "earth-spikes switch level 2",
+    "earth-spikes count label 2",
+    "earth-spikes switch level 3",
+    "earth-spikes count label 3",
+    "earth-spikes switch level 4",
+    "earth-spikes count label 4",
+    "earth-spikes switch level 5",
+    "earth-spikes count label 5",
+    "stone-fist single round level 5",
+    "stone-fist actual collision level 5",
+    "stone-fist fist count 5",
+    "stone-fist wave 5",
+    "stone-fist single round level 1",
+    "stone-fist actual collision level 1",
+    "stone-fist fist count 1",
+    "stone-fist wave 1",
+    "stone-fist single round level 2",
+    "stone-fist actual collision level 2",
+    "stone-fist fist count 2",
+    "stone-fist wave 2",
+    "stone-fist single round level 3",
+    "stone-fist actual collision level 3",
+    "stone-fist fist count 3",
+    "stone-fist wave 3",
+    "stone-fist single round level 4",
+    "stone-fist actual collision level 4",
+    "stone-fist fist count 4",
+    "stone-fist wave 4",
+    "stone-fist single round level 5",
+    "stone-fist actual collision level 5",
+    "stone-fist fist count 5",
+    "stone-fist wave 5",
+    "stone-fist switch level 1",
+    "stone-fist count label 1",
+    "stone-fist switch level 2",
+    "stone-fist count label 2",
+    "stone-fist switch level 3",
+    "stone-fist count label 3",
+    "stone-fist switch level 4",
+    "stone-fist count label 4",
+    "stone-fist switch level 5",
+    "stone-fist count label 5",
+    "boulder single round level 5",
+    "boulder actual collision level 5",
+    "boulder main rock 5",
+    "boulder companions 5",
+    "boulder wave 5",
+    "boulder single round level 1",
+    "boulder actual collision level 1",
+    "boulder main rock 1",
+    "boulder companions 1",
+    "boulder wave 1",
+    "boulder single round level 2",
+    "boulder actual collision level 2",
+    "boulder main rock 2",
+    "boulder companions 2",
+    "boulder wave 2",
+    "boulder single round level 3",
+    "boulder actual collision level 3",
+    "boulder main rock 3",
+    "boulder companions 3",
+    "boulder wave 3",
+    "boulder single round level 4",
+    "boulder actual collision level 4",
+    "boulder main rock 4",
+    "boulder companions 4",
+    "boulder wave 4",
+    "boulder single round level 5",
+    "boulder actual collision level 5",
+    "boulder main rock 5",
+    "boulder companions 5",
+    "boulder wave 5",
+    "boulder switch level 1",
+    "boulder count label 1",
+    "boulder switch level 2",
+    "boulder count label 2",
+    "boulder switch level 3",
+    "boulder count label 3",
+    "boulder switch level 4",
+    "boulder count label 4",
+    "boulder switch level 5",
+    "boulder count label 5",
+    "quicksand single round level 5",
+    "quicksand actual collision level 5",
+    "quicksand six pulses 5",
+    "quicksand rebound 5",
+    "quicksand actual pull 5",
+    "quicksand single round level 1",
+    "quicksand actual collision level 1",
+    "quicksand six pulses 1",
+    "quicksand rebound 1",
+    "quicksand actual pull 1",
+    "quicksand single round level 2",
+    "quicksand actual collision level 2",
+    "quicksand six pulses 2",
+    "quicksand rebound 2",
+    "quicksand actual pull 2",
+    "quicksand single round level 3",
+    "quicksand actual collision level 3",
+    "quicksand six pulses 3",
+    "quicksand rebound 3",
+    "quicksand actual pull 3",
+    "quicksand single round level 4",
+    "quicksand actual collision level 4",
+    "quicksand six pulses 4",
+    "quicksand rebound 4",
+    "quicksand actual pull 4",
+    "quicksand single round level 5",
+    "quicksand actual collision level 5",
+    "quicksand six pulses 5",
+    "quicksand rebound 5",
+    "quicksand actual pull 5",
+    "quicksand switch level 1",
+    "quicksand count label 1",
+    "quicksand switch level 2",
+    "quicksand count label 2",
+    "quicksand switch level 3",
+    "quicksand count label 3",
+    "quicksand switch level 4",
+    "quicksand count label 4",
+    "quicksand switch level 5",
+    "quicksand count label 5",
+    "pause stable",
+    "slow play",
+    "mobile no overflow",
+    "previous skill fireball",
+    "previous skill lightning",
+    "previous skill orbit-swords",
+    "previous skill seeking-swords",
+    "monster roster preserved",
+    "monster death preserved",
+    "no browser errors"
+  ],
+  "results": {
+    "earth-spikes": {
+      "ready": true,
+      "fx60": {
+        "fps": 60,
+        "method": "original-drawings",
+        "assets": {
+          "earth-shatter": {
+            "count": 36,
+            "duration": 0.6,
+            "fps": 60
+          },
+          "earth-shockwave": {
+            "count": 39,
+            "duration": 0.65,
+            "fps": 60
+          },
+          "boulder-roll": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "quicksand-vortex": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "earth-pillar": {
+            "count": 141,
+            "duration": 2.35,
+            "fps": 60
+          },
+          "stone-fist": {
+            "count": 71,
+            "duration": 1.18,
+            "fps": 60
+          },
+          "quicksand-burst": {
+            "count": 62,
+            "duration": 1.02,
+            "fps": 60
+          },
+          "flight": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "impact": {
+            "count": 54,
+            "duration": 0.9,
+            "fps": 60
+          },
+          "lightning-strike": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "lightning-star": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "orbit-blade": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "orbit-crescent": {
+            "count": 30,
+            "duration": 0.5,
+            "fps": 60
+          },
+          "fireball-hit": {
+            "count": 8,
+            "duration": 0.12,
+            "fps": 60
+          },
+          "orbit-hit": {
+            "count": 9,
+            "duration": 0.15,
+            "fps": 60
+          },
+          "rune-sword": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "rune-hit": {
+            "count": 12,
+            "duration": 0.2,
+            "fps": 60
+          }
+        },
+        "deferred": []
+      },
+      "skill": "earth-spikes",
+      "selected": 5,
+      "playing": false,
+      "elapsed": 3.2665999999999964,
+      "theme": "dark",
+      "speed": 1,
+      "hero": "dafeiyu",
+      "auto": false,
+      "stages": [
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 5,
+          "collisions": 14,
+          "splash": 9,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 5,
+          "pillarExplosions": 5,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 1,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 1,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "volleys": 1,
+          "emitted": 2,
+          "collisions": 2,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 2,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "volleys": 1,
+          "emitted": 3,
+          "collisions": 3,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 3,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "volleys": 1,
+          "emitted": 4,
+          "collisions": 6,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 4,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 5,
+          "collisions": 14,
+          "splash": 9,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 5,
+          "pillarExplosions": 5,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        }
+      ]
+    },
+    "stone-fist": {
+      "ready": true,
+      "fx60": {
+        "fps": 60,
+        "method": "original-drawings",
+        "assets": {
+          "earth-shatter": {
+            "count": 36,
+            "duration": 0.6,
+            "fps": 60
+          },
+          "earth-shockwave": {
+            "count": 39,
+            "duration": 0.65,
+            "fps": 60
+          },
+          "boulder-roll": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "quicksand-vortex": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "earth-pillar": {
+            "count": 141,
+            "duration": 2.35,
+            "fps": 60
+          },
+          "stone-fist": {
+            "count": 71,
+            "duration": 1.18,
+            "fps": 60
+          },
+          "quicksand-burst": {
+            "count": 62,
+            "duration": 1.02,
+            "fps": 60
+          },
+          "flight": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "impact": {
+            "count": 54,
+            "duration": 0.9,
+            "fps": 60
+          },
+          "lightning-strike": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "lightning-star": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "orbit-blade": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "orbit-crescent": {
+            "count": 30,
+            "duration": 0.5,
+            "fps": 60
+          },
+          "fireball-hit": {
+            "count": 8,
+            "duration": 0.12,
+            "fps": 60
+          },
+          "orbit-hit": {
+            "count": 9,
+            "duration": 0.15,
+            "fps": 60
+          },
+          "rune-sword": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "rune-hit": {
+            "count": 12,
+            "duration": 0.2,
+            "fps": 60
+          }
+        },
+        "deferred": []
+      },
+      "skill": "stone-fist",
+      "selected": 5,
+      "playing": false,
+      "elapsed": 3.272599999999993,
+      "theme": "dark",
+      "speed": 1,
+      "hero": "dafeiyu",
+      "auto": false,
+      "stages": [
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 2,
+          "collisions": 10,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 2,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 1,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 1,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 1,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 2,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 1,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 2,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 1,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 3,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 1,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 2,
+          "collisions": 10,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 2,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 1,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        }
+      ]
+    },
+    "boulder": {
+      "ready": true,
+      "fx60": {
+        "fps": 60,
+        "method": "original-drawings",
+        "assets": {
+          "earth-shatter": {
+            "count": 36,
+            "duration": 0.6,
+            "fps": 60
+          },
+          "earth-shockwave": {
+            "count": 39,
+            "duration": 0.65,
+            "fps": 60
+          },
+          "boulder-roll": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "quicksand-vortex": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "earth-pillar": {
+            "count": 141,
+            "duration": 2.35,
+            "fps": 60
+          },
+          "stone-fist": {
+            "count": 71,
+            "duration": 1.18,
+            "fps": 60
+          },
+          "quicksand-burst": {
+            "count": 62,
+            "duration": 1.02,
+            "fps": 60
+          },
+          "flight": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "impact": {
+            "count": 54,
+            "duration": 0.9,
+            "fps": 60
+          },
+          "lightning-strike": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "lightning-star": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "orbit-blade": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "orbit-crescent": {
+            "count": 30,
+            "duration": 0.5,
+            "fps": 60
+          },
+          "fireball-hit": {
+            "count": 8,
+            "duration": 0.12,
+            "fps": 60
+          },
+          "orbit-hit": {
+            "count": 9,
+            "duration": 0.15,
+            "fps": 60
+          },
+          "rune-sword": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "rune-hit": {
+            "count": 12,
+            "duration": 0.2,
+            "fps": 60
+          }
+        },
+        "deferred": []
+      },
+      "skill": "boulder",
+      "selected": 5,
+      "playing": false,
+      "elapsed": 3.2666999999999926,
+      "theme": "dark",
+      "speed": 1,
+      "hero": "dafeiyu",
+      "auto": false,
+      "stages": [
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 3,
+          "collisions": 11,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 2,
+          "shockwaves": 1,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 2,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 2,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 3,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 3,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 3,
+          "collisions": 11,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 1,
+          "companionBoulders": 2,
+          "shockwaves": 1,
+          "sandPulses": 0,
+          "sandRebounds": 0,
+          "pullDistance": 0,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 480,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 532,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        }
+      ]
+    },
+    "quicksand": {
+      "ready": true,
+      "fx60": {
+        "fps": 60,
+        "method": "original-drawings",
+        "assets": {
+          "earth-shatter": {
+            "count": 36,
+            "duration": 0.6,
+            "fps": 60
+          },
+          "earth-shockwave": {
+            "count": 39,
+            "duration": 0.65,
+            "fps": 60
+          },
+          "boulder-roll": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "quicksand-vortex": {
+            "count": 40,
+            "duration": 0.6666666666666666,
+            "fps": 60
+          },
+          "earth-pillar": {
+            "count": 141,
+            "duration": 2.35,
+            "fps": 60
+          },
+          "stone-fist": {
+            "count": 71,
+            "duration": 1.18,
+            "fps": 60
+          },
+          "quicksand-burst": {
+            "count": 62,
+            "duration": 1.02,
+            "fps": 60
+          },
+          "flight": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "impact": {
+            "count": 54,
+            "duration": 0.9,
+            "fps": 60
+          },
+          "lightning-strike": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "lightning-star": {
+            "count": 110,
+            "duration": 1.817,
+            "fps": 60
+          },
+          "orbit-blade": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "orbit-crescent": {
+            "count": 30,
+            "duration": 0.5,
+            "fps": 60
+          },
+          "fireball-hit": {
+            "count": 8,
+            "duration": 0.12,
+            "fps": 60
+          },
+          "orbit-hit": {
+            "count": 9,
+            "duration": 0.15,
+            "fps": 60
+          },
+          "rune-sword": {
+            "count": 32,
+            "duration": 0.5333333333333333,
+            "fps": 60
+          },
+          "rune-hit": {
+            "count": 12,
+            "duration": 0.2,
+            "fps": 60
+          }
+        },
+        "deferred": []
+      },
+      "skill": "quicksand",
+      "selected": 5,
+      "playing": false,
+      "elapsed": 3.266699999999985,
+      "theme": "dark",
+      "speed": 1,
+      "hero": "dafeiyu",
+      "auto": false,
+      "stages": [
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 35,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 1,
+          "pullDistance": 221.7047999999947,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 477.3524000000021,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 572.6475999999948,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 18,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 0,
+          "pullDistance": 51.99999999999722,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 575,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 18,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 0,
+          "pullDistance": 106.99999999999253,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 3,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 18,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 0,
+          "pullDistance": 106.99999999999253,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 4,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 24,
+          "splash": 0,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 0,
+          "pullDistance": 106.99999999999253,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 420,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 630,
+              "y": 172
+            }
+          ]
+        },
+        {
+          "level": 5,
+          "volleys": 1,
+          "emitted": 1,
+          "collisions": 35,
+          "splash": 5,
+          "activeShots": 0,
+          "hitEffects": 0,
+          "bladeCount": 0,
+          "lightningEmitted": 0,
+          "starBursts": 0,
+          "crescentsFired": 0,
+          "mergedEmitted": 0,
+          "peakActiveShots": 0,
+          "pillarEruptions": 0,
+          "pillarExplosions": 0,
+          "fistHits": 0,
+          "mainBoulders": 0,
+          "companionBoulders": 0,
+          "shockwaves": 0,
+          "sandPulses": 6,
+          "sandRebounds": 1,
+          "pullDistance": 221.7047999999947,
+          "enemies": [
+            {
+              "id": 0,
+              "x": 477.3524000000021,
+              "y": 172
+            },
+            {
+              "id": 1,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 2,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 3,
+              "x": 520,
+              "y": 172
+            },
+            {
+              "id": 4,
+              "x": 572.6475999999948,
+              "y": 172
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "errors": []
+}

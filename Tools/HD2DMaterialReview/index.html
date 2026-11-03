@@ -1,16 +1,20 @@
 <!doctype html>
 <html lang="zh-CN" data-theme="dark">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10100f"><title>HD-2D 素材库 · mAIverse</title><meta name="description" content="mAIverse HD-2D素材库：4项技能1—5级同步预览与20种像素怪物图鉴。"><link rel="icon" href="assets/flight.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="monsters.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10100f"><title>HD-2D 素材库 · mAIverse</title><meta name="description" content="mAIverse HD-2D素材库：8项技能1—5级同步预览与20种像素怪物图鉴。"><link rel="icon" href="assets/flight.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="monsters.css"></head>
 <body>
 <header class="topbar"><a class="brand" href="#"><span class="brand-orb" aria-hidden="true"></span>mAIverse <span class="brand-sub">素材库</span></a><span class="edition">HD-2D STUDY <span>01</span></span></header>
 <main>
-<nav class="library-nav" aria-label="素材分类"><a href="index.html" aria-current="page">技能特效</a><a href="monsters.html">怪物图鉴</a></nav>
+<nav class="library-nav" aria-label="素材分类"><a href="index.html" aria-current="page">技能特效</a><a href="fx60.html">60帧逐帧审阅</a><a href="monsters.html">怪物图鉴</a></nav>
 <section class="intro"><div><p class="eyebrow" id="skill-tag">焰系 · 自动弹体</p><h1 id="skill-title">火球术 <span>Ⅰ—Ⅴ</span></h1><p class="lede" id="skill-lede">一颗火光，逐级长成五重焰爆。看看每一级的飞行与命中。</p></div><a class="compare-link" href="#comparison">五级同屏对比 <span aria-hidden="true">↘</span></a></section>
 <nav class="skill-switch" aria-label="选择技能">
 <button data-skill="fireball" aria-pressed="true"><img src="assets/fireball-icon.png" alt=""><span><strong>火球术</strong><small>飞行 · 命中焰爆</small></span></button>
 <button data-skill="lightning" aria-pressed="false"><img src="assets/lightning-strike-icon.png" alt=""><span><strong>雷电术</strong><small>落雷 · 五芒星雷爆</small></span></button>
 <button data-skill="orbit-swords" aria-pressed="false"><img src="assets/orbit-blade-icon.png" alt=""><span><strong>环绕剑</strong><small>护身 · 月牙剑气</small></span></button>
-<button data-skill="seeking-swords" aria-pressed="false"><img src="assets/seeking-flight-icon.png" alt=""><span><strong>追踪剑</strong><small>追踪 · 五剑合一</small></span></button>
+<button data-skill="seeking-swords" aria-pressed="false"><img src="assets/seeking-flight-icon.png" alt=""><span><strong>追踪剑</strong><small>符文剑群 · 最多50把</small></span></button>
+<button data-skill="earth-spikes" aria-pressed="false"><img src="assets/earth-pillar-icon.png" alt=""><span><strong>岩柱</strong><small>逐柱破土 · 爆裂</small></span></button>
+<button data-skill="stone-fist" aria-pressed="false"><img src="assets/stone-fist-icon.png" alt=""><span><strong>地拳</strong><small>重击 · 双拳震波</small></span></button>
+<button data-skill="boulder" aria-pressed="false"><img src="assets/boulder-roll-icon.png" alt=""><span><strong>巨岩</strong><small>滚岩 · 主岩伴岩</small></span></button>
+<button data-skill="quicksand" aria-pressed="false"><img src="assets/quicksand-vortex-icon.png" alt=""><span><strong>流沙</strong><small>牵引 · 坍缩反喷</small></span></button>
 </nav>
 <section class="study" aria-label="技能等级预览">
 <div class="study-top"><div class="tabs" role="tablist" aria-label="选择火球等级">
@@ -18,11 +22,11 @@
 </div><div class="live-label"><span></span><b id="status">准备素材</b></div></div>
 <div class="stage-wrap"><canvas id="main-stage" aria-label="5级火球动画预览"></canvas><div id="loading" class="loading">正在点亮火焰…</div><div class="stage-note"><span>训练木桩 · 无限耐久</span><span>动画样板 / 非战斗实机</span></div></div>
 <div class="controls"><div class="control-group"><button id="play" class="control primary" disabled><span id="play-icon">Ⅱ</span><span id="play-text">暂停</span></button><button id="replay" class="control" disabled>↻ <span>重播</span></button><label class="auto"><input id="auto" type="checkbox" checked><span>自动连发</span></label></div><div class="control-group options"><label>速度 <select id="speed" aria-label="播放速度"><option value="0.5">0.5× 慢放</option><option value="1" selected>1× 原速</option></select></label><button id="theme" class="control" aria-label="切换浅色背景">◐ <span>浅色背景</span></button><label>角色 <select id="hero" aria-label="切换演示角色"><option value="dafeiyu">大肥鱼</option><option value="xiaobai">小白</option></select></label></div></div>
-<div class="level-info"><div class="level-title"><span class="level-badge" id="level-badge">Ⅴ</span><div><h2 id="level-title">5级 · 五重焰爆</h2><p id="level-caption">五颗火球，命中时追加范围爆炸。</p></div></div><dl class="stats"><div><dt id="count-label">每轮数量</dt><dd id="count">5 <small>颗</small></dd></div><div><dt>单颗伤害</dt><dd id="damage">58</dd></div><div><dt id="interval-label">释放间隔</dt><dd id="interval">1.3 <small>秒</small></dd></div><div><dt>命中效果</dt><dd class="effect-name" id="effect">范围焰爆</dd></div></dl></div>
+<div class="level-info"><div class="level-title"><span class="level-badge" id="level-badge">Ⅴ</span><div><h2 id="level-title">5级 · 五重焰爆</h2><p id="level-caption">五颗火球，命中时追加范围爆炸。</p></div></div><dl class="stats"><div><dt id="count-label">每轮数量</dt><dd id="count">5 <small>颗</small></dd></div><div><dt id="damage-label">单颗伤害</dt><dd id="damage">58</dd></div><div><dt id="interval-label">释放间隔</dt><dd id="interval">1.3 <small>秒</small></dd></div><div><dt>命中效果</dt><dd class="effect-name" id="effect">范围焰爆</dd></div></dl></div>
 </section>
-<section id="comparison" class="comparison"><div class="section-title"><div><p class="eyebrow">同一时间 · 同一尺寸</p><h2>把成长放在一起看</h2></div><p>五块预览同步播放，共用上方暂停与慢放。</p></div><div id="level-cards" class="card-grid"></div></section>
-<section class="notes"><div><span class="note-number">01</span><h3>数量成长，尺寸统一</h3><p id="count-note">1—5级每轮分别发射1—5颗。单颗火球保持相同大小，方便判断清晰度和遮挡。</p></div><div><span class="note-number">02</span><h3 id="feature-title">满级，命中才爆开</h3><p id="feature-note">5级追加半径42的范围伤害，溅射倍率70%。低等级保留短促命中火花。</p></div><div><span class="note-number">03</span><h3>停下来，仔细看一帧</h3><p>用暂停和0.5×慢放检查尾焰、眼部和爆炸边缘。深浅背景都能切换。</p></div></section>
-<footer><div><strong>mAIverse</strong><span>4项技能 · 20组等级预览 · 沿用当前游戏规则</span></div><a href="../../Art/HD2DReview/2026-11-02/SourceBundles/all-skills-source-assets.zip" download>下载全部透明素材与提示词 ↗</a></footer>
-<p class="footnote">训练台的木桩、命中闪红与光晕用于审阅；正式战场的空间光影与性能仍需在游戏内验证。</p>
+<section id="comparison" class="comparison"><div class="section-title"><div><p class="eyebrow" id="comparison-tag">同一时间 · 同一尺寸</p><h2>把成长放在一起看</h2></div><p>五块预览同步播放，共用上方暂停与慢放。</p></div><div id="level-cards" class="card-grid"></div></section>
+<section class="notes"><div><span class="note-number">01</span><h3 id="count-title">数量成长，尺寸统一</h3><p id="count-note">1—5级每轮分别发射1—5颗。单颗火球保持相同大小，方便判断清晰度和遮挡。</p></div><div><span class="note-number">02</span><h3 id="feature-title">满级，命中才爆开</h3><p id="feature-note">5级追加半径42的范围伤害，溅射倍率70%。低等级保留短促命中火花。</p></div><div><span class="note-number">03</span><h3>停下来，仔细看一帧</h3><p>用暂停和0.5×慢放检查尾焰、眼部和爆炸边缘。深浅背景都能切换。</p></div></section>
+<footer><div><strong>mAIverse</strong><span>8项技能 · 40组等级预览 · 60Hz原画候选版</span></div><div class="skill-downloads"><a href="../../Art/HD2DReview/2026-11-03/SourceBundles/fx60-source-assets-20261103.zip" download>60帧原画及提示词 ↗</a><a href="../../Art/HD2DReview/2026-11-02/SourceBundles/all-skills-source-assets.zip" download>昨日四技能素材 ↗</a><a href="../../Art/HD2DReview/2026-11-03/SourceBundles/earth-source-assets-20261103.zip" download>土系16关键帧初稿 ↗</a></div></footer>
+<p class="footnote">训练台的木桩、命中闪红与光晕用于审阅；技能以ad965b1为基线重新制作，追踪剑按用户新要求改为最多50把同尺寸小剑，正式战场的空间光影与性能仍需在游戏内验证。</p>
 </main><script type="module" src="app.js"></script>
 </body></html>

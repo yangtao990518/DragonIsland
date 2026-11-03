@@ -1,0 +1,219 @@
+{
+  "id": "fireball-hit",
+  "file": "fireball-hit.png",
+  "columns": 8,
+  "cell": [
+    96,
+    96
+  ],
+  "count": 8,
+  "duration": 0.12,
+  "loop": false,
+  "fps": 60,
+  "anchor": [
+    49,
+    74
+  ],
+  "unionBounds": [
+    31,
+    58,
+    66,
+    82
+  ],
+  "extent": {
+    "w": 35,
+    "h": 24
+  },
+  "frameStarts": [
+    0.0,
+    0.016666666666666666,
+    0.03333333333333333,
+    0.05,
+    0.06666666666666667,
+    0.08333333333333333,
+    0.1,
+    0.11666666666666667
+  ],
+  "frameDurations": [
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.003333333333333327
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        444,
+        444
+      ],
+      "bbox": [
+        42,
+        68,
+        55,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        444,
+        0,
+        887,
+        444
+      ],
+      "bbox": [
+        37,
+        62,
+        60,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        887,
+        0,
+        1330,
+        444
+      ],
+      "bbox": [
+        32,
+        58,
+        62,
+        82
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        1330,
+        0,
+        1774,
+        444
+      ],
+      "bbox": [
+        32,
+        61,
+        65,
+        81
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        0,
+        444,
+        444,
+        887
+      ],
+      "bbox": [
+        31,
+        61,
+        66,
+        80
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        444,
+        444,
+        887,
+        887
+      ],
+      "bbox": [
+        32,
+        61,
+        63,
+        76
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        887,
+        444,
+        1330,
+        887
+      ],
+      "bbox": [
+        38,
+        63,
+        60,
+        70
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        1330,
+        444,
+        1774,
+        887
+      ],
+      "bbox": [
+        39,
+        65,
+        58,
+        70
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "f8587a075bf5f11eb277680f30847928809efb3d4a3df63509f4b87da2e1fc94"
+    }
+  ],
+  "frameHashes": [
+    "e24ea70910c7680d90f0b26bcf58bcb883ea2636c4dd6684512f5ad354f0f541",
+    "a434b333cc8a3ee7076a5caff445df0b8c3a86c1f749f687939b7632be5debce",
+    "e6c4db4a4fa2382c7af98e62f80b7ab29b2976b71d41272ce709f27de35a9bfb",
+    "6959843197b9a5584f5bfcc37e0cd4087388a124e70ed21cef2647e304c9e89d",
+    "4445070d6e76fa2886ed7bc59e094e7a2c13e0ff76e67b6845035b98febf91ad",
+    "c5faee970a0a175def897b8df9a0876aaeac5ac10ab36efcde32611911067c5b",
+    "24c9bde20be1dfde0156370f61efbd751454c25caa234b67c26a642c45bdfa05",
+    "2cc752c5ca2c906aff90d9e66a68237ae8c2ca834ae154f1db283997ca5ebecf"
+  ],
+  "consecutiveExactDuplicates": [],
+  "source": "built-in-imagegen-original-drawings",
+  "interpolated": false,
+  "perFrameBboxFit": false,
+  "sheetSHA256": "227de3ade4872dde6431ab562a4a67a0c530981b899b1f114ac80d3f11d19b7f",
+  "nonEmptyDrawings": 8,
+  "transparentTailSamples": [],
+  "distinctSamples": 8,
+  "pageTransforms": [
+    {
+      "page": 0,
+      "gridOffsetY": 0,
+      "sharedAcrossEveryCell": true
+    }
+  ],
+  "matting": "v3: boundary unmix, earth RGB-only interior despill, no silhouette erosion"
+}

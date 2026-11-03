@@ -1,0 +1,45 @@
+// New earth art/preview based solely on DragonIsland ad965b1 (Nov 2).
+import {frameIndex as fxIndex,sourceRect,extentFor} from './fx60.js';
+const grow=(base,n)=>base*(1+(n-1)*.18);
+const levels=(base,counts,scales)=>Array.from({length:5},(_,i)=>({level:i+1,count:counts[i],scale:scales[i],damage:grow(base,i+1),displayDamage:Math.floor(grow(base,i+1)),cooldown:5}));
+export const definitions={
+ 'earth-spikes':{title:'岩柱',tag:'土系 · 逐柱破土',unit:'根',countLabel:'每轮岩柱',intervalLabel:'释放间隔',interval:'5.0',badge:'逐柱爆裂',levelNames:['','破土','双岩','三柱','岩阵','五柱爆裂'],captions:['','一根岩柱破土，尖端命中。','两根岩柱依次升起。','三根岩柱交错破土。','四根岩柱铺开控制区域。','五根岩柱依次破土，再逐柱爆裂。'],effects:['','破土命中','破土命中','破土命中','破土命中','逐柱爆裂'],levels:levels(32,[1,2,3,4,5],[1,1,1,1,1]),maxFeature:'五柱爆裂',countNote:'1—5级分别生成1—5根岩柱。0.35秒起依次命中，满级1.70秒起每根分别爆裂。',note:'沿用ad965b1：破土命中间隔0.105秒；满级每柱独立爆炸，间隔0.055秒，爆裂伤害80%。'},
+ 'stone-fist':{title:'地拳',tag:'土系 · 石拳重击',unit:'拳',countLabel:'每轮拳数',intervalLabel:'释放间隔',interval:'5.0',badge:'双拳震波',levelNames:['','凝拳','重拳','巨拳','撼地','双拳裂地'],captions:['','一记紧凑的石拳重击。','单拳增大，重击范围扩大。','石拳进一步增大。','单拳达到完整尺寸。','双拳先后重击，追加裂地震波。'],effects:['','单拳重击','单拳重击','单拳重击','单拳重击','双拳 · 震波'],levels:levels(32,[1,1,1,1,2],[.55,.7,.85,1,1]),maxFeature:'裂地震波',countNote:'1—4级保持单拳，尺寸55%、70%、85%、100%；满级改为左右双拳，追加低矮震波。',note:'单拳0.47秒命中；满级双拳分别0.47/0.63秒重击，0.67秒震波，震波伤害60%。'},
+ boulder:{title:'巨岩',tag:'土系 · 重岩滚落',unit:'岩',countLabel:'每轮岩石',intervalLabel:'释放间隔',interval:'5.0',badge:'三岩震地',levelNames:['','碎岩','重岩','巨岩','崩岩','主岩·伴岩'],captions:['','一颗岩石翻滚落向目标。','单岩增大，撞击更厚重。','巨岩继续增大。','主岩达到更大的撞击尺寸。','主岩落地后，两颗伴岩依次撞下，再震地。'],effects:['','撞击碎裂','撞击碎裂','撞击碎裂','撞击碎裂','伴岩 · 震波'],levels:levels(32,[1,1,1,1,3],[.58,.74,.9,1.06,1.13]),maxFeature:'两颗伴岩',countNote:'1—4级是一颗逐渐增大的岩石；5级是一颗主岩加两颗伴岩，不是五颗相同岩石。',note:'主岩0.82秒命中；满级伴岩1.05/1.25秒各65%伤害，1.30秒追加60%震波。滚动是命中前的美术演示。'},
+ quicksand:{title:'流沙',tag:'土系 · 持续牵引',unit:'区',countLabel:'持续区域',intervalLabel:'释放间隔',interval:'5.0',badge:'坍缩反喷',levelNames:['','沙涡','回沙','沉沙','流沙阵','坍缩反喷'],captions:['','小范围流沙旋转，持续牵引。','流沙范围扩大。','沙粒向中心流动，牵引更宽区域。','更大流沙阵，持续减速牵引。','最大流沙阵，追加坍缩后的短促反喷。'],effects:['','减速 · 牵引','减速 · 牵引','减速 · 牵引','减速 · 牵引','坍缩 · 反喷'],levels:levels(12,[1,1,1,1,1],[.5,.65,.8,.95,1.1]),maxFeature:'坍缩反喷',countNote:'各级始终一个流沙区域，范围按50%、65%、80%、95%、110%增长；满级增加坍缩反喷。',note:'0.45—2.50秒以28单位/秒牵引；1.02秒起每0.25秒伤害一次，共6次、每次50%；满级2.15秒反喷180%。'}
+};
+export const assetIDs=['earth-pillar','earth-shatter','stone-fist','earth-shockwave','boulder-roll','quicksand-vortex','quicksand-burst'];
+let geometry={};
+export async function loadGeometry(){const r=await fetch('assets/earth-manifest.json');if(!r.ok)throw Error('土系图集尺寸资料无法加载');geometry=(await r.json()).assets;}
+export async function preload(image){return Object.fromEntries(await Promise.all(assetIDs.map(async id=>[id,await image(id+'.png')])));}
+const norm=(x,y)=>Math.hypot(x,y);
+export function createState(skill,level){return{skill,level,player:{x:115,y:172},time:0,nextCast:.22,queued:[],shots:[],hits:[],numbers:[],enemies:[-100,-40,12,55,110].map((dx,id)=>({x:520+dx,y:172,id,hitAt:-99,homeX:520+dx,homeY:172,slowUntil:0})),volleys:0,emitted:0,collisionCount:0,splashCount:0,zones:[],blades:[],pillarEruptions:0,pillarExplosions:0,fistHits:0,mainBoulders:0,companionBoulders:0,shockwaves:0,sandPulses:0,sandRebounds:0,pullDistance:0};}
+function plan(s){const n=s.level,d=definitions[s.skill].levels[n-1],events=[];const add=(kind,at,dx,r,sy,mul)=>events.push({kind,at,dx,r,sy,mul,done:false});
+ if(s.skill==='earth-spikes')for(let i=0;i<n;i++){const dx=(i-(n-1)/2)*(40+n*4);add('pillar',.35+i*.105,dx,(22+n*3)*.5,.5,1);if(n===5)add('pillar-explosion',1.7+i*.055,dx,38,.66,.8);}
+ if(s.skill==='stone-fist'){if(n<5)add('fist',.47,0,46*d.scale,.5,1);else{add('fist',.47,-62,38,.5,1);add('fist',.63,62,38,.5,1);add('fist-wave',.67,0,142,.23,.6);}}
+ if(s.skill==='boulder'){add('main-rock',.82,0,54*d.scale,.35,1);if(n===5){add('companion-rock',1.05,-98,34,.35,.65);add('companion-rock',1.25,98,34,.35,.65);add('rock-wave',1.3,0,161,.23,.6);}}
+ if(s.skill==='quicksand'){for(let i=0;i<6;i++)add('sand-pulse',1.02+i*.25,0,100*d.scale,.32,.5);if(n===5)add('sand-rebound',2.15,0,112,.32,1.8);}
+ return{born:s.time,x:520,y:172,events};}
+export function advance(s,dt,{auto,hurt}){s.time+=dt;const d=definitions[s.skill].levels[s.level-1];if(s.time>=s.nextCast){s.zones.push(plan(s));s.volleys++;s.emitted+=d.count;s.nextCast=auto?s.nextCast+5:Infinity;}
+ for(const z of s.zones){const age=s.time-z.born;
+  if(s.skill==='quicksand'&&age>=.45&&age<2.5)for(const e of s.enemies){const dx=z.x-e.x,dy=z.y-e.y,len=norm(dx,dy);if(len<100*d.scale&&len>.01){const step=Math.min(len,dt*28);e.x+=dx/len*step;e.y+=dy/len*step;e.slowUntil=s.time+.3;s.pullDistance+=step;}}
+  for(const e of z.events)if(!e.done&&age>=e.at){e.done=true;if(e.kind==='pillar')s.pillarEruptions++;if(e.kind==='pillar-explosion')s.pillarExplosions++;if(e.kind==='fist')s.fistHits++;if(e.kind==='main-rock')s.mainBoulders++;if(e.kind==='companion-rock')s.companionBoulders++;if(e.kind.endsWith('wave'))s.shockwaves++;if(e.kind==='sand-pulse')s.sandPulses++;if(e.kind==='sand-rebound')s.sandRebounds++;
+   for(const target of s.enemies){const dx=target.x-(z.x+e.dx),dy=target.y-z.y;if((dx/(e.r+14))**2+(dy/(e.r*e.sy+14))**2<=1){hurt(s,target,d.damage*e.mul,['pillar-explosion','fist-wave','rock-wave','sand-rebound'].includes(e.kind));s.collisionCount++;}}}
+ }s.zones=s.zones.filter(z=>s.time-z.born<3.35);s.numbers=s.numbers.filter(n=>s.time-n.born<.64);s.hits=s.hits.filter(h=>s.time-h.born<.2);
+}
+const pillarStarts=[0,.1,.18,.25,.30,.35,.41,.51,.80,1.10,1.5,1.65,1.8,1.95,2.08,2.2];
+const fistStarts=[0,.07,.13,.19,.25,.31,.36,.40,.44,.47,.59,.67,.77,.87,.97,1.07];
+const burstStarts=[0,.08,.14,.20,.28,.32,.35,.42,.49,.57,.65,.72,.79,.86,.92,.98];
+function sprite(ctx,sheet,index,x,y,size,anchor=[48,76],alpha=1){anchor=sheet.fx60?.anchor??anchor;ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y));ctx.drawImage(sheet,...sourceRect(sheet,index),-anchor[0]*size/96,-anchor[1]*size/96,size,size);ctx.restore();}
+function plane(ctx,sheet,index,x,y,r,sy,extent={w:60,h:30},alpha=1){const anchor=sheet.fx60?.anchor??[48,62];ctx.save();ctx.globalAlpha=alpha;ctx.translate(Math.round(x),Math.round(y));ctx.scale(2*r/extent.w,2*r*sy/extent.h);ctx.drawImage(sheet,...sourceRect(sheet,index),-anchor[0],-anchor[1],96,96);ctx.restore();}
+const extent=id=>extentFor(id,geometry[id]?.extent??{w:60,h:30});
+export function render(ctx,s,{assets,frameAt}){const d=definitions[s.skill].levels[s.level-1],fx=assets.fx;
+ for(const z of s.zones){const age=s.time-z.born;
+  if(s.skill==='earth-spikes')for(let i=0;i<s.level;i++){const t=age-i*.105,x=z.x+(i-(s.level-1)/2)*(40+s.level*4),explosion=age-(1.7+i*.055),fade=s.level===5?Math.max(0,Math.min(1,1-explosion/.08)):1;if(t>=0&&t<2.35&&fade>0)sprite(ctx,fx['earth-pillar'],fxIndex(fx['earth-pillar'],t,frameAt(pillarStarts,t)),x,z.y+20,96*(22+s.level*3)/extent('earth-pillar').w,[48,76],fade);if(s.level===5){const a=explosion;if(a>=0&&a<.6)sprite(ctx,fx['earth-shatter'],fxIndex(fx['earth-shatter'],a,Math.min(15,Math.floor(a/.6*16))),x,z.y+20,96*76/extent('earth-shatter').w,[48,70]);}}
+  if(s.skill==='stone-fist'){const punches=s.level===5?[{dx:-62,delay:0,r:38},{dx:62,delay:.16,r:38}]:[{dx:0,delay:0,r:46*d.scale}];for(const p of punches){const t=age-p.delay;if(t>=0&&t<1.18)sprite(ctx,fx['stone-fist'],fxIndex(fx['stone-fist'],t,frameAt(fistStarts,t)),z.x+p.dx,z.y+20,96*2*p.r/extent('stone-fist').w,[48,76]);}if(s.level===5&&age>=.67&&age<1.32)plane(ctx,fx['earth-shockwave'],fxIndex(fx['earth-shockwave'],age-.67,Math.min(15,Math.floor((age-.67)/.65*16))),z.x,z.y+20,142,.23,extent('earth-shockwave'));}
+  if(s.skill==='boulder'){
+   for(const e of z.events.filter(e=>e.kind==='main-rock'||e.kind==='companion-rock')){const start=e.kind==='main-rock'?.06:e.at-.48,t=age-start,duration=e.at-start;if(t>=0&&t<duration){const q=t/duration,x=z.x+e.dx-(1-q)*145,y=z.y+20-Math.sin(q*Math.PI)*15;sprite(ctx,fx['boulder-roll'],fxIndex(fx['boulder-roll'],t,Math.floor(t*24)%16),x,y,96*2*e.r/extent('boulder-roll').w,[48,76]);}const hitAge=age-e.at;if(hitAge>=0&&hitAge<.62)sprite(ctx,fx['earth-shatter'],fxIndex(fx['earth-shatter'],hitAge,Math.min(15,Math.floor(hitAge/.62*16))),z.x+e.dx,z.y+20,96*2*e.r/extent('earth-shatter').w,[48,70]);}
+   if(s.level===5&&age>=1.30&&age<1.96)plane(ctx,fx['earth-shockwave'],fxIndex(fx['earth-shockwave'],age-1.30,Math.min(15,Math.floor((age-1.30)/.66*16))),z.x,z.y+20,161,.23,extent('earth-shockwave'));}
+  if(s.skill==='quicksand'){if(age>=.10&&age<2.7){const a=Math.min(1,(age-.1)/.35,(2.7-age)/.25);plane(ctx,fx['quicksand-vortex'],fxIndex(fx['quicksand-vortex'],Math.max(0,age-.1),Math.floor(Math.max(0,age-.1)*24)%16),z.x,z.y+20,100*d.scale,.32,extent('quicksand-vortex'),Math.max(0,a));}if(s.level===5&&age>=1.80&&age<2.82){const phase=age-1.8;sprite(ctx,fx['quicksand-burst'],fxIndex(fx['quicksand-burst'],phase,frameAt(burstStarts,phase)),z.x,z.y+20,96*224/extent('quicksand-burst').w,[48,68]);}}
+ }
+}

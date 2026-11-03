@@ -1,0 +1,240 @@
+{
+  "id": "orbit-hit",
+  "file": "orbit-hit.png",
+  "columns": 8,
+  "cell": [
+    96,
+    96
+  ],
+  "count": 9,
+  "duration": 0.15,
+  "loop": false,
+  "fps": 60,
+  "anchor": [
+    48,
+    48
+  ],
+  "unionBounds": [
+    31,
+    21,
+    66,
+    73
+  ],
+  "extent": {
+    "w": 35,
+    "h": 52
+  },
+  "frameStarts": [
+    0.0,
+    0.016666666666666666,
+    0.03333333333333333,
+    0.05,
+    0.06666666666666667,
+    0.08333333333333333,
+    0.1,
+    0.11666666666666667,
+    0.13333333333333333
+  ],
+  "frameDurations": [
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666666,
+    0.016666666666666663
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "sourceRect": [
+        0,
+        0,
+        418,
+        418
+      ],
+      "bbox": [
+        47,
+        27,
+        60,
+        66
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 1,
+      "sourceRect": [
+        418,
+        0,
+        836,
+        418
+      ],
+      "bbox": [
+        43,
+        24,
+        59,
+        68
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 2,
+      "sourceRect": [
+        836,
+        0,
+        1254,
+        418
+      ],
+      "bbox": [
+        39,
+        23,
+        62,
+        71
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 3,
+      "sourceRect": [
+        0,
+        418,
+        418,
+        836
+      ],
+      "bbox": [
+        38,
+        22,
+        66,
+        71
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 4,
+      "sourceRect": [
+        418,
+        418,
+        836,
+        836
+      ],
+      "bbox": [
+        33,
+        21,
+        65,
+        73
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 5,
+      "sourceRect": [
+        836,
+        418,
+        1254,
+        836
+      ],
+      "bbox": [
+        31,
+        21,
+        63,
+        70
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 6,
+      "sourceRect": [
+        0,
+        836,
+        418,
+        1254
+      ],
+      "bbox": [
+        33,
+        23,
+        63,
+        69
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 7,
+      "sourceRect": [
+        418,
+        836,
+        836,
+        1254
+      ],
+      "bbox": [
+        32,
+        24,
+        62,
+        69
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    },
+    {
+      "index": 8,
+      "sourceRect": [
+        836,
+        836,
+        1254,
+        1254
+      ],
+      "bbox": [
+        32,
+        28,
+        56,
+        65
+      ],
+      "edgeTouch": false,
+      "sourcePage": 0,
+      "rawSHA256": "09138865d6389162e91922babbdb852fe30bd91897b9b251e75f85cdf147ffbc"
+    }
+  ],
+  "frameHashes": [
+    "f929ba0f92e2666f8b4c8f3aad31126b338e2b98d3b26f9a02bec6ca58653d57",
+    "76b433114b5e76f14d69c08e3a3b177fc4c9177379e61ebfee859d0d33f06aae",
+    "442611768c6d27accab5b6f9f0af219da7954ccdec8758dcc67ee920d20c5836",
+    "1eb9c984763ef7515ef1e11d96ad2ac42946073cedfa98c4eadf696b3a37530b",
+    "862e17db1e8580ded8aeabfb8e4715f50292e7bab2ed3b2f0bf2f5058987de8c",
+    "dda6ecf8cf383badb439b62a806f5b9e2b0129cdee1a45b60d1100dff47c37f8",
+    "21d3e2759feb6239244487b2fe114e6f13630257bed2807e4396ad54bd257700",
+    "b498098a98f4e182f7a0094078916dced8367e99a8981698fc6c18525178e608",
+    "3febeeda9b774de2e7299f03c85599aea798e256cf09869261b76cf56297618f"
+  ],
+  "consecutiveExactDuplicates": [],
+  "source": "built-in-imagegen-original-drawings",
+  "interpolated": false,
+  "perFrameBboxFit": false,
+  "sheetSHA256": "e9c9b1eb57881e1922409965a2f43108dee37228a31ea8321aad42e09c63f015",
+  "nonEmptyDrawings": 9,
+  "transparentTailSamples": [],
+  "distinctSamples": 9,
+  "pageTransforms": [
+    {
+      "page": 0,
+      "gridOffsetY": 0,
+      "sharedAcrossEveryCell": true
+    }
+  ],
+  "matting": "v3: boundary unmix, earth RGB-only interior despill, no silhouette erosion"
+}
