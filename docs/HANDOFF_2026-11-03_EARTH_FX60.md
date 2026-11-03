@@ -12,9 +12,9 @@
 
 沿用原素材网页与原有受众：
 
-- [技能等级预览](https://maiverse-fireball-hd2d-20261102.blithebough2.chatgpt.site/)
-- [60帧逐帧审阅](https://maiverse-fireball-hd2d-20261102.blithebough2.chatgpt.site/fx60.html)
-- [追踪剑群](https://maiverse-fireball-hd2d-20261102.blithebough2.chatgpt.site/#seeking-swords)
+- [技能等级预览](https://maiverse-fireball-hd2d-20261102.ildiacicrazzstim.chatgpt.site/)
+- [60帧逐帧审阅](https://maiverse-fireball-hd2d-20261102.ildiacicrazzstim.chatgpt.site/fx60.html)
+- [追踪剑群](https://maiverse-fireball-hd2d-20261102.ildiacicrazzstim.chatgpt.site/#seeking-swords)
 
 ## 60Hz资产和时序
 

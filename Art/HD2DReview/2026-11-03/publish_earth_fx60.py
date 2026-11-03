@@ -5,7 +5,7 @@ OUT=Path(__file__).resolve().parent;SITE=OUT.parents[1]/'sites/fireball-hd2d-lev
 sys.path.insert(0,str(OUT.parents[1]/'DragonIsland-IslandReview/output'))
 from github_review_api import request,credential,REPO
 from publish_hd2d_handoff import build_tree_incrementally,gitsha
-BASE='8608d45e61142c4c4bd622d538cd4ad4fc815d69';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
+BASE='93ca3ed9b2512f93d3a4960f368a19cb59b9aa35';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
 def stage():
  ART.mkdir(parents=True,exist_ok=True);TOOLS.mkdir(parents=True,exist_ok=True);bundles=[]
  for file in ['fx60-source-assets-20261103.zip','earth-source-assets-20261103.zip']:

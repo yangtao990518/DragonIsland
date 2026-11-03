@@ -261,7 +261,7 @@
       "skill": "earth-spikes",
       "selected": 5,
       "playing": false,
-      "elapsed": 3.2665999999999964,
+      "elapsed": 3.2664999999999953,
       "theme": "dark",
       "speed": 1,
       "hero": "dafeiyu",
@@ -672,7 +672,7 @@
       "skill": "stone-fist",
       "selected": 5,
       "playing": false,
-      "elapsed": 3.272599999999993,
+      "elapsed": 3.266599999999997,
       "theme": "dark",
       "speed": 1,
       "hero": "dafeiyu",
@@ -1083,7 +1083,7 @@
       "skill": "boulder",
       "selected": 5,
       "playing": false,
-      "elapsed": 3.2666999999999926,
+      "elapsed": 3.266699999999991,
       "theme": "dark",
       "speed": 1,
       "hero": "dafeiyu",
@@ -1494,7 +1494,7 @@
       "skill": "quicksand",
       "selected": 5,
       "playing": false,
-      "elapsed": 3.266699999999985,
+      "elapsed": 3.2665999999999866,
       "theme": "dark",
       "speed": 1,
       "hero": "dafeiyu",
@@ -1522,11 +1522,11 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 1,
-          "pullDistance": 221.7047999999947,
+          "pullDistance": 221.71039999999303,
           "enemies": [
             {
               "id": 0,
-              "x": 477.3524000000021,
+              "x": 477.35520000000224,
               "y": 172
             },
             {
@@ -1546,7 +1546,7 @@
             },
             {
               "id": 4,
-              "x": 572.6475999999948,
+              "x": 572.6447999999938,
               "y": 172
             }
           ]
@@ -1573,7 +1573,7 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 0,
-          "pullDistance": 51.99999999999722,
+          "pullDistance": 51.99999999999662,
           "enemies": [
             {
               "id": 0,
@@ -1624,7 +1624,7 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 0,
-          "pullDistance": 106.99999999999253,
+          "pullDistance": 106.99999999999103,
           "enemies": [
             {
               "id": 0,
@@ -1675,7 +1675,7 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 0,
-          "pullDistance": 106.99999999999253,
+          "pullDistance": 106.99999999999103,
           "enemies": [
             {
               "id": 0,
@@ -1726,7 +1726,7 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 0,
-          "pullDistance": 106.99999999999253,
+          "pullDistance": 106.99999999999103,
           "enemies": [
             {
               "id": 0,
@@ -1777,11 +1777,11 @@
           "shockwaves": 0,
           "sandPulses": 6,
           "sandRebounds": 1,
-          "pullDistance": 221.7047999999947,
+          "pullDistance": 221.71039999999303,
           "enemies": [
             {
               "id": 0,
-              "x": 477.3524000000021,
+              "x": 477.35520000000224,
               "y": 172
             },
             {
@@ -1801,7 +1801,7 @@
             },
             {
               "id": 4,
-              "x": 572.6475999999948,
+              "x": 572.6447999999938,
               "y": 172
             }
           ]
