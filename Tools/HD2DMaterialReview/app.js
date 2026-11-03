@@ -1,5 +1,7 @@
 import {definitions,preload as preloadExtra,createState as createExtraState,advance as advanceExtra,render as renderExtra,drawBlade} from './skills.js';
 import {upgrade,frameIndex as fxIndex,sourceRect,summary as fxSummary} from './fx60.js';
+import {installDownloads} from './source-download.js';
+installDownloads();
 const $ = s => document.querySelector(s);
 const roman = ['', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ'];
 const names = ['', '初燃', '双焰', '三重火光', '四重连焰', '五重焰爆'];

@@ -1,3 +1,5 @@
+import {installDownloads} from './source-download.js';
+installDownloads();
 const $=s=>document.querySelector(s),ctx=$('#canvas').getContext('2d');
 const names={'flight':'火球 · 飞行','impact':'火球 · 焰爆','fireball-hit':'火球 · 触点','lightning-strike':'雷电 · 落雷','lightning-star':'雷电 · 五芒星','orbit-blade':'环绕剑 · 剑身','orbit-crescent':'环绕剑 · 月牙','orbit-hit':'环绕剑 · 命中','earth-pillar':'岩柱 · 破土与崩落','earth-shatter':'土系 · 碎岩','earth-shockwave':'土系 · 震波','stone-fist':'地拳 · 重击','boulder-roll':'巨岩 · 滚动','quicksand-vortex':'流沙 · 旋涡','quicksand-burst':'流沙 · 反喷','rune-sword':'追踪剑 · 符文小剑','rune-hit':'追踪剑 · 命中'};
 let manifest,images={},id,frame=0,time=0,last=0,playing=true,ready=false;

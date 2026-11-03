@@ -71,6 +71,7 @@
 - `Tools/HD2DMaterialReview/`：完整网页快照，运行 `python -m http.server 8768` 后访问该目录。图集直接可用，不必重新生成原画。
 - `Art/HD2DReview/2026-11-03/source-parts.json`：新版来源包分片、顺序、大小及SHA256。运行同目录 `restore_sources.py` 合并并校验完整ZIP；不要用旧11月2日恢复脚本猜新分片。
 - 来源包内有22张原图、实际提示词、850个非空及8个透明尾段PNG、17张图集/manifest、选定计划与去背景/拆帧脚本。不打包失败试稿、缓存、身份或凭据。
+- 来源包39,044,897字节，SHA256为`c4f965ddd5be10a907aeebb31b3de0cab37eb52132e32328247263bf1fe1c6fb`。来源ZIP独立解压重跑已验证：17张输出图集SHA256全部一致。网站源码单文件上限32MiB，因此网站保留38个无损分片，下载按钮在浏览器内合并并验证整包SHA256后下载；不会降低原画质量。Git中的Art恢复脚本同样可合并整包。
 - 需要复现去背景时准备Python、Pillow、NumPy；使用来源包 `reproduction/prepare_skill_fx_60hz.py` 与随包的 `sprite_processor.py`。PowerShell设置 `MAIVERSE_FX_ROOT` 为解压根目录、`MAIVERSE_FX_EXPORT` 为输出图集目录后运行；实际原图已随包，不依赖办公室的生成缓存路径。
 - `docs/SKILL_FX_60HZ_STANDARD.md`：后续技能60Hz标准。视频完整取帧规则依然独立生效。
 

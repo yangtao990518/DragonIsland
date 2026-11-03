@@ -2,7 +2,7 @@ from pathlib import Path
 import json,zipfile,hashlib
 OUT=Path(__file__).resolve().parent;ROOT=OUT/'skill-fx-60hz-2026-11-03';SITE=OUT.parents[1]/'sites/fireball-hd2d-levels-20261102/dist'
 manifest=json.loads((SITE/'assets/fx60/manifest.json').read_text());plan=json.loads((ROOT/'plan-60hz.json').read_text());assert not manifest['pending'] and not manifest['issues']
-dest=SITE/'assets/fx60-source-assets-20261103.zip';source_map={}
+dest=ROOT/'fx60-source-assets-20261103.zip';source_map={}
 with zipfile.ZipFile(dest,'w',zipfile.ZIP_DEFLATED) as z:
  for job in plan['jobs']:
   name=job['id'];page=job['page'];folder=ROOT/name;key=f'{name}-{page}';rel=f'{name}/raw-{page:02d}.png';source_map[key]=rel

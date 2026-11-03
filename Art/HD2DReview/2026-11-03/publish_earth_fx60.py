@@ -5,11 +5,13 @@ OUT=Path(__file__).resolve().parent;SITE=OUT.parents[1]/'sites/fireball-hd2d-lev
 sys.path.insert(0,str(OUT.parents[1]/'DragonIsland-IslandReview/output'))
 from github_review_api import request,credential,REPO
 from publish_hd2d_handoff import build_tree_incrementally,gitsha
-BASE='ad965b1aa4750c27b3052c6c7544c378c1d1a321';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
+BASE='dcf64313c998cac8c7da2fdc82f9e2923815f81f';BRANCH='codex/earth-hd2d-20261103';CACHE=OUT/'earth-fx60-github-upload-cache.json'
 def stage():
  ART.mkdir(parents=True,exist_ok=True);TOOLS.mkdir(parents=True,exist_ok=True);bundles=[]
  for file in ['fx60-source-assets-20261103.zip','earth-source-assets-20261103.zip']:
-  p=SITE/'dist/assets'/file;directory=ART/'SourceBundles';directory.mkdir(exist_ok=True);parts=directory/(file+'.parts');parts.mkdir(exist_ok=True);data=p.read_bytes();records=[]
+  p=SITE/'dist/assets'/file
+  if not p.exists():p=OUT/'skill-fx-60hz-2026-11-03'/file
+  directory=ART/'SourceBundles';directory.mkdir(exist_ok=True);parts=directory/(file+'.parts');parts.mkdir(exist_ok=True);data=p.read_bytes();records=[]
   for i,start in enumerate(range(0,len(data),1048576)):
    chunk=data[start:start+1048576];target=parts/f'{i:04d}.part';target.write_bytes(chunk);records.append({'path':str(target.relative_to(ART)).replace('\\','/'),'bytes':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()})
   bundles.append({'file':'SourceBundles/'+file,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'parts':records})
@@ -28,7 +30,7 @@ def stage():
  (TOOLS/'assets/asset-index.json').write_text(json.dumps(idx,indent=2),encoding='utf-8')
  docs=STAGE/'docs';docs.mkdir(exist_ok=True)
  for name in ['HANDOFF_2026-11-03_EARTH_FX60.md','SKILL_FX_60HZ_STANDARD.md']:shutil.copy2(OUT.parent/'docs'/name,docs/name)
- for name in ['prepare_skill_fx_60hz.py','package_fx60_sources.py','publish_earth_fx60.py']:shutil.copy2(OUT/name,ART/name)
+ for name in ['prepare_skill_fx_60hz.py','package_fx60_sources.py','publish_earth_fx60.py','split_fx60_site_download.py']:shutil.copy2(OUT/name,ART/name)
  for name in ['qa-earth.mjs','qa-fx60.mjs']:shutil.copy2(SITE/name,ART/name)
  qa=ART/'qa';qa.mkdir(exist_ok=True)
  for name in ['earth-results.json','fx60-results.json','rune-swords-50.png','rune-swords-xiaobai.png','earth-earth-spikes.png','earth-stone-fist.png','earth-boulder.png','earth-quicksand.png']:shutil.copy2(SITE/'qa'/name,qa/name)
